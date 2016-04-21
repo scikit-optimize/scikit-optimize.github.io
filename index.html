@@ -1,1 +1,1692 @@
-Hello world :)
+<!doctype html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+    <title>skopt API documentation</title>
+    <meta name="description" content="Scikit-Optimize, or `skopt`, is meant to be a simple and efficient library
+for black box optimizatio..." />
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
+  
+  <style type="text/css">
+  
+* {
+  box-sizing: border-box;
+}
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+  body {
+    background: #fff;
+    font-family: "Source Sans Pro", "Helvetica Neueue", Helvetica, sans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6em;
+  }
+  #content {
+    width: 70%;
+    max-width: 850px;
+    float: left;
+    padding: 30px 60px;
+    border-left: 1px solid #ddd;
+  }
+  #sidebar {
+    width: 25%;
+    float: left;
+    padding: 30px;
+    overflow: hidden;
+  }
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: .85em;
+    text-transform: uppercase;
+  }
+
+  #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+    #footer p {
+      margin: 0 0 0 30px;
+      display: inline-block;
+    }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 300;
+  }
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.1em;
+    margin: 0 0 .50em 0;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+  }
+
+  a:hover {
+    color: #e08524;
+    transition: color .3s ease-in-out;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .title .name {
+    font-weight: bold;
+  }
+  .section-title {
+    margin-top: 2em;
+  }
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #f9f9f9;
+  } 
+
+  pre {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 0 #f3f3f3;
+    margin: 0 30px;
+    padding: 15px 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+    .codehilite .err { background: #ff3300; color: #fff !important; } 
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+
+  #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+    #index ul {
+      margin: 0;
+    }
+
+  .item {
+    margin: 0 0 15px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #fafafa;
+      margin: 0;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      min-width: 40%;
+    }
+      .item .name:hover {
+        background: #f6f6f6;
+      }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 0 30px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 0;
+      padding: 0;
+    }
+
+    .source_link a {
+      background: #ffc300;
+      font-weight: 400;
+      font-size: .75em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 1px 1px 0 #f4b700;
+      
+      padding: 3px 8px;
+      border-radius: 2px;
+      transition: background .3s ease-in-out;
+    }
+      .source_link a:hover {
+        background: #FF7200;
+        text-shadow: none;
+        transition: background .3s ease-in-out;
+      }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+  .clear {
+    clear: both;
+  }
+
+  @media all and (max-width: 950px) {
+    #sidebar {
+      width: 35%;
+    }
+    #content {
+      width: 65%;
+    }
+  }
+  @media all and (max-width: 650px) {
+    #top {
+      display: none;
+    }
+    #sidebar {
+      float: none;
+      width: auto;
+    }
+    #content {
+      float: none;
+      width: auto;
+      padding: 30px;
+    }
+
+    #index ul {
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    #index ul li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+    #footer {
+      text-align: left;
+    }
+    #footer p {
+      display: block;
+      margin: inherit;
+    }
+  }
+
+  /*****************************/
+
+  </style>
+
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+  function toggle(id, $link) {
+    $node = document.getElementById(id);
+    if (!$node)
+    return;
+    if (!$node.style.display || $node.style.display == 'none') {
+    $node.style.display = 'block';
+    $link.innerHTML = 'Hide source &nequiv;';
+    } else {
+    $node.style.display = 'none';
+    $link.innerHTML = 'Show source &equiv;';
+    }
+  }
+  </script>
+</head>
+<body>
+<a href="https://github.com/scikit-optimize/scikit-optimize"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+    
+  
+  <div id="sidebar">
+    <h1>API</h1>
+    <ul id="index">
+
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#skopt.dummy_minimize">dummy_minimize</a></li>
+    <li class="mono"><a href="#skopt.gbrt_minimize">gbrt_minimize</a></li>
+    <li class="mono"><a href="#skopt.gp_minimize">gp_minimize</a></li>
+  </ul>
+
+    </li>
+
+
+    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+      <ul>
+        <li class="mono"><a href="benchmarks.m.html">skopt.benchmarks</a></li>
+        <li class="mono"><a href="learning/index.html">skopt.learning</a></li>
+        <li class="mono"><a href="utils.m.html">skopt.utils</a></li>
+      </ul>
+    </li>
+
+    </ul>
+  </div>
+
+    <article id="content">
+      
+  
+
+  
+
+
+  <header id="section-intro">
+  <h1 class="title"><span class="name">skopt</span> module</h1>
+  <p>Scikit-Optimize, or <code>skopt</code>, is meant to be a simple and efficient library
+for black box optimization, accessible to everybody and reusable in various
+contexts.</p>
+<p>The library is built on top of NumPy, SciPy and Scikit-Learn.</p>
+<p><a href="https://travis-ci.org/scikit-optimize/scikit-optimize"><img alt="Build Status" src="https://travis-ci.org/scikit-optimize/scikit-optimize.svg?branch=master" /></a></p>
+<h2>Development</h2>
+<p>The library is still experimental and under heavy development.</p>
+<p>The development version can be installed through:</p>
+<pre><code>git clone https://github.com/scikit-optimize/scikit-optimize.git
+cd scikit-optimize
+pip install -r requirements.txt
+python setup.py develop
+</code></pre>
+<p>Run the tests by executing <code>nosetests</code> in the top level directory.</p>
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt', this);">Show source &equiv;</a></p>
+  <div id="source-skopt" class="source">
+    <pre><code>"""
+Scikit-Optimize, or `skopt`, is meant to be a simple and efficient library
+for black box optimization, accessible to everybody and reusable in various
+contexts.
+
+The library is built on top of NumPy, SciPy and Scikit-Learn.
+
+[![Build Status](https://travis-ci.org/scikit-optimize/scikit-optimize.svg?branch=master)](https://travis-ci.org/scikit-optimize/scikit-optimize)
+
+## Development
+
+The library is still experimental and under heavy development.
+
+The development version can be installed through:
+
+    git clone https://github.com/scikit-optimize/scikit-optimize.git
+    cd scikit-optimize
+    pip install -r requirements.txt
+    python setup.py develop
+
+Run the tests by executing `nosetests` in the top level directory.
+"""
+
+from . import benchmarks
+from . import learning
+from . import utils
+
+from .gp_opt import gp_minimize
+from .dummy_opt import dummy_minimize
+from .gbrt_opt import gbrt_minimize
+
+__version__ = "0.0"
+
+
+__all__ = ("benchmarks",
+           "learning",
+           "utils",
+           "gp_minimize",
+           "dummy_minimize",
+           "gbrt_minimize")
+</code></pre>
+  </div>
+
+  </header>
+
+  <section id="section-items">
+
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="skopt.dummy_minimize">
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, bounds, maxiter=1000, random_state=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Random search by uniform sampling within the given bounds.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>func</code> [callable]:
+    Function to minimize. Should take a array of parameters and
+    return the function values.</p>
+</li>
+<li>
+<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<ul>
+<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
+<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+</ul>
+</li>
+<li>
+<p><code>maxiter</code> [int, default=1000]:
+    Number of iterations to find the minimum. In other words, the
+    number of function evaluations.</p>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li>
+<p><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    The optimization result returned as a OptimizeResult object.
+    Important attributes are:</p>
+<ul>
+<li><code>x</code> [float]: location of the minimum.</li>
+<li><code>fun</code> [float]: function value at the minimum.</li>
+<li><code>x_iters</code> [array]: location of function evaluation for each
+   iteration.</li>
+<li><code>func_vals</code> [array]: function value for each iteration.</li>
+</ul>
+<p>For more details related to the OptimizeResult object, refer
+http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.dummy_minimize" class="source">
+    <pre><code>def dummy_minimize(func, bounds, maxiter=1000, random_state=None):
+    """Random search by uniform sampling within the given bounds.
+
+    Parameters
+    ----------
+    * `func` [callable]:
+        Function to minimize. Should take a array of parameters and
+        return the function values.
+
+    * `bounds` [array-like, shape=(n_parameters, 2)]:
+        - ``bounds[i][0]`` should give the lower bound of each parameter and
+        - ``bounds[i][1]`` should give the upper bound of each parameter.
+
+    * `maxiter` [int, default=1000]:
+        Number of iterations to find the minimum. In other words, the
+        number of function evaluations.
+
+    * `random_state` [int, RandomState instance, or None (default)]:
+        Set random state to something other than None for reproducible
+        results.
+
+    Returns
+    -------
+    * `res` [`OptimizeResult`, scipy object]:
+        The optimization result returned as a OptimizeResult object.
+        Important attributes are:
+
+        - `x` [float]: location of the minimum.
+        - `fun` [float]: function value at the minimum.
+        - `x_iters` [array]: location of function evaluation for each
+           iteration.
+        - `func_vals` [array]: function value for each iteration.
+
+        For more details related to the OptimizeResult object, refer
+        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html
+    """
+    rng = check_random_state(random_state)
+
+    n_params = len(bounds)
+    lb, ub = extract_bounds(bounds)
+
+    X = lb + (ub - lb) * rng.rand(maxiter, n_params)
+    init_y = func(X[0])
+    if not np.isscalar(init_y):
+        raise ValueError(
+            "The function to be optimized should return a scalar")
+    y = np.asarray([init_y] + [func(X[i]) for i in range(maxiter - 1)])
+
+    res = OptimizeResult()
+    best = np.argmin(y)
+    res.x = X[best]
+    res.fun = y[best]
+    res.func_vals = y
+    res.x_iters = X
+
+    return res
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.gbrt_minimize">
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, bounds, base_estimator=None, maxiter=100, n_points=20, n_start=10, random_state=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Sequential optimisation using gradient boosted trees.</p>
+<p>Gradient boosted regression trees are used to model the (very)
+expensive to evaluate function <code>func</code>. The model is improved
+by sequentially evaluating the expensive function at the next
+best point. Thereby finding the minimum of <code>func</code> with as
+few evaluations as possible.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>func</code> [callable]:
+    Function to minimize. Should take a array of parameters and
+    return the function values.</p>
+</li>
+<li>
+<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<ul>
+<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
+<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+</ul>
+</li>
+<li>
+<p><code>base_estimator</code> [<code>GradientBoostingQuantileRegressor</code>]:
+    The regressor to use as surrogate model</p>
+</li>
+<li>
+<p><code>maxiter</code> [int, default=100]:
+    Number of iterations used to find the minimum. This corresponds
+    to the total number of evaluations of <code>func</code>. If <code>n_start</code> &gt; 0
+    only <code>maxiter - n_start</code> iterations are used.</p>
+</li>
+<li>
+<p><code>n_start</code> [int, default=10]:
+    Number of random points to draw before fitting <code>base_estimator</code>
+    for the first time. If <code>n_start &gt; maxiter</code> this degrades to
+    a random search for the minimum.</p>
+</li>
+<li>
+<p><code>n_points</code> [int, default=20]:
+    Number of points to sample when minimizing the acquisition function.</p>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li>
+<p><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    The optimization result returned as a OptimizeResult object.
+    Important attributes are:</p>
+<ul>
+<li><code>x</code> [float]: location of the minimum.</li>
+<li><code>fun</code> [float]: function value at the minimum.</li>
+<li><code>models</code>: surrogate models used for each iteration.</li>
+<li><code>x_iters</code> [array]: location of function evaluation for each
+   iteration.</li>
+<li><code>func_vals</code> [array]: function value for each iteration.</li>
+</ul>
+<p>For more details related to the OptimizeResult object, refer
+http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.gbrt_minimize" class="source">
+    <pre><code>def gbrt_minimize(func, bounds, base_estimator=None, maxiter=100,
+                  n_points=20, n_start=10, random_state=None):
+    """Sequential optimisation using gradient boosted trees.
+
+    Gradient boosted regression trees are used to model the (very)
+    expensive to evaluate function `func`. The model is improved
+    by sequentially evaluating the expensive function at the next
+    best point. Thereby finding the minimum of `func` with as
+    few evaluations as possible.
+
+    Parameters
+    ----------
+    * `func` [callable]:
+        Function to minimize. Should take a array of parameters and
+        return the function values.
+
+    * `bounds` [array-like, shape=(n_parameters, 2)]:
+        - ``bounds[i][0]`` should give the lower bound of each parameter and
+        - ``bounds[i][1]`` should give the upper bound of each parameter.
+
+    * `base_estimator` [`GradientBoostingQuantileRegressor`]:
+        The regressor to use as surrogate model
+
+    * `maxiter` [int, default=100]:
+        Number of iterations used to find the minimum. This corresponds
+        to the total number of evaluations of `func`. If `n_start` > 0
+        only `maxiter - n_start` iterations are used.
+
+    * `n_start` [int, default=10]:
+        Number of random points to draw before fitting `base_estimator`
+        for the first time. If `n_start > maxiter` this degrades to
+        a random search for the minimum.
+
+    * `n_points` [int, default=20]:
+        Number of points to sample when minimizing the acquisition function.
+
+    * `random_state` [int, RandomState instance, or None (default)]:
+        Set random state to something other than None for reproducible
+        results.
+
+    Returns
+    -------
+    * `res` [`OptimizeResult`, scipy object]:
+        The optimization result returned as a OptimizeResult object.
+        Important attributes are:
+
+        - `x` [float]: location of the minimum.
+        - `fun` [float]: function value at the minimum.
+        - `models`: surrogate models used for each iteration.
+        - `x_iters` [array]: location of function evaluation for each
+           iteration.
+        - `func_vals` [array]: function value for each iteration.
+
+        For more details related to the OptimizeResult object, refer
+        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html
+    """
+    rng = check_random_state(random_state)
+
+    # Bounds
+    num_params = len(bounds)
+    lower_bounds, upper_bounds = extract_bounds(bounds)
+
+    # Default estimator
+    if base_estimator is None:
+        base_estimator = GradientBoostingQuantileRegressor(random_state=rng)
+
+    # Record the points and function values evaluated as part of
+    # the minimization
+    Xi = np.zeros((maxiter, num_params))
+    yi = np.zeros(maxiter)
+
+    # Initialize with random points
+    if n_start == 0:
+        raise ValueError("Need at least one starting point.")
+
+    if maxiter == 0:
+        raise ValueError("Need to perform at least one iteration.")
+
+    n_start = min(n_start, maxiter)
+
+    Xi[:n_start] = _random_points(
+        lower_bounds, upper_bounds, n_points=n_start, random_state=rng)
+    best_x = Xi[:n_start].ravel()
+    yi[:n_start] = [func(xi) for xi in Xi[:n_start]]
+    best_y = np.min(yi[:n_start])
+
+    models = []
+
+    for i in range(n_start, maxiter):
+        rgr = clone(base_estimator)
+        # only the first i points are meaningful
+        rgr.fit(Xi[:i, :], yi[:i])
+        models.append(rgr)
+
+        # `rgr` predicts constants for each leaf which means that the EI
+        # has zero gradient over large distances. As a result we can not
+        # use gradient based optimisers like BFGS, use random sampling
+        # for the moment.
+        x0 = _random_points(lower_bounds, upper_bounds,
+                            n_points=n_points,
+                            random_state=rng)
+        aq = _expected_improvement(x0, rgr, best_y)
+        best = np.argmin(aq)
+
+        Xi[i] = x0[best].ravel()
+        yi[i] = func(x0[best])
+
+        if yi[i] < best_y:
+            best_y = yi[i]
+            best_x = Xi[i]
+
+    res = OptimizeResult()
+    res.x = best_x
+    res.fun = best_y
+    res.func_vals = yi
+    res.x_iters = Xi
+    res.models = models
+
+    return res
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.gp_minimize">
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, bounds, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, maxiter=1000, n_points=500, n_start=10, n_restarts_optimizer=5, random_state=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bayesian optimization using Gaussian Processes.</p>
+<p>If every function evaluation is expensive, for instance
+when the parameters are the hyperparameters of a neural network
+and the function evaluation is the mean cross-validation score across
+ten folds, optimizing the hyperparameters by standared optimization
+routines would take for ever!</p>
+<p>The idea is to approximate the function using a Gaussian process.
+In other words the function values are assumed to follow a multivariate
+gaussian. The covariance of the function values are given by a
+GP kernel between the parameters. Then a smart choice to choose the
+next parameter to evaluate can be made by the acquisition function
+over the Gaussian prior which is much quicker to evaluate.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>func</code> [callable]:
+    Function to minimize. Should take a array of parameters and
+    return the function values.</p>
+</li>
+<li>
+<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<ul>
+<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
+<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+</ul>
+</li>
+<li>
+<p><code>base_estimator</code> [a Gaussian process estimator]:
+    The Gaussian process estimator to use for optimization.</p>
+</li>
+<li>
+<p><code>acq</code> [string, default=<code>"LCB"</code>]:
+    Function to minimize over the gaussian prior. Can be either</p>
+<ul>
+<li><code>"LCB"</code> for lower confidence bound,</li>
+<li><code>"EI"</code> for expected improvement,</li>
+<li><code>"PI"</code> for probability of improvement.</li>
+</ul>
+</li>
+<li>
+<p><code>xi</code> [float, default=0.01]:
+    Controls how much improvement one wants over the previous best
+    values. Used when the acquisition is either <code>"EI"</code> or <code>"PI"</code>.</p>
+</li>
+<li>
+<p><code>kappa</code> [float, default=1.96]:
+    Controls how much of the variance in the predicted values should be
+    taken into account. If set to be very high, then we are favouring
+    exploration over exploitation and vice versa.
+    Used when the acquisition is <code>"LCB"</code>.</p>
+</li>
+<li>
+<p><code>search</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>]:
+    Searching for the next possible candidate to update the Gaussian prior
+    with.</p>
+<p>If search is set to <code>"sampling"</code>, <code>n_points</code> are sampled randomly
+and the Gaussian Process prior is updated with the point that gives
+the best acquisition value over the Gaussian prior.</p>
+<p>If search is set to <code>"lbfgs"</code>, then a point is sampled randomly, and
+lbfgs is run for 10 iterations optimizing the acquisition function
+over the Gaussian prior.</p>
+</li>
+<li>
+<p><code>maxiter</code> [int, default=1000]:
+    Number of iterations to find the minimum. Note that <code>n_start</code>
+    iterations are effectively discounted, such that total number of
+    function evaluations is at most <code>maxiter</code>.</p>
+</li>
+<li>
+<p><code>n_points</code> [int, default=500]:
+    Number of points to sample to determine the next "best" point.
+    Useless if search is set to <code>"lbfgs"</code>.</p>
+</li>
+<li>
+<p><code>n_start</code> [int, default=10]:
+    Number of random initialization points.</p>
+</li>
+<li>
+<p><code>n_restarts_optimizer</code> [int, default=10]:
+    The number of restarts of the optimizer when <code>search</code> is <code>"lbfgs"</code>.</p>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li>
+<p><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    The optimization result returned as a OptimizeResult object.
+    Important attributes are:</p>
+<ul>
+<li><code>x</code> [float]: location of the minimum.</li>
+<li><code>fun</code> [float]: function value at the minimum.</li>
+<li><code>models</code>: surrogate models used for each iteration.</li>
+<li><code>x_iters</code> [array]: location of function evaluation for each
+   iteration.</li>
+<li><code>func_vals</code> [array]: function value for each iteration.</li>
+</ul>
+<p>For more details related to the OptimizeResult object, refer
+http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.gp_minimize" class="source">
+    <pre><code>def gp_minimize(func, bounds, base_estimator=None, acq="LCB", xi=0.01,
+                kappa=1.96, search="sampling", maxiter=1000, n_points=500,
+                n_start=10, n_restarts_optimizer=5, random_state=None):
+    """Bayesian optimization using Gaussian Processes.
+
+    If every function evaluation is expensive, for instance
+    when the parameters are the hyperparameters of a neural network
+    and the function evaluation is the mean cross-validation score across
+    ten folds, optimizing the hyperparameters by standared optimization
+    routines would take for ever!
+
+    The idea is to approximate the function using a Gaussian process.
+    In other words the function values are assumed to follow a multivariate
+    gaussian. The covariance of the function values are given by a
+    GP kernel between the parameters. Then a smart choice to choose the
+    next parameter to evaluate can be made by the acquisition function
+    over the Gaussian prior which is much quicker to evaluate.
+
+    Parameters
+    ----------
+    * `func` [callable]:
+        Function to minimize. Should take a array of parameters and
+        return the function values.
+
+    * `bounds` [array-like, shape=(n_parameters, 2)]:
+        - ``bounds[i][0]`` should give the lower bound of each parameter and
+        - ``bounds[i][1]`` should give the upper bound of each parameter.
+
+    * `base_estimator` [a Gaussian process estimator]:
+        The Gaussian process estimator to use for optimization.
+
+    * `acq` [string, default=`"LCB"`]:
+        Function to minimize over the gaussian prior. Can be either
+
+        - `"LCB"` for lower confidence bound,
+        - `"EI"` for expected improvement,
+        - `"PI"` for probability of improvement.
+
+    * `xi` [float, default=0.01]:
+        Controls how much improvement one wants over the previous best
+        values. Used when the acquisition is either `"EI"` or `"PI"`.
+
+    * `kappa` [float, default=1.96]:
+        Controls how much of the variance in the predicted values should be
+        taken into account. If set to be very high, then we are favouring
+        exploration over exploitation and vice versa.
+        Used when the acquisition is `"LCB"`.
+
+    * `search` [string, `"sampling"` or `"lbfgs"`]:
+        Searching for the next possible candidate to update the Gaussian prior
+        with.
+
+        If search is set to `"sampling"`, `n_points` are sampled randomly
+        and the Gaussian Process prior is updated with the point that gives
+        the best acquisition value over the Gaussian prior.
+
+        If search is set to `"lbfgs"`, then a point is sampled randomly, and
+        lbfgs is run for 10 iterations optimizing the acquisition function
+        over the Gaussian prior.
+
+    * `maxiter` [int, default=1000]:
+        Number of iterations to find the minimum. Note that `n_start`
+        iterations are effectively discounted, such that total number of
+        function evaluations is at most `maxiter`.
+
+    * `n_points` [int, default=500]:
+        Number of points to sample to determine the next "best" point.
+        Useless if search is set to `"lbfgs"`.
+
+    * `n_start` [int, default=10]:
+        Number of random initialization points.
+
+    * `n_restarts_optimizer` [int, default=10]:
+        The number of restarts of the optimizer when `search` is `"lbfgs"`.
+
+    * `random_state` [int, RandomState instance, or None (default)]:
+        Set random state to something other than None for reproducible
+        results.
+
+    Returns
+    -------
+    * `res` [`OptimizeResult`, scipy object]:
+        The optimization result returned as a OptimizeResult object.
+        Important attributes are:
+
+        - `x` [float]: location of the minimum.
+        - `fun` [float]: function value at the minimum.
+        - `models`: surrogate models used for each iteration.
+        - `x_iters` [array]: location of function evaluation for each
+           iteration.
+        - `func_vals` [array]: function value for each iteration.
+
+        For more details related to the OptimizeResult object, refer
+        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html
+    """
+    rng = check_random_state(random_state)
+
+    # Bounds
+    n_params = len(bounds)
+    lb, ub = extract_bounds(bounds)
+
+    # Default GP
+    if base_estimator is None:
+        base_estimator = GaussianProcessRegressor(
+            kernel=(ConstantKernel(1.0, (0.01, 1000.0)) *
+                    Matern(length_scale=np.ones(n_params),
+                           length_scale_bounds=[(0.01, 100)] * n_params,
+                           nu=2.5)),
+            normalize_y=True, alpha=10e-6, random_state=random_state)
+
+    # First points
+    Xi = lb + (ub - lb) * rng.rand(n_start, n_params)
+    yi = [func(x) for x in Xi]
+    if np.ndim(yi) != 1:
+        raise ValueError(
+            "The function to be optimized should return a scalar")
+
+    # Bayesian optimization loop
+    models = []
+
+    for i in range(maxiter - n_start):
+        gp = clone(base_estimator)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            gp.fit(Xi, yi)
+
+        models.append(gp)
+
+        if search == "sampling":
+            X = lb + (ub - lb) * rng.rand(n_points, n_params)
+            values = acquisition(X=X, model=gp,  y_opt=np.min(yi), method=acq,
+                                 xi=xi, kappa=kappa)
+            next_x = X[np.argmin(values)]
+
+        elif search == "lbfgs":
+            best = np.inf
+
+            for j in range(n_restarts_optimizer):
+                x0 = lb + (ub - lb) * rng.rand(n_params)
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    x, a, _ = fmin_l_bfgs_b(
+                        _acquisition, x0,
+                        args=(gp, np.min(yi), acq, xi, kappa),
+                        bounds=bounds, approx_grad=True, maxiter=10)
+
+                if a < best:
+                    next_x, best = x, a
+
+        next_y = func(next_x)
+        Xi = np.vstack((Xi, next_x))
+        yi.append(next_y)
+
+    # Pack results
+    res = OptimizeResult()
+    best = np.argmin(yi)
+    res.x = Xi[best]
+    res.fun = yi[best]
+    res.func_vals = np.array(yi)
+    res.x_iters = Xi
+    res.models = models
+
+    return res
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+
+  </section>
+
+    </article>
+  <div class="clear"> </div>
+  <footer id="footer">
+    <p>
+      Documentation generated by
+      <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
+    </p>
+
+    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
+  </footer>
+</div>
+</body>
+</html>
