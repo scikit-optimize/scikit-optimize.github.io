@@ -1139,9 +1139,35 @@ one go.</p></div>
 
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict for each quantile.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">rgr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict.</span>
+
+<span class="sd">        Predict X at every quantile if ``return_std`` is set to False.</span>
+<span class="sd">        If ``return_std`` is set to True, then return the mean</span>
+<span class="sd">        and the predicted standard deviation, which is approximated as</span>
+<span class="sd">        the (0.84th quantile - 0.16th quantile) divided by 2.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `X` [array-like, shape=(n_samples, n_features):</span>
+<span class="sd">            where `n_samples` is the number of samples</span>
+<span class="sd">            and `n_features` is the number of features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predicted_quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">rgr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">predicted_quantiles</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">std_quantiles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">]</span>
+            <span class="n">is_present_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">std_quantiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">is_present_mask</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;return_std works only if the quantiles during &quot;</span>
+                    <span class="s2">&quot;instantiation include 0.16, 0.5 and 0.84&quot;</span><span class="p">)</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.16</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.84</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="p">((</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1316,19 +1342,53 @@ one go.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.learning.GradientBoostingQuantileRegressor.predict">
-    <p>def <span class="ident">predict</span>(</p><p>self, X)</p>
+    <p>def <span class="ident">predict</span>(</p><p>self, X, return_std=False)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Predict for each quantile.</p></div>
+    <div class="desc"><p>Predict.</p>
+<p>Predict X at every quantile if <code>return_std</code> is set to False.
+If <code>return_std</code> is set to True, then return the mean
+and the predicted standard deviation, which is approximated as
+the (0.84th quantile - 0.16th quantile) divided by 2.0</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>X</code> [array-like, shape=(n_samples, n_features):
+    where <code>n_samples</code> is the number of samples
+    and <code>n_features</code> is the number of features.</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor.predict', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Predict for each quantile.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">rgr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Predict.</span>
+<span class="sd">    Predict X at every quantile if ``return_std`` is set to False.</span>
+<span class="sd">    If ``return_std`` is set to True, then return the mean</span>
+<span class="sd">    and the predicted standard deviation, which is approximated as</span>
+<span class="sd">    the (0.84th quantile - 0.16th quantile) divided by 2.0</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `X` [array-like, shape=(n_samples, n_features):</span>
+<span class="sd">        where `n_samples` is the number of samples</span>
+<span class="sd">        and `n_features` is the number of features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">predicted_quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">rgr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">return_std</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">predicted_quantiles</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">std_quantiles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">]</span>
+        <span class="n">is_present_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">std_quantiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">is_present_mask</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;return_std works only if the quantiles during &quot;</span>
+                <span class="s2">&quot;instantiation include 0.16, 0.5 and 0.84&quot;</span><span class="p">)</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.16</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.84</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="p">((</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
 </pre></div>
 
   </div>
