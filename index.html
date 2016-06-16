@@ -1054,7 +1054,7 @@ table {
       <ul>
         <li class="mono"><a href="benchmarks.m.html">skopt.benchmarks</a></li>
         <li class="mono"><a href="learning/index.html">skopt.learning</a></li>
-        <li class="mono"><a href="utils.m.html">skopt.utils</a></li>
+        <li class="mono"><a href="space.m.html">skopt.space</a></li>
       </ul>
     </li>
 
@@ -1114,7 +1114,7 @@ python setup.py develop
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">benchmarks</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">learning</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">space</span>
 
 <span class="kn">from</span> <span class="nn">.gp_opt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 <span class="kn">from</span> <span class="nn">.dummy_opt</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
@@ -1125,7 +1125,7 @@ python setup.py develop
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
            <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;utils&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;space&quot;</span><span class="p">,</span>
            <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
            <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
            <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">)</span>
@@ -1141,7 +1141,7 @@ python setup.py develop
       
   <div class="item">
     <div class="name def" id="skopt.dummy_minimize">
-    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, bounds, maxiter=1000, random_state=None)</p>
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, maxiter=1000, random_state=None)</p>
     </div>
     
 
@@ -1156,10 +1156,17 @@ python setup.py develop
     return the function values.</p>
 </li>
 <li>
-<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<p><code>dimensions</code> [list, shape=(n_dims,)]:
+    List of search space dimensions.
+    Each search dimension can be defined either as</p>
 <ul>
-<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
-<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+<li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
+  dimensions),</li>
+<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+  dimensions),</li>
+<li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
+<li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
+  <code>Categorical</code>).</li>
 </ul>
 </li>
 <li>
@@ -1193,7 +1200,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dummy_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1202,9 +1209,17 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Function to minimize. Should take a array of parameters and</span>
 <span class="sd">        return the function values.</span>
 
-<span class="sd">    * `bounds` [array-like, shape=(n_parameters, 2)]:</span>
-<span class="sd">        - ``bounds[i][0]`` should give the lower bound of each parameter and</span>
-<span class="sd">        - ``bounds[i][1]`` should give the upper bound of each parameter.</span>
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
 
 <span class="sd">    * `maxiter` [int, default=1000]:</span>
 <span class="sd">        Number of iterations to find the minimum. In other words, the</span>
@@ -1230,16 +1245,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
-    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-    <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">extract_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-
-    <span class="n">X</span> <span class="o">=</span> <span class="n">lb</span> <span class="o">+</span> <span class="p">(</span><span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">n_params</span><span class="p">)</span>
     <span class="n">init_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">init_y</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxiter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">)])</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
     <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -1259,7 +1272,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, bounds, base_estimator=None, maxiter=100, n_points=20, n_start=10, random_state=None)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, maxiter=100, n_points=20, n_start=10, random_state=None)</p>
     </div>
     
 
@@ -1279,10 +1292,17 @@ few evaluations as possible.</p>
     return the function values.</p>
 </li>
 <li>
-<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<p><code>dimensions</code> [list, shape=(n_dims,)]:
+    List of search space dimensions.
+    Each search dimension can be defined either as</p>
 <ul>
-<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
-<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+<li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
+  dimensions),</li>
+<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+  dimensions),</li>
+<li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
+<li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
+  <code>Categorical</code>).</li>
 </ul>
 </li>
 <li>
@@ -1332,7 +1352,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                   <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using gradient boosted trees.</span>
 
@@ -1348,9 +1368,17 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Function to minimize. Should take a array of parameters and</span>
 <span class="sd">        return the function values.</span>
 
-<span class="sd">    * `bounds` [array-like, shape=(n_parameters, 2)]:</span>
-<span class="sd">        - ``bounds[i][0]`` should give the lower bound of each parameter and</span>
-<span class="sd">        - ``bounds[i][1]`` should give the upper bound of each parameter.</span>
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
 
 <span class="sd">    * `base_estimator` [`GradientBoostingQuantileRegressor`]:</span>
 <span class="sd">        The regressor to use as surrogate model</span>
@@ -1389,10 +1417,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
-
-    <span class="c1"># Bounds</span>
-    <span class="n">num_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-    <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span> <span class="o">=</span> <span class="n">extract_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
     <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1400,7 +1425,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="c1"># Record the points and function values evaluated as part of</span>
     <span class="c1"># the minimization</span>
-    <span class="n">Xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">num_params</span><span class="p">))</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">))</span>
     <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">maxiter</span><span class="p">)</span>
 
     <span class="c1"># Initialize with random points</span>
@@ -1412,31 +1437,29 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="n">n_start</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_start</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">)</span>
 
-    <span class="n">Xi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">_random_points</span><span class="p">(</span>
-        <span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-    <span class="n">best_x</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">Xi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">yi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">]]</span>
-    <span class="n">best_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">])</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">yi</span><span class="p">[:</span><span class="n">n_start</span><span class="p">])</span>
+    <span class="n">best_y</span> <span class="o">=</span> <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">best_x</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_start</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">):</span>
         <span class="n">rgr</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
         <span class="c1"># only the first i points are meaningful</span>
-        <span class="n">rgr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xi</span><span class="p">[:</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">yi</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">rgr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xi</span><span class="p">[:</span><span class="n">i</span><span class="p">]),</span> <span class="n">yi</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span>
         <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rgr</span><span class="p">)</span>
 
         <span class="c1"># `rgr` predicts constants for each leaf which means that the EI</span>
         <span class="c1"># has zero gradient over large distances. As a result we can not</span>
         <span class="c1"># use gradient based optimisers like BFGS, use random sampling</span>
         <span class="c1"># for the moment.</span>
-        <span class="n">x0</span> <span class="o">=</span> <span class="n">_random_points</span><span class="p">(</span><span class="n">lower_bounds</span><span class="p">,</span> <span class="n">upper_bounds</span><span class="p">,</span>
-                            <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
-                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
         <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">gaussian_ei</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">rgr</span><span class="p">,</span> <span class="n">best_y</span><span class="p">))</span>
 
-        <span class="n">Xi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x0</span><span class="p">[</span><span class="n">best</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="n">best</span><span class="p">])</span>
+        <span class="n">Xi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="n">best</span><span class="p">:</span><span class="n">best</span><span class="o">+</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">Xi</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">best_y</span><span class="p">:</span>
             <span class="n">best_y</span> <span class="o">=</span> <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -1460,7 +1483,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, bounds, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, maxiter=1000, n_points=500, n_start=10, n_restarts_optimizer=5, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, maxiter=1000, n_points=500, n_start=10, n_restarts_optimizer=5, random_state=None)</p>
     </div>
     
 
@@ -1486,10 +1509,17 @@ over the Gaussian prior which is much quicker to evaluate.</p>
     return the function values.</p>
 </li>
 <li>
-<p><code>bounds</code> [array-like, shape=(n_parameters, 2)]:</p>
+<p><code>dimensions</code> [list, shape=(n_dims,)]:
+    List of search space dimensions.
+    Each search dimension can be defined either as</p>
 <ul>
-<li><code>bounds[i][0]</code> should give the lower bound of each parameter and</li>
-<li><code>bounds[i][1]</code> should give the upper bound of each parameter.</li>
+<li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
+  dimensions),</li>
+<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+  dimensions),</li>
+<li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
+<li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
+  <code>Categorical</code>).</li>
 </ul>
 </li>
 <li>
@@ -1574,7 +1604,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
                 <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
                 <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
@@ -1598,9 +1628,17 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Function to minimize. Should take a array of parameters and</span>
 <span class="sd">        return the function values.</span>
 
-<span class="sd">    * `bounds` [array-like, shape=(n_parameters, 2)]:</span>
-<span class="sd">        - ``bounds[i][0]`` should give the lower bound of each parameter and</span>
-<span class="sd">        - ``bounds[i][1]`` should give the upper bound of each parameter.</span>
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
 
 <span class="sd">    * `base_estimator` [a Gaussian process estimator]:</span>
 <span class="sd">        The Gaussian process estimator to use for optimization.</span>
@@ -1670,22 +1708,19 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
-
-    <span class="c1"># Bounds</span>
-    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-    <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">extract_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
             <span class="n">kernel</span><span class="o">=</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span> <span class="o">*</span>
-                    <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_params</span><span class="p">),</span>
-                           <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n_params</span><span class="p">,</span>
+                    <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
+                           <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
                            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)),</span>
             <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="c1"># First points</span>
-    <span class="n">Xi</span> <span class="o">=</span> <span class="n">lb</span> <span class="o">+</span> <span class="p">(</span><span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_start</span><span class="p">,</span> <span class="n">n_params</span><span class="p">)</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">yi</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1699,12 +1734,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-            <span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xi</span><span class="p">),</span> <span class="n">yi</span><span class="p">)</span>
 
         <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">search</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="n">lb</span> <span class="o">+</span> <span class="p">(</span><span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_params</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
+                                          <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
                 <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span>
                 <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
@@ -1714,18 +1750,21 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
             <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_restarts_optimizer</span><span class="p">):</span>
-                <span class="n">x0</span> <span class="o">=</span> <span class="n">lb</span> <span class="o">+</span> <span class="p">(</span><span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_params</span><span class="p">)</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                               <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
 
                 <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
                     <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_l_bfgs_b</span><span class="p">(</span>
                         <span class="n">_acquisition</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
                         <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span>
-                        <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">approx_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                        <span class="n">bounds</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
+                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
                     <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span>
 
+        <span class="n">next_x</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">next_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
         <span class="n">Xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">Xi</span><span class="p">,</span> <span class="n">next_x</span><span class="p">))</span>
         <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_y</span><span class="p">)</span>
