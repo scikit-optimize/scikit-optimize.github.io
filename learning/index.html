@@ -1089,7 +1089,26 @@ table {
     <div class="desc"><p>Predict several quantiles with one estimator.</p>
 <p>This is a wrapper around <code>GradientBoostingRegressor</code>'s quantile
 regression that allows you to predict several <code>quantiles</code> in
-one go.</p></div>
+one go.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>quantiles</code> [array-like]:
+    Quantiles to predict. By default the 16, 50 and 84%
+    quantiles are predicted.</p>
+</li>
+<li>
+<p><code>base_estimator</code> [GradientBoostingRegressor instance or None (default)]:
+    Quantile regressor used to make predictions. Only instances
+    of <code>GradientBoostingRegressor</code> are supported. Use this to change
+    the hyper-parameters of the estimator.</p>
+</li>
+<li>
+<p><code>random-state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor" class="source">
@@ -1099,23 +1118,28 @@ one go.</p></div>
 <span class="sd">    This is a wrapper around `GradientBoostingRegressor`&#39;s quantile</span>
 <span class="sd">    regression that allows you to predict several `quantiles` in</span>
 <span class="sd">    one go.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `quantiles` [array-like]:</span>
+<span class="sd">        Quantiles to predict. By default the 16, 50 and 84%</span>
+<span class="sd">        quantiles are predicted.</span>
+
+<span class="sd">    * `base_estimator` [GradientBoostingRegressor instance or None (default)]:</span>
+<span class="sd">        Quantile regressor used to make predictions. Only instances</span>
+<span class="sd">        of `GradientBoostingRegressor` are supported. Use this to change</span>
+<span class="sd">        the hyper-parameters of the estimator.</span>
+
+<span class="sd">    * `random-state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        * `quantiles` [array-like]:</span>
-<span class="sd">            Quantiles to predict. By default the 16, 50 and 84%</span>
-<span class="sd">            quantiles are predicted.</span>
-
-<span class="sd">        * `random-state` [int, RandomState instance, or None (default)]:</span>
-<span class="sd">            Set random state to something other than None for reproducible</span>
-<span class="sd">            results.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit one regressor for each quantile.</span>
@@ -1130,20 +1154,35 @@ one go.</p></div>
 <span class="sd">            Target values (real numbers in regression)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[</span><span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">,</span>
-                                                      <span class="n">alpha</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
-                                                      <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">:</span>
-            <span class="n">rgr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to be of type&#39;</span>
+                                 <span class="s1">&#39; GradientBoostingRegressor.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span> <span class="o">==</span> <span class="s1">&#39;quantile&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to use quantile&#39;</span>
+                                 <span class="s1">&#39; loss not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">:</span>
+            <span class="n">regressor</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
+            <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict.</span>
 
-<span class="sd">        Predict X at every quantile if ``return_std`` is set to False.</span>
-<span class="sd">        If ``return_std`` is set to True, then return the mean</span>
+<span class="sd">        Predict `X` at every quantile if `return_std` is set to False.</span>
+<span class="sd">        If `return_std` is set to True, then return the mean</span>
 <span class="sd">        and the predicted standard deviation, which is approximated as</span>
 <span class="sd">        the (0.84th quantile - 0.16th quantile) divided by 2.0</span>
 
@@ -1186,42 +1225,21 @@ one go.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.learning.GradientBoostingQuantileRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, quantiles=[0.16, 0.5, 0.84], random_state=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, quantiles=[0.16, 0.5, 0.84], base_estimator=None, random_state=None)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Constructor.</p>
-<h2>Parameters</h2>
-<ul>
-<li>
-<p><code>quantiles</code> [array-like]:
-    Quantiles to predict. By default the 16, 50 and 84%
-    quantiles are predicted.</p>
-</li>
-<li>
-<p><code>random-state</code> [int, RandomState instance, or None (default)]:
-    Set random state to something other than None for reproducible
-    results.</p>
-</li>
-</ul></div>
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Constructor.</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    * `quantiles` [array-like]:</span>
-<span class="sd">        Quantiles to predict. By default the 16, 50 and 84%</span>
-<span class="sd">        quantiles are predicted.</span>
-<span class="sd">    * `random-state` [int, RandomState instance, or None (default)]:</span>
-<span class="sd">        Set random state to something other than None for reproducible</span>
-<span class="sd">        results.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
 </pre></div>
 
   </div>
@@ -1265,12 +1283,22 @@ one go.</p></div>
 <span class="sd">        Target values (real numbers in regression)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[</span><span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">,</span>
-                                                  <span class="n">alpha</span><span class="o">=</span><span class="n">a</span><span class="p">,</span>
-                                                  <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">rgr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="p">:</span>
-        <span class="n">rgr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to be of type&#39;</span>
+                             <span class="s1">&#39; GradientBoostingRegressor.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span> <span class="o">==</span> <span class="s1">&#39;quantile&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to use quantile&#39;</span>
+                             <span class="s1">&#39; loss not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">:</span>
+        <span class="n">regressor</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
+        <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
@@ -1349,7 +1377,7 @@ one go.</p></div>
     
   
     <div class="desc"><p>Predict.</p>
-<p>Predict X at every quantile if <code>return_std</code> is set to False.
+<p>Predict <code>X</code> at every quantile if <code>return_std</code> is set to False.
 If <code>return_std</code> is set to True, then return the mean
 and the predicted standard deviation, which is approximated as
 the (0.84th quantile - 0.16th quantile) divided by 2.0</p>
@@ -1364,8 +1392,8 @@ the (0.84th quantile - 0.16th quantile) divided by 2.0</p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.predict" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Predict.</span>
-<span class="sd">    Predict X at every quantile if ``return_std`` is set to False.</span>
-<span class="sd">    If ``return_std`` is set to True, then return the mean</span>
+<span class="sd">    Predict `X` at every quantile if `return_std` is set to False.</span>
+<span class="sd">    If `return_std` is set to True, then return the mean</span>
 <span class="sd">    and the predicted standard deviation, which is approximated as</span>
 <span class="sd">    the (0.84th quantile - 0.16th quantile) divided by 2.0</span>
 <span class="sd">    Parameters</span>
@@ -1520,6 +1548,16 @@ component of a nested object.</p>
   </div>
   
           <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.learning.GradientBoostingQuantileRegressor.base_estimator" class="name">var <span class="ident">base_estimator</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="skopt.learning.GradientBoostingQuantileRegressor.quantiles" class="name">var <span class="ident">quantiles</span></p>
             
