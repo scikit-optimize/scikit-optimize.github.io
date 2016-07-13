@@ -1992,21 +1992,7 @@ It is also known as the Gini importance.</p>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-
-            <span class="c1"># This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906</span>
-            <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-
-            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">:</span>
-                <span class="n">var_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-                <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-                <span class="n">std</span> <span class="o">+=</span> <span class="n">var_tree</span> <span class="o">+</span> <span class="n">mean_tree</span> <span class="o">**</span> <span class="mi">2</span>
-
-            <span class="n">std</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span>
-            <span class="n">std</span> <span class="o">-=</span> <span class="n">mean</span> <span class="o">**</span> <span class="mf">2.0</span>
-            <span class="n">std</span><span class="p">[</span><span class="n">std</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-            <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">**</span> <span class="mf">0.5</span>
-
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
@@ -2503,17 +2489,7 @@ and returns a transformed version of X.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                 <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="c1"># This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">:</span>
-            <span class="n">var_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-            <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-            <span class="n">std</span> <span class="o">+=</span> <span class="n">var_tree</span> <span class="o">+</span> <span class="n">mean_tree</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">std</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span>
-        <span class="n">std</span> <span class="o">-=</span> <span class="n">mean</span> <span class="o">**</span> <span class="mf">2.0</span>
-        <span class="n">std</span><span class="p">[</span><span class="n">std</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">**</span> <span class="mf">0.5</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -3250,22 +3226,7 @@ component of a nested object.</p>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-
-            <span class="c1"># This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906</span>
-            <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-
-            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">:</span>
-                <span class="n">var_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-                <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-                <span class="n">std</span> <span class="o">+=</span> <span class="n">var_tree</span> <span class="o">+</span> <span class="n">mean_tree</span> <span class="o">**</span> <span class="mi">2</span>
-
-            <span class="n">std</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span>
-            <span class="n">std</span> <span class="o">-=</span> <span class="n">mean</span> <span class="o">**</span> <span class="mf">2.0</span>
-            <span class="n">std</span><span class="p">[</span><span class="n">std</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-            <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">**</span> <span class="mf">0.5</span>
-
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
-
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -3761,17 +3722,7 @@ and returns a transformed version of X.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                 <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="c1"># This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">:</span>
-            <span class="n">var_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-            <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-            <span class="n">std</span> <span class="o">+=</span> <span class="n">var_tree</span> <span class="o">+</span> <span class="n">mean_tree</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">std</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span>
-        <span class="n">std</span> <span class="o">-=</span> <span class="n">mean</span> <span class="o">**</span> <span class="mf">2.0</span>
-        <span class="n">std</span><span class="p">[</span><span class="n">std</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">**</span> <span class="mf">0.5</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
