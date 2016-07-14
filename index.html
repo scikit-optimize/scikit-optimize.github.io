@@ -1327,12 +1327,13 @@ making predictions.</p>
 <p><code>maxiter</code> [int, default=100]:
     Number of iterations used to find the minimum. This corresponds
     to the total number of evaluations of <code>func</code>. If <code>n_start</code> &gt; 0
-    only <code>maxiter - n_start</code> iterations are used.</p>
+    only <code>maxiter - n_start</code> additional evaluations of <code>func</code> are
+    made that are guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>n_start</code> [int, default=10]:
     Number of random points to draw before fitting <code>base_estimator</code>
-    for the first time. If <code>n_start &gt; maxiter</code> this degrades to
+    for the first time. If <code>n_start = maxiter</code> this degrades to
     a random search for the minimum.</p>
 </li>
 <li>
@@ -1410,11 +1411,12 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `maxiter` [int, default=100]:</span>
 <span class="sd">        Number of iterations used to find the minimum. This corresponds</span>
 <span class="sd">        to the total number of evaluations of `func`. If `n_start` &gt; 0</span>
-<span class="sd">        only `maxiter - n_start` iterations are used.</span>
+<span class="sd">        only `maxiter - n_start` additional evaluations of `func` are</span>
+<span class="sd">        made that are guided by the surrogate model.</span>
 
 <span class="sd">    * `n_start` [int, default=10]:</span>
 <span class="sd">        Number of random points to draw before fitting `base_estimator`</span>
-<span class="sd">        for the first time. If `n_start &gt; maxiter` this degrades to</span>
+<span class="sd">        for the first time. If `n_start = maxiter` this degrades to</span>
 <span class="sd">        a random search for the minimum.</span>
 
 <span class="sd">    * `n_points` [int, default=1000]:</span>
@@ -1460,8 +1462,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="s1">&#39;_estimator_type&#39;</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="n">base_estimator</span><span class="o">.</span><span class="n">_estimator_type</span> <span class="o">==</span> <span class="s1">&#39;regressor&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The base_estimator parameter has to either&quot;</span>
                              <span class="s2">&quot; be a string or a regressor instance.&quot;</span>
                              <span class="s2">&quot; &#39;</span><span class="si">%s</span><span class="s2">&#39; is neither.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
@@ -1520,12 +1521,13 @@ few evaluations as possible.</p>
 <p><code>maxiter</code> [int, default=100]:
     Number of iterations used to find the minimum. This corresponds
     to the total number of evaluations of <code>func</code>. If <code>n_start</code> &gt; 0
-    only <code>maxiter - n_start</code> iterations are used.</p>
+    only <code>maxiter - n_start</code> additional evaluations of <code>func</code> are
+    made that are guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>n_start</code> [int, default=10]:
     Number of random points to draw before fitting <code>base_estimator</code>
-    for the first time. If <code>n_start &gt; maxiter</code> this degrades to
+    for the first time. If <code>n_start = maxiter</code> this degrades to
     a random search for the minimum.</p>
 </li>
 <li>
@@ -1593,11 +1595,12 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `maxiter` [int, default=100]:</span>
 <span class="sd">        Number of iterations used to find the minimum. This corresponds</span>
 <span class="sd">        to the total number of evaluations of `func`. If `n_start` &gt; 0</span>
-<span class="sd">        only `maxiter - n_start` iterations are used.</span>
+<span class="sd">        only `maxiter - n_start` additional evaluations of `func` are</span>
+<span class="sd">        made that are guided by the surrogate model.</span>
 
 <span class="sd">    * `n_start` [int, default=10]:</span>
 <span class="sd">        Number of random points to draw before fitting `base_estimator`</span>
-<span class="sd">        for the first time. If `n_start &gt; maxiter` this degrades to</span>
+<span class="sd">        for the first time. If `n_start = maxiter` this degrades to</span>
 <span class="sd">        a random search for the minimum.</span>
 
 <span class="sd">    * `n_points` [int, default=20]:</span>
