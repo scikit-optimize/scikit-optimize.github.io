@@ -1109,6 +1109,21 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DecisionTreeRegressor that supports `return_std`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">presort</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="n">splitter</span><span class="p">,</span>
+            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+            <span class="n">presort</span><span class="o">=</span><span class="n">presort</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict continuous output for `X`.</span>
@@ -1139,7 +1154,9 @@ table {
                     <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
+            <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="o">**</span><span class="mf">0.5</span>
 
         <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
@@ -1165,7 +1182,7 @@ table {
             
   <div class="item">
     <div class="name def" id="skopt.learning.DecisionTreeRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, criterion=&#39;mse&#39;, splitter=&#39;best&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, presort=False)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, criterion=&#39;mse&#39;, splitter=&#39;best&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, presort=False, min_variance=0.0)</p>
     </div>
     
 
@@ -1175,28 +1192,20 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.DecisionTreeRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.DecisionTreeRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-             <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span>
-             <span class="n">splitter</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span>
-             <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-             <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">presort</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">presort</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
-        <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
-        <span class="n">splitter</span><span class="o">=</span><span class="n">splitter</span><span class="p">,</span>
+        <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="n">splitter</span><span class="p">,</span>
         <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
         <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
         <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
         <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
-        <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span>
-        <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="n">presort</span><span class="o">=</span><span class="n">presort</span><span class="p">)</span>
+        <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+        <span class="n">presort</span><span class="o">=</span><span class="n">presort</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1752,7 +1761,9 @@ and returns a transformed version of X.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                 <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
+        <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="o">**</span><span class="mf">0.5</span>
     <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -1948,6 +1959,16 @@ It is also known as the Gini importance.</p>
 </div>
 
             </div>
+            <div class="item">
+            <p id="skopt.learning.DecisionTreeRegressor.min_variance" class="name">var <span class="ident">min_variance</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
       </div>
       
@@ -1963,6 +1984,24 @@ It is also known as the Gini importance.</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ExtraTreesRegressor that supports `return_std`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+            <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict continuous output for X.</span>
@@ -1992,7 +2031,8 @@ It is also known as the Gini importance.</p>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
 
         <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
@@ -2022,7 +2062,7 @@ It is also known as the Gini importance.</p>
             
   <div class="item">
     <div class="name def" id="skopt.learning.ExtraTreesRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, n_estimators=10, criterion=&#39;mse&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#39;auto&#39;, max_leaf_nodes=None, bootstrap=False, oob_score=False, n_jobs=1, random_state=None, verbose=0, warm_start=False)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, n_estimators=10, criterion=&#39;mse&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#39;auto&#39;, max_leaf_nodes=None, bootstrap=False, oob_score=False, n_jobs=1, random_state=None, verbose=0, warm_start=False, min_variance=0.0)</p>
     </div>
     
 
@@ -2032,41 +2072,23 @@ It is also known as the Gini importance.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.ExtraTreesRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.ExtraTreesRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-             <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-             <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span>
-             <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-             <span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">bootstrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-             <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
-        <span class="n">base_estimator</span><span class="o">=</span><span class="n">ExtraTreeRegressor</span><span class="p">(),</span>
-        <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span>
-        <span class="n">estimator_params</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;criterion&quot;</span><span class="p">,</span> <span class="s2">&quot;max_depth&quot;</span><span class="p">,</span> <span class="s2">&quot;min_samples_split&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">,</span> <span class="s2">&quot;min_weight_fraction_leaf&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;max_features&quot;</span><span class="p">,</span> <span class="s2">&quot;max_leaf_nodes&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;random_state&quot;</span><span class="p">),</span>
-        <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span>
-        <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-        <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_split</span> <span class="o">=</span> <span class="n">min_samples_split</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">min_samples_leaf</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_weight_fraction_leaf</span> <span class="o">=</span> <span class="n">min_weight_fraction_leaf</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_features</span> <span class="o">=</span> <span class="n">max_features</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_leaf_nodes</span> <span class="o">=</span> <span class="n">max_leaf_nodes</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+        <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+        <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+        <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+        <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+        <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2489,7 +2511,8 @@ and returns a transformed version of X.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                 <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
     <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -2679,6 +2702,16 @@ component of a nested object.</p>
    feature).</p>
 <h2>Returns</h2>
 <p>feature_importances_ : array, shape = [n_features]</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.learning.ExtraTreesRegressor.min_variance" class="name">var <span class="ident">min_variance</span></p>
+            
+
+            
+  
   <div class="source_cont">
 </div>
 
@@ -3197,6 +3230,24 @@ component of a nested object.</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RandomForestRegressor that supports `return_std`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+            <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict continuous output for X.</span>
@@ -3226,7 +3277,8 @@ component of a nested object.</p>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
         <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -3255,7 +3307,7 @@ component of a nested object.</p>
             
   <div class="item">
     <div class="name def" id="skopt.learning.RandomForestRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, n_estimators=10, criterion=&#39;mse&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#39;auto&#39;, max_leaf_nodes=None, bootstrap=True, oob_score=False, n_jobs=1, random_state=None, verbose=0, warm_start=False)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, n_estimators=10, criterion=&#39;mse&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=&#39;auto&#39;, max_leaf_nodes=None, bootstrap=True, oob_score=False, n_jobs=1, random_state=None, verbose=0, warm_start=False, min_variance=0.0)</p>
     </div>
     
 
@@ -3265,41 +3317,23 @@ component of a nested object.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.RandomForestRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.RandomForestRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-             <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-             <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span>
-             <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-             <span class="n">max_features</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">bootstrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-             <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-             <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
-        <span class="n">base_estimator</span><span class="o">=</span><span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
-        <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span>
-        <span class="n">estimator_params</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;criterion&quot;</span><span class="p">,</span> <span class="s2">&quot;max_depth&quot;</span><span class="p">,</span> <span class="s2">&quot;min_samples_split&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">,</span> <span class="s2">&quot;min_weight_fraction_leaf&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;max_features&quot;</span><span class="p">,</span> <span class="s2">&quot;max_leaf_nodes&quot;</span><span class="p">,</span>
-                          <span class="s2">&quot;random_state&quot;</span><span class="p">),</span>
-        <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span>
-        <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-        <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_split</span> <span class="o">=</span> <span class="n">min_samples_split</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">min_samples_leaf</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_weight_fraction_leaf</span> <span class="o">=</span> <span class="n">min_weight_fraction_leaf</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_features</span> <span class="o">=</span> <span class="n">max_features</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">max_leaf_nodes</span> <span class="o">=</span> <span class="n">max_leaf_nodes</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+        <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+        <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+        <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+        <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+        <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3722,7 +3756,8 @@ and returns a transformed version of X.</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
                 <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
     <span class="k">return</span> <span class="n">mean</span>
 </pre></div>
 
@@ -3912,6 +3947,16 @@ component of a nested object.</p>
    feature).</p>
 <h2>Returns</h2>
 <p>feature_importances_ : array, shape = [n_features]</p></div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.learning.RandomForestRegressor.min_variance" class="name">var <span class="ident">min_variance</span></p>
+            
+
+            
+  
   <div class="source_cont">
 </div>
 
