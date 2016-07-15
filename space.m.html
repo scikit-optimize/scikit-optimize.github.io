@@ -1193,7 +1193,7 @@ table {
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lb</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Dimension</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Dimension</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for search space dimensions.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -1331,7 +1331,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1351,7 +1351,6 @@ table {
             <span class="n">prior</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">))</span>
 
         <span class="c1"># XXX check that sum(prior) == 1</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="n">prior</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -1403,7 +1402,7 @@ table {
                 <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
 
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
+                <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
                 <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
@@ -1565,7 +1564,7 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.Categorical', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.Categorical" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1585,7 +1584,6 @@ table {
             <span class="n">prior</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">))</span>
 
         <span class="c1"># XXX check that sum(prior) == 1</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="n">prior</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -1620,7 +1618,7 @@ table {
             
   <div class="item">
     <div class="name def" id="skopt.space.Categorical.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, *categories)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, categories, prior=None)</p>
     </div>
     
 
@@ -1642,7 +1640,7 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.Categorical.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.Categorical.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1822,7 +1820,7 @@ original space.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.Dimension', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.Dimension" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Dimension</span><span class="p">:</span>
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Dimension</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for search space dimensions.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -2225,6 +2223,10 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Integer.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.size">size</a></code>
+    </p>
 
             
   
@@ -2245,10 +2247,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Integer.transformed_size" class="name">var <span class="ident">transformed_size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.transformed_size">transformed_size</a></code>
-    </p>
 
             
   
@@ -2535,6 +2533,10 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Real.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.size">size</a></code>
+    </p>
 
             
   
@@ -2555,10 +2557,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Real.transformed_size" class="name">var <span class="ident">transformed_size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.transformed_size">transformed_size</a></code>
-    </p>
 
             
   
@@ -2609,7 +2607,7 @@ orignal space.</p></div>
                 <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
 
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
+                <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
                 <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
@@ -2807,7 +2805,7 @@ orignal space.</p></div>
               <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">str</span><span class="p">)):</span>
             <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
+            <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
             <span class="n">_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dim</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Real</span><span class="p">):</span>
