@@ -1,4 +1,6 @@
 
+# Bayesian optimisation
+
 
 ```python
 import numpy as np
@@ -64,41 +66,41 @@ for n_iter in range(5):
 ```
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_0.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_0.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_1.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_1.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_2.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_2.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_3.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_3.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_4.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_4.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_5.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_5.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_6.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_6.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_7.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_7.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_8.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_8.png)
 
 
 
-![png](Bayesian%20optimisation_files/Bayesian%20optimisation_2_9.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_3_9.png)
 
