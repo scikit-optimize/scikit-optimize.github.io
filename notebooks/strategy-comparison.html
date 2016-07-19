@@ -1102,7 +1102,7 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x1059544e0&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f23ac386588&gt;
 </pre></div>
 
 
@@ -1179,7 +1179,7 @@ models. This makes the comparison more robust against models that get
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">func_vals</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
 
-<span class="c1"># maximum number of allowed calls to `branin`</span>
+<span class="c1"># Maximum number of allowed calls to `branin`</span>
 <span class="n">max_iterations</span> <span class="o">=</span> <span class="mi">80</span>
 
 <span class="c1"># Random search</span>
@@ -1190,10 +1190,10 @@ models. This makes the comparison more robust against models that get
 <span class="n">forest_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span>
                               <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
 
-<span class="c1"># Extra trees based surrogate model</span>
+<span class="c1"># Extra trees </span>
 <span class="n">et</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 <span class="n">et_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">et</span><span class="p">,</span>
-                              <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
+                          <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
 
 <span class="c1"># Gaussian processes</span>
 <span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">Matern</span><span class="p">(</span><span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">),</span> 

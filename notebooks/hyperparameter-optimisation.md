@@ -99,9 +99,7 @@ print("""Best parameters:
 
 ```python
 from skopt import forest_minimize
-from skopt.learning import ExtraTreesRegressor
-base_estimator = ExtraTreesRegressor(n_estimators=100, min_samples_leaf=3, random_state=0)
-res_forest = forest_minimize(objective, space, base_estimator=base_estimator, maxiter=50, random_state=0)
+res_forest = forest_minimize(objective, space, maxiter=50, random_state=0)
 ```
 
 

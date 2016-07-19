@@ -1305,7 +1305,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;rf&#39;, maxiter=100, n_points=100, n_start=10, random_state=None)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, maxiter=100, n_points=100, n_start=10, random_state=None)</p>
     </div>
     
 
@@ -1338,7 +1338,7 @@ minimum of <code>func</code> with as few evaluations as possible.</p>
 </ul>
 </li>
 <li>
-<p><code>base_estimator</code> [string or <code>Regressor</code>, default=<code>"rf"</code>]:
+<p><code>base_estimator</code> [string or <code>Regressor</code>, default=<code>"et"</code>]:
     The regressor to use as surrogate model. Can be either</p>
 <ul>
 <li><code>"rf"</code> for random forest regressor</li>
@@ -1397,7 +1397,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.forest_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                     <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
@@ -1424,7 +1424,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    * `base_estimator` [string or `Regressor`, default=`&quot;rf&quot;`]:</span>
+<span class="sd">    * `base_estimator` [string or `Regressor`, default=`&quot;et&quot;`]:</span>
 <span class="sd">        The regressor to use as surrogate model. Can be either</span>
 
 <span class="sd">        - `&quot;rf&quot;` for random forest regressor</span>
@@ -1481,15 +1481,17 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                              <span class="s2">&quot; are: &#39;rf&#39;, &#39;et&#39; or &#39;dt&#39;, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;rf&quot;</span><span class="p">:</span>
-            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                                   <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;et&quot;</span><span class="p">:</span>
-            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                                 <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                                                  <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;dt&quot;</span><span class="p">:</span>
-            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>

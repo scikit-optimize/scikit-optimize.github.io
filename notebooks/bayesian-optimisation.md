@@ -159,7 +159,7 @@ res
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
-         space: <skopt.space.Space object at 0x7f5ad9bc0978>
+         space: <skopt.space.Space object at 0x7f387a2c5be0>
              x: array([-0.29052129])
        x_iters: array([[-0.33191198],
            [-1.6864524 ],

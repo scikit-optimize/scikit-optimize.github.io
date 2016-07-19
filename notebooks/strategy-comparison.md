@@ -19,7 +19,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x1059544e0>
+    <matplotlib.figure.Figure at 0x7f23ac386588>
 
 
 Bayesian optimisation or sequential model-based optimisation uses a surrogate model
@@ -112,7 +112,7 @@ branin_ = partial(branin, noise_level=noise_level)
 def evaluate(minimizer, n_iter=20):
     return [minimizer(random_state=n).func_vals for n in range(n_iter)]
 
-# maximum number of allowed calls to `branin`
+# Maximum number of allowed calls to `branin`
 max_iterations = 80
 
 # Random search
@@ -123,10 +123,10 @@ rf = RandomForestRegressor(n_estimators=100, min_samples_leaf=3, random_state=9)
 forest_res = evaluate(partial(forest_minimize, branin_, bounds, base_estimator=rf,
                               maxiter=max_iterations))
 
-# Extra trees based surrogate model
+# Extra trees 
 et = ExtraTreesRegressor(n_estimators=100, min_samples_leaf=3, random_state=9)
 et_res = evaluate(partial(forest_minimize, branin_, bounds, base_estimator=et,
-                              maxiter=max_iterations))
+                          maxiter=max_iterations))
 
 # Gaussian processes
 gp = GaussianProcessRegressor(kernel=Matern(length_scale_bounds="fixed"), 
