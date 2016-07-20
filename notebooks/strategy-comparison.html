@@ -1066,6 +1066,7 @@ table {
         <li class="mono"><a href="../acquisition.m.html">skopt.acquisition</a></li>
         <li class="mono"><a href="../benchmarks.m.html">skopt.benchmarks</a></li>
         <li class="mono"><a href="../learning/index.html">skopt.learning</a></li>
+        <li class="mono"><a href="../plots.m.html">skopt.plots</a></li>
         <li class="mono"><a href="../space.m.html">skopt.space</a></li>
       </ul>
     </li>
@@ -1088,21 +1089,17 @@ table {
           
           <h1>Comparing surrogate models</h1>
 <p>Tim Head, July 2016</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">cycle</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">set_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f23ac386588&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f9820583320&gt;
 </pre></div>
 
 
@@ -1121,35 +1118,36 @@ a real world application this function would be unknown and expensive to evaluat
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <span class="n">_branin</span>
 
 <span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">_branin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
+    <span class="k">return</span> <span class="n">_branin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_branin</span><span class="p">():</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+
+<span class="k">def</span> <span class="nf">plot_branin</span><span class="p">():</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
     <span class="n">x1_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
     <span class="n">x2_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
     <span class="n">x_ax</span><span class="p">,</span> <span class="n">y_ax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x1_values</span><span class="p">,</span> <span class="n">x2_values</span><span class="p">)</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">x_ax</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_ax</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span>
-
     <span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">branin</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">],</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 
     <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x_ax</span><span class="p">,</span> <span class="n">y_ax</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span>
-                       <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span>
-                       <span class="n">label</span><span class="o">=</span><span class="s1">&#39;branin&#39;</span><span class="p">)</span>
+                       <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> 
+                                    <span class="n">vmax</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
 
-    <span class="n">minima</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(((</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">12.275</span><span class="p">),</span> <span class="p">(</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">2.275</span><span class="p">),</span> <span class="p">(</span><span class="mf">9.42478</span><span class="p">,</span> <span class="mf">2.475</span><span class="p">)))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">minima</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">minima</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r*&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Minima&#39;</span><span class="p">)</span>
+    <span class="n">minima</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">12.275</span><span class="p">],</span> <span class="p">[</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">2.275</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.42478</span><span class="p">,</span> <span class="mf">2.475</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">minima</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">minima</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Minima&quot;</span><span class="p">)</span>
 
     <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
     <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;f(x)&quot;</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X1&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;X2&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
 
 <span class="n">plot_branin</span><span class="p">()</span>
@@ -1157,7 +1155,7 @@ a real world application this function would be unknown and expensive to evaluat
 
 
 <p><img alt="png" src="strategy-comparison_files/strategy-comparison_4_0.png" /></p>
-<p>This shows the value of the two dimensional branin function and the three minima.</p>
+<p>This shows the value of the two-dimensional branin function and the three minima.</p>
 <h1>Objective</h1>
 <p>The objective of this example is to find one of these minima in as few iterations
 as possible. One iteration is defined as one call to the branin function.</p>
@@ -1165,79 +1163,40 @@ as possible. One iteration is defined as one call to the branin function.</p>
 random number generator. Then compare the average performance of these
 models. This makes the comparison more robust against models that get
 "lucky".</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
-<span class="kn">from</span> <span class="nn">skopt.learning</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">ExtraTreesRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Matern</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
 
 <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
-<span class="n">noise_level</span> <span class="o">=</span> <span class="mf">2.</span>
-<span class="n">branin_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">)</span>
+<span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">n_calls</span> <span class="o">=</span> <span class="mi">80</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">func_vals</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
-
-<span class="c1"># Maximum number of allowed calls to `branin`</span>
-<span class="n">max_iterations</span> <span class="o">=</span> <span class="mi">80</span>
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> 
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
 
 <span class="c1"># Random search</span>
-<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">dummy_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
-
-<span class="c1"># Random forest</span>
-<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">forest_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span>
-                              <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
-
-<span class="c1"># Extra trees </span>
-<span class="n">et</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">et_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">et</span><span class="p">,</span>
-                          <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
+<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">dummy_minimize</span><span class="p">)</span> 
 
 <span class="c1"># Gaussian processes</span>
-<span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">Matern</span><span class="p">(</span><span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">),</span> 
-                              <span class="n">alpha</span><span class="o">=</span><span class="n">noise_level</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">gp_res</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">gp_minimize</span><span class="p">,</span> <span class="n">branin_</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>
-                          <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iterations</span><span class="p">))</span>
+<span class="n">gp_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">gp_minimize</span><span class="p">)</span>
+
+<span class="c1"># Random forest</span>
+<span class="n">rf_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;rf&quot;</span><span class="p">))</span>
+
+<span class="c1"># Extra trees </span>
+<span class="n">et_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">))</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
 
-    <span class="n">averages</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">results_</span><span class="p">),</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">cycle</span><span class="p">((</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">))):</span>
-        <span class="n">average</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results_</span><span class="p">:</span>
-            <span class="n">best_so_far</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)):</span>
-                <span class="n">best_so_far</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">res</span><span class="p">[:</span><span class="n">n</span><span class="p">]))</span>
-
-            <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">best_so_far</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.21</span><span class="p">)</span>
-            <span class="n">average</span> <span class="o">+=</span> <span class="n">best_so_far</span>
-
-        <span class="n">average</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_</span><span class="p">)</span>
-        <span class="n">averages</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">method</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">average</span><span class="p">))</span>
-
-    <span class="c1"># draw last to make sure they are on top of everything</span>
-    <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">average</span> <span class="ow">in</span> <span class="n">averages</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">average</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
-
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">minimum</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-               <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True minimum&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;min f(x)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">plot_results</span><span class="p">([(</span><span class="s1">&#39;Random search&#39;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
-              <span class="p">(</span><span class="s1">&#39;Gaussian Process&#39;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
-              <span class="p">(</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">,</span> <span class="n">forest_res</span><span class="p">),</span>
-              <span class="p">(</span><span class="s1">&#39;Extra Trees&#39;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">)])</span>
+<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
+                 <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
 </pre></div>
 
 

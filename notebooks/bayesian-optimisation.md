@@ -66,19 +66,17 @@ def f(x, noise_level=noise_level):
 
 
 ```python
-def plot_f(f, noise_level):
-    # Plot f(x) + contours
-    x = np.linspace(-2, 2, 400).reshape(-1, 1)
-    fx = [f(x_i, noise_level=0.0) for x_i in x]
-    plt.plot(x, fx, "r--", label="True (unknown)")
-    plt.fill(np.concatenate([x, x[::-1]]),
-             np.concatenate(([fx_i - 1.9600 * noise_level for fx_i in fx], 
-                             [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
-             alpha=.2, fc="r", ec="None")
-    plt.legend()
-    plt.plot()
-    
-plot_f(f, noise_level)
+# Plot f(x) + contours
+x = np.linspace(-2, 2, 400).reshape(-1, 1)
+fx = [f(x_i, noise_level=0.0) for x_i in x]
+plt.plot(x, fx, "r--", label="True (unknown)")
+plt.fill(np.concatenate([x, x[::-1]]),
+         np.concatenate(([fx_i - 1.9600 * noise_level for fx_i in fx], 
+                         [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
+         alpha=.2, fc="r", ec="None")
+plt.legend()
+plt.grid()
+plt.show()
 ```
 
 
@@ -100,9 +98,9 @@ res = gp_minimize(f,                  # the function to minimize
                   [(-2.0, 2.0)],      # the bounds on each dimension of x
                   acq="LCB",          # the acquisition function (optional)
                   base_estimator=gp,  # a GP estimator (optional)
-                  maxiter=10,         # the number of evaluations of f
+                  maxiter=15,         # the number of evaluations of f
                   n_start=1,          # the number of random evaluations at initialization
-                  random_state=1)
+                  random_state=777)
 ```
 
 Accordingly, the approximated minimum is found to be:
@@ -115,7 +113,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=-0.2905, f(x^*)=-0.9913'
+    'x^*=-0.3054, f(x^*)=-0.9880'
 
 
 
@@ -137,9 +135,10 @@ res
 
 
 
-           fun: -0.99126837591834005
-     func_vals: array([-0.66208998,  0.04897941, -0.32364866, -0.09243675,  0.90198354,
-            0.36221553,  0.13395597,  0.09876704, -0.58157711, -0.99126838])
+           fun: -0.98797691126302833
+     func_vals: array([ 0.19928047,  0.05426539,  0.74588383, -0.09170902,  0.02286328,
+           -0.00743607,  0.39523305, -0.80869739, -0.63804929, -0.98797691,
+           -0.90691442, -0.68555016, -0.93611953, -0.93899462, -0.84303905])
         models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
@@ -158,67 +157,97 @@ res
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
-         space: <skopt.space.Space object at 0x7f387a2c5be0>
-             x: array([-0.29052129])
-       x_iters: array([[-0.33191198],
-           [-1.6864524 ],
-           [ 1.00249728],
-           [ 1.99408203],
-           [ 0.26221694],
-           [-0.85449147],
-           [ 1.43749331],
-           [-1.99685383],
-           [-0.42448745],
-           [-0.29052129]])
+         space: <skopt.space.Space object at 0x7f8e40a64208>
+             x: array([-0.30543376])
+       x_iters: array([[-1.38934506],
+           [ 1.99823817],
+           [ 0.36266965],
+           [-1.98571246],
+           [ 1.33478429],
+           [-0.6192673 ],
+           [-0.94605405],
+           [-0.27569283],
+           [-0.17939988],
+           [-0.30543376],
+           [-0.32830253],
+           [-0.33260938],
+           [-0.29898535],
+           [-0.28619493],
+           [-0.28942012]])
 
 
 
-Together these attributes can be used to visually inspect the results of the minimization:
+Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:
+
+
+```python
+from skopt.plots import plot_convergence
+plot_convergence(res)
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f8e3e6ea160>
+
+
+
+
+![png](bayesian-optimisation_files/bayesian-optimisation_16_1.png)
+
 
 
 ```python
 from skopt.acquisition import gaussian_lcb
 
-def plot_results(f, noise_level, res):
-    # Plot f(x) + contours
-    x = np.linspace(-2, 2, 400).reshape(-1, 1)
-    fx = [f(x_i, noise_level=0.0) for x_i in x]
-    plt.plot(x, fx, "r--", label="True (unknown)")
-    plt.fill(np.concatenate([x, x[::-1]]),
-             np.concatenate(([fx_i - 1.9600 * noise_level for fx_i in fx], 
-                             [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
-             alpha=.2, fc="r", ec="None")
-    
-    # Plot GP(x) + concours
-    gp = res.models[-1]
-    y_pred, sigma = gp.predict(x, return_std=True)
+# Plot f(x) + contours
+x = np.linspace(-2, 2, 400).reshape(-1, 1)
+fx = [f(x_i, noise_level=0.0) for x_i in x]
+plt.plot(x, fx, "r--", label="True (unknown)")
+plt.fill(np.concatenate([x, x[::-1]]),
+         np.concatenate(([fx_i - 1.9600 * noise_level for fx_i in fx], 
+                         [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
+         alpha=.2, fc="r", ec="None")
 
-    plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
-    plt.fill(np.concatenate([x, x[::-1]]),
-             np.concatenate([y_pred - 1.9600 * sigma, 
-                             (y_pred + 1.9600 * sigma)[::-1]]),
-             alpha=.2, fc="g", ec="None")
+# Plot GP(x) + concours
+gp = res.models[-1]
+y_pred, sigma = gp.predict(x, return_std=True)
 
-    # Plot sampled points
-    plt.plot(res.x_iters, 
-             res.func_vals, 
-             "r.", markersize=15, label="Observations")
+plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
+plt.fill(np.concatenate([x, x[::-1]]),
+         np.concatenate([y_pred - 1.9600 * sigma, 
+                         (y_pred + 1.9600 * sigma)[::-1]]),
+         alpha=.2, fc="g", ec="None")
 
-    # Plot LCB(x) + next query point
-    acq = gaussian_lcb(x, gp)
-    plt.plot(x, gaussian_lcb(x, gp), "b", label="LCB(x)")
-    next_x = np.argmin(acq)
-    plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
+# Plot sampled points
+plt.plot(res.x_iters, 
+         res.func_vals, 
+         "r.", markersize=15, label="Observations")
 
-    plt.title(r"$x^* = %.2f, f(x^*) = %.2f$" % (res.x, res.fun))
-    plt.legend(loc="best")
+# Plot LCB(x) + next query point
+acq = gaussian_lcb(x, gp)
+plt.plot(x, gaussian_lcb(x, gp), "b", label="LCB(x)")
+next_x = np.argmin(acq)
+plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
 
-    plt.show()
-    
-plot_results(f, noise_level, res=res)
+plt.title(r"$x^* = %.2f, f(x^*) = %.2f$" % (res.x, res.fun))
+plt.legend(loc="best")
+plt.grid()
+
+plt.show()
 ```
 
 
-![png](bayesian-optimisation_files/bayesian-optimisation_16_0.png)
+![png](bayesian-optimisation_files/bayesian-optimisation_17_0.png)
 

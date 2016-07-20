@@ -1066,6 +1066,7 @@ table {
         <li class="mono"><a href="../acquisition.m.html">skopt.acquisition</a></li>
         <li class="mono"><a href="../benchmarks.m.html">skopt.benchmarks</a></li>
         <li class="mono"><a href="../learning/index.html">skopt.learning</a></li>
+        <li class="mono"><a href="../plots.m.html">skopt.plots</a></li>
         <li class="mono"><a href="../space.m.html">skopt.space</a></li>
       </ul>
     </li>
@@ -1142,19 +1143,17 @@ controlling the exploration-exploitation trade-off.
 
 
 <p><strong>Note.</strong> In <code>skopt</code>, functions $f$ are assumed to take as input a 1D vector $x$ represented as an array-like and to return a scalar $f(x)$.</p>
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_f</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">):</span>
-    <span class="c1"># Plot f(x) + contours</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-             <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
-                             <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
-             <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-
-<span class="n">plot_f</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="c1"># Plot f(x) + contours</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
@@ -1171,9 +1170,9 @@ controlling the exploration-exploitation trade-off.
                   <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
                   <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>          <span class="c1"># the acquisition function (optional)</span>
                   <span class="n">base_estimator</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="c1"># a GP estimator (optional)</span>
-                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f</span>
+                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f</span>
                   <span class="n">n_start</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>          <span class="c1"># the number of random evaluations at initialization</span>
-                  <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
 </pre></div>
 
 
@@ -1182,7 +1181,7 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;x^*=-0.2905, f(x^*)=-0.9913&#39;
+<div class="codehilite"><pre><span></span>&#39;x^*=-0.3054, f(x^*)=-0.9880&#39;
 </pre></div>
 
 
@@ -1200,9 +1199,10 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>       fun: -0.99126837591834005
- func_vals: array([-0.66208998,  0.04897941, -0.32364866, -0.09243675,  0.90198354,
-        0.36221553,  0.13395597,  0.09876704, -0.58157711, -0.99126838])
+<div class="codehilite"><pre><span></span>       fun: -0.98797691126302833
+ func_vals: array([ 0.19928047,  0.05426539,  0.74588383, -0.09170902,  0.02286328,
+       -0.00743607,  0.39523305, -0.80869739, -0.63804929, -0.98797691,
+       -0.90691442, -0.68555016, -0.93611953, -0.93899462, -0.84303905])
     models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
@@ -1221,66 +1221,89 @@ controlling the exploration-exploitation trade-off.
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0)]
-     space: &lt;skopt.space.Space object at 0x7f387a2c5be0&gt;
-         x: array([-0.29052129])
-   x_iters: array([[-0.33191198],
-       [-1.6864524 ],
-       [ 1.00249728],
-       [ 1.99408203],
-       [ 0.26221694],
-       [-0.85449147],
-       [ 1.43749331],
-       [-1.99685383],
-       [-0.42448745],
-       [-0.29052129]])
+     space: &lt;skopt.space.Space object at 0x7f8e40a64208&gt;
+         x: array([-0.30543376])
+   x_iters: array([[-1.38934506],
+       [ 1.99823817],
+       [ 0.36266965],
+       [-1.98571246],
+       [ 1.33478429],
+       [-0.6192673 ],
+       [-0.94605405],
+       [-0.27569283],
+       [-0.17939988],
+       [-0.30543376],
+       [-0.32830253],
+       [-0.33260938],
+       [-0.29898535],
+       [-0.28619493],
+       [-0.28942012]])
 </pre></div>
 
 
-<p>Together these attributes can be used to visually inspect the results of the minimization:</p>
+<p>Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
+<span class="n">plot_convergence</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f8e3e6ea160&gt;
+</pre></div>
+
+
+<p><img alt="png" src="bayesian-optimisation_files/bayesian-optimisation_16_1.png" /></p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.acquisition</span> <span class="kn">import</span> <span class="n">gaussian_lcb</span>
 
-<span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
-    <span class="c1"># Plot f(x) + contours</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-             <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
-                             <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
-             <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+<span class="c1"># Plot f(x) + contours</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Plot GP(x) + concours</span>
-    <span class="n">gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># Plot GP(x) + concours</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">r&quot;$\mu_{GP}(x)$&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-             <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">y_pred</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> 
-                             <span class="p">(</span><span class="n">y_pred</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-             <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">r&quot;$\mu_{GP}(x)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">y_pred</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> 
+                         <span class="p">(</span><span class="n">y_pred</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Plot sampled points</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> 
-             <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">,</span> 
-             <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+<span class="c1"># Plot sampled points</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> 
+         <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">,</span> 
+         <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Plot LCB(x) + next query point</span>
-    <span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">),</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;LCB(x)&quot;</span><span class="p">)</span>
-    <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="p">[</span><span class="n">acq</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="s2">&quot;b.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
+<span class="c1"># Plot LCB(x) + next query point</span>
+<span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">),</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;LCB(x)&quot;</span><span class="p">)</span>
+<span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="p">[</span><span class="n">acq</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="s2">&quot;b.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.2f</span><span class="s2">, f(x^*) = </span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.2f</span><span class="s2">, f(x^*) = </span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="png" src="bayesian-optimisation_files/bayesian-optimisation_16_0.png" /></p>
+<p><img alt="png" src="bayesian-optimisation_files/bayesian-optimisation_17_0.png" /></p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">

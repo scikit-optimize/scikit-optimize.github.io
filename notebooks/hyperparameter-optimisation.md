@@ -174,21 +174,14 @@ print("""Best parameters:
     - min_samples_leaf=8
 
 
-## Visualization
+## Convergence plot
 
 
 ```python
-n_points = 50
-
-best_gp = [-np.min(res_gp.func_vals[:i+1]) for i in range(n_points)]
-plt.plot(range(n_points), best_gp, label="GP-based search")
-best_forest = [-np.min(res_forest.func_vals[:i+1]) for i in range(n_points)]
-plt.plot(range(n_points), best_forest, label="Forest-based search")
-best_dummy = [-np.min(res_dummy.func_vals[:i+1]) for i in range(n_points)]
-plt.plot(range(n_points), best_dummy, label="Random search")
-plt.legend(loc="best")
-
-plt.show()
+from skopt.plots import plot_convergence
+plot_convergence(("gp_optimize", res_gp),
+                 ("forest_optimize", res_forest),
+                 ("dummy_optimize", res_dummy))
 ```
 
 
