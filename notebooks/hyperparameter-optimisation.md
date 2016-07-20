@@ -61,7 +61,7 @@ With these two pieces, we are now ready for sequential model-based optimisation.
 
 ```python
 from skopt import gp_minimize
-res_gp = gp_minimize(objective, space, maxiter=50, random_state=0)
+res_gp = gp_minimize(objective, space, n_calls=50, random_state=0)
 ```
 
 
@@ -99,7 +99,7 @@ print("""Best parameters:
 
 ```python
 from skopt import forest_minimize
-res_forest = forest_minimize(objective, space, maxiter=50, random_state=0)
+res_forest = forest_minimize(objective, space, n_calls=50, random_state=0)
 ```
 
 
@@ -139,7 +139,7 @@ As a baseline, let us also compare with random search in the space of hyper-para
 
 ```python
 from skopt import dummy_minimize
-res_dummy = dummy_minimize(objective, space, maxiter=50, random_state=0)
+res_dummy = dummy_minimize(objective, space, n_calls=50, random_state=0)
 ```
 
 
@@ -185,5 +185,12 @@ plot_convergence(("gp_optimize", res_gp),
 ```
 
 
-![png](hyperparameter-optimisation_files/hyperparameter-optimisation_21_0.png)
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f1c86c4c160>
+
+
+
+
+![png](hyperparameter-optimisation_files/hyperparameter-optimisation_21_1.png)
 

@@ -98,8 +98,8 @@ res = gp_minimize(f,                  # the function to minimize
                   [(-2.0, 2.0)],      # the bounds on each dimension of x
                   acq="LCB",          # the acquisition function (optional)
                   base_estimator=gp,  # a GP estimator (optional)
-                  maxiter=15,         # the number of evaluations of f
-                  n_start=1,          # the number of random evaluations at initialization
+                  n_calls=15,         # the number of evaluations of f
+                  n_random_starts=1,          # the number of random evaluations at initialization
                   random_state=777)
 ```
 
@@ -168,7 +168,7 @@ res
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
-         space: <skopt.space.Space object at 0x7f8e40a64208>
+         space: <skopt.space.Space object at 0x7fbe79100fd0>
              x: array([-0.30543376])
        x_iters: array([[-1.38934506],
            [ 1.99823817],
@@ -199,7 +199,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f8e3e6ea160>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7fbe6985fe48>
 
 
 

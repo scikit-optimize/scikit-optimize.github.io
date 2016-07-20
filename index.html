@@ -1174,7 +1174,7 @@ python setup.py develop
       
   <div class="item">
     <div class="name def" id="skopt.dummy_minimize">
-    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, maxiter=1000, random_state=None)</p>
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=1000, random_state=None)</p>
     </div>
     
 
@@ -1203,9 +1203,8 @@ python setup.py develop
 </ul>
 </li>
 <li>
-<p><code>maxiter</code> [int, default=1000]:
-    Number of iterations to find the minimum. In other words, the
-    number of function evaluations.</p>
+<p><code>n_calls</code> [int, default=100]:
+    Number of calls to <code>func</code> to find the minimum.</p>
 </li>
 <li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
@@ -1234,7 +1233,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dummy_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1255,9 +1254,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    * `maxiter` [int, default=1000]:</span>
-<span class="sd">        Number of iterations to find the minimum. In other words, the</span>
-<span class="sd">        number of function evaluations.</span>
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func` to find the minimum.</span>
 
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
@@ -1281,13 +1279,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="n">init_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">init_y</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">)])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">)])</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
     <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -1308,7 +1306,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, maxiter=100, n_points=100, n_start=10, random_state=None)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, random_state=None)</p>
     </div>
     
 
@@ -1356,17 +1354,16 @@ a regressor which returns the mean and standard deviation when
 making predictions.</p>
 </li>
 <li>
-<p><code>maxiter</code> [int, default=100]:
-    Number of iterations used to find the minimum. This corresponds
-    to the total number of evaluations of <code>func</code>. If <code>n_start</code> &gt; 0
-    only <code>maxiter - n_start</code> additional evaluations of <code>func</code> are
-    made that are guided by the surrogate model.</p>
+<p><code>n_calls</code> [int, default=100]:
+    Number of calls to <code>func</code>.
+    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
+    additional evaluations of <code>func</code> are made that are guided
+    by the <code>base_estimator</code>.</p>
 </li>
 <li>
-<p><code>n_start</code> [int, default=10]:
-    Number of random points to draw before fitting <code>base_estimator</code>
-    for the first time. If <code>n_start = maxiter</code> this degrades to
-    a random search for the minimum.</p>
+<p><code>n_random_starts</code> [int, default=10]:
+    Number of evaluations of <code>func</code> with random initialization points
+    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>n_points</code> [int, default=1000]:
@@ -1400,8 +1397,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.forest_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -1441,16 +1438,15 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        a regressor which returns the mean and standard deviation when</span>
 <span class="sd">        making predictions.</span>
 
-<span class="sd">    * `maxiter` [int, default=100]:</span>
-<span class="sd">        Number of iterations used to find the minimum. This corresponds</span>
-<span class="sd">        to the total number of evaluations of `func`. If `n_start` &gt; 0</span>
-<span class="sd">        only `maxiter - n_start` additional evaluations of `func` are</span>
-<span class="sd">        made that are guided by the surrogate model.</span>
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func`.</span>
+<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
+<span class="sd">        additional evaluations of `func` are made that are guided</span>
+<span class="sd">        by the `base_estimator`.</span>
 
-<span class="sd">    * `n_start` [int, default=10]:</span>
-<span class="sd">        Number of random points to draw before fitting `base_estimator`</span>
-<span class="sd">        for the first time. If `n_start = maxiter` this degrades to</span>
-<span class="sd">        a random search for the minimum.</span>
+<span class="sd">    * `n_random_starts` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with random initialization points</span>
+<span class="sd">        before approximating the `func` with `base_estimator`.</span>
 
 <span class="sd">    * `n_points` [int, default=1000]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
@@ -1503,8 +1499,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                              <span class="s2">&quot; be a string or a regressor instance.&quot;</span>
                              <span class="s2">&quot; &#39;</span><span class="si">%s</span><span class="s2">&#39; is neither.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span>
-                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span>
+    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 </pre></div>
 
@@ -1516,7 +1513,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, maxiter=100, n_points=20, n_start=10, random_state=None)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, random_state=None)</p>
     </div>
     
 
@@ -1554,17 +1551,16 @@ few evaluations as possible.</p>
     The regressor to use as surrogate model</p>
 </li>
 <li>
-<p><code>maxiter</code> [int, default=100]:
-    Number of iterations used to find the minimum. This corresponds
-    to the total number of evaluations of <code>func</code>. If <code>n_start</code> &gt; 0
-    only <code>maxiter - n_start</code> additional evaluations of <code>func</code> are
-    made that are guided by the surrogate model.</p>
+<p><code>n_calls</code> [int, default=100]:
+    Number of calls to <code>func</code>.
+    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
+    additional evaluations of <code>func</code> are made that are guided
+    by the <code>base_estimator</code>.</p>
 </li>
 <li>
-<p><code>n_start</code> [int, default=10]:
-    Number of random points to draw before fitting <code>base_estimator</code>
-    for the first time. If <code>n_start = maxiter</code> this degrades to
-    a random search for the minimum.</p>
+<p><code>n_random_starts</code> [int, default=10]:
+    Number of evaluations of <code>func</code> with random initialization points
+    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>n_points</code> [int, default=20]:
@@ -1598,8 +1594,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -1629,16 +1625,15 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `base_estimator` [`GradientBoostingQuantileRegressor`]:</span>
 <span class="sd">        The regressor to use as surrogate model</span>
 
-<span class="sd">    * `maxiter` [int, default=100]:</span>
-<span class="sd">        Number of iterations used to find the minimum. This corresponds</span>
-<span class="sd">        to the total number of evaluations of `func`. If `n_start` &gt; 0</span>
-<span class="sd">        only `maxiter - n_start` additional evaluations of `func` are</span>
-<span class="sd">        made that are guided by the surrogate model.</span>
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func`.</span>
+<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
+<span class="sd">        additional evaluations of `func` are made that are guided</span>
+<span class="sd">        by the `base_estimator`.</span>
 
-<span class="sd">    * `n_start` [int, default=10]:</span>
-<span class="sd">        Number of random points to draw before fitting `base_estimator`</span>
-<span class="sd">        for the first time. If `n_start = maxiter` this degrades to</span>
-<span class="sd">        a random search for the minimum.</span>
+<span class="sd">    * `n_random_starts` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with random initialization points</span>
+<span class="sd">        before approximating the `func` with `base_estimator`.</span>
 
 <span class="sd">    * `n_points` [int, default=20]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
@@ -1672,8 +1667,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">maxiter</span><span class="p">,</span>
-                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_start</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span>
+    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 </pre></div>
 
@@ -1685,7 +1681,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, maxiter=1000, n_points=500, n_start=10, n_restarts_optimizer=5, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, random_state=None)</p>
     </div>
     
 
@@ -1761,10 +1757,11 @@ lbfgs is run for 10 iterations optimizing the acquisition function
 over the Gaussian prior.</p>
 </li>
 <li>
-<p><code>maxiter</code> [int, default=1000]:
-    Number of iterations to find the minimum. Note that <code>n_start</code>
-    iterations are effectively discounted, such that total number of
-    function evaluations is at most <code>maxiter</code>.</p>
+<p><code>n_calls</code> [int, default=100]:
+    Number of calls to <code>func</code>.
+    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
+    additional evaluations of <code>func</code> are made that are guided
+    by the <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>n_points</code> [int, default=500]:
@@ -1772,8 +1769,9 @@ over the Gaussian prior.</p>
     Useless if search is set to <code>"lbfgs"</code>.</p>
 </li>
 <li>
-<p><code>n_start</code> [int, default=10]:
-    Number of random initialization points.</p>
+<p><code>n_random_starts</code> [int, default=10]:
+    Number of evaluations of <code>func</code> with random initialization points
+    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>n_restarts_optimizer</code> [int, default=10]:
@@ -1808,8 +1806,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-                <span class="n">n_start</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
 <span class="sd">    If every function evaluation is expensive, for instance</span>
@@ -1875,17 +1873,19 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        lbfgs is run for 10 iterations optimizing the acquisition function</span>
 <span class="sd">        over the Gaussian prior.</span>
 
-<span class="sd">    * `maxiter` [int, default=1000]:</span>
-<span class="sd">        Number of iterations to find the minimum. Note that `n_start`</span>
-<span class="sd">        iterations are effectively discounted, such that total number of</span>
-<span class="sd">        function evaluations is at most `maxiter`.</span>
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func`.</span>
+<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
+<span class="sd">        additional evaluations of `func` are made that are guided</span>
+<span class="sd">        by the `base_estimator`.</span>
 
 <span class="sd">    * `n_points` [int, default=500]:</span>
 <span class="sd">        Number of points to sample to determine the next &quot;best&quot; point.</span>
 <span class="sd">        Useless if search is set to `&quot;lbfgs&quot;`.</span>
 
-<span class="sd">    * `n_start` [int, default=10]:</span>
-<span class="sd">        Number of random initialization points.</span>
+<span class="sd">    * `n_random_starts` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with random initialization points</span>
+<span class="sd">        before approximating the `func` with `base_estimator`.</span>
 
 <span class="sd">    * `n_restarts_optimizer` [int, default=10]:</span>
 <span class="sd">        The number of restarts of the optimizer when `search` is `&quot;lbfgs&quot;`.</span>
@@ -1914,6 +1914,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
+
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
@@ -1923,8 +1924,17 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)),</span>
             <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected n_random_start &gt; 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_random_starts</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">n_random_starts</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected n_calls &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
+
+    <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_random_starts</span>
     <span class="c1"># First points</span>
-    <span class="n">Xi</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_start</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">yi</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1933,7 +1943,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Bayesian optimization loop</span>
     <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxiter</span> <span class="o">-</span> <span class="n">n_start</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_model_iter</span><span class="p">):</span>
         <span class="n">gp</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>

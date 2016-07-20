@@ -15,7 +15,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f9820583320>
+    <matplotlib.figure.Figure at 0x7f9a64e83828>
 
 
 Bayesian optimisation or sequential model-based optimisation uses a surrogate model
@@ -105,7 +105,7 @@ n_calls = 80
 
 ```python
 def run(minimizer, n_iter=30):
-    return [minimizer(func, bounds, maxiter=n_calls, random_state=n) 
+    return [minimizer(func, bounds, n_calls=n_calls, random_state=n) 
             for n in range(n_iter)]
 
 # Random search
@@ -133,7 +133,14 @@ plot_convergence(("dummy_minimize", dummy_res),
 ```
 
 
-![png](strategy-comparison_files/strategy-comparison_8_0.png)
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f9a367c65c0>
+
+
+
+
+![png](strategy-comparison_files/strategy-comparison_8_1.png)
 
 
 This plot shows the value of the minimum found (y axis) as a function of the number
