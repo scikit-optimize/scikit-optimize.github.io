@@ -1,5 +1,5 @@
 
-# Bayesian optimisation with `skopt`
+# Bayesian optimization with `skopt`
 
 Gilles Louppe, July 2016.
 
@@ -21,15 +21,15 @@ We are interested in solving $$x^* = \arg \min_x f(x)$$ under the constraints th
 - $f$ is expensive to evaluate;
 - evaluations $y = f(x)$ of may be noisy.
 
-**Disclaimer.** If you do not have these constraints, then there is certainly a better optimisation algorithm than Bayesian optimisation.
+**Disclaimer.** If you do not have these constraints, then there is certainly a better optimization algorithm than Bayesian optimization.
 
-## Bayesian optimisation loop
+## Bayesian optimization loop
 
 For $t=1:T$:
 
 1. Given observations $(x_i, y_i=f(x_i))$ for $i=1:t$, build a probabilistic model for the objective $f$. Integrate out all possible true functions, using Gaussian process regression.
    
-2. Optimise a cheap acquisition/utility function $u$ based on the posterior distribution for sampling the next point.
+2. optimize a cheap acquisition/utility function $u$ based on the posterior distribution for sampling the next point.
    $$x_{t+1} = \arg \min_x u(x)$$
    Exploit uncertainty to balance exploration against exploitation.
     
@@ -80,10 +80,10 @@ plt.show()
 ```
 
 
-![png](bayesian-optimisation_files/bayesian-optimisation_8_0.png)
+![png](bayesian-optimization_files/bayesian-optimization_8_0.png)
 
 
-Bayesian optimisation based on gaussian process regression is implemented in `skopt.gp_minimize` and can be carried out as follows:
+Bayesian optimization based on gaussian process regression is implemented in `skopt.gp_minimize` and can be carried out as follows:
 
 
 ```python
@@ -125,7 +125,7 @@ For further inspection of the results, attributes of the `res` named tuple provi
 - `x_iters` [array]: location of function evaluation for each
    iteration.
 - `func_vals` [array]: function value for each iteration.
-- `space` [Space]: the optimisation space.
+- `space` [Space]: the optimization space.
 
 
 ```python
@@ -204,7 +204,7 @@ plot_convergence(res)
 
 
 
-![png](bayesian-optimisation_files/bayesian-optimisation_16_1.png)
+![png](bayesian-optimization_files/bayesian-optimization_16_1.png)
 
 
 
@@ -249,5 +249,5 @@ plt.show()
 ```
 
 
-![png](bayesian-optimisation_files/bayesian-optimisation_17_0.png)
+![png](bayesian-optimization_files/bayesian-optimization_17_0.png)
 

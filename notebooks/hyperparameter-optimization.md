@@ -192,5 +192,5 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-![png](hyperparameter-optimisation_files/hyperparameter-optimisation_21_1.png)
+![png](hyperparameter-optimization_files/hyperparameter-optimization_21_1.png)
 

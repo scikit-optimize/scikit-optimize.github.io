@@ -18,7 +18,7 @@ plt.set_cmap("viridis")
     <matplotlib.figure.Figure at 0x7f9a64e83828>
 
 
-Bayesian optimisation or sequential model-based optimisation uses a surrogate model
+Bayesian optimization or sequential model-based optimization uses a surrogate model
 to model the expensive to evaluate function `func`. There are several choices
 for what kind of surrogate model to use. This example compares the performance of:
 
@@ -26,7 +26,7 @@ for what kind of surrogate model to use. This example compares the performance o
 * extra trees, and
 * random forests 
 
-as surrogate models. A purely random optimisation strategy is used as a baseline.
+as surrogate models. A purely random optimization strategy is used as a baseline.
 
 
 # Toy model

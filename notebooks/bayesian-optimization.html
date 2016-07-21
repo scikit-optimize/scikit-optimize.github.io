@@ -1075,9 +1075,9 @@ table {
     <li class="set"><h3><a href="#">Notebooks</a></h3>
       <ul>
         
-        <li><a href="https://scikit-optimize.github.io/notebooks/bayesian-optimisation.html">Bayesian optimisation</a></li>
+        <li><a href="https://scikit-optimize.github.io/notebooks/bayesian-optimization.html">Bayesian optimization</a></li>
         
-        <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimisation.html">Hyperparameter optimisation</a></li>
+        <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimization.html">Hyperparameter optimization</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/strategy-comparison.html">Strategy comparison</a></li>
       </ul>
@@ -1087,165 +1087,223 @@ table {
 
     <article id="content">
           
-          <h1>Tuning a scikit-learn estimator with <code>skopt</code></h1>
+          <h1>Bayesian optimization with <code>skopt</code></h1>
 <p>Gilles Louppe, July 2016.</p>
-<div class="codehilite"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
+
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 </pre></div>
 
 
 <h2>Problem statement</h2>
-<p>Tuning the hyper-parameters of a machine learning model is often carried out using an exhaustive exploration of (a subset of) the space all hyper-parameter configurations (e.g., using <code>sklearn.model_selection.GridSearchCV</code>), which often results in a very time consuming operation. </p>
-<p>In this notebook, we illustrate how <code>skopt</code> can be used to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.</p>
-<h2>Objective</h2>
-<p>The first step is to define the objective function we want to minimize, in this case the cross-validation mean absolute error of a gradient boosting regressor over the Boston dataset, as a function of its hyper-parameters:</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<p>We are interested in solving $$x^* = \arg \min_x f(x)$$ under the constraints that</p>
+<ul>
+<li>$f$ is a black box for which no closed form is known (nor its gradients);</li>
+<li>$f$ is expensive to evaluate;</li>
+<li>evaluations $y = f(x)$ of may be noisy.</li>
+</ul>
+<p><strong>Disclaimer.</strong> If you do not have these constraints, then there is certainly a better optimization algorithm than Bayesian optimization.</p>
+<h2>Bayesian optimization loop</h2>
+<p>For $t=1:T$:</p>
+<ol>
+<li>
+<p>Given observations $(x_i, y_i=f(x_i))$ for $i=1:t$, build a probabilistic model for the objective $f$. Integrate out all possible true functions, using Gaussian process regression.</p>
+</li>
+<li>
+<p>optimize a cheap acquisition/utility function $u$ based on the posterior distribution for sampling the next point.
+   $$x_{t+1} = \arg \min_x u(x)$$
+   Exploit uncertainty to balance exploration against exploitation.</p>
+</li>
+<li>
+<p>Sample the next observation $y_{t+1}$ at $x_{t+1}$.</p>
+</li>
+</ol>
+<h2>Acquisition functions</h2>
+<p>Acquisition functions $\text{u}(x)$ specify which sample $x$ should be tried next:</p>
+<ul>
+<li>Lower confidence bound: $\text{LCB}(x) = \mu_{GP}(x) + \kappa \sigma_{GP}(x)$;</li>
+<li>Probability of improvement: $-\text{PI}(x) = -P(f(x) \geq f(x_t^+) + \kappa) $;</li>
+<li>Expected improvement: $-\text{EI}(x) = -\mathbb{E} [f(x) - f(x_t^+)] $;</li>
+</ul>
+<p>where $x_t^+$ is the best point observed so far.</p>
+<p>In most cases, acquisition functions provide knobs (e.g., $\kappa$) for
+controlling the exploration-exploitation trade-off.
+- Search in regions where $\mu_{GP}(x)$ is high (exploitation)
+- Probe regions where uncertainty $\sigma_{GP}(x)$ is high (exploration)</p>
+<h2>Toy example</h2>
+<p>Let assume the following noisy function $f$:</p>
+<div class="codehilite"><pre><span></span><span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
-<span class="n">reg</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="n">max_depth</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">max_features</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="p">,</span> <span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">params</span>
-
-    <span class="n">reg</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-                   <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
-                   <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span>
-                   <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span> 
-                   <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;mean_absolute_error&quot;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
 </pre></div>
 
 
-<p>Next, we need to define the bounds of the dimensions of the search space we want to explore:</p>
-<div class="codehilite"><pre><span></span><span class="n">space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth</span>
-          <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>  <span class="c1"># learning_rate</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>                  <span class="c1"># max_features</span>
-          <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>                          <span class="c1"># min_samples_split</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>                          <span class="c1"># min_samples_leaf</span>
+<p><strong>Note.</strong> In <code>skopt</code>, functions $f$ are assumed to take as input a 1D vector $x$ represented as an array-like and to return a scalar $f(x)$.</p>
+<div class="codehilite"><pre><span></span><span class="c1"># Plot f(x) + contours</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
-<h2>Optimize all the things!</h2>
-<p>With these two pieces, we are now ready for sequential model-based optimisation. Here we compare gaussian process-based optimisation versus forest-based optimisation.</p>
+<p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_8_0.png" /></p>
+<p>Bayesian optimization based on gaussian process regression is implemented in <code>skopt.gp_minimize</code> and can be carried out as follows:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Matern</span>
+
+<span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">Matern</span><span class="p">(</span><span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">),</span> 
+                              <span class="n">alpha</span><span class="o">=</span><span class="n">noise_level</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span>                  <span class="c1"># the function to minimize</span>
+                  <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
+                  <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>          <span class="c1"># the acquisition function (optional)</span>
+                  <span class="n">base_estimator</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="c1"># a GP estimator (optional)</span>
+                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>          <span class="c1"># the number of random evaluations at initialization</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">fun</span>
+<p>Accordingly, the approximated minimum is found to be:</p>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;x^*=</span><span class="si">%.4f</span><span class="s2">, f(x^*)=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;Best score=2.9130&#39;
+<div class="codehilite"><pre><span></span>&#39;x^*=-0.3054, f(x^*)=-0.9880&#39;
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">- max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
-<span class="s2">- max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                            <span class="n">res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
-                            <span class="n">res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+<p>For further inspection of the results, attributes of the <code>res</code> named tuple provide the following information:</p>
+<ul>
+<li><code>x</code> [float]: location of the minimum.</li>
+<li><code>fun</code> [float]: function value at the minimum.</li>
+<li><code>models</code>: surrogate models used for each iteration.</li>
+<li><code>x_iters</code> [array]: location of function evaluation for each
+   iteration.</li>
+<li><code>func_vals</code> [array]: function value for each iteration.</li>
+<li><code>space</code> [Space]: the optimization space.</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="n">res</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=5
-- learning_rate=0.087491
-- max_features=6
-- min_samples_split=23
-- min_samples_leaf=2
+<div class="codehilite"><pre><span></span>       fun: -0.98797691126302833
+ func_vals: array([ 0.19928047,  0.05426539,  0.74588383, -0.09170902,  0.02286328,
+       -0.00743607,  0.39523305, -0.80869739, -0.63804929, -0.98797691,
+       -0.90691442, -0.68555016, -0.93611953, -0.93899462, -0.84303905])
+    models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+             kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0)]
+     space: &lt;skopt.space.Space object at 0x7fbe79100fd0&gt;
+         x: array([-0.30543376])
+   x_iters: array([[-1.38934506],
+       [ 1.99823817],
+       [ 0.36266965],
+       [-1.98571246],
+       [ 1.33478429],
+       [-0.6192673 ],
+       [-0.94605405],
+       [-0.27569283],
+       [-0.17939988],
+       [-0.30543376],
+       [-0.32830253],
+       [-0.33260938],
+       [-0.29898535],
+       [-0.28619493],
+       [-0.28942012]])
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="n">res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">fun</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>&#39;Best score=2.8968&#39;
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">- max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
-<span class="s2">- max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                            <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
-                            <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=4
-- learning_rate=0.094372
-- max_features=5
-- min_samples_split=20
-- min_samples_leaf=1
-</pre></div>
-
-
-<p>As a baseline, let us also compare with random search in the space of hyper-parameters, which is equivalent to <code>sklearn.model_selection.RandomizedSearchCV</code>.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
-<span class="n">res_dummy</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">fun</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>&#39;Best score=3.1388&#39;
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">- max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- learning_rate=</span><span class="si">%.4f</span><span class="s2"></span>
-<span class="s2">- max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                            <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
-                            <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=2
-- learning_rate=0.0807
-- max_features=13
-- min_samples_split=17
-- min_samples_leaf=8
-</pre></div>
-
-
-<h2>Convergence plot</h2>
+<p>Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
-<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;gp_optimize&quot;</span><span class="p">,</span> <span class="n">res_gp</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_optimize&quot;</span><span class="p">,</span> <span class="n">res_forest</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;dummy_optimize&quot;</span><span class="p">,</span> <span class="n">res_dummy</span><span class="p">))</span>
+<span class="n">plot_convergence</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f1c86c4c160&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbe6985fe48&gt;
 </pre></div>
 
 
-<p><img alt="png" src="hyperparameter-optimisation_files/hyperparameter-optimisation_21_1.png" /></p>
+<p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_16_1.png" /></p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.acquisition</span> <span class="kn">import</span> <span class="n">gaussian_lcb</span>
+
+<span class="c1"># Plot f(x) + contours</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fx</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot GP(x) + concours</span>
+<span class="n">gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">r&quot;$\mu_{GP}(x)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">y_pred</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> 
+                         <span class="p">(</span><span class="n">y_pred</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+         <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot sampled points</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> 
+         <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">,</span> 
+         <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot LCB(x) + next query point</span>
+<span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gp</span><span class="p">),</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;LCB(x)&quot;</span><span class="p">)</span>
+<span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="p">[</span><span class="n">acq</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="s2">&quot;b.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.2f</span><span class="s2">, f(x^*) = </span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_17_0.png" /></p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">
