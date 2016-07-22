@@ -1221,7 +1221,7 @@ python setup.py develop
 <ul>
 <li><code>x</code> [float]: location of the minimum.</li>
 <li><code>fun</code> [float]: function value at the minimum.</li>
-<li><code>x_iters</code> [array]: location of function evaluation for each
+<li><code>x_iters</code> [list of lists]: location of function evaluation for each
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimisation space.</li>
@@ -1269,7 +1269,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">        - `x` [float]: location of the minimum.</span>
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
-<span class="sd">        - `x_iters` [array]: location of function evaluation for each</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimisation space.</span>
@@ -1385,7 +1385,7 @@ making predictions.</p>
 <li><code>x</code> [float]: location of the minimum.</li>
 <li><code>fun</code> [float]: function value at the minimum.</li>
 <li><code>models</code>: surrogate models used for each iteration.</li>
-<li><code>x_iters</code> [array]: location of function evaluation for each
+<li><code>x_iters</code> [list of lists]: location of function evaluation for each
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
@@ -1464,7 +1464,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `x` [float]: location of the minimum.</span>
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
 <span class="sd">        - `models`: surrogate models used for each iteration.</span>
-<span class="sd">        - `x_iters` [array]: location of function evaluation for each</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
@@ -1582,7 +1582,7 @@ few evaluations as possible.</p>
 <li><code>x</code> [float]: location of the minimum.</li>
 <li><code>fun</code> [float]: function value at the minimum.</li>
 <li><code>models</code>: surrogate models used for each iteration.</li>
-<li><code>x_iters</code> [array]: location of function evaluation for each
+<li><code>x_iters</code> [list of lists]: location of function evaluation for each
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
@@ -1651,7 +1651,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `x` [float]: location of the minimum.</span>
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
 <span class="sd">        - `models`: surrogate models used for each iteration.</span>
-<span class="sd">        - `x_iters` [array]: location of function evaluation for each</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
@@ -1793,7 +1793,7 @@ over the Gaussian prior.</p>
 <li><code>x</code> [float]: location of the minimum.</li>
 <li><code>fun</code> [float]: function value at the minimum.</li>
 <li><code>models</code>: surrogate models used for each iteration.</li>
-<li><code>x_iters</code> [array]: location of function evaluation for each
+<li><code>x_iters</code> [list of lists]: location of function evaluation for each
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
@@ -1903,7 +1903,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `x` [float]: location of the minimum.</span>
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
 <span class="sd">        - `models`: surrogate models used for each iteration.</span>
-<span class="sd">        - `x_iters` [array]: location of function evaluation for each</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
@@ -1980,7 +1980,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">next_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
-        <span class="n">Xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">Xi</span><span class="p">,</span> <span class="n">next_x</span><span class="p">))</span>
+        <span class="n">Xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
         <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_y</span><span class="p">)</span>
 
     <span class="c1"># Pack results</span>
