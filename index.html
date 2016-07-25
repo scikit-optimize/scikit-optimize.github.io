@@ -1308,7 +1308,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, random_state=None)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1376,6 +1376,27 @@ making predictions.</p>
     Set random state to something other than None for reproducible
     results.</p>
 </li>
+<li>
+<p><code>acq</code> [string, default=<code>"LCB"</code>]:
+    Function to minimize over the forest posterior. Can be either</p>
+<ul>
+<li><code>"LCB"</code> for lower confidence bound,</li>
+<li><code>"EI"</code> for expected improvement,</li>
+<li><code>"PI"</code> for probability of improvement.</li>
+</ul>
+</li>
+<li>
+<p><code>xi</code> [float, default=0.01]:
+    Controls how much improvement one wants over the previous best
+    values. Used when the acquisition is either <code>"EI"</code> or <code>"PI"</code>.</p>
+</li>
+<li>
+<p><code>kappa</code> [float, default=1.96]:
+    Controls how much of the variance in the predicted values should be
+    taken into account. If set to be very high, then we are favouring
+    exploration over exploitation and vice versa.
+    Used when the acquisition is <code>"LCB"</code>.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1400,7 +1421,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -1457,6 +1479,23 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
+<span class="sd">    * `acq` [string, default=`&quot;LCB&quot;`]:</span>
+<span class="sd">        Function to minimize over the forest posterior. Can be either</span>
+
+<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound,</span>
+<span class="sd">        - `&quot;EI&quot;` for expected improvement,</span>
+<span class="sd">        - `&quot;PI&quot;` for probability of improvement.</span>
+
+<span class="sd">    * `xi` [float, default=0.01]:</span>
+<span class="sd">        Controls how much improvement one wants over the previous best</span>
+<span class="sd">        values. Used when the acquisition is either `&quot;EI&quot;` or `&quot;PI&quot;`.</span>
+
+<span class="sd">    * `kappa` [float, default=1.96]:</span>
+<span class="sd">        Controls how much of the variance in the predicted values should be</span>
+<span class="sd">        taken into account. If set to be very high, then we are favouring</span>
+<span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1504,7 +1543,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
                           <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
+                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1515,7 +1555,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, random_state=None)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1573,6 +1613,27 @@ few evaluations as possible.</p>
     Set random state to something other than None for reproducible
     results.</p>
 </li>
+<li>
+<p><code>acq</code> [string, default=<code>"LCB"</code>]:
+    Function to minimize over the forest posterior. Can be either</p>
+<ul>
+<li><code>"LCB"</code> for lower confidence bound,</li>
+<li><code>"EI"</code> for expected improvement,</li>
+<li><code>"PI"</code> for probability of improvement.</li>
+</ul>
+</li>
+<li>
+<p><code>xi</code> [float, default=0.01]:
+    Controls how much improvement one wants over the previous best
+    values. Used when the acquisition is either <code>"EI"</code> or <code>"PI"</code>.</p>
+</li>
+<li>
+<p><code>kappa</code> [float, default=1.96]:
+    Controls how much of the variance in the predicted values should be
+    taken into account. If set to be very high, then we are favouring
+    exploration over exploitation and vice versa.
+    Used when the acquisition is <code>"LCB"</code>.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1597,7 +1658,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -1644,6 +1706,23 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
+<span class="sd">    * `acq` [string, default=`&quot;LCB&quot;`]:</span>
+<span class="sd">        Function to minimize over the forest posterior. Can be either</span>
+
+<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound,</span>
+<span class="sd">        - `&quot;EI&quot;` for expected improvement,</span>
+<span class="sd">        - `&quot;PI&quot;` for probability of improvement.</span>
+
+<span class="sd">    * `xi` [float, default=0.01]:</span>
+<span class="sd">        Controls how much improvement one wants over the previous best</span>
+<span class="sd">        values. Used when the acquisition is either `&quot;EI&quot;` or `&quot;PI&quot;`.</span>
+
+<span class="sd">    * `kappa` [float, default=1.96]:</span>
+<span class="sd">        Controls how much of the variance in the predicted values should be</span>
+<span class="sd">        taken into account. If set to be very high, then we are favouring</span>
+<span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1672,7 +1751,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
                           <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span>
+                          <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
 </pre></div>
 
   </div>
