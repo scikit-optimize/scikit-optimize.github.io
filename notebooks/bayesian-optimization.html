@@ -1171,17 +1171,17 @@ controlling the exploration-exploitation trade-off.
                   <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>          <span class="c1"># the acquisition function (optional)</span>
                   <span class="n">base_estimator</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="c1"># a GP estimator (optional)</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f</span>
-                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>          <span class="c1"># the number of random evaluations at initialization</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># the number of random evaluations at initialization</span>
                   <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
 </pre></div>
 
 
 <p>Accordingly, the approximated minimum is found to be:</p>
-<div class="codehilite"><pre><span></span><span class="s2">&quot;x^*=</span><span class="si">%.4f</span><span class="s2">, f(x^*)=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;x^*=</span><span class="si">%.4f</span><span class="s2">, f(x^*)=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;x^*=-0.3054, f(x^*)=-0.9880&#39;
+<div class="codehilite"><pre><span></span>&#39;x^*=-0.2950, f(x^*)=-0.9909&#39;
 </pre></div>
 
 
@@ -1199,10 +1199,10 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>       fun: -0.98797691126302833
- func_vals: array([ 0.19928047,  0.05426539,  0.74588383, -0.09170902,  0.02286328,
-       -0.00743607,  0.39523305, -0.80869739, -0.63804929, -0.98797691,
-       -0.90691442, -0.68555016, -0.93611953, -0.93899462, -0.84303905])
+<div class="codehilite"><pre><span></span>       fun: -0.99086677726910888
+ func_vals: array([ 0.19928047,  0.05426552,  0.73707278, -0.09170696,  0.0205681 ,
+       -0.0143208 ,  0.3971182 ,  0.10637845, -0.11715768, -0.99086678,
+       -0.81299046, -0.70832964, -0.88766165, -0.89399144, -0.72523841])
     models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
@@ -1232,23 +1232,9 @@ controlling the exploration-exploitation trade-off.
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0)]
-     space: &lt;skopt.space.Space object at 0x7fbe79100fd0&gt;
-         x: array([-0.30543376])
-   x_iters: array([[-1.38934506],
-       [ 1.99823817],
-       [ 0.36266965],
-       [-1.98571246],
-       [ 1.33478429],
-       [-0.6192673 ],
-       [-0.94605405],
-       [-0.27569283],
-       [-0.17939988],
-       [-0.30543376],
-       [-0.32830253],
-       [-0.33260938],
-       [-0.29898535],
-       [-0.28619493],
-       [-0.28942012]])
+     space: &lt;skopt.space.Space object at 0x7fb2659bff28&gt;
+         x: [-0.2950021037049726]
+   x_iters: [[-1.389345060394712], [2.0], [0.36759832661543052], [-2.0], [1.3208901627191687], [-0.61713393654416193], [-0.94406516090216697], [1.6493695614209909], [0.99401541039817354], [-0.2950021037049726], [-0.19509859657696732], [-0.29618605818118171], [-0.22693990792121738], [-0.22985942629696079], [-0.19307679268560285]]
 </pre></div>
 
 
@@ -1258,7 +1244,7 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbe6985fe48&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fb26361ecc0&gt;
 </pre></div>
 
 
@@ -1295,7 +1281,7 @@ controlling the exploration-exploitation trade-off.
 <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="p">[</span><span class="n">acq</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="s2">&quot;b.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.2f</span><span class="s2">, f(x^*) = </span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.4f</span><span class="s2">, f(x^*) = </span><span class="si">%.4f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 

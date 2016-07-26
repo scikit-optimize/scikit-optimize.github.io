@@ -1763,7 +1763,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;LCB&#39;, xi=0.01, kappa=1.96, search=&#39;sampling&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;lbfgs&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, random_state=None)</p>
     </div>
     
 
@@ -1807,7 +1807,7 @@ over the Gaussian prior which is much quicker to evaluate.</p>
     The Gaussian process estimator to use for optimization.</p>
 </li>
 <li>
-<p><code>acq</code> [string, default=<code>"LCB"</code>]:
+<p><code>acq</code> [string, default=<code>"EI"</code>]:
     Function to minimize over the gaussian prior. Can be either</p>
 <ul>
 <li><code>"LCB"</code> for lower confidence bound,</li>
@@ -1828,7 +1828,7 @@ over the Gaussian prior which is much quicker to evaluate.</p>
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
 <li>
-<p><code>search</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>]:
+<p><code>search</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>, default="lbfgs"]:
     Searching for the next possible candidate to update the Gaussian prior
     with.</p>
 <p>If search is set to <code>"sampling"</code>, <code>n_points</code> are sampled randomly
@@ -1887,8 +1887,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
                 <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
@@ -1926,7 +1926,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `base_estimator` [a Gaussian process estimator]:</span>
 <span class="sd">        The Gaussian process estimator to use for optimization.</span>
 
-<span class="sd">    * `acq` [string, default=`&quot;LCB&quot;`]:</span>
+<span class="sd">    * `acq` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the gaussian prior. Can be either</span>
 
 <span class="sd">        - `&quot;LCB&quot;` for lower confidence bound,</span>
@@ -1943,7 +1943,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
-<span class="sd">    * `search` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`]:</span>
+<span class="sd">    * `search` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=&quot;lbfgs&quot;]:</span>
 <span class="sd">        Searching for the next possible candidate to update the Gaussian prior</span>
 <span class="sd">        with.</span>
 
@@ -2015,7 +2015,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
             <span class="s2">&quot;Expected n_calls &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
 
     <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_random_starts</span>
-    
+
     <span class="n">Xi</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">yi</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>

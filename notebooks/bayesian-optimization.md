@@ -99,7 +99,7 @@ res = gp_minimize(f,                  # the function to minimize
                   acq="LCB",          # the acquisition function (optional)
                   base_estimator=gp,  # a GP estimator (optional)
                   n_calls=15,         # the number of evaluations of f
-                  n_random_starts=1,          # the number of random evaluations at initialization
+                  n_random_starts=1,  # the number of random evaluations at initialization
                   random_state=777)
 ```
 
@@ -107,13 +107,13 @@ Accordingly, the approximated minimum is found to be:
 
 
 ```python
-"x^*=%.4f, f(x^*)=%.4f" % (res.x, res.fun)
+"x^*=%.4f, f(x^*)=%.4f" % (res.x[0], res.fun)
 ```
 
 
 
 
-    'x^*=-0.3054, f(x^*)=-0.9880'
+    'x^*=-0.2950, f(x^*)=-0.9909'
 
 
 
@@ -135,10 +135,10 @@ res
 
 
 
-           fun: -0.98797691126302833
-     func_vals: array([ 0.19928047,  0.05426539,  0.74588383, -0.09170902,  0.02286328,
-           -0.00743607,  0.39523305, -0.80869739, -0.63804929, -0.98797691,
-           -0.90691442, -0.68555016, -0.93611953, -0.93899462, -0.84303905])
+           fun: -0.99086677726910888
+     func_vals: array([ 0.19928047,  0.05426552,  0.73707278, -0.09170696,  0.0205681 ,
+           -0.0143208 ,  0.3971182 ,  0.10637845, -0.11715768, -0.99086678,
+           -0.81299046, -0.70832964, -0.88766165, -0.89399144, -0.72523841])
         models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
@@ -168,23 +168,9 @@ res
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
-         space: <skopt.space.Space object at 0x7fbe79100fd0>
-             x: array([-0.30543376])
-       x_iters: array([[-1.38934506],
-           [ 1.99823817],
-           [ 0.36266965],
-           [-1.98571246],
-           [ 1.33478429],
-           [-0.6192673 ],
-           [-0.94605405],
-           [-0.27569283],
-           [-0.17939988],
-           [-0.30543376],
-           [-0.32830253],
-           [-0.33260938],
-           [-0.29898535],
-           [-0.28619493],
-           [-0.28942012]])
+         space: <skopt.space.Space object at 0x7fb2659bff28>
+             x: [-0.2950021037049726]
+       x_iters: [[-1.389345060394712], [2.0], [0.36759832661543052], [-2.0], [1.3208901627191687], [-0.61713393654416193], [-0.94406516090216697], [1.6493695614209909], [0.99401541039817354], [-0.2950021037049726], [-0.19509859657696732], [-0.29618605818118171], [-0.22693990792121738], [-0.22985942629696079], [-0.19307679268560285]]
 
 
 
@@ -199,7 +185,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fbe6985fe48>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7fb26361ecc0>
 
 
 
@@ -241,7 +227,7 @@ plt.plot(x, gaussian_lcb(x, gp), "b", label="LCB(x)")
 next_x = np.argmin(acq)
 plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
 
-plt.title(r"$x^* = %.2f, f(x^*) = %.2f$" % (res.x, res.fun))
+plt.title(r"$x^* = %.4f, f(x^*) = %.4f$" % (res.x[0], res.fun))
 plt.legend(loc="best")
 plt.grid()
 
