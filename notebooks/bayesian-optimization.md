@@ -96,10 +96,11 @@ gp = GaussianProcessRegressor(kernel=Matern(length_scale_bounds="fixed"),
 
 res = gp_minimize(f,                  # the function to minimize
                   [(-2.0, 2.0)],      # the bounds on each dimension of x
+                  x0=[0.],            # the starting point
                   acq="LCB",          # the acquisition function (optional)
                   base_estimator=gp,  # a GP estimator (optional)
                   n_calls=15,         # the number of evaluations of f
-                  n_random_starts=1,  # the number of random evaluations at initialization
+                  n_random_starts=0,  # the number of random initialization points
                   random_state=777)
 ```
 
@@ -113,7 +114,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=-0.2950, f(x^*)=-0.9909'
+    'x^*=-0.3217, f(x^*)=-0.9259'
 
 
 
@@ -129,17 +130,18 @@ For further inspection of the results, attributes of the `res` named tuple provi
 
 
 ```python
-res
+for key, value in sorted(res.items()):
+    print(key, "=", value)
+    print()
 ```
 
-
-
-
-           fun: -0.99086677726910888
-     func_vals: array([ 0.19928047,  0.05426552,  0.73707278, -0.09170696,  0.0205681 ,
-           -0.0143208 ,  0.3971182 ,  0.10637845, -0.11715768, -0.99086678,
-           -0.81299046, -0.70832964, -0.88766165, -0.89399144, -0.72523841])
-        models: [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+    fun = -0.925940774705
+    
+    func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016026  0.04066236
+      0.12350638  0.08315035  0.10237308 -0.3999157   0.12857682 -0.64048307
+     -0.8962862  -0.92594077 -0.83922126]
+    
+    models = [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
@@ -168,10 +170,17 @@ res
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
-         space: <skopt.space.Space object at 0x7fb2659bff28>
-             x: [-0.2950021037049726]
-       x_iters: [[-1.389345060394712], [2.0], [0.36759832661543052], [-2.0], [1.3208901627191687], [-0.61713393654416193], [-0.94406516090216697], [1.6493695614209909], [0.99401541039817354], [-0.2950021037049726], [-0.19509859657696732], [-0.29618605818118171], [-0.22693990792121738], [-0.22985942629696079], [-0.19307679268560285]]
-
+    
+    space = <skopt.space.Space object at 0x7f988aa6be48>
+    
+    specs = {'function': 'gp_minimize', 'args': {'n_points': 500, 'random_state': 777, 'search': 'lbfgs', 'n_random_starts': 0, 'n_restarts_optimizer': 5, 'y0': None, 'dimensions': [(-2.0, 2.0)], 'func': <function f at 0x7f988aa64510>, 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+                 kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'n_calls': 15, 'acq': 'LCB', 'x0': [0.0], 'xi': 0.01, 'kappa': 1.96}}
+    
+    x = [-0.3216749916139835]
+    
+    x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209652246221], [1.5140003571302036], [0.62375407049503984], [1.2243915794329912], [-1.5528926830427656], [-0.53675652890758174], [-0.67998042813399784], [-0.36427321425821568], [-0.34695602514531776], [-0.3216749916139835], [-0.3066311315820735]]
+    
 
 
 Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:
@@ -185,7 +194,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fb26361ecc0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f98886f1b70>
 
 
 

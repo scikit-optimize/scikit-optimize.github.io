@@ -1247,6 +1247,7 @@ python setup.py develop
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimisation space.</li>
+<li><code>specs</code> [dict]`: the call specifications.</li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
@@ -1314,10 +1315,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimisation space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Save call args</span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+             <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
+
+    <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
@@ -1356,6 +1363,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">X</span> <span class="o">=</span> <span class="n">x0</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">y0</span>
 
+    <span class="c1"># Random search</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">first</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -1378,8 +1386,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
     <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span> <span class="o">=</span> <span class="n">y</span>
     <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span> <span class="o">=</span> <span class="n">X</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
     <span class="n">res</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Create attribute even though it is empty</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">rng</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
 
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>
@@ -1523,6 +1533,7 @@ making predictions.</p>
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
+<li><code>specs</code> [dict]`: the call specifications.</li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
@@ -1644,12 +1655,19 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Save call args + rng</span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+             <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
+
+    <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
+    <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rf&quot;</span><span class="p">,</span> <span class="s2">&quot;et&quot;</span><span class="p">,</span> <span class="s2">&quot;dt&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for the base_estimator parameter&quot;</span>
@@ -1675,11 +1693,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                              <span class="s2">&quot; be a string or a regressor instance.&quot;</span>
                              <span class="s2">&quot; &#39;</span><span class="si">%s</span><span class="s2">&#39; is neither.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
-                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span>
-                          <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span>
+                         <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+
+    <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
   </div>
@@ -1811,6 +1832,7 @@ guided by the surrogate model.</p>
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
+<li><code>specs</code> [dict]`: the call specifications.</li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
@@ -1923,10 +1945,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Save call args</span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+             <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
+
+    <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="c1"># Default estimator</span>
@@ -1935,11 +1963,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
-                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
-                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
+                         <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+
+    <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
   </div>
@@ -2093,6 +2124,7 @@ over the Gaussian prior.</p>
    iteration.</li>
 <li><code>func_vals</code> [array]: function value for each iteration.</li>
 <li><code>space</code> [Space]: the optimization space.</li>
+<li><code>specs</code> [dict]`: the call specifications.</li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
@@ -2228,10 +2260,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">           iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
 <span class="sd">        - `space` [Space]: the optimization space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Save call args </span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+             <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
+
+    <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
@@ -2341,6 +2379,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span> <span class="o">=</span> <span class="n">Xi</span>
     <span class="n">res</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
     <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">rng</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
 
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>
