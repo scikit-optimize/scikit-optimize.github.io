@@ -43,7 +43,7 @@ def objective(params):
     return -np.mean(cross_val_score(reg, X, y, cv=5, n_jobs=-1, scoring="mean_absolute_error"))
 ```
 
-Next, we need to define the bounds of the dimensions of the search space we want to explore:
+Next, we need to define the bounds of the dimensions of the search space we want to explore, and (optionally) the starting point:
 
 
 ```python
@@ -52,6 +52,8 @@ space  = [(1, 5),                           # max_depth
           (1, X.shape[1]),                  # max_features
           (2, 30),                          # min_samples_split
           (1, 30)]                          # min_samples_leaf
+
+x0 = [3, 0.01, 6, 2, 1]
 ```
 
 ## Optimize all the things!
@@ -61,7 +63,7 @@ With these two pieces, we are now ready for sequential model-based optimisation.
 
 ```python
 from skopt import gp_minimize
-res_gp = gp_minimize(objective, space, n_calls=50, random_state=0)
+res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 ```
 
 
@@ -72,7 +74,7 @@ res_gp = gp_minimize(objective, space, n_calls=50, random_state=0)
 
 
 
-    'Best score=2.9130'
+    'Best score=3.0168'
 
 
 
@@ -89,17 +91,17 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=5
-    - learning_rate=0.087491
-    - max_features=6
-    - min_samples_split=23
-    - min_samples_leaf=2
+    - max_depth=2
+    - learning_rate=0.100000
+    - max_features=5
+    - min_samples_split=30
+    - min_samples_leaf=1
 
 
 
 ```python
 from skopt import forest_minimize
-res_forest = forest_minimize(objective, space, n_calls=50, random_state=0)
+res_forest = forest_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 ```
 
 
@@ -139,7 +141,7 @@ As a baseline, let us also compare with random search in the space of hyper-para
 
 ```python
 from skopt import dummy_minimize
-res_dummy = dummy_minimize(objective, space, n_calls=50, random_state=0)
+res_dummy = dummy_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 ```
 
 
@@ -150,7 +152,7 @@ res_dummy = dummy_minimize(objective, space, n_calls=50, random_state=0)
 
 
 
-    'Best score=3.1388'
+    'Best score=3.0592'
 
 
 
@@ -167,11 +169,11 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=2
-    - learning_rate=0.0807
-    - max_features=13
-    - min_samples_split=17
-    - min_samples_leaf=8
+    - max_depth=5
+    - learning_rate=0.0596
+    - max_features=10
+    - min_samples_split=23
+    - min_samples_leaf=1
 
 
 ## Convergence plot
@@ -187,7 +189,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f1c86c4c160>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f166007d3c8>
 
 
 

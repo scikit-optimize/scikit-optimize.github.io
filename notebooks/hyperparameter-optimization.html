@@ -1122,19 +1122,21 @@ table {
 </pre></div>
 
 
-<p>Next, we need to define the bounds of the dimensions of the search space we want to explore:</p>
+<p>Next, we need to define the bounds of the dimensions of the search space we want to explore, and (optionally) the starting point:</p>
 <div class="codehilite"><pre><span></span><span class="n">space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth</span>
           <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>  <span class="c1"># learning_rate</span>
           <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>                  <span class="c1"># max_features</span>
           <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>                          <span class="c1"># min_samples_split</span>
           <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>                          <span class="c1"># min_samples_leaf</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
 
 <h2>Optimize all the things!</h2>
 <p>With these two pieces, we are now ready for sequential model-based optimisation. Here we compare gaussian process-based optimisation versus forest-based optimisation.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
 
@@ -1142,7 +1144,7 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;Best score=2.9130&#39;
+<div class="codehilite"><pre><span></span>&#39;Best score=3.0168&#39;
 </pre></div>
 
 
@@ -1158,16 +1160,16 @@ table {
 
 
 <div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=5
-- learning_rate=0.087491
-- max_features=6
-- min_samples_split=23
-- min_samples_leaf=2
+- max_depth=2
+- learning_rate=0.100000
+- max_features=5
+- min_samples_split=30
+- min_samples_leaf=1
 </pre></div>
 
 
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="n">res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
 
@@ -1201,7 +1203,7 @@ table {
 
 <p>As a baseline, let us also compare with random search in the space of hyper-parameters, which is equivalent to <code>sklearn.model_selection.RandomizedSearchCV</code>.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
-<span class="n">res_dummy</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">res_dummy</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
 
@@ -1209,7 +1211,7 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;Best score=3.1388&#39;
+<div class="codehilite"><pre><span></span>&#39;Best score=3.0592&#39;
 </pre></div>
 
 
@@ -1225,11 +1227,11 @@ table {
 
 
 <div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=2
-- learning_rate=0.0807
-- max_features=13
-- min_samples_split=17
-- min_samples_leaf=8
+- max_depth=5
+- learning_rate=0.0596
+- max_features=10
+- min_samples_split=23
+- min_samples_leaf=1
 </pre></div>
 
 
@@ -1241,7 +1243,7 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f1c86c4c160&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f166007d3c8&gt;
 </pre></div>
 
 

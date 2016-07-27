@@ -15,7 +15,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f9a64e83828>
+    <matplotlib.figure.Figure at 0x7f098cff2278>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -97,15 +97,16 @@ models. This makes the comparison more robust against models that get
 from functools import partial
 from skopt import gp_minimize, forest_minimize, dummy_minimize
 
-bounds = [(-5, 10), (0, 15)]
 func = partial(branin, noise_level=2.0)
+bounds = [(-5.0, 10.0), (0.0, 15.0)]
+x0 = [2.5, 7.5]
 n_calls = 80
 ```
 
 
 ```python
-def run(minimizer, n_iter=30):
-    return [minimizer(func, bounds, n_calls=n_calls, random_state=n) 
+def run(minimizer, n_iter=20):
+    return [minimizer(func, bounds, x0=x0, n_calls=n_calls, random_state=n) 
             for n in range(n_iter)]
 
 # Random search
@@ -121,6 +122,8 @@ rf_res = run(partial(forest_minimize, base_estimator="rf"))
 et_res = run(partial(forest_minimize, base_estimator="et"))
 ```
 
+Note that this can take a few minutes.
+
 
 ```python
 from skopt.plots import plot_convergence
@@ -135,12 +138,12 @@ plot_convergence(("dummy_minimize", dummy_res),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f9a367c65c0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f094fc42630>
 
 
 
 
-![png](strategy-comparison_files/strategy-comparison_8_1.png)
+![png](strategy-comparison_files/strategy-comparison_9_1.png)
 
 
 This plot shows the value of the minimum found (y axis) as a function of the number
