@@ -1174,7 +1174,7 @@ python setup.py develop
       
   <div class="item">
     <div class="name def" id="skopt.dummy_minimize">
-    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, random_state=None)</p>
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None)</p>
     </div>
     
 
@@ -1207,6 +1207,28 @@ python setup.py develop
     Number of calls to <code>func</code> to find the minimum.</p>
 </li>
 <li>
+<p><code>x0</code> [list or list of lists or None]:
+    Initial input points.</p>
+<ul>
+<li>If it is a list of lists, use it as a list of input points.</li>
+<li>If it is a list, use it as a single initial input point.</li>
+<li>If it is <code>None</code>, no initial input points are used.</li>
+</ul>
+</li>
+<li>
+<p><code>y0</code> [list or scalar or None]
+    Evaluation of initial input points.</p>
+<ul>
+<li>If it is a list, then it corresponds to evaluations of the function
+  at each element of <code>x0</code> : the i-th element of <code>y0</code> corresponds
+  to the function evaluated at the i-th element of <code>x0</code>.</li>
+<li>If it is a scalar, then it corresponds to the evaluation of the
+  function at <code>x0</code>.</li>
+<li>If it is None and <code>x0</code> is provided, then the function is evaluated
+  at each element of <code>x0</code>.</li>
+</ul>
+</li>
+<li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
     Set random state to something other than None for reproducible
     results.</p>
@@ -1233,7 +1255,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dummy_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1257,6 +1280,22 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `n_calls` [int, default=100]:</span>
 <span class="sd">        Number of calls to `func` to find the minimum.</span>
 
+<span class="sd">    * `x0` [list or list of lists or None]:</span>
+<span class="sd">        Initial input points.</span>
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list or scalar or None]</span>
+<span class="sd">        Evaluation of initial input points.</span>
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
+
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
@@ -1279,14 +1318,51 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
 
-    <span class="n">init_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">init_y</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">)])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected x0 to be a list, but got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
 
+    <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="n">init_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">init_y</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="n">n_calls</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Expected y0 to be an iterable or a scalar, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">y0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x0 and y0 should have the same length&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">,</span> <span class="n">y0</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;y0 elements should be scalars&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">X_left</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y0</span><span class="p">:</span>
+        <span class="n">y_left</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X_left</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">init_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">X_left</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">init_y</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
+        <span class="n">y_left</span> <span class="o">=</span> <span class="p">([</span><span class="n">init_y</span><span class="p">]</span> <span class="o">+</span>
+                  <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">X_left</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">)])</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">X_left</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">+</span> <span class="n">y_left</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
     <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
@@ -1308,17 +1384,25 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Sequential optimization using decision trees.</p>
+    <div class="desc"><p>Sequential optimisation using decision trees.</p>
 <p>A tree based regression model is used to model the expensive to evaluate
 function <code>func</code>. The model is improved by sequentially evaluating
 the expensive function at the next best point. Thereby finding the
 minimum of <code>func</code> with as few evaluations as possible.</p>
+<p>The total number of evaluations, <code>n_calls</code>, are performed like the
+following. If <code>x0</code> is provided but not <code>y0</code>, then the elements of <code>x0</code>
+are first evaluated, followed by <code>n_random_starts</code> evaluations.
+Finally, <code>n_calls - len(x0) - n_random_starts</code> evaluations are
+made guided by the surrogate model. If <code>x0</code> and <code>y0</code> are both
+provided then <code>n_random_starts</code> evaluations are first made then
+<code>n_calls - n_random_starts</code> subsequent evaluations are made
+guided by the surrogate model.</p>
 <h2>Parameters</h2>
 <ul>
 <li>
@@ -1357,10 +1441,7 @@ making predictions.</p>
 </li>
 <li>
 <p><code>n_calls</code> [int, default=100]:
-    Number of calls to <code>func</code>.
-    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
-    additional evaluations of <code>func</code> are made that are guided
-    by the <code>base_estimator</code>.</p>
+    Number of calls to <code>func</code>.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
@@ -1370,6 +1451,28 @@ making predictions.</p>
 <li>
 <p><code>n_points</code> [int, default=1000]:
     Number of points to sample when minimizing the acquisition function.</p>
+</li>
+<li>
+<p><code>x0</code> [list or list of lists or None]:
+    Initial input points.</p>
+<ul>
+<li>If it is a list of lists, use it as a list of input points.</li>
+<li>If it is a list, use it as a single initial input point.</li>
+<li>If it is <code>None</code>, no initial input points are used.</li>
+</ul>
+</li>
+<li>
+<p><code>y0</code> [list or scalar or None]
+    Evaluation of initial input points.</p>
+<ul>
+<li>If it is a list, then it corresponds to evaluations of the function
+  at each element of <code>x0</code> : the i-th element of <code>y0</code> corresponds
+  to the function evaluated at the i-th element of <code>x0</code>.</li>
+<li>If it is a scalar, then it corresponds to the evaluation of the
+  function at <code>x0</code>.</li>
+<li>If it is None and <code>x0</code> is provided, then the function is evaluated
+  at each element of <code>x0</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
@@ -1421,14 +1524,24 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                    <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sequential optimization using decision trees.</span>
+                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
 <span class="sd">    function `func`. The model is improved by sequentially evaluating</span>
 <span class="sd">    the expensive function at the next best point. Thereby finding the</span>
 <span class="sd">    minimum of `func` with as few evaluations as possible.</span>
+
+<span class="sd">    The total number of evaluations, `n_calls`, are performed like the</span>
+<span class="sd">    following. If `x0` is provided but not `y0`, then the elements of `x0`</span>
+<span class="sd">    are first evaluated, followed by `n_random_starts` evaluations.</span>
+<span class="sd">    Finally, `n_calls - len(x0) - n_random_starts` evaluations are</span>
+<span class="sd">    made guided by the surrogate model. If `x0` and `y0` are both</span>
+<span class="sd">    provided then `n_random_starts` evaluations are first made then</span>
+<span class="sd">    `n_calls - n_random_starts` subsequent evaluations are made</span>
+<span class="sd">    guided by the surrogate model.</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1464,9 +1577,6 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_calls` [int, default=100]:</span>
 <span class="sd">        Number of calls to `func`.</span>
-<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
-<span class="sd">        additional evaluations of `func` are made that are guided</span>
-<span class="sd">        by the `base_estimator`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
 <span class="sd">        Number of evaluations of `func` with random initialization points</span>
@@ -1474,6 +1584,22 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_points` [int, default=1000]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
+
+<span class="sd">    * `x0` [list or list of lists or None]:</span>
+<span class="sd">        Initial input points.</span>
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list or scalar or None]</span>
+<span class="sd">        Evaluation of initial input points.</span>
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
 
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
@@ -1539,12 +1665,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The base_estimator parameter has to either&quot;</span>
                              <span class="s2">&quot; be a string or a regressor instance.&quot;</span>
                              <span class="s2">&quot; &#39;</span><span class="si">%s</span><span class="s2">&#39; is neither.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
                           <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
-                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
+                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span>
+                          <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1555,7 +1680,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1567,6 +1692,14 @@ expensive to evaluate function <code>func</code>. The model is improved
 by sequentially evaluating the expensive function at the next
 best point. Thereby finding the minimum of <code>func</code> with as
 few evaluations as possible.</p>
+<p>The total number of evaluations, <code>n_calls</code>, are performed like the
+following. If <code>x0</code> is provided but not <code>y0</code>, then the elements of <code>x0</code>
+are first evaluated, followed by <code>n_random_starts</code> evaluations.
+Finally, <code>n_calls - len(x0) - n_random_starts</code> evaluations are
+made guided by the surrogate model. If <code>x0</code> and <code>y0</code> are both
+provided then <code>n_random_starts</code> evaluations are first made then
+<code>n_calls - n_random_starts</code> subsequent evaluations are made
+guided by the surrogate model.</p>
 <h2>Parameters</h2>
 <ul>
 <li>
@@ -1594,10 +1727,7 @@ few evaluations as possible.</p>
 </li>
 <li>
 <p><code>n_calls</code> [int, default=100]:
-    Number of calls to <code>func</code>.
-    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
-    additional evaluations of <code>func</code> are made that are guided
-    by the <code>base_estimator</code>.</p>
+    Number of calls to <code>func</code>.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
@@ -1607,6 +1737,28 @@ few evaluations as possible.</p>
 <li>
 <p><code>n_points</code> [int, default=20]:
     Number of points to sample when minimizing the acquisition function.</p>
+</li>
+<li>
+<p><code>x0</code> [list or list of lists or None]:
+    Initial input points.</p>
+<ul>
+<li>If it is a list of lists, use it as a list of input points.</li>
+<li>If it is a list, use it as a single initial input point.</li>
+<li>If it is <code>None</code>, no initial input points are used.</li>
+</ul>
+</li>
+<li>
+<p><code>y0</code> [list or scalar or None]
+    Evaluation of initial input points.</p>
+<ul>
+<li>If it is a lists, then it corresponds to evaluations of the function
+  at each element of <code>x0</code> : the i-th element of <code>y0</code> corresponds
+  to the function evaluated at the i-th element of <code>x0</code>.</li>
+<li>If it is a scalar, then it corresponds to the evaluation of the
+  function at <code>x0</code>.</li>
+<li>If it is None and <code>x0</code> is provided, then the function is evaluated
+  at each element of <code>x0</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
@@ -1658,8 +1810,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                  <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -1667,6 +1819,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    by sequentially evaluating the expensive function at the next</span>
 <span class="sd">    best point. Thereby finding the minimum of `func` with as</span>
 <span class="sd">    few evaluations as possible.</span>
+
+<span class="sd">    The total number of evaluations, `n_calls`, are performed like the</span>
+<span class="sd">    following. If `x0` is provided but not `y0`, then the elements of `x0`</span>
+<span class="sd">    are first evaluated, followed by `n_random_starts` evaluations.</span>
+<span class="sd">    Finally, `n_calls - len(x0) - n_random_starts` evaluations are</span>
+<span class="sd">    made guided by the surrogate model. If `x0` and `y0` are both</span>
+<span class="sd">    provided then `n_random_starts` evaluations are first made then</span>
+<span class="sd">    `n_calls - n_random_starts` subsequent evaluations are made</span>
+<span class="sd">    guided by the surrogate model.</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1691,9 +1853,6 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_calls` [int, default=100]:</span>
 <span class="sd">        Number of calls to `func`.</span>
-<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
-<span class="sd">        additional evaluations of `func` are made that are guided</span>
-<span class="sd">        by the `base_estimator`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
 <span class="sd">        Number of evaluations of `func` with random initialization points</span>
@@ -1701,6 +1860,22 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_points` [int, default=20]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
+
+<span class="sd">    * `x0` [list or list of lists or None]:</span>
+<span class="sd">        Initial input points.</span>
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list or scalar or None]</span>
+<span class="sd">        Evaluation of initial input points.</span>
+<span class="sd">        - If it is a lists, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
 
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
@@ -1751,8 +1926,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
                           <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span>
-                          <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
+                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
+                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1763,7 +1938,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;lbfgs&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;lbfgs&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
     </div>
     
 
@@ -1773,7 +1948,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <p>If every function evaluation is expensive, for instance
 when the parameters are the hyperparameters of a neural network
 and the function evaluation is the mean cross-validation score across
-ten folds, optimizing the hyperparameters by standared optimization
+ten folds, optimizing the hyperparameters by standard optimization
 routines would take for ever!</p>
 <p>The idea is to approximate the function using a Gaussian process.
 In other words the function values are assumed to follow a multivariate
@@ -1781,6 +1956,14 @@ gaussian. The covariance of the function values are given by a
 GP kernel between the parameters. Then a smart choice to choose the
 next parameter to evaluate can be made by the acquisition function
 over the Gaussian prior which is much quicker to evaluate.</p>
+<p>The total number of evaluations, <code>n_calls</code>, are performed like the
+following. If <code>x0</code> is provided but not <code>y0</code>, then the elements of <code>x0</code>
+are first evaluated, followed by <code>n_random_starts</code> evaluations.
+Finally, <code>n_calls - len(x0) - n_random_starts</code> evaluations are
+made guided by the surrogate model. If <code>x0</code> and <code>y0</code> are both
+provided then <code>n_random_starts</code> evaluations are first made then
+<code>n_calls - n_random_starts</code> subsequent evaluations are made
+guided by the surrogate model.</p>
 <h2>Parameters</h2>
 <ul>
 <li>
@@ -1840,10 +2023,7 @@ over the Gaussian prior.</p>
 </li>
 <li>
 <p><code>n_calls</code> [int, default=100]:
-    Number of calls to <code>func</code>.
-    If <code>n_random_starts</code> &gt; 0, <code>n_calls - n_random_starts</code>
-    additional evaluations of <code>func</code> are made that are guided
-    by the <code>base_estimator</code>.</p>
+    Number of calls to <code>func</code>.</p>
 </li>
 <li>
 <p><code>n_points</code> [int, default=500]:
@@ -1858,6 +2038,28 @@ over the Gaussian prior.</p>
 <li>
 <p><code>n_restarts_optimizer</code> [int, default=10]:
     The number of restarts of the optimizer when <code>search</code> is <code>"lbfgs"</code>.</p>
+</li>
+<li>
+<p><code>x0</code> [list or list of lists or None]:
+    Initial input points.</p>
+<ul>
+<li>If it is a list of lists, use it as a list of input points.</li>
+<li>If it is a list, use it as a single initial input point.</li>
+<li>If it is <code>None</code>, no initial input points are used.</li>
+</ul>
+</li>
+<li>
+<p><code>y0</code> [list or scalar or None]
+    Evaluation of initial input points.</p>
+<ul>
+<li>If it is a list, then it corresponds to evaluations of the function
+  at each element of <code>x0</code> : the i-th element of <code>y0</code> corresponds
+  to the function evaluated at the i-th element of <code>x0</code>.</li>
+<li>If it is a scalar, then it corresponds to the evaluation of the
+  function at <code>x0</code>.</li>
+<li>If it is None and <code>x0</code> is provided, then the function is evaluated
+  at each element of <code>x0</code>.</li>
+</ul>
 </li>
 <li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
@@ -1889,13 +2091,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
                 <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-                <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+                <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
 <span class="sd">    If every function evaluation is expensive, for instance</span>
 <span class="sd">    when the parameters are the hyperparameters of a neural network</span>
 <span class="sd">    and the function evaluation is the mean cross-validation score across</span>
-<span class="sd">    ten folds, optimizing the hyperparameters by standared optimization</span>
+<span class="sd">    ten folds, optimizing the hyperparameters by standard optimization</span>
 <span class="sd">    routines would take for ever!</span>
 
 <span class="sd">    The idea is to approximate the function using a Gaussian process.</span>
@@ -1904,6 +2107,15 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    GP kernel between the parameters. Then a smart choice to choose the</span>
 <span class="sd">    next parameter to evaluate can be made by the acquisition function</span>
 <span class="sd">    over the Gaussian prior which is much quicker to evaluate.</span>
+
+<span class="sd">    The total number of evaluations, `n_calls`, are performed like the</span>
+<span class="sd">    following. If `x0` is provided but not `y0`, then the elements of `x0`</span>
+<span class="sd">    are first evaluated, followed by `n_random_starts` evaluations.</span>
+<span class="sd">    Finally, `n_calls - len(x0) - n_random_starts` evaluations are</span>
+<span class="sd">    made guided by the surrogate model. If `x0` and `y0` are both</span>
+<span class="sd">    provided then `n_random_starts` evaluations are first made then</span>
+<span class="sd">    `n_calls - n_random_starts` subsequent evaluations are made</span>
+<span class="sd">    guided by the surrogate model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1957,9 +2169,6 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_calls` [int, default=100]:</span>
 <span class="sd">        Number of calls to `func`.</span>
-<span class="sd">        If `n_random_starts` &gt; 0, `n_calls - n_random_starts`</span>
-<span class="sd">        additional evaluations of `func` are made that are guided</span>
-<span class="sd">        by the `base_estimator`.</span>
 
 <span class="sd">    * `n_points` [int, default=500]:</span>
 <span class="sd">        Number of points to sample to determine the next &quot;best&quot; point.</span>
@@ -1971,6 +2180,22 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `n_restarts_optimizer` [int, default=10]:</span>
 <span class="sd">        The number of restarts of the optimizer when `search` is `&quot;lbfgs&quot;`.</span>
+
+<span class="sd">    * `x0` [list or list of lists or None]:</span>
+<span class="sd">        Initial input points.</span>
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list or scalar or None]</span>
+<span class="sd">        Evaluation of initial input points.</span>
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
 
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
@@ -2005,26 +2230,55 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)),</span>
             <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
-    <span class="c1"># First points</span>
-    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected x0 to be a list, but got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
+
+    <span class="n">n_init_func_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">n_total_init_calls</span> <span class="o">=</span> <span class="n">n_random_starts</span> <span class="o">+</span> <span class="n">n_init_func_calls</span>
+
+    <span class="k">if</span> <span class="n">n_total_init_calls</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># if x0 is not provided and n_random_starts is 0 then</span>
+        <span class="c1"># it will ask for n_random_starts to be &gt; 0.</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Expected n_random_start &gt; 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_random_starts</span><span class="p">)</span>
+            <span class="s2">&quot;Expected n_random_starts &gt; 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_random_starts</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">n_random_starts</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">n_total_init_calls</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Expected n_calls &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
+            <span class="s2">&quot;Expected n_calls &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_total_init_calls</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
 
-    <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_random_starts</span>
+    <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Expected y0 to be an iterable or a scalar, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">y0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x0 and y0 should have the same length&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">,</span> <span class="n">y0</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;y0 elements should be scalars&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">Xi</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-    <span class="n">yi</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">]</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">):]]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The function to be optimized should return a scalar&quot;</span><span class="p">)</span>
 
     <span class="c1"># Bayesian optimization loop</span>
     <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
-
+    <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_total_init_calls</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_model_iter</span><span class="p">):</span>
         <span class="n">gp</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
 
