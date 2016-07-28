@@ -1051,7 +1051,10 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
+    <li class="mono"><a href="#skopt.plots.partial_dependence">partial_dependence</a></li>
     <li class="mono"><a href="#skopt.plots.plot_convergence">plot_convergence</a></li>
+    <li class="mono"><a href="#skopt.plots.plot_evaluations">plot_evaluations</a></li>
+    <li class="mono"><a href="#skopt.plots.plot_objective">plot_objective</a></li>
   </ul>
 
     </li>
@@ -1093,7 +1096,9 @@ table {
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">MaxNLocator</span>
 
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">OptimizeResult</span>
 
 
@@ -1177,6 +1182,270 @@ table {
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">):</span>
+    <span class="c1"># Work out min, max of y axis for the diagonal so we can adjust</span>
+    <span class="c1"># them all to the same value</span>
+    <span class="n">diagonal_ylim</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]),</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]))</span>
+
+    <span class="c1"># Deal with formatting of the axes</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span> <span class="c1"># rows</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span> <span class="c1"># columns</span>
+            <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+
+            <span class="c1"># off-diagonal axis</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="c1"># plots on the diagonal are special, like Texas. They have</span>
+                <span class="c1"># their own range so do not mess with them.</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">diagonal_ylim</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+
+            <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
+            <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
+
+            <span class="c1"># for all rows except ...</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+            <span class="c1"># ... the bottom row</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax_</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                       <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the partial dependence for dimensions `i` and `j` with</span>
+<span class="sd">    respect to the objective value, as approximated by `model`.</span>
+
+<span class="sd">    The partial dependence plot shows how the value of the dimensions</span>
+<span class="sd">    `i` and `j` influence the `model` predictions after &quot;averaging out&quot;</span>
+<span class="sd">    the influence of all other dimensions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `space` [`Space`]</span>
+<span class="sd">        The parameter space over which the minimization was performed.</span>
+
+<span class="sd">    * `model`</span>
+<span class="sd">        Surrogate model for the objective function.</span>
+
+<span class="sd">    * `i` [int]</span>
+<span class="sd">        The first dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    * `j` [int, default=None]</span>
+<span class="sd">        The second dimension for which to calculate the partial dependence.</span>
+<span class="sd">        To calculate the 1D partial dependence on `i` alone set `j=None`.</span>
+
+<span class="sd">    * `sample_points` [np.array, shape=(n_points, n_dims), default=None]</span>
+<span class="sd">        Randomly sampled and transformed points to use when averaging</span>
+<span class="sd">        the model function at each of the `n_points`.</span>
+
+<span class="sd">    * `n_samples` [int, default=100]</span>
+<span class="sd">        Number of random samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points`. Only used when `sample_points=None`.</span>
+
+<span class="sd">    * `n_points` [int, default=40]</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension `i` and `j`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    For 1D partial dependence:</span>
+
+<span class="sd">    * `xi`: [np.array]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    * `yi`: [np.array]:</span>
+<span class="sd">        The value of the model at each point `xi`.</span>
+
+<span class="sd">    For 2D partial dependence:</span>
+
+<span class="sd">    * `xi`: [np.array, shape=n_points]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    * `yi`: [np.array, shape=n_points]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    * `zi`: [list of lists, n_points by n_points]:</span>
+<span class="sd">        The value of the model at each point `(xi, yi)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">:</span>
+            <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_points</span><span class="p">)</span>
+            <span class="n">rvs_</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">yi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+
+        <span class="n">zi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">y_</span> <span class="ow">in</span> <span class="n">yi_transformed</span><span class="p">:</span>
+                <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_points</span><span class="p">)</span>
+                <span class="n">rvs_</span><span class="p">[:,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
+            <span class="n">zi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span>
+
+
+<span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
+
+<span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
+<span class="sd">    respect to the objective function. The off-diagonal shows the</span>
+<span class="sd">    partial dependence for dimensions `i` and `j` with</span>
+<span class="sd">    respect to the objective function. The objective function is</span>
+<span class="sd">    approximated by `result.model.`</span>
+
+<span class="sd">    Pairwise scatter plots of the points at which the objective</span>
+<span class="sd">    function was directly evaluated are shown on the off-diagonal.</span>
+<span class="sd">    A red point indicates the found minimum.</span>
+
+<span class="sd">    Note: search spaces that contain `Categorical` dimensions are</span>
+<span class="sd">          currently not supported by this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `result` [`OptimizeResult`]</span>
+<span class="sd">        The result for which to create the scatter plot matrix.</span>
+
+<span class="sd">    * `levels` [int, default=10]</span>
+<span class="sd">        Number of levels to draw on the contour plot, passed directly</span>
+<span class="sd">        to `plt.contour()`.</span>
+
+<span class="sd">    * `n_points` [int, default=40]</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension.</span>
+
+<span class="sd">    * `n_samples` [int, default=100]</span>
+<span class="sd">        Number of random samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rvs_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                            <span class="n">sample_points</span><span class="o">=</span><span class="n">rvs_transformed</span><span class="p">,</span>
+                                            <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
+                                                <span class="n">rvs_transformed</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Partial dependence&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
+
+<span class="sd">    The scatter plot matrix shows at which points in the search</span>
+<span class="sd">    space and in which order samples were evaluated. Pairwise</span>
+<span class="sd">    scatter plots are shown on the off-diagonal for each</span>
+<span class="sd">    dimension of the search space. The order in which samples</span>
+<span class="sd">    were evaluated is encoded in each point&#39;s color.</span>
+<span class="sd">    The diagonal shows a histogram of sampled values for each</span>
+<span class="sd">    dimension. A red point indicates the found minimum.</span>
+
+<span class="sd">    Note: search spaces that contain `Categorical` dimensions are</span>
+<span class="sd">          currently not supported by this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `result` [`OptimizeResult`]</span>
+<span class="sd">        The result for which to create the scatter plot matrix.</span>
+
+<span class="sd">    * `bins` [int, bins=20]:</span>
+<span class="sd">        Number of bins to use for histograms on the diagonal.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                              <span class="nb">range</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">order</span><span class="p">,</span>
+                                 <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                 <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Number of samples&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1188,6 +1457,178 @@ table {
   <section id="section-items">
 
     <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="skopt.plots.partial_dependence">
+    <p>def <span class="ident">partial_dependence</span>(</p><p>space, model, i, j=None, sample_points=None, n_samples=100, n_points=40)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Calculate the partial dependence for dimensions <code>i</code> and <code>j</code> with
+respect to the objective value, as approximated by <code>model</code>.</p>
+<p>The partial dependence plot shows how the value of the dimensions
+<code>i</code> and <code>j</code> influence the <code>model</code> predictions after "averaging out"
+the influence of all other dimensions.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>space</code> [<code>Space</code>]
+    The parameter space over which the minimization was performed.</p>
+</li>
+<li>
+<p><code>model</code>
+    Surrogate model for the objective function.</p>
+</li>
+<li>
+<p><code>i</code> [int]
+    The first dimension for which to calculate the partial dependence.</p>
+</li>
+<li>
+<p><code>j</code> [int, default=None]
+    The second dimension for which to calculate the partial dependence.
+    To calculate the 1D partial dependence on <code>i</code> alone set <code>j=None</code>.</p>
+</li>
+<li>
+<p><code>sample_points</code> [np.array, shape=(n_points, n_dims), default=None]
+    Randomly sampled and transformed points to use when averaging
+    the model function at each of the <code>n_points</code>.</p>
+</li>
+<li>
+<p><code>n_samples</code> [int, default=100]
+    Number of random samples to use for averaging the model function
+    at each of the <code>n_points</code>. Only used when <code>sample_points=None</code>.</p>
+</li>
+<li>
+<p><code>n_points</code> [int, default=40]
+    Number of points at which to evaluate the partial dependence
+    along each dimension <code>i</code> and <code>j</code>.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<p>For 1D partial dependence:</p>
+<ul>
+<li>
+<p><code>xi</code>: [np.array]:
+    The points at which the partial dependence was evaluated.</p>
+</li>
+<li>
+<p><code>yi</code>: [np.array]:
+    The value of the model at each point <code>xi</code>.</p>
+</li>
+</ul>
+<p>For 2D partial dependence:</p>
+<ul>
+<li><code>xi</code>: [np.array, shape=n_points]:
+    The points at which the partial dependence was evaluated.</li>
+<li><code>yi</code>: [np.array, shape=n_points]:
+    The points at which the partial dependence was evaluated.</li>
+<li><code>zi</code>: [list of lists, n_points by n_points]:
+    The value of the model at each point <code>(xi, yi)</code>.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.partial_dependence', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.plots.partial_dependence" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                       <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the partial dependence for dimensions `i` and `j` with</span>
+<span class="sd">    respect to the objective value, as approximated by `model`.</span>
+
+<span class="sd">    The partial dependence plot shows how the value of the dimensions</span>
+<span class="sd">    `i` and `j` influence the `model` predictions after &quot;averaging out&quot;</span>
+<span class="sd">    the influence of all other dimensions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `space` [`Space`]</span>
+<span class="sd">        The parameter space over which the minimization was performed.</span>
+
+<span class="sd">    * `model`</span>
+<span class="sd">        Surrogate model for the objective function.</span>
+
+<span class="sd">    * `i` [int]</span>
+<span class="sd">        The first dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    * `j` [int, default=None]</span>
+<span class="sd">        The second dimension for which to calculate the partial dependence.</span>
+<span class="sd">        To calculate the 1D partial dependence on `i` alone set `j=None`.</span>
+
+<span class="sd">    * `sample_points` [np.array, shape=(n_points, n_dims), default=None]</span>
+<span class="sd">        Randomly sampled and transformed points to use when averaging</span>
+<span class="sd">        the model function at each of the `n_points`.</span>
+
+<span class="sd">    * `n_samples` [int, default=100]</span>
+<span class="sd">        Number of random samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points`. Only used when `sample_points=None`.</span>
+
+<span class="sd">    * `n_points` [int, default=40]</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension `i` and `j`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    For 1D partial dependence:</span>
+
+<span class="sd">    * `xi`: [np.array]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    * `yi`: [np.array]:</span>
+<span class="sd">        The value of the model at each point `xi`.</span>
+
+<span class="sd">    For 2D partial dependence:</span>
+
+<span class="sd">    * `xi`: [np.array, shape=n_points]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    * `yi`: [np.array, shape=n_points]:</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    * `zi`: [list of lists, n_points by n_points]:</span>
+<span class="sd">        The value of the model at each point `(xi, yi)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">:</span>
+            <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_points</span><span class="p">)</span>
+            <span class="n">rvs_</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">yi_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+
+        <span class="n">zi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">y_</span> <span class="ow">in</span> <span class="n">yi_transformed</span><span class="p">:</span>
+                <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_points</span><span class="p">)</span>
+                <span class="n">rvs_</span><span class="p">[:,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
+            <span class="n">zi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       
   <div class="item">
     <div class="name def" id="skopt.plots.plot_convergence">
@@ -1313,6 +1754,227 @@ table {
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.plots.plot_evaluations">
+    <p>def <span class="ident">plot_evaluations</span>(</p><p>result, bins=20)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Visualize the order in which points where sampled.</p>
+<p>The scatter plot matrix shows at which points in the search
+space and in which order samples were evaluated. Pairwise
+scatter plots are shown on the off-diagonal for each
+dimension of the search space. The order in which samples
+were evaluated is encoded in each point's color.
+The diagonal shows a histogram of sampled values for each
+dimension. A red point indicates the found minimum.</p>
+<p>Note: search spaces that contain <code>Categorical</code> dimensions are
+      currently not supported by this function.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>result</code> [<code>OptimizeResult</code>]
+    The result for which to create the scatter plot matrix.</p>
+</li>
+<li>
+<p><code>bins</code> [int, bins=20]:
+    Number of bins to use for histograms on the diagonal.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>ax</code>: [<code>Axes</code>]:
+    The matplotlib axes.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_evaluations', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.plots.plot_evaluations" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
+
+<span class="sd">    The scatter plot matrix shows at which points in the search</span>
+<span class="sd">    space and in which order samples were evaluated. Pairwise</span>
+<span class="sd">    scatter plots are shown on the off-diagonal for each</span>
+<span class="sd">    dimension of the search space. The order in which samples</span>
+<span class="sd">    were evaluated is encoded in each point&#39;s color.</span>
+<span class="sd">    The diagonal shows a histogram of sampled values for each</span>
+<span class="sd">    dimension. A red point indicates the found minimum.</span>
+
+<span class="sd">    Note: search spaces that contain `Categorical` dimensions are</span>
+<span class="sd">          currently not supported by this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `result` [`OptimizeResult`]</span>
+<span class="sd">        The result for which to create the scatter plot matrix.</span>
+
+<span class="sd">    * `bins` [int, bins=20]:</span>
+<span class="sd">        Number of bins to use for histograms on the diagonal.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                              <span class="nb">range</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">order</span><span class="p">,</span>
+                                 <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                 <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Number of samples&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.plots.plot_objective">
+    <p>def <span class="ident">plot_objective</span>(</p><p>result, levels=10, n_points=40, n_samples=100)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Pairwise partial dependence plot of the objective function.</p>
+<p>The diagonal shows the partial dependence for dimension <code>i</code> with
+respect to the objective function. The off-diagonal shows the
+partial dependence for dimensions <code>i</code> and <code>j</code> with
+respect to the objective function. The objective function is
+approximated by <code>result.model.</code></p>
+<p>Pairwise scatter plots of the points at which the objective
+function was directly evaluated are shown on the off-diagonal.
+A red point indicates the found minimum.</p>
+<p>Note: search spaces that contain <code>Categorical</code> dimensions are
+      currently not supported by this function.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>result</code> [<code>OptimizeResult</code>]
+    The result for which to create the scatter plot matrix.</p>
+</li>
+<li>
+<p><code>levels</code> [int, default=10]
+    Number of levels to draw on the contour plot, passed directly
+    to <code>plt.contour()</code>.</p>
+</li>
+<li>
+<p><code>n_points</code> [int, default=40]
+    Number of points at which to evaluate the partial dependence
+    along each dimension.</p>
+</li>
+<li>
+<p><code>n_samples</code> [int, default=100]
+    Number of random samples to use for averaging the model function
+    at each of the <code>n_points</code>.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>ax</code>: [<code>Axes</code>]:
+    The matplotlib axes.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_objective', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.plots.plot_objective" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
+
+<span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
+<span class="sd">    respect to the objective function. The off-diagonal shows the</span>
+<span class="sd">    partial dependence for dimensions `i` and `j` with</span>
+<span class="sd">    respect to the objective function. The objective function is</span>
+<span class="sd">    approximated by `result.model.`</span>
+
+<span class="sd">    Pairwise scatter plots of the points at which the objective</span>
+<span class="sd">    function was directly evaluated are shown on the off-diagonal.</span>
+<span class="sd">    A red point indicates the found minimum.</span>
+
+<span class="sd">    Note: search spaces that contain `Categorical` dimensions are</span>
+<span class="sd">          currently not supported by this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `result` [`OptimizeResult`]</span>
+<span class="sd">        The result for which to create the scatter plot matrix.</span>
+
+<span class="sd">    * `levels` [int, default=10]</span>
+<span class="sd">        Number of levels to draw on the contour plot, passed directly</span>
+<span class="sd">        to `plt.contour()`.</span>
+
+<span class="sd">    * `n_points` [int, default=40]</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension.</span>
+
+<span class="sd">    * `n_samples` [int, default=100]</span>
+<span class="sd">        Number of random samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rvs_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                            <span class="n">sample_points</span><span class="o">=</span><span class="n">rvs_transformed</span><span class="p">,</span>
+                                            <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
+                                                <span class="n">rvs_transformed</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Partial dependence&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
