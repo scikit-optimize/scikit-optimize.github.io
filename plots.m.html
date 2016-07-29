@@ -1096,6 +1096,7 @@ table {
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">LogLocator</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">MaxNLocator</span>
 
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
@@ -1210,6 +1211,15 @@ table {
                     <span class="n">ax_</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+
+                <span class="c1"># for all rows except ...</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+                <span class="c1"># ... the bottom row</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax_</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">diagonal_ylim</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
@@ -1217,16 +1227,11 @@ table {
                 <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
 
+                <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+
             <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
             <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
-
-            <span class="c1"># for all rows except ...</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-            <span class="c1"># ... the bottom row</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax_</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span>
-                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax</span>
 
@@ -1283,7 +1288,7 @@ table {
 <span class="sd">        The points at which the partial dependence was evaluated.</span>
 <span class="sd">    * `yi`: [np.array, shape=n_points]:</span>
 <span class="sd">        The points at which the partial dependence was evaluated.</span>
-<span class="sd">    * `zi`: [list of lists, n_points by n_points]:</span>
+<span class="sd">    * `zi`: [np.array, shape=(n_points, n_points)]:</span>
 <span class="sd">        The value of the model at each point `(xi, yi)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1322,10 +1327,11 @@ table {
                 <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
             <span class="n">zi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span>
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
 
-<span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -1358,6 +1364,10 @@ table {
 <span class="sd">        Number of random samples to use for averaging the model function</span>
 <span class="sd">        at each of the `n_points`.</span>
 
+<span class="sd">    * `zscale` [str, default=&#39;linear&#39;]</span>
+<span class="sd">        Scale to use for the z axis of the contour plots. Either &#39;linear&#39;</span>
+<span class="sd">        or &#39;log&#39;.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `ax`: [`Axes`]:</span>
@@ -1366,6 +1376,14 @@ table {
     <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
     <span class="n">rvs_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for zscale are &#39;linear&#39; and &#39;log&#39;,&quot;</span>
+                         <span class="s2">&quot; not &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">zscale</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
@@ -1389,8 +1407,10 @@ table {
                                                 <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
                                                 <span class="n">rvs_transformed</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
 
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
+                <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span>
+                                      <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                                  <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
@@ -1524,7 +1544,7 @@ the influence of all other dimensions.</p>
     The points at which the partial dependence was evaluated.</li>
 <li><code>yi</code>: [np.array, shape=n_points]:
     The points at which the partial dependence was evaluated.</li>
-<li><code>zi</code>: [list of lists, n_points by n_points]:
+<li><code>zi</code>: [np.array, shape=(n_points, n_points)]:
     The value of the model at each point <code>(xi, yi)</code>.</li>
 </ul></div>
   <div class="source_cont">
@@ -1582,7 +1602,7 @@ the influence of all other dimensions.</p>
 <span class="sd">        The points at which the partial dependence was evaluated.</span>
 <span class="sd">    * `yi`: [np.array, shape=n_points]:</span>
 <span class="sd">        The points at which the partial dependence was evaluated.</span>
-<span class="sd">    * `zi`: [list of lists, n_points by n_points]:</span>
+<span class="sd">    * `zi`: [np.array, shape=(n_points, n_points)]:</span>
 <span class="sd">        The value of the model at each point `(xi, yi)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1621,7 +1641,7 @@ the influence of all other dimensions.</p>
                 <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">)))</span>
             <span class="n">zi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span>
+        <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zi</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 
   </div>
@@ -1858,7 +1878,7 @@ dimension. A red point indicates the found minimum.</p>
       
   <div class="item">
     <div class="name def" id="skopt.plots.plot_objective">
-    <p>def <span class="ident">plot_objective</span>(</p><p>result, levels=10, n_points=40, n_samples=250)</p>
+    <p>def <span class="ident">plot_objective</span>(</p><p>result, levels=10, n_points=40, n_samples=250, zscale=&#39;linear&#39;)</p>
     </div>
     
 
@@ -1896,6 +1916,11 @@ A red point indicates the found minimum.</p>
     Number of random samples to use for averaging the model function
     at each of the <code>n_points</code>.</p>
 </li>
+<li>
+<p><code>zscale</code> [str, default='linear']
+    Scale to use for the z axis of the contour plots. Either 'linear'
+    or 'log'.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1905,7 +1930,8 @@ A red point indicates the found minimum.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_objective', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.plot_objective" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -1938,6 +1964,10 @@ A red point indicates the found minimum.</p>
 <span class="sd">        Number of random samples to use for averaging the model function</span>
 <span class="sd">        at each of the `n_points`.</span>
 
+<span class="sd">    * `zscale` [str, default=&#39;linear&#39;]</span>
+<span class="sd">        Scale to use for the z axis of the contour plots. Either &#39;linear&#39;</span>
+<span class="sd">        or &#39;log&#39;.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `ax`: [`Axes`]:</span>
@@ -1946,6 +1976,14 @@ A red point indicates the found minimum.</p>
     <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
     <span class="n">rvs_transformed</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for zscale are &#39;linear&#39; and &#39;log&#39;,&quot;</span>
+                         <span class="s2">&quot; not &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">zscale</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
@@ -1969,8 +2007,10 @@ A red point indicates the found minimum.</p>
                                                 <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
                                                 <span class="n">rvs_transformed</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
 
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
+                <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span>
+                                      <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                                  <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
