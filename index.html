@@ -1981,7 +1981,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;lbfgs&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;auto&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
     </div>
     
 
@@ -2054,9 +2054,11 @@ guided by the surrogate model.</p>
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
 <li>
-<p><code>search</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>, default="lbfgs"]:
+<p><code>search</code> [string, <code>"auto"``,</code>"sampling"<code>or</code>"lbfgs"<code>, default=</code>"auto"`]:
     Searching for the next possible candidate to update the Gaussian prior
     with.</p>
+<p>If search is set to <code>"auto"</code>, then it is set to <code>"lbfgs"`` if
+all the search dimensions are Real(continuous). It defaults to</code>"sampling"` for all other cases.</p>
 <p>If search is set to <code>"sampling"</code>, <code>n_points</code> are sampled randomly
 and the Gaussian Process prior is updated with the point that gives
 the best acquisition value over the Gaussian prior.</p>
@@ -2134,7 +2136,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
                 <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                 <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
@@ -2199,9 +2201,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
-<span class="sd">    * `search` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=&quot;lbfgs&quot;]:</span>
+<span class="sd">    * `search` [string, `&quot;auto&quot;``, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
 <span class="sd">        Searching for the next possible candidate to update the Gaussian prior</span>
 <span class="sd">        with.</span>
+
+<span class="sd">        If search is set to `&quot;auto&quot;`, then it is set to `&quot;lbfgs&quot;`` if</span>
+<span class="sd">        all the search dimensions are Real(continuous). It defaults to</span>
+<span class="sd">        `&quot;sampling&quot;` for all other cases.</span>
 
 <span class="sd">        If search is set to `&quot;sampling&quot;`, `n_points` are sampled randomly</span>
 <span class="sd">        and the Gaussian Process prior is updated with the point that gives</span>
@@ -2265,7 +2271,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Save call args </span>
+    <span class="c1"># Save call args</span>
     <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
              <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
 
@@ -2326,6 +2332,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">yi</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">):]]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">search</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_real</span><span class="p">:</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;lbfgs&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
+    <span class="k">elif</span> <span class="n">search</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected search to be &#39;lbfgs&#39;, &#39;sampling&#39; or &#39;auto&#39;, &quot;</span>
+            <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">search</span><span class="p">)</span>
 
     <span class="c1"># Bayesian optimization loop</span>
     <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>

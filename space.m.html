@@ -1432,6 +1432,13 @@ table {
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">_dimensions</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns true if all dimensions are Real</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Real</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
+
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
 
@@ -1838,10 +1845,6 @@ original space.</p></div>
             <div class="item">
             <p id="skopt.space.Categorical.size" class="name">var <span class="ident">size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.size">size</a></code>
-    </p>
 
             
   
@@ -1852,6 +1855,10 @@ original space.</p></div>
             <div class="item">
             <p id="skopt.space.Categorical.transformed_bounds" class="name">var <span class="ident">transformed_bounds</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.transformed_bounds">transformed_bounds</a></code>
+    </p>
 
             
   
@@ -2293,10 +2300,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Integer.size" class="name">var <span class="ident">size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.size">size</a></code>
-    </p>
 
             
   
@@ -2307,6 +2310,10 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Integer.transformed_bounds" class="name">var <span class="ident">transformed_bounds</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.transformed_bounds">transformed_bounds</a></code>
+    </p>
 
             
   
@@ -2603,10 +2610,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Real.size" class="name">var <span class="ident">size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.size">size</a></code>
-    </p>
 
             
   
@@ -2627,6 +2630,10 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.Real.transformed_size" class="name">var <span class="ident">transformed_size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.Dimension.transformed_size">transformed_size</a></code>
+    </p>
 
             
   
@@ -2689,6 +2696,13 @@ orignal space.</p></div>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid grid component (got </span><span class="si">%s</span><span class="s2">).&quot;</span> <span class="o">%</span> <span class="n">dim</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">_dimensions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns true if all dimensions are Real</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Real</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
@@ -3138,6 +3152,17 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 
             
   
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.space.Space.is_real" class="name">var <span class="ident">is_real</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Returns true if all dimensions are Real</p></div>
   <div class="source_cont">
 </div>
 
