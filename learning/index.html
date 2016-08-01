@@ -1583,7 +1583,12 @@ one go.</p>
     the hyper-parameters of the estimator.</p>
 </li>
 <li>
-<p><code>random-state</code> [int, RandomState instance, or None (default)]:
+<p><code>n_jobs</code> [int, default=1]:
+    The number of jobs to run in parallel for <code>fit</code>.
+    If -1, then the number of jobs is set to the number of cores.</p>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
     Set random state to something other than None for reproducible
     results.</p>
 </li>
@@ -1609,16 +1614,21 @@ one go.</p>
 <span class="sd">        of `GradientBoostingRegressor` are supported. Use this to change</span>
 <span class="sd">        the hyper-parameters of the estimator.</span>
 
-<span class="sd">    * `random-state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">    * `n_jobs` [int, default=1]:</span>
+<span class="sd">        The number of jobs to run in parallel for `fit`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit one regressor for each quantile.</span>
@@ -1647,13 +1657,19 @@ one go.</p>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to use quantile&#39;</span>
                                  <span class="s1">&#39; loss not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># The predictions for different quantiles should be sorted.</span>
+        <span class="c1"># Therefore each of the regressors need the same seed.</span>
+        <span class="n">base_estimator</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">regressors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">:</span>
             <span class="n">regressor</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
-            <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-            <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
+            <span class="n">regressors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_parallel_fit</span><span class="p">)(</span><span class="n">regressor</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">regressor</span> <span class="ow">in</span> <span class="n">regressors</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -1704,7 +1720,7 @@ one go.</p>
             
   <div class="item">
     <div class="name def" id="skopt.learning.GradientBoostingQuantileRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, quantiles=[0.16, 0.5, 0.84], base_estimator=None, random_state=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, quantiles=[0.16, 0.5, 0.84], base_estimator=None, n_jobs=1, random_state=None)</p>
     </div>
     
 
@@ -1715,10 +1731,11 @@ one go.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 </pre></div>
 
   </div>
@@ -1772,12 +1789,17 @@ one go.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span> <span class="o">==</span> <span class="s1">&#39;quantile&#39;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_estimator has to use quantile&#39;</span>
                              <span class="s1">&#39; loss not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># The predictions for different quantiles should be sorted.</span>
+    <span class="c1"># Therefore each of the regressors need the same seed.</span>
+    <span class="n">base_estimator</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">regressors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span><span class="p">:</span>
         <span class="n">regressor</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
-        <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-        <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
+        <span class="n">regressor</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">regressors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regressor</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">regressors_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">)(</span>
+        <span class="n">delayed</span><span class="p">(</span><span class="n">_parallel_fit</span><span class="p">)(</span><span class="n">regressor</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">regressor</span> <span class="ow">in</span> <span class="n">regressors</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
@@ -1846,6 +1868,16 @@ the (0.84th quantile - 0.16th quantile) divided by 2.0</p>
           <h3>Instance variables</h3>
             <div class="item">
             <p id="skopt.learning.GradientBoostingQuantileRegressor.base_estimator" class="name">var <span class="ident">base_estimator</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.learning.GradientBoostingQuantileRegressor.n_jobs" class="name">var <span class="ident">n_jobs</span></p>
             
 
             

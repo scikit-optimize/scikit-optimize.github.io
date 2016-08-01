@@ -1402,7 +1402,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1493,6 +1493,11 @@ making predictions.</p>
 </ul>
 </li>
 <li>
+<p><code>n_jobs</code> [int, default=1]:
+    The number of jobs to run in parallel for <code>fit</code> and <code>predict</code>.
+    If -1, then the number of jobs is set to the number of cores.</p>
+</li>
+<li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
     Set random state to something other than None for reproducible
     results.</p>
@@ -1544,7 +1549,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                     <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -1621,6 +1626,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
 <span class="sd">          at each element of `x0`.</span>
 
+<span class="sd">    * `n_jobs` [int, default=1]:</span>
+<span class="sd">        The number of jobs to run in parallel for `fit` and `predict`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
@@ -1677,11 +1686,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;rf&quot;</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                                    <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                                   <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;et&quot;</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                                 <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                  <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;dt&quot;</span><span class="p">:</span>
@@ -1712,7 +1723,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1793,6 +1804,11 @@ guided by the surrogate model.</p>
 </ul>
 </li>
 <li>
+<p><code>n_jobs</code> [int, default=1]:
+    The number of jobs to run in parallel for <code>fit</code>.
+    If -1, then the number of jobs is set to the number of cores.</p>
+</li>
+<li>
 <p><code>random_state</code> [int, RandomState instance, or None (default)]:
     Set random state to something other than None for reproducible
     results.</p>
@@ -1844,7 +1860,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                   <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -1912,6 +1928,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
 <span class="sd">          at each element of `x0`.</span>
 
+<span class="sd">    * `n_jobs` [int, default=1]:</span>
+<span class="sd">        The number of jobs to run in parallel for `fit`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
@@ -1962,6 +1982,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">,</span>
+                                                           <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="n">res</span> <span class="o">=</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
