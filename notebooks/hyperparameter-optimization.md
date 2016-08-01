@@ -74,7 +74,7 @@ res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 
 
 
-    'Best score=3.0168'
+    'Best score=2.8879'
 
 
 
@@ -91,11 +91,11 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=2
-    - learning_rate=0.100000
-    - max_features=5
-    - min_samples_split=30
-    - min_samples_leaf=1
+    - max_depth=5
+    - learning_rate=0.099611
+    - max_features=8
+    - min_samples_split=15
+    - min_samples_leaf=5
 
 
 
@@ -112,7 +112,7 @@ res_forest = forest_minimize(objective, space, x0=x0, n_calls=50, random_state=0
 
 
 
-    'Best score=2.8968'
+    'Best score=2.9195'
 
 
 
@@ -130,10 +130,10 @@ print("""Best parameters:
 
     Best parameters:
     - max_depth=4
-    - learning_rate=0.094372
-    - max_features=5
-    - min_samples_split=20
-    - min_samples_leaf=1
+    - learning_rate=0.089097
+    - max_features=8
+    - min_samples_split=6
+    - min_samples_leaf=3
 
 
 As a baseline, let us also compare with random search in the space of hyper-parameters, which is equivalent to `sklearn.model_selection.RandomizedSearchCV`.
@@ -189,7 +189,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f166007d3c8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f03dc670198>
 
 
 

@@ -1,7 +1,7 @@
 
 # Comparing surrogate models
 
-Tim Head, July 2016
+Tim Head, July 2016.
 
 
 ```python
@@ -15,7 +15,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f098cff2278>
+    <matplotlib.figure.Figure at 0x7f607c455550>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -138,7 +138,7 @@ plot_convergence(("dummy_minimize", dummy_res),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f094fc42630>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f60440ef1d0>
 
 
 

@@ -1402,7 +1402,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=100, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1543,7 +1543,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                    <span class="n">n_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                     <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
@@ -1670,8 +1670,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rf&quot;</span><span class="p">,</span> <span class="s2">&quot;et&quot;</span><span class="p">,</span> <span class="s2">&quot;dt&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for the base_estimator parameter&quot;</span>
-                             <span class="s2">&quot; are: &#39;rf&#39;, &#39;et&#39; or &#39;dt&#39;, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Valid values for the base_estimator parameter&quot;</span>
+                <span class="s2">&quot; are: &#39;rf&#39;, &#39;et&#39; or &#39;dt&#39;, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;rf&quot;</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -1711,7 +1712,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=20, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
     </div>
     
 
@@ -1766,7 +1767,7 @@ guided by the surrogate model.</p>
     before approximating the <code>func</code> with <code>base_estimator</code>.</p>
 </li>
 <li>
-<p><code>n_points</code> [int, default=20]:
+<p><code>n_points</code> [int, default=1000]:
     Number of points to sample when minimizing the acquisition function.</p>
 </li>
 <li>
@@ -1842,7 +1843,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">n_points</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                  <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
@@ -1890,7 +1891,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Number of evaluations of `func` with random initialization points</span>
 <span class="sd">        before approximating the `func` with `base_estimator`.</span>
 
-<span class="sd">    * `n_points` [int, default=20]:</span>
+<span class="sd">    * `n_points` [int, default=1000]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
 
 <span class="sd">    * `x0` [list, list of lists or `None`]:</span>
@@ -1959,7 +1960,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+        <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
@@ -1981,7 +1982,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;auto&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, alpha=1e-09, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;auto&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
     </div>
     
 
@@ -2033,6 +2034,12 @@ guided by the surrogate model.</p>
     The Gaussian process estimator to use for optimization.</p>
 </li>
 <li>
+<p><code>alpha</code> [float, default=1e-10]:
+    Value added to the diagonal of the kernel matrix during fitting.
+    Larger values correspond to an increased noise level in the
+    observations and reduce potential numerical issues during fitting.</p>
+</li>
+<li>
 <p><code>acq</code> [string, default=<code>"EI"</code>]:
     Function to minimize over the gaussian prior. Can be either</p>
 <ul>
@@ -2054,7 +2061,7 @@ guided by the surrogate model.</p>
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
 <li>
-<p><code>search</code> [string, <code>"auto"``,</code>"sampling"<code>or</code>"lbfgs"<code>, default=</code>"auto"`]:
+<p><code>search</code> [string, <code>"auto"</code>, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"auto"</code>]:
     Searching for the next possible candidate to update the Gaussian prior
     with.</p>
 <p>If search is set to <code>"auto"</code>, then it is set to <code>"lbfgs"`` if
@@ -2135,9 +2142,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-                <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-10</span><span class="p">,</span>
+                <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                 <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
@@ -2184,6 +2191,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `base_estimator` [a Gaussian process estimator]:</span>
 <span class="sd">        The Gaussian process estimator to use for optimization.</span>
 
+<span class="sd">    * `alpha` [float, default=1e-10]:</span>
+<span class="sd">        Value added to the diagonal of the kernel matrix during fitting.</span>
+<span class="sd">        Larger values correspond to an increased noise level in the</span>
+<span class="sd">        observations and reduce potential numerical issues during fitting.</span>
+
 <span class="sd">    * `acq` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the gaussian prior. Can be either</span>
 
@@ -2201,7 +2213,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
-<span class="sd">    * `search` [string, `&quot;auto&quot;``, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
+<span class="sd">    * `search` [string, `&quot;auto&quot;`, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
 <span class="sd">        Searching for the next possible candidate to update the Gaussian prior</span>
 <span class="sd">        with.</span>
 
@@ -2286,7 +2298,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
                            <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
                            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)),</span>
-            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -2376,7 +2388,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                         <span class="n">_acquisition</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
                         <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span>
                         <span class="n">bounds</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
-                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
                     <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span>

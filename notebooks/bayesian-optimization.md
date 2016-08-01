@@ -171,11 +171,13 @@ for key, value in sorted(res.items()):
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
     
-    space = <skopt.space.Space object at 0x7f988aa6be48>
+    random_state = <mtrand.RandomState object at 0x7fbd8ceca900>
     
-    specs = {'function': 'gp_minimize', 'args': {'n_points': 500, 'random_state': 777, 'search': 'lbfgs', 'n_random_starts': 0, 'n_restarts_optimizer': 5, 'y0': None, 'dimensions': [(-2.0, 2.0)], 'func': <function f at 0x7f988aa64510>, 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+    space = <skopt.space.Space object at 0x7fbd8ceb8c50>
+    
+    specs = {'function': 'gp_minimize', 'args': {'kappa': 1.96, 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
-                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'n_calls': 15, 'acq': 'LCB', 'x0': [0.0], 'xi': 0.01, 'kappa': 1.96}}
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'acq': 'LCB', 'search': 'auto', 'y0': None, 'n_calls': 15, 'x0': [0.0], 'alpha': 1e-09, 'xi': 0.01, 'random_state': 777, 'n_points': 500, 'dimensions': [(-2.0, 2.0)], 'n_restarts_optimizer': 5, 'n_random_starts': 0, 'func': <function f at 0x7fbd8cece620>}}
     
     x = [-0.3216749916139835]
     
@@ -194,7 +196,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f98886f1b70>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7fbd8a4744e0>
 
 
 
