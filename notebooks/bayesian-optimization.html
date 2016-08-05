@@ -1078,8 +1078,6 @@ table {
         <li><a href="https://scikit-optimize.github.io/notebooks/bayesian-optimization.html">Bayesian optimization</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimization.html">Hyperparameter optimization</a></li>
-        
-        <li><a href="https://scikit-optimize.github.io/notebooks/strategy-comparison.html">Strategy comparison</a></li>
       </ul>
     </li>
     </ul>
@@ -1095,6 +1093,13 @@ table {
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>/home/travis/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn(&#39;Matplotlib is building the font cache using fc-list. This may take a moment.&#39;)
+/home/travis/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn(&#39;Matplotlib is building the font cache using fc-list. This may take a moment.&#39;)
 </pre></div>
 
 
@@ -1202,11 +1207,11 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>fun = -0.925940774705
+<div class="codehilite"><pre><span></span>fun = -0.925941066255
 
-func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016026  0.04066236
-  0.12350638  0.08315035  0.10237308 -0.3999157   0.12857682 -0.64048307
- -0.8962862  -0.92594077 -0.83922126]
+func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016027  0.04066236
+  0.12350637  0.08315042  0.10237308 -0.39991553  0.128577   -0.64048322
+ -0.89628578 -0.92594107 -0.83922154]
 
 models = [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
@@ -1238,17 +1243,17 @@ models = [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
              normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0)]
 
-random_state = &lt;mtrand.RandomState object at 0x7fbd8ceca900&gt;
+random_state = &lt;mtrand.RandomState object at 0x7f9cfc84f438&gt;
 
-space = &lt;skopt.space.Space object at 0x7fbd8ceb8c50&gt;
+space = &lt;skopt.space.Space object at 0x7f9cff0d5208&gt;
 
-specs = {&#39;function&#39;: &#39;gp_minimize&#39;, &#39;args&#39;: {&#39;kappa&#39;: 1.96, &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+specs = {&#39;args&#39;: {&#39;kappa&#39;: 1.96, &#39;x0&#39;: [0.0], &#39;n_restarts_optimizer&#39;: 5, &#39;search&#39;: &#39;auto&#39;, &#39;alpha&#39;: 1e-09, &#39;xi&#39;: 0.01, &#39;n_points&#39;: 500, &#39;random_state&#39;: 777, &#39;dimensions&#39;: [(-2.0, 2.0)], &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
              kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
-             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), &#39;acq&#39;: &#39;LCB&#39;, &#39;search&#39;: &#39;auto&#39;, &#39;y0&#39;: None, &#39;n_calls&#39;: 15, &#39;x0&#39;: [0.0], &#39;alpha&#39;: 1e-09, &#39;xi&#39;: 0.01, &#39;random_state&#39;: 777, &#39;n_points&#39;: 500, &#39;dimensions&#39;: [(-2.0, 2.0)], &#39;n_restarts_optimizer&#39;: 5, &#39;n_random_starts&#39;: 0, &#39;func&#39;: &lt;function f at 0x7fbd8cece620&gt;}}
+             normalize_y=False, optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=0), &#39;y0&#39;: None, &#39;func&#39;: &lt;function f at 0x7f9cff0c2bf8&gt;, &#39;n_random_starts&#39;: 0, &#39;n_calls&#39;: 15, &#39;acq&#39;: &#39;LCB&#39;}, &#39;function&#39;: &#39;gp_minimize&#39;}
 
-x = [-0.3216749916139835]
+x = [-0.32167462923223483]
 
-x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209652246221], [1.5140003571302036], [0.62375407049503984], [1.2243915794329912], [-1.5528926830427656], [-0.53675652890758174], [-0.67998042813399784], [-0.36427321425821568], [-0.34695602514531776], [-0.3216749916139835], [-0.3066311315820735]]
+x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209567449765], [1.5140003732987382], [0.62375407407250694], [1.2243917203159205], [-1.5528926690953295], [-0.53675657487932271], [-0.67998050022698353], [-0.36427313079405427], [-0.34695632908030555], [-0.32167462923223483], [-0.30663049322803215]]
 </pre></div>
 
 
@@ -1258,7 +1263,7 @@ x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209652246221], [1
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbd8a4744e0&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f9cf25d5550&gt;
 </pre></div>
 
 
