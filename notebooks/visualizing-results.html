@@ -1089,8 +1089,8 @@ table {
 
     <article id="content">
           
-          <h1>Comparing surrogate models</h1>
-<p>Tim Head, July 2016.</p>
+          <h1>Visualizing optimization results</h1>
+<p>Tim Head, August 2016.</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
@@ -1101,29 +1101,42 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f607c455550&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x1044164e0&gt;
 </pre></div>
 
 
 <p>Bayesian optimization or sequential model-based optimization uses a surrogate model
-to model the expensive to evaluate function <code>func</code>. There are several choices
-for what kind of surrogate model to use. This example compares the performance of:</p>
-<ul>
-<li>gaussian processes,</li>
-<li>extra trees, and</li>
-<li>random forests </li>
-</ul>
-<p>as surrogate models. A purely random optimization strategy is used as a baseline.</p>
-<h1>Toy model</h1>
-<p>We will use the <code>branin</code> function as toy model for the expensive function. In
-a real world application this function would be unknown and expensive to evaluate.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <span class="n">_branin</span>
+to model the expensive to evaluate objective function <code>func</code>. It is this model
+that is used to determine at which points to evaluate the expensive objective next.</p>
+<p>To help understand why the optimization process is proceeding the way it is, it is
+useful to plot the location and order of the points at which the objective is
+evaluated. If everything is working as expected, early samples will be spread over
+the whole parameter space and later samples should cluster around the minimum.</p>
+<p>The <code>plot_evaluations()</code> function helps with visualizing the location and order
+in which samples are evaluated for objectives with an arbitrary number of dimensions.</p>
+<p>The <code>plot_objective()</code> function plots the partial dependence of the objective, as
+represented by the surrogate model, for each dimension and as pairs of the input
+dimensions.</p>
+<p>All of the minimizers implemented in <code>skopt</code> return an <a href=""><code>OptimizeResult</code></a> instance
+that can be inspected. Both <code>plot_evaluations</code> and <code>plot_objective</code> are helpers that
+do just that.</p>
+<h1>Toy models</h1>
+<p>We will use two different toy models to demonstrate how <code>plot_evaluations()</code> works.</p>
+<p>The first model is the <code>branin</code> function which has two dimensions and three minima.</p>
+<p>The second model is the <code>hart6</code> function which has six dimension which makes it hard to visualize. This will show off the utility of <code>plot_evaluations()</code>.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <span class="n">branin</span>
+<span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">hart6</span> <span class="k">as</span> <span class="n">hart6_</span>
 
-<span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">_branin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+
+<span class="c1"># redefined `hart6` to allow adding arbitrary &quot;noise&quot; dimensions</span>
+<span class="k">def</span> <span class="nf">hart6</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">hart6_</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
 </pre></div>
 
 
+<h1>Starting with <code>branin</code></h1>
+<p>To start let's take advantage of the fact that <code>branin</code> is a simple
+function which can be visualised in two dimensions.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
 
 <span class="k">def</span> <span class="nf">plot_branin</span><span class="p">():</span>
@@ -1147,78 +1160,121 @@ a real world application this function would be unknown and expensive to evaluat
 
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_0$&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$X_1$&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
 
 <span class="n">plot_branin</span><span class="p">()</span>
 </pre></div>
 
 
-<p><img alt="png" src="strategy-comparison_files/strategy-comparison_4_0.png" /></p>
-<p>This shows the value of the two-dimensional branin function and the three minima.</p>
-<h1>Objective</h1>
-<p>The objective of this example is to find one of these minima in as few iterations
-as possible. One iteration is defined as one call to the branin function.</p>
-<p>We will evaluate each model several times using a different seed for the
-random number generator. Then compare the average performance of these
-models. This makes the comparison more robust against models that get
-"lucky".</p>
+<p><img alt="png" src="visualizing-results_files/visualizing-results_5_0.png" /></p>
+<h1>Evaluating the objective function</h1>
+<p>Next we use an extra trees based minimizer to find one of the minima of the
+<code>branin</code> function. Then we visualize at which points the objective is being
+evaluated using <code>plot_evaluations()</code>.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_evaluations</span>
 <span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
 
-<span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
 <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]</span>
-<span class="n">n_calls</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">n_calls</span> <span class="o">=</span> <span class="mi">160</span>
+
+<span class="n">forest_res</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">,</span>
+                             <span class="n">random_state</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_evaluations</span><span class="p">(</span><span class="n">forest_res</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> 
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
+<p><img alt="png" src="visualizing-results_files/visualizing-results_7_0.png" /></p>
+<p><code>plot_evaluations()</code> creates a grid of size <code>n_dims</code> by <code>n_dims</code>. The diagonal shows
+histograms for each of the dimensions. In the lower triangle (just one plot in this case)
+a two dimensional scatter plot of all points is shown. The order in which points were
+evaluated is encoded in the color of each point. Darker/purple colors correspond to earlier
+samples and lighter/yellow colors correspond to later samples. A red point shows the location
+of the minimum found by the optimization process.</p>
+<p>You should be able to see that points start clustering around the location of the true
+miminum. The histograms show that the objective is evaluated more often at locations near
+to one of the three minima.</p>
+<p>Using <code>plot_objective()</code> we can visualise the one dimensional partial dependence of the
+surrogate model for each dimension. The contour plot in the bottom left corner shows
+the two dimensional partial dependence. In this case this is the same as simply plotting
+the objective as it only has two dimensions.</p>
+<blockquote>
+<h3>Partial dependence plots</h3>
+<p>Partial dependence plots were proposed by <a href="http://projecteuclid.org/euclid.aos/1013203451">Friedman (2001)</a> (doi:10.1214/aos/1013203451 section 8.2)
+as a method for interpreting the importance of input features used in gradient
+boosting machines. Given a function of $k$ variables $y=f\left(x_1, x_2, ..., x_k\right)$ the
+partial dependence of $f$ on the $i$-th variable $x_i$ is calculated as:
+$$\phi\left( x_i \right) = \frac{1}{N} \sum^N_{j=0}f\left(x_{1,j}, x_{2,j}, ..., x_i, ..., x_{k,j}\right)$$
+with the sum running over a set of $N$ points drawn at random from the search space.</p>
+<p>The idea is to visulize how the value of $x_j$ influences the function $f$ after
+averaging out the influence of all other variables.</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_objective</span>
 
-<span class="c1"># Random search</span>
-<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">dummy_minimize</span><span class="p">)</span> 
-
-<span class="c1"># Gaussian processes</span>
-<span class="n">gp_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">gp_minimize</span><span class="p">)</span>
-
-<span class="c1"># Random forest</span>
-<span class="n">rf_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;rf&quot;</span><span class="p">))</span>
-
-<span class="c1"># Extra trees </span>
-<span class="n">et_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_objective</span><span class="p">(</span><span class="n">forest_res</span><span class="p">)</span>
 </pre></div>
 
 
-<p>Note that this can take a few minutes.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
+<p><img alt="png" src="visualizing-results_files/visualizing-results_9_0.png" /></p>
+<p>The two dimensional partial dependence plot can look like the true objective but it does not
+have to. As points at which the objective function is being evaluated are concentrated
+around the suspected minimum the surrogate model sometimes is not a good
+representation of the objective far away from the minima.</p>
+<h2>Random sampling</h2>
+<p>Compare this to a mimizer which picks points at random. There is no structure visible
+in the order in which it evaluates the objective. Because there is no model involved
+in the process of picking sample points at random, we can not plot the partial
+dependence of the model.</p>
+<div class="codehilite"><pre><span></span><span class="n">dummy_res</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
-                 <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_evaluations</span><span class="p">(</span><span class="n">dummy_res</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f60440ef1d0&gt;
+<p><img alt="png" src="visualizing-results_files/visualizing-results_12_0.png" /></p>
+<h1>Working in six dimensions</h1>
+<p>Visualising what happens in two dimensions is easy, where <code>plot_evaluations()</code> and
+<code>plot_objective()</code> start to be useful is when the number of dimensions grows.
+They take care of many of the more mundane things needed to make good plots of all combinations of the dimensions.</p>
+<p>The next example uses <code>hart6</code> which has six dimensions and shows both <code>plot_evaluations()</code>
+and <code>plot_objective()</code>.</p>
+<div class="codehilite"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),]</span> <span class="o">*</span> <span class="mi">6</span>
+
+<span class="n">forest_res</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">hart6</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                             <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 
 
-<p><img alt="png" src="strategy-comparison_files/strategy-comparison_9_1.png" /></p>
-<p>This plot shows the value of the minimum found (y axis) as a function of the number
-of iterations performed so far (x axis). The dashed red line indicates the
-true value of the minimum of the branin function.</p>
-<p>For the first ten iterations all methods perform equally well as they all start
-by creating ten random samples before fitting their respective model for the
-first time. After iteration ten the next point at which to evaluate <code>branin</code> is
-guided by the model, which is where differences start to appear.</p>
-<p>Each minimizer only has access to noisy observations of the objective
-function, so as time passes (more iterations) it will start observing values that
-are below the true value simply because they are fluctuations.</p>
+<div class="codehilite"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">plot_evaluations</span><span class="p">(</span><span class="n">forest_res</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_objective</span><span class="p">(</span><span class="n">forest_res</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="visualizing-results_files/visualizing-results_15_0.png" /></p>
+<p><img alt="png" src="visualizing-results_files/visualizing-results_15_1.png" /></p>
+<h2>Going from 6 to 6+2 dimensions</h2>
+<p>To make things more interesting let's add two dimension to the problem. As <code>hart6</code>
+only depends on six dimensions we know that for this problem the new dimensions will
+be "flat" or uninformative. This is clearly visible in both the placement of samples
+and the partial dependence plots.</p>
+<div class="codehilite"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),]</span> <span class="o">*</span> <span class="mi">8</span>
+<span class="n">n_calls</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">forest_res</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">hart6</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                             <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_evaluations</span><span class="p">(</span><span class="n">forest_res</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plot_objective</span><span class="p">(</span><span class="n">forest_res</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="visualizing-results_files/visualizing-results_17_0.png" /></p>
+<p><img alt="png" src="visualizing-results_files/visualizing-results_17_1.png" /></p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">
