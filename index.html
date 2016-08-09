@@ -1176,7 +1176,7 @@ python setup.py develop
       
   <div class="item">
     <div class="name def" id="skopt.dummy_minimize">
-    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None)</p>
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None, verbose=False, callback=None)</p>
     </div>
     
 
@@ -1235,6 +1235,16 @@ python setup.py develop
     Set random state to something other than None for reproducible
     results.</p>
 </li>
+<li>
+<p><code>verbose</code> [boolean, default=False]:
+    Control the verbosity. It is advised to set the verbosity to True
+    for long optimization runs.</p>
+</li>
+<li>
+<p><code>callback</code> [callable, list of callables, optional]
+    If callable then <code>callback(res)</code> is called after each call to <code>func</code>.
+    If list of callables, then each callable in the list is called.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1261,7 +1271,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dummy_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                   <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1307,6 +1318,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, list of callables, optional]</span>
+<span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
+<span class="sd">        If list of callables, then each callable in the list is called.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1342,6 +1361,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0` should be a list, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
 
+    <span class="n">n_init_func_calls</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
             <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
@@ -1359,12 +1379,18 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">n_calls</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">n_init_func_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0`cannot be `None` when `y0` is provided&quot;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># len(x0) == 0 and y0 is None</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VerboseCallback</span><span class="p">(</span>
+            <span class="n">n_init</span><span class="o">=</span><span class="n">n_init_func_calls</span><span class="p">,</span> <span class="n">n_total</span><span class="o">=</span><span class="n">n_calls</span><span class="p">))</span>
 
     <span class="n">X</span> <span class="o">=</span> <span class="n">x0</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">y0</span>
@@ -1382,22 +1408,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
 
         <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
 
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="c1"># Pack results</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
-    <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span> <span class="o">=</span> <span class="n">y</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span> <span class="o">=</span> <span class="n">X</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Create attribute even though it is empty</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">rng</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
-
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1408,7 +1425,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, verbose=False, callback=None)</p>
     </div>
     
 
@@ -1529,6 +1546,15 @@ making predictions.</p>
     exploration over exploitation and vice versa.
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
+<li>
+<p><code>verbose</code> [boolean, default=False]:
+    Control the verbosity. It is advised to set the verbosity to True
+    for long optimization runs.</p>
+</li>
+<li>
+<p><code>callback</code> [callable, optional]
+    If provided, then <code>callback(res)</code> is called after call to func.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1555,7 +1581,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s1">&#39;et&#39;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                     <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -1657,6 +1684,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, optional]</span>
+<span class="sd">        If provided, then `callback(res)` is called after call to func.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1711,14 +1745,12 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                              <span class="s2">&quot; be a string or a regressor instance.&quot;</span>
                              <span class="s2">&quot; &#39;</span><span class="si">%s</span><span class="s2">&#39; is neither.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
-    <span class="n">res</span> <span class="o">=</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
-                         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span>
-                         <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
-
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+                          <span class="n">specs</span><span class="o">=</span><span class="n">specs</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                          <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                          <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1729,7 +1761,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_points=1000, n_random_starts=10, x0=None, y0=None, n_jobs=1, random_state=None, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, verbose=False, callback=None)</p>
     </div>
     
 
@@ -1840,6 +1872,16 @@ guided by the surrogate model.</p>
     exploration over exploitation and vice versa.
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
+<li>
+<p><code>verbose</code> [boolean, default=False]:
+    Control the verbosity. It is advised to set the verbosity to True
+    for long optimization runs.</p>
+</li>
+<li>
+<p><code>callback</code> [callable, list of callables, optional]
+    If callable then <code>callback(res)</code> is called after each call to <code>func</code>.
+    If list of callables, then each callable in the list is called.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1868,7 +1910,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                   <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                  <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -1885,7 +1928,6 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    provided then `n_random_starts` evaluations are first made then</span>
 <span class="sd">    `n_calls - n_random_starts` subsequent evaluations are made</span>
 <span class="sd">    guided by the surrogate model.</span>
-
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1961,6 +2003,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, list of callables, optional]</span>
+<span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
+<span class="sd">        If list of callables, then each callable in the list is called.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1995,12 +2045,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                                                            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
-    <span class="n">res</span> <span class="o">=</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
-                         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
-                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
-                         <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+    <span class="k">return</span> <span class="n">_tree_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
+                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq</span><span class="o">=</span><span class="n">acq</span><span class="p">,</span> <span class="n">specs</span><span class="o">=</span><span class="n">specs</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>
@@ -2013,7 +2062,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, alpha=1e-09, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;auto&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, alpha=1e-09, acq=&#39;EI&#39;, xi=0.01, kappa=1.96, search=&#39;auto&#39;, n_calls=100, n_points=500, n_random_starts=10, n_restarts_optimizer=5, x0=None, y0=None, random_state=None, verbose=False, callback=None)</p>
     </div>
     
 
@@ -2149,6 +2198,16 @@ over the Gaussian prior.</p>
     Set random state to something other than None for reproducible
     results.</p>
 </li>
+<li>
+<p><code>verbose</code> [boolean, default=False]:
+    Control the verbosity. It is advised to set the verbosity to True
+    for long optimization runs.</p>
+</li>
+<li>
+<p><code>callback</code> [callable, list of callables, optional]
+    If callable then <code>callback(res)</code> is called after each call to <code>func</code>.
+    If list of callables, then each callable in the list is called.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -2178,7 +2237,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">10e-10</span><span class="p">,</span>
                 <span class="n">acq</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
 <span class="sd">    If every function evaluation is expensive, for instance</span>
@@ -2298,6 +2358,14 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, list of callables, optional]</span>
+<span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
+<span class="sd">        If list of callables, then each callable in the list is called.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -2361,8 +2429,22 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Expected `n_calls` &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_total_init_calls</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
 
+    <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VerboseCallback</span><span class="p">(</span>
+            <span class="n">n_init</span><span class="o">=</span><span class="n">n_init_func_calls</span><span class="p">,</span> <span class="n">n_random</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+            <span class="n">n_total</span><span class="o">=</span><span class="n">n_calls</span><span class="p">))</span>
+
     <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">x0</span><span class="p">:</span>
-        <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">]</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x0</span><span class="p">):</span>
+            <span class="n">y0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">x0</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y0</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                    <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">x0</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
             <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
@@ -2379,8 +2461,21 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">else</span><span class="p">:</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">Xi</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-    <span class="n">yi</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">+</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xi</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">):]]</span>
+    <span class="c1"># Random function evaluations.</span>
+    <span class="n">X_rand</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">X_rand</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">y0</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X_rand</span><span class="p">):</span>
+        <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span>
+                <span class="n">x0</span> <span class="o">+</span> <span class="n">X_rand</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                    <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
 
@@ -2433,23 +2528,15 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span>
 
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">next_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
+        <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">))</span>
         <span class="n">Xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
-        <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_y</span><span class="p">)</span>
+        <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
 
     <span class="c1"># Pack results</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
-    <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">=</span> <span class="n">yi</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span> <span class="o">=</span> <span class="n">Xi</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">rng</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
-
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
 </pre></div>
 
   </div>
