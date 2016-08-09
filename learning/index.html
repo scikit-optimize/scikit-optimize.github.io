@@ -1052,9 +1052,6 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
-        <span class="class_name"><a href="#skopt.learning.DecisionTreeRegressor">DecisionTreeRegressor</a></span>
-        </li>
-        <li class="mono">
         <span class="class_name"><a href="#skopt.learning.ExtraTreesRegressor">ExtraTreesRegressor</a></span>
         </li>
         <li class="mono">
@@ -1100,13 +1097,11 @@ table {
   <div id="source-skopt.learning" class="source">
     <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Machine learning extensions for model-based optimization.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
 <span class="kn">from</span> <span class="nn">.gbrt</span> <span class="kn">import</span> <span class="n">GradientBoostingQuantileRegressor</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;DecisionTreeRegressor&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;RandomForestRegressor&quot;</span><span class="p">,</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;RandomForestRegressor&quot;</span><span class="p">,</span>
            <span class="s2">&quot;ExtraTreesRegressor&quot;</span><span class="p">,</span>
            <span class="s2">&quot;GradientBoostingQuantileRegressor&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1121,224 +1116,6 @@ table {
 
 
     <h2 class="section-title" id="header-classes">Classes</h2>
-      
-      <div class="item">
-      <p id="skopt.learning.DecisionTreeRegressor" class="name">class <span class="ident">DecisionTreeRegressor</span></p>
-      
-  
-    <div class="desc"><p>DecisionTreeRegressor that supports <code>return_std</code>.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.DecisionTreeRegressor', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.learning.DecisionTreeRegressor" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DecisionTreeRegressor</span><span class="p">(</span><span class="n">sk_DecisionTreeRegressor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DecisionTreeRegressor that supports `return_std`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">presort</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
-            <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="n">splitter</span><span class="p">,</span>
-            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
-            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
-            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
-            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
-            <span class="n">presort</span><span class="o">=</span><span class="n">presort</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Predict continuous output for `X`.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        * `X` [array-like, shape=(n_samples, n_features)]:</span>
-<span class="sd">            Input data.</span>
-
-<span class="sd">        * `return_std` [bool, default=False]:</span>
-<span class="sd">            Whether or not to return the standard deviation.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        * `predictions` [array-like, shape=(n_samples,)]:</span>
-<span class="sd">            Predicted values for X. If criterion is set to &quot;mse&quot;,</span>
-<span class="sd">            then `predictions[i] ~= mean(y | X[i])`.</span>
-
-<span class="sd">        * `std` [array-like, shape=(n_samples,)]:</span>
-<span class="sd">            Standard deviation of `y` at `X`. If criterion</span>
-<span class="sd">            is set to &quot;mse&quot;, then `std[i] ~= std(y | X[i])`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mean</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">!=</span> <span class="s2">&quot;mse&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
-                    <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-
-            <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-            <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span>
-            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="o">**</span><span class="mf">0.5</span>
-
-        <span class="k">return</span> <span class="n">mean</span>
-</pre></div>
-
-  </div>
-</div>
-
-
-      <div class="class">
-          <h3>Ancestors (in MRO)</h3>
-          <ul class="class_list">
-          <li><a href="#skopt.learning.DecisionTreeRegressor">DecisionTreeRegressor</a></li>
-          <li>sklearn.tree.tree.DecisionTreeRegressor</li>
-          <li>sklearn.tree.tree.BaseDecisionTree</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.base.BaseEstimator</li>
-          <li>sklearn.feature_selection.from_model._LearntSelectorMixin</li>
-          <li>sklearn.base.TransformerMixin</li>
-          <li>sklearn.base.RegressorMixin</li>
-          <li>builtins.object</li>
-          </ul>
-          <h3>Static methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="skopt.learning.DecisionTreeRegressor.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, criterion=&#39;mse&#39;, splitter=&#39;best&#39;, max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, presort=False, min_variance=0.0)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.DecisionTreeRegressor.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.learning.DecisionTreeRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">presort</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
-    <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
-        <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span> <span class="n">splitter</span><span class="o">=</span><span class="n">splitter</span><span class="p">,</span>
-        <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-        <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
-        <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
-        <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
-        <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
-        <span class="n">presort</span><span class="o">=</span><span class="n">presort</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="skopt.learning.DecisionTreeRegressor.predict">
-    <p>def <span class="ident">predict</span>(</p><p>self, X, return_std=False)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Predict continuous output for <code>X</code>.</p>
-<h2>Parameters</h2>
-<ul>
-<li>
-<p><code>X</code> [array-like, shape=(n_samples, n_features)]:
-    Input data.</p>
-</li>
-<li>
-<p><code>return_std</code> [bool, default=False]:
-    Whether or not to return the standard deviation.</p>
-</li>
-</ul>
-<h2>Returns</h2>
-<ul>
-<li>
-<p><code>predictions</code> [array-like, shape=(n_samples,)]:
-    Predicted values for X. If criterion is set to "mse",
-    then <code>predictions[i] ~= mean(y | X[i])</code>.</p>
-</li>
-<li>
-<p><code>std</code> [array-like, shape=(n_samples,)]:
-    Standard deviation of <code>y</code> at <code>X</code>. If criterion
-    is set to "mse", then <code>std[i] ~= std(y | X[i])</code>.</p>
-</li>
-</ul></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.DecisionTreeRegressor.predict', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.learning.DecisionTreeRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Predict continuous output for `X`.</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    * `X` [array-like, shape=(n_samples, n_features)]:</span>
-<span class="sd">        Input data.</span>
-<span class="sd">    * `return_std` [bool, default=False]:</span>
-<span class="sd">        Whether or not to return the standard deviation.</span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    * `predictions` [array-like, shape=(n_samples,)]:</span>
-<span class="sd">        Predicted values for X. If criterion is set to &quot;mse&quot;,</span>
-<span class="sd">        then `predictions[i] ~= mean(y | X[i])`.</span>
-<span class="sd">    * `std` [array-like, shape=(n_samples,)]:</span>
-<span class="sd">        Standard deviation of `y` at `X`. If criterion</span>
-<span class="sd">        is set to &quot;mse&quot;, then `std[i] ~= std(y | X[i])`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mean</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DecisionTreeRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">!=</span> <span class="s2">&quot;mse&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
-                <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
-        <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span>
-        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span><span class="o">**</span><span class="mf">0.5</span>
-    <span class="k">return</span> <span class="n">mean</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-          <h3>Instance variables</h3>
-            <div class="item">
-            <p id="skopt.learning.DecisionTreeRegressor.feature_importances_" class="name">var <span class="ident">feature_importances_</span></p>
-            
-
-            
-  
-    <div class="desc"><p>Return the feature importances.</p>
-<p>The importance of a feature is computed as the (normalized) total
-reduction of the criterion brought by that feature.
-It is also known as the Gini importance.</p>
-<h2>Returns</h2>
-<p>feature_importances_ : array, shape = [n_features]</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.learning.DecisionTreeRegressor.min_variance" class="name">var <span class="ident">min_variance</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-      </div>
-      </div>
       
       <div class="item">
       <p id="skopt.learning.ExtraTreesRegressor" class="name">class <span class="ident">ExtraTreesRegressor</span></p>
