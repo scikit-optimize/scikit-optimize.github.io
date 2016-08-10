@@ -91,6 +91,8 @@ from skopt import gp_minimize
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
 
+# Note that we have fixed the hyperparameters of the kernel, because it is
+# sufficient for this easy problem.
 gp = GaussianProcessRegressor(kernel=Matern(length_scale_bounds="fixed"), 
                               alpha=noise_level**2, random_state=0)
 
@@ -127,6 +129,7 @@ For further inspection of the results, attributes of the `res` named tuple provi
    iteration.
 - `func_vals` [array]: function value for each iteration.
 - `space` [Space]: the optimization space.
+- `specs` [dict]: parameters passed to the function.
 
 
 ```python
