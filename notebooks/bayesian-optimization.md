@@ -1,7 +1,7 @@
 
 # Bayesian optimization with `skopt`
 
-Gilles Louppe, July 2016.
+Gilles Louppe, Manoj Kumar July 2016.
 
 
 ```python
@@ -88,6 +88,7 @@ Bayesian optimization based on gaussian process regression is implemented in `sk
 
 ```python
 from skopt import gp_minimize
+from skopt.acquisition import gaussian_lcb
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
 
@@ -101,7 +102,7 @@ res = gp_minimize(f,                  # the function to minimize
                   x0=[0.],            # the starting point
                   acq="LCB",          # the acquisition function (optional)
                   base_estimator=gp,  # a GP estimator (optional)
-                  n_calls=15,         # the number of evaluations of f
+                  n_calls=15,         # the number of evaluations of f including at x0
                   n_random_starts=0,  # the number of random initialization points
                   random_state=777)
 ```
@@ -138,11 +139,11 @@ for key, value in sorted(res.items()):
     print()
 ```
 
-    fun = -0.925940774705
+    fun = -0.925940846889
     
-    func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016026  0.04066236
-      0.12350638  0.08315035  0.10237308 -0.3999157   0.12857682 -0.64048307
-     -0.8962862  -0.92594077 -0.83922126]
+    func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016027  0.04066236
+      0.12350636  0.08315037  0.10237308 -0.39991577  0.12857691 -0.64048308
+     -0.89628662 -0.92594085 -0.83922214]
     
     models = [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
@@ -174,17 +175,17 @@ for key, value in sorted(res.items()):
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
     
-    random_state = <mtrand.RandomState object at 0x7fbd8ceca900>
+    random_state = <mtrand.RandomState object at 0x7efec2f9a710>
     
-    space = <skopt.space.Space object at 0x7fbd8ceb8c50>
+    space = <skopt.space.Space object at 0x7efed865c390>
     
-    specs = {'function': 'gp_minimize', 'args': {'kappa': 1.96, 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+    specs = {'function': 'gp_minimize', 'args': {'xi': 0.01, 'alpha': 1e-09, 'search': 'auto', 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
-                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'acq': 'LCB', 'search': 'auto', 'y0': None, 'n_calls': 15, 'x0': [0.0], 'alpha': 1e-09, 'xi': 0.01, 'random_state': 777, 'n_points': 500, 'dimensions': [(-2.0, 2.0)], 'n_restarts_optimizer': 5, 'n_random_starts': 0, 'func': <function f at 0x7fbd8cece620>}}
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'y0': None, 'kappa': 1.96, 'n_calls': 15, 'n_restarts_optimizer': 5, 'dimensions': [(-2.0, 2.0)], 'x0': [0.0], 'n_random_starts': 0, 'acq': 'LCB', 'func': <function f at 0x7efec32c3730>, 'random_state': 777, 'n_points': 500}}
     
-    x = [-0.3216749916139835]
+    x = [-0.3216749018934576]
     
-    x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209652246221], [1.5140003571302036], [0.62375407049503984], [1.2243915794329912], [-1.5528926830427656], [-0.53675652890758174], [-0.67998042813399784], [-0.36427321425821568], [-0.34695602514531776], [-0.3216749916139835], [-0.3066311315820735]]
+    x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209567449765], [1.5140003732987382], [0.62375407663414983], [1.2243916295115473], [-1.5528927044981757], [-0.53675650999716518], [-0.6799804656778119], [-0.36427320742932195], [-0.34695572665820723], [-0.3216749018934576], [-0.30662911602363885]]
     
 
 
@@ -199,7 +200,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fbd8a4744e0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7efec32cbc18>
 
 
 
@@ -207,11 +208,85 @@ plot_convergence(res)
 ![png](bayesian-optimization_files/bayesian-optimization_16_1.png)
 
 
+Let us visually examine
+
+1. The approximation of the fit gp model to the original function.
+2. The acquistion values (The lower confidence bound) that determine the next point to be queried.
+
+At the points closer to the points previously evaluated at, the variance dips to zero.
+
+The first column shows the following:
+1. The true function.
+2. The approximation to the original function by the gaussian process model
+3. How sure the GP is about the function.
+
+The second column shows the acquisition function values after every surrogate model is fit. It is possible that we do not choose the global minimum but a local minimum depending on the minimizer used to minimize the acquisition function.
+
 
 ```python
-from skopt.acquisition import gaussian_lcb
+plt.rcParams["figure.figsize"] = (20, 20)
 
+x = np.linspace(-2, 2, 400).reshape(-1, 1)
+fx = np.array([f(x_i, noise_level=0.0) for x_i in x])
+
+# Plot first five iterations.
+for n_iter in range(5):
+    gp = res.models[n_iter]
+    curr_x_iters = res.x_iters[: n_iter+1]
+    curr_func_vals = res.func_vals[: n_iter+1]
+
+    # Plot true function.
+    plt.subplot(5, 2, 2*n_iter+1)
+    plt.plot(x, fx, "r--", label="True (unknown)")
+    plt.fill(np.concatenate([x, x[::-1]]),
+             np.concatenate([fx - 1.9600 * noise_level, fx[::-1] + 1.9600 * noise_level]),
+             alpha=.2, fc="r", ec="None")
+
+    # Plot GP(x) + contours
+    y_pred, sigma = gp.predict(x, return_std=True)
+    plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
+    plt.fill(np.concatenate([x, x[::-1]]),
+             np.concatenate([y_pred - 1.9600 * sigma, 
+                             (y_pred + 1.9600 * sigma)[::-1]]),
+             alpha=.2, fc="g", ec="None")
+
+    # Plot sampled points
+    plt.plot(curr_x_iters, curr_func_vals,
+             "r.", markersize=15, label="Observations")
+    plt.title(r"$x_{%d} = %.4f, f(x_{%d}) = %.4f$" % (
+              n_iter, res.x_iters[n_iter][0], n_iter, res.func_vals[n_iter]))
+    plt.grid()
+
+    if n_iter == 0:
+        plt.legend(loc="best", prop={'size': 8}, numpoints=1)
+
+    plt.subplot(5, 2, 2*n_iter+2)
+    acq = gaussian_lcb(x, gp)
+    plt.plot(x, acq, "b", label="LCB(x)")
+    plt.fill_between(x.ravel(), -2.0, acq.ravel(), alpha=0.3, color='blue')
+
+    next_x = np.asarray(res.x_iters[n_iter + 1])
+    next_acq = gaussian_lcb(next_x.reshape(-1, 1), gp)
+    plt.plot(next_x[0], next_acq, "bo", markersize=10, label="Next query point")
+    plt.grid()
+    
+    if n_iter == 0:
+        plt.legend(loc="best", prop={'size': 12}, numpoints=1)
+
+plt.suptitle("Sequential model-based minimization using gp_minimize.", fontsize=20)
+plt.show()
+```
+
+
+![png](bayesian-optimization_files/bayesian-optimization_18_0.png)
+
+
+Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are cluttered around the minimum because the GP does not gain anything more by further exploration.
+
+
+```python
 # Plot f(x) + contours
+plt.rcParams["figure.figsize"] = (10, 6)
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
 fx = [f(x_i, noise_level=0.0) for x_i in x]
 plt.plot(x, fx, "r--", label="True (unknown)")
@@ -249,5 +324,5 @@ plt.show()
 ```
 
 
-![png](bayesian-optimization_files/bayesian-optimization_17_0.png)
+![png](bayesian-optimization_files/bayesian-optimization_20_0.png)
 
