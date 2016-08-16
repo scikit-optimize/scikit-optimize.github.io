@@ -1090,7 +1090,8 @@ table {
     <article id="content">
           
           <h1>Tuning a scikit-learn estimator with <code>skopt</code></h1>
-<p>Gilles Louppe, July 2016.</p>
+<p>Gilles Louppe, July 2016 <br />
+Katie Malone, August 2016</p>
 <div class="codehilite"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
@@ -1239,13 +1240,12 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1127687b8&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x10a76a940&gt;
 </pre></div>
 
 
 <p><img alt="png" src="hyperparameter-optimization_files/hyperparameter-optimization_18_1.png" /></p>
 <h2>Part 2: Tuning a scikit-learn pipeline with <code>skopt</code></h2>
-<p>Katie Malone, August 2016</p>
 <h3>Introduction</h3>
 <p>Scikit-learn objects (transformers, estimators) are often not used singly, but instead chained together into a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipeline</a>.  When that happens, there can be several different sets of hyperparameters to examine, one for each object.  In the same way that <code>GridSearchCV</code> can be applied to a pipeline to tune the hyperparameters of several objects at once, we can do a more efficient search (this example uses GPs) over more than one scikit-learn object.  </p>
 <p>We'll do that here now.  A common method for reducing dimensionality is to preprocess with <a href="http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">principal components analysis</a>, or PCA.  A free parameter of PCA is how many components to use; now we'll optimize over this parameter as well as the parameters of the gradient boosted classifier.  It's not guaranteed that using PCA will give us better results than the classifier all by itself, and there are other problems where PCA might make more sense than it does here, but a reasonable person might want to try it out anyway.  Here's how you can do that.</p>
@@ -1340,6 +1340,17 @@ Best parameters:
 </pre></div>
 
 
+<div class="codehilite"><pre><span></span>Best score=4.3505
+Best parameters:
+    - n_components=6
+    - max_depth=4
+    - learning_rate=0.077229
+    - max_features=17
+    - min_samples_split=20
+    - min_samples_leaf=13
+</pre></div>
+
+
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
 <span class="n">pipe_res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective_pipe</span><span class="p">,</span> <span class="n">pipe_space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">pipe_x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
@@ -1355,6 +1366,17 @@ Best parameters:
 </pre></div>
 
 
+<div class="codehilite"><pre><span></span>Best score=3.8386
+Best parameters:
+    - n_components=11
+    - max_depth=3
+    - learning_rate=0.098992
+    - max_features=13
+    - min_samples_split=5
+    - min_samples_leaf=2
+</pre></div>
+
+
 <div class="codehilite"><pre><span></span><span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;gp_optimize&quot;</span><span class="p">,</span> <span class="n">res_gp</span><span class="p">),</span>
                  <span class="p">(</span><span class="s2">&quot;forest_optimize&quot;</span><span class="p">,</span> <span class="n">res_forest</span><span class="p">),</span>
                  <span class="p">(</span><span class="s2">&quot;dummy_optimize&quot;</span><span class="p">,</span> <span class="n">res_dummy</span><span class="p">),</span>
@@ -1364,6 +1386,11 @@ Best parameters:
 </pre></div>
 
 
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x10a738d30&gt;
+</pre></div>
+
+
+<p><img alt="png" src="hyperparameter-optimization_files/hyperparameter-optimization_31_1.png" /></p>
 <p>So, interestingly, our PCA pipelines seem to do much worse than the classifiers do all by themselves.  As we said above, there are other problems where PCA might make more sense than it does here.  But now, instead of that being an argument that you'd make based on theoretical reasons, you've actually tried it both ways and found empirically that PCA is probably not something you want to use here.</p>
     </article>
   <div class="clear"> </div>

@@ -1,7 +1,8 @@
 
 # Tuning a scikit-learn estimator with `skopt`
 
-Gilles Louppe, July 2016.
+Gilles Louppe, July 2016 <br />
+Katie Malone, August 2016
 
 
 ```python
@@ -180,7 +181,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1127687b8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x10a76a940>
 
 
 
@@ -189,8 +190,6 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 ## Part 2: Tuning a scikit-learn pipeline with `skopt`
-
-Katie Malone, August 2016
 
 ### Introduction
 
@@ -299,6 +298,16 @@ print("""Best parameters:
                                 pipe_res_dummy.x[4], pipe_res_dummy.x[5]))
 ```
 
+    Best score=4.3505
+    Best parameters:
+        - n_components=6
+        - max_depth=4
+        - learning_rate=0.077229
+        - max_features=17
+        - min_samples_split=20
+        - min_samples_leaf=13
+
+
 
 ```python
 from skopt import forest_minimize
@@ -315,6 +324,16 @@ print("""Best parameters:
                                 pipe_res_forest.x[4], pipe_res_forest.x[5]))
 ```
 
+    Best score=3.8386
+    Best parameters:
+        - n_components=11
+        - max_depth=3
+        - learning_rate=0.098992
+        - max_features=13
+        - min_samples_split=5
+        - min_samples_leaf=2
+
+
 
 ```python
 plot_convergence(("gp_optimize", res_gp),
@@ -324,5 +343,16 @@ plot_convergence(("gp_optimize", res_gp),
                  ("forest_optimize_w_pca", pipe_res_forest),
                  ("dummy_optimize_w_pca", pipe_res_dummy))
 ```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x10a738d30>
+
+
+
+
+![png](hyperparameter-optimization_files/hyperparameter-optimization_31_1.png)
+
 
 So, interestingly, our PCA pipelines seem to do much worse than the classifiers do all by themselves.  As we said above, there are other problems where PCA might make more sense than it does here.  But now, instead of that being an argument that you'd make based on theoretical reasons, you've actually tried it both ways and found empirically that PCA is probably not something you want to use here.
