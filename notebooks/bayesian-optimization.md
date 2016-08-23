@@ -13,6 +13,12 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 6)
 ```
 
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+      warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+      warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+
+
 ## Problem statement
 
 We are interested in solving $$x^* = \arg \min_x f(x)$$ under the constraints that
@@ -139,11 +145,11 @@ for key, value in sorted(res.items()):
     print()
 ```
 
-    fun = -0.925940846889
+    fun = -0.925941066255
     
     func_vals = [ 0.22468304  0.05499527 -0.09826131 -0.2306291   0.16016027  0.04066236
-      0.12350636  0.08315037  0.10237308 -0.39991577  0.12857691 -0.64048308
-     -0.89628662 -0.92594085 -0.83922214]
+      0.12350637  0.08315042  0.10237308 -0.39991553  0.128577   -0.64048322
+     -0.89628578 -0.92594107 -0.83922154]
     
     models = [GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
@@ -175,17 +181,17 @@ for key, value in sorted(res.items()):
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
                  normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0)]
     
-    random_state = <mtrand.RandomState object at 0x7efec2f9a710>
+    random_state = <mtrand.RandomState object at 0x7f2c5b5f9900>
     
-    space = <skopt.space.Space object at 0x7efed865c390>
+    space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'function': 'gp_minimize', 'args': {'xi': 0.01, 'alpha': 1e-09, 'search': 'auto', 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
+    specs = {'args': {'n_points': 500, 'n_calls': 15, 'acq': 'LCB', 'alpha': 1e-09, 'n_restarts_optimizer': 5, 'kappa': 1.96, 'random_state': 777, 'xi': 0.01, 'verbose': False, 'n_random_starts': 0, 'func': <function f at 0x7f2c5ba0b158>, 'base_estimator': GaussianProcessRegressor(alpha=0.010000000000000002, copy_X_train=True,
                  kernel=Matern(length_scale=1, nu=1.5), n_restarts_optimizer=0,
-                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'y0': None, 'kappa': 1.96, 'n_calls': 15, 'n_restarts_optimizer': 5, 'dimensions': [(-2.0, 2.0)], 'x0': [0.0], 'n_random_starts': 0, 'acq': 'LCB', 'func': <function f at 0x7efec32c3730>, 'random_state': 777, 'n_points': 500}}
+                 normalize_y=False, optimizer='fmin_l_bfgs_b', random_state=0), 'callback': None, 'dimensions': [(-2.0, 2.0)], 'y0': None, 'search': 'auto', 'x0': [0.0]}, 'function': 'gp_minimize'}
     
-    x = [-0.3216749018934576]
+    x = [-0.32167462923223483]
     
-    x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209567449765], [1.5140003732987382], [0.62375407663414983], [1.2243916295115473], [-1.5528927044981757], [-0.53675650999716518], [-0.6799804656778119], [-0.36427320742932195], [-0.34695572665820723], [-0.3216749018934576], [-0.30662911602363885]]
+    x_iters = [[0.0], [-2.0], [2.0], [1.0783056681658953], [-1.0607209567449765], [1.5140003732987382], [0.62375407407250694], [1.2243917203159205], [-1.5528926690953295], [-0.53675657487932271], [-0.67998050022698353], [-0.36427313079405427], [-0.34695632908030555], [-0.32167462923223483], [-0.30663049322803215]]
     
 
 
@@ -200,7 +206,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7efec32cbc18>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f2c4d317400>
 
 
 
