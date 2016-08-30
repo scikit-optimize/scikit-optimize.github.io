@@ -2169,13 +2169,15 @@ guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>base_estimator</code> [a Gaussian process estimator]:
-    The Gaussian process estimator to use for optimization.</p>
-</li>
-<li>
-<p><code>alpha</code> [float, default=1e-10]:
-    Value added to the diagonal of the kernel matrix during fitting.
-    Larger values correspond to an increased noise level in the
-    observations and reduce potential numerical issues during fitting.</p>
+    The Gaussian process estimator to use for optimization.
+    By default, a Matern kernel is used with the following
+    hyperparameters tuned.</p>
+<ul>
+<li>All the length scales of the Matern kernel.</li>
+<li>The covariance amplitude that each element is multiplied with.</li>
+<li>Noise that is added to the matern kernel. The noise is assumed
+  to be iid gaussian.</li>
+</ul>
 </li>
 <li>
 <p><code>acq</code> [string, default=<code>"EI"</code>]:
@@ -2341,11 +2343,12 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">    * `base_estimator` [a Gaussian process estimator]:</span>
 <span class="sd">        The Gaussian process estimator to use for optimization.</span>
-
-<span class="sd">    * `alpha` [float, default=1e-10]:</span>
-<span class="sd">        Value added to the diagonal of the kernel matrix during fitting.</span>
-<span class="sd">        Larger values correspond to an increased noise level in the</span>
-<span class="sd">        observations and reduce potential numerical issues during fitting.</span>
+<span class="sd">        By default, a Matern kernel is used with the following</span>
+<span class="sd">        hyperparameters tuned.</span>
+<span class="sd">        - All the length scales of the Matern kernel.</span>
+<span class="sd">        - The covariance amplitude that each element is multiplied with.</span>
+<span class="sd">        - Noise that is added to the matern kernel. The noise is assumed</span>
+<span class="sd">          to be iid gaussian.</span>
 
 <span class="sd">    * `acq` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the gaussian prior. Can be either</span>
@@ -2454,12 +2457,20 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">length_scale</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">length_scale_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">length_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">)</span>
+            <span class="n">length_scale_bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span>
+        <span class="n">cov_amplitude</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+        <span class="n">matern</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">length_scale</span><span class="p">,</span>
+                        <span class="n">length_scale_bounds</span><span class="o">=</span><span class="n">length_scale_bounds</span><span class="p">,</span>
+                        <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">WhiteKernel</span><span class="p">()</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
-            <span class="n">kernel</span><span class="o">=</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span> <span class="o">*</span>
-                    <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
-                           <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
-                           <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)),</span>
-            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">matern</span> <span class="o">+</span> <span class="n">noise</span><span class="p">,</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
