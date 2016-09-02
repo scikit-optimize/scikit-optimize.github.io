@@ -181,7 +181,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fc6bd278e48>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f05852aa320>
 
 
 
@@ -347,7 +347,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fc6cc343128>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f057527b518>
 
 
 

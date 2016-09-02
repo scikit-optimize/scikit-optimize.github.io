@@ -189,11 +189,11 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f8f960529d8>
+    random_state = <mtrand.RandomState object at 0x7f5b8ea060d8>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'args': {'n_restarts_optimizer': 5, 'n_random_starts': 0, 'random_state': 777, 'callback': None, 'y0': None, 'func': <function f at 0x7f8f9699a268>, 'n_calls': 15, 'kappa': 1.96, 'alpha': 1e-09, 'xi': 0.01, 'acq': 'LCB', 'search': 'auto', 'base_estimator': None, 'verbose': False, 'x0': [0.0], 'dimensions': [(-2.0, 2.0)], 'n_points': 500}, 'function': 'gp_minimize'}
+    specs = {'args': {'base_estimator': None, 'callback': None, 'random_state': 777, 'dimensions': [(-2.0, 2.0)], 'n_points': 500, 'kappa': 1.96, 'alpha': 1e-09, 'y0': None, 'verbose': False, 'n_calls': 15, 'search': 'auto', 'x0': [0.0], 'acq': 'LCB', 'func': <function f at 0x7f5bac35c268>, 'xi': 0.01, 'n_random_starts': 0, 'n_restarts_optimizer': 5}, 'function': 'gp_minimize'}
     
     x = [0.8988885384156996]
     
@@ -212,7 +212,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f8f882a57b8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f5b8e4c1898>
 
 
 
