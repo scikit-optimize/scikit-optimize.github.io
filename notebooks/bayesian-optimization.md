@@ -189,11 +189,11 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f2deb413168>
+    random_state = <mtrand.RandomState object at 0x7f165e35b0d8>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'function': 'gp_minimize', 'args': {'dimensions': [(-2.0, 2.0)], 'n_random_starts': 0, 'y0': None, 'kappa': 1.96, 'x0': [0.0], 'alpha': 1e-09, 'func': <function f at 0x7f2dfd238268>, 'acq': 'LCB', 'verbose': False, 'n_restarts_optimizer': 5, 'n_calls': 15, 'n_points': 500, 'base_estimator': None, 'xi': 0.01, 'callback': None, 'random_state': 777, 'search': 'auto'}}
+    specs = {'function': 'gp_minimize', 'args': {'n_calls': 15, 'x0': [0.0], 'base_estimator': None, 'func': <function f at 0x7f166bb13268>, 'dimensions': [(-2.0, 2.0)], 'n_random_starts': 0, 'random_state': 777, 'xi': 0.01, 'y0': None, 'n_restarts_optimizer': 5, 'acq': 'LCB', 'kappa': 1.96, 'search': 'auto', 'n_points': 500, 'alpha': 1e-09, 'verbose': False, 'callback': None}}
     
     x = [0.8988885384156996]
     
@@ -212,7 +212,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f2deaecd8d0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f165de14978>
 
 
 
@@ -293,7 +293,7 @@ plt.show()
 ![png](bayesian-optimization_files/bayesian-optimization_18_0.png)
 
 
-Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are cluttered around the minimum because the GP does not gain anything more by further exploration.
+Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are clustered around the minimum because the GP does not gain anything more by further exploration.
 
 
 ```python
