@@ -3,9 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>skopt API documentation</title>
-    <meta name="description" content="Scikit-Optimize, or `skopt`, is a simple and efficient library
-for sequential model-based optimizati..." />
+    <title>skopt.optimizer API documentation</title>
+    <meta name="description" content="" />
 
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1052,27 +1051,18 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-    <li class="mono"><a href="#skopt.dummy_minimize">dummy_minimize</a></li>
-    <li class="mono"><a href="#skopt.forest_minimize">forest_minimize</a></li>
-    <li class="mono"><a href="#skopt.gbrt_minimize">gbrt_minimize</a></li>
-    <li class="mono"><a href="#skopt.gp_minimize">gp_minimize</a></li>
+    <li class="mono"><a href="#skopt.optimizer.dummy_minimize">dummy_minimize</a></li>
+    <li class="mono"><a href="#skopt.optimizer.forest_minimize">forest_minimize</a></li>
+    <li class="mono"><a href="#skopt.optimizer.gbrt_minimize">gbrt_minimize</a></li>
+    <li class="mono"><a href="#skopt.optimizer.gp_minimize">gp_minimize</a></li>
   </ul>
 
     </li>
 
 
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="acquisition.m.html">skopt.acquisition</a></li>
-        <li class="mono"><a href="benchmarks.m.html">skopt.benchmarks</a></li>
-        <li class="mono"><a href="callbacks.m.html">skopt.callbacks</a></li>
-        <li class="mono"><a href="learning/index.html">skopt.learning</a></li>
-        <li class="mono"><a href="optimizer/index.html">skopt.optimizer</a></li>
-        <li class="mono"><a href="plots.m.html">skopt.plots</a></li>
-        <li class="mono"><a href="space.m.html">skopt.space</a></li>
-      </ul>
-    </li>
 
+    <li class="set"><h3><a href="https://scikit-optimize.github.io/"></a></h3>
+    </li>
 
     <li class="set"><h3><a href="#">Notebooks</a></h3>
       <ul>
@@ -1097,141 +1087,17 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">skopt</span> module</h1>
-  <p>Scikit-Optimize, or <code>skopt</code>, is a simple and efficient library
-for sequential model-based optimization, accessible to everybody
-and reusable in various contexts.</p>
-<p>The library is built on top of NumPy, SciPy and Scikit-Learn.</p>
-<p><a href="https://travis-ci.org/scikit-optimize/scikit-optimize"><img alt="Build Status" src="https://travis-ci.org/scikit-optimize/scikit-optimize.svg?branch=master" /></a></p>
-<h2>Install</h2>
-<p>These instructions will setup the latest released version of <code>scikit-optimize</code>.
-Currently <code>scikit-optimize</code> relies on a yet unreleased version of <code>scikit-learn</code>.
-This means you will have to install that version by hand and probably want to
-create a separate virtualenv or conda environment for it.</p>
-<div class="codehilite"><pre><span></span>pip install -e git+https://github.com/scikit-learn/scikit-learn.git#egg=scikit-learn-0.18dev
-</pre></div>
-
-
-<p>After this you can install <code>scikit-optimize</code> with:</p>
-<div class="codehilite"><pre><span></span>pip install scikit-optimize
-</pre></div>
-
-
-<h2>Getting started</h2>
-<p>Find the minimum of the noisy function <code>f(x)</code> over the range <code>-2 &lt; x &lt; 2</code>
-with <code>skopt</code>:</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
-
-<span class="n">res</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)])</span>
-</pre></div>
-
-
-<p>For more read our <a href="https://scikit-optimize.github.io/notebooks/bayesian-optimization.html">introduction to bayesian optimization</a>
-and the other <a href="https://github.com/scikit-optimize/scikit-optimize/tree/master/examples">examples</a>.</p>
-<h2>Development</h2>
-<p>The library is still experimental and under heavy development.</p>
-<p>The development version can be installed through:</p>
-<div class="codehilite"><pre><span></span>git clone https://github.com/scikit-optimize/scikit-optimize.git
-cd scikit-optimize
-pip install -r requirements.txt
-python setup.py develop
-</pre></div>
-
-
-<p>Run the tests by executing <code>nosetests</code> in the top level directory.</p>
+  <h1 class="title"><span class="name">skopt.optimizer</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt', this);">Show source &equiv;</a></p>
-  <div id="source-skopt" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Scikit-Optimize, or `skopt`, is a simple and efficient library</span>
-<span class="sd">for sequential model-based optimization, accessible to everybody</span>
-<span class="sd">and reusable in various contexts.</span>
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">.dummy</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
+<span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
+<span class="kn">from</span> <span class="nn">.gbrt</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
+<span class="kn">from</span> <span class="nn">.gp</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 
-<span class="sd">The library is built on top of NumPy, SciPy and Scikit-Learn.</span>
-
-<span class="sd">[![Build Status](https://travis-ci.org/scikit-optimize/scikit-optimize.svg?branch=master)](https://travis-ci.org/scikit-optimize/scikit-optimize)</span>
-
-<span class="sd">## Install</span>
-
-<span class="sd">These instructions will setup the latest released version of `scikit-optimize`.</span>
-<span class="sd">Currently `scikit-optimize` relies on a yet unreleased version of `scikit-learn`.</span>
-<span class="sd">This means you will have to install that version by hand and probably want to</span>
-<span class="sd">create a separate virtualenv or conda environment for it.</span>
-
-<span class="sd">```</span>
-<span class="sd">pip install -e git+https://github.com/scikit-learn/scikit-learn.git#egg=scikit-learn-0.18dev</span>
-<span class="sd">```</span>
-
-<span class="sd">After this you can install `scikit-optimize` with:</span>
-<span class="sd">```</span>
-<span class="sd">pip install scikit-optimize</span>
-<span class="sd">```</span>
-
-<span class="sd">## Getting started</span>
-
-<span class="sd">Find the minimum of the noisy function `f(x)` over the range `-2 &lt; x &lt; 2`</span>
-<span class="sd">with `skopt`:</span>
-
-<span class="sd">```python</span>
-<span class="sd">import numpy as np</span>
-<span class="sd">from skopt import gp_minimize</span>
-
-<span class="sd">def f(x):</span>
-<span class="sd">    return (np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2)) *</span>
-<span class="sd">            np.random.randn() * 0.1)</span>
-
-<span class="sd">res = gp_minimize(f, [(-2.0, 2.0)])</span>
-<span class="sd">```</span>
-
-<span class="sd">For more read our [introduction to bayesian optimization](https://scikit-optimize.github.io/notebooks/bayesian-optimization.html)</span>
-<span class="sd">and the other [examples](https://github.com/scikit-optimize/scikit-optimize/tree/master/examples).</span>
-
-
-<span class="sd">## Development</span>
-
-<span class="sd">The library is still experimental and under heavy development.</span>
-
-<span class="sd">The development version can be installed through:</span>
-
-<span class="sd">    git clone https://github.com/scikit-optimize/scikit-optimize.git</span>
-<span class="sd">    cd scikit-optimize</span>
-<span class="sd">    pip install -r requirements.txt</span>
-<span class="sd">    python setup.py develop</span>
-
-<span class="sd">Run the tests by executing `nosetests` in the top level directory.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">acquisition</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">benchmarks</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">callbacks</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">learning</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">plots</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">space</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-
-
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1&quot;</span>
-
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;optimizer&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;plots&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;space&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">)</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gp_minimize&quot;</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1245,7 +1111,7 @@ python setup.py develop
     <h2 class="section-title" id="header-functions">Functions</h2>
       
   <div class="item">
-    <div class="name def" id="skopt.dummy_minimize">
+    <div class="name def" id="skopt.optimizer.dummy_minimize">
     <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None, verbose=False, callback=None)</p>
     </div>
     
@@ -1338,8 +1204,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 </li>
 </ul></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.dummy_minimize" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.dummy_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer.dummy_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                    <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -1494,7 +1360,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   
       
   <div class="item">
-    <div class="name def" id="skopt.forest_minimize">
+    <div class="name def" id="skopt.optimizer.forest_minimize">
     <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
@@ -1646,8 +1512,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 </li>
 </ul></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.forest_minimize', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.forest_minimize" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.forest_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">,</span>
                     <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
@@ -1815,7 +1681,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   
       
   <div class="item">
-    <div class="name def" id="skopt.gbrt_minimize">
+    <div class="name def" id="skopt.optimizer.gbrt_minimize">
     <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
@@ -1960,8 +1826,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 </li>
 </ul></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.gbrt_minimize" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.gbrt_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer.gbrt_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
@@ -2110,7 +1976,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   
       
   <div class="item">
-    <div class="name def" id="skopt.gp_minimize">
+    <div class="name def" id="skopt.optimizer.gp_minimize">
     <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96)</p>
     </div>
     
@@ -2289,8 +2155,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 </li>
 </ul></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.gp_minimize" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.gp_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                 <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
