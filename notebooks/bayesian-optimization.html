@@ -1102,13 +1102,6 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>/home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
-  warnings.warn(&#39;Matplotlib is building the font cache using fc-list. This may take a moment.&#39;)
-/home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
-  warnings.warn(&#39;Matplotlib is building the font cache using fc-list. This may take a moment.&#39;)
-</pre></div>
-
-
 <h2>Problem statement</h2>
 <p>We are interested in solving $$x^* = \arg \min_x f(x)$$ under the constraints that</p>
 <ul>
@@ -1261,14 +1254,14 @@ models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              n_restarts_optimizer=0, normalize_y=True,
              optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777)]
 
-random_state = &lt;mtrand.RandomState object at 0x7f1d6f442a20&gt;
+random_state = &lt;mtrand.RandomState object at 0x7f588942a900&gt;
 
 space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
 
-specs = {&#39;args&#39;: {&#39;verbose&#39;: False, &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+specs = {&#39;function&#39;: &#39;base_minimize&#39;, &#39;args&#39;: {&#39;n_restarts_optimizer&#39;: 5, &#39;x0&#39;: [0.0], &#39;y0&#39;: None, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
              n_restarts_optimizer=0, normalize_y=True,
-             optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777), &#39;y0&#39;: None, &#39;n_calls&#39;: 15, &#39;random_state&#39;: 777, &#39;n_random_starts&#39;: 0, &#39;dimensions&#39;: [(-2.0, 2.0)], &#39;kappa&#39;: 1.96, &#39;callback&#39;: None, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;n_restarts_optimizer&#39;: 5, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [0.0], &#39;n_points&#39;: 10000, &#39;func&#39;: &lt;function f at 0x7f1d800dcea0&gt;, &#39;xi&#39;: 0.01}, &#39;function&#39;: &#39;base_minimize&#39;}
+             optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777), &#39;dimensions&#39;: [(-2.0, 2.0)], &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;func&#39;: &lt;function f at 0x7f5896139d08&gt;, &#39;n_points&#39;: 10000, &#39;n_random_starts&#39;: 0, &#39;callback&#39;: None, &#39;n_calls&#39;: 15, &#39;random_state&#39;: 777, &#39;kappa&#39;: 1.96, &#39;xi&#39;: 0.01, &#39;verbose&#39;: False}}
 
 x = [0.8988885384156996]
 
@@ -1282,7 +1275,7 @@ x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.6738684537303534], [1.2779567
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f1d6ea976d8&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f588944b550&gt;
 </pre></div>
 
 

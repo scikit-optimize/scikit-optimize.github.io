@@ -13,12 +13,6 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 6)
 ```
 
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
-      warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.5/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
-      warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
-
-
 ## Problem statement
 
 We are interested in solving $$x^* = \arg \min_x f(x)$$ under the constraints that
@@ -189,14 +183,14 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f1d6f442a20>
+    random_state = <mtrand.RandomState object at 0x7f588942a900>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'args': {'verbose': False, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'function': 'base_minimize', 'args': {'n_restarts_optimizer': 5, 'x0': [0.0], 'y0': None, 'acq_func': 'LCB', 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
                  n_restarts_optimizer=0, normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), 'y0': None, 'n_calls': 15, 'random_state': 777, 'n_random_starts': 0, 'dimensions': [(-2.0, 2.0)], 'kappa': 1.96, 'callback': None, 'acq_func': 'LCB', 'n_restarts_optimizer': 5, 'acq_optimizer': 'auto', 'x0': [0.0], 'n_points': 10000, 'func': <function f at 0x7f1d800dcea0>, 'xi': 0.01}, 'function': 'base_minimize'}
+                 optimizer='fmin_l_bfgs_b', random_state=777), 'dimensions': [(-2.0, 2.0)], 'acq_optimizer': 'auto', 'func': <function f at 0x7f5896139d08>, 'n_points': 10000, 'n_random_starts': 0, 'callback': None, 'n_calls': 15, 'random_state': 777, 'kappa': 1.96, 'xi': 0.01, 'verbose': False}}
     
     x = [0.8988885384156996]
     
@@ -215,7 +209,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f1d6ea976d8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f588944b550>
 
 
 
