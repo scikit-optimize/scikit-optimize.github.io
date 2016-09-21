@@ -183,14 +183,14 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f968a379870>
+    random_state = <mtrand.RandomState object at 0x7f3d34702bd0>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'args': {'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'function': 'base_minimize', 'args': {'y0': None, 'n_points': 10000, 'func': <function f at 0x7f3d41404d08>, 'x0': [0.0], 'callback': None, 'random_state': 777, 'kappa': 1.96, 'n_calls': 15, 'xi': 0.01, 'acq_optimizer': 'auto', 'dimensions': [(-2.0, 2.0)], 'verbose': False, 'acq_func': 'LCB', 'n_random_starts': 0, 'n_restarts_optimizer': 5, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
                  n_restarts_optimizer=0, normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), 'acq_func': 'LCB', 'x0': [0.0], 'verbose': False, 'y0': None, 'n_restarts_optimizer': 5, 'callback': None, 'xi': 0.01, 'dimensions': [(-2.0, 2.0)], 'acq_optimizer': 'auto', 'random_state': 777, 'kappa': 1.96, 'n_random_starts': 0, 'n_calls': 15, 'func': <function f at 0x7f9697088d08>, 'n_points': 10000}, 'function': 'base_minimize'}
+                 optimizer='fmin_l_bfgs_b', random_state=777)}}
     
     x = [0.8988885384156996]
     
@@ -209,7 +209,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f968a39e630>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f3d34718b38>
 
 
 

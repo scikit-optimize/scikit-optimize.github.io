@@ -15,7 +15,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7fc774723c50>
+    <matplotlib.figure.Figure at 0x7f785c265c18>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -116,10 +116,10 @@ dummy_res = run(dummy_minimize)
 gp_res = run(gp_minimize)
 
 # Random forest
-rf_res = run(partial(forest_minimize, base_estimator="rf"))
+rf_res = run(partial(forest_minimize, base_estimator="RF"))
 
 # Extra trees 
-et_res = run(partial(forest_minimize, base_estimator="et"))
+et_res = run(partial(forest_minimize, base_estimator="ET"))
 ```
 
 Note that this can take a few minutes.
@@ -138,7 +138,7 @@ plot_convergence(("dummy_minimize", dummy_res),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fc73dac5ac8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f781fe05f28>
 
 
 

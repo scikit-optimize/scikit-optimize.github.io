@@ -1361,7 +1361,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;et&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;ET&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
 
@@ -1402,11 +1402,11 @@ guided by the surrogate model.</p>
 </ul>
 </li>
 <li>
-<p><code>base_estimator</code> [string or <code>Regressor</code>, default=<code>"et"</code>]:
+<p><code>base_estimator</code> [string or <code>Regressor</code>, default=<code>"ET"</code>]:
     The regressor to use as surrogate model. Can be either</p>
 <ul>
-<li><code>"rf"</code> for random forest regressor</li>
-<li><code>"et"</code> for extra trees regressor</li>
+<li><code>"RF"</code> for random forest regressor</li>
+<li><code>"ET"</code> for extra trees regressor</li>
 <li>instance of regressor with support for <code>return_std</code> in its predict
   method</li>
 </ul>
@@ -1514,7 +1514,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer.forest_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;et&quot;</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">,</span>
                     <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                     <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
@@ -1553,11 +1553,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    * `base_estimator` [string or `Regressor`, default=`&quot;et&quot;`]:</span>
+<span class="sd">    * `base_estimator` [string or `Regressor`, default=`&quot;ET&quot;`]:</span>
 <span class="sd">        The regressor to use as surrogate model. Can be either</span>
 
-<span class="sd">        - `&quot;rf&quot;` for random forest regressor</span>
-<span class="sd">        - `&quot;et&quot;` for extra trees regressor</span>
+<span class="sd">        - `&quot;RF&quot;` for random forest regressor</span>
+<span class="sd">        - `&quot;ET&quot;` for extra trees regressor</span>
 <span class="sd">        - instance of regressor with support for `return_std` in its predict</span>
 <span class="sd">          method</span>
 
@@ -1648,18 +1648,18 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rf&quot;</span><span class="p">,</span> <span class="s2">&quot;et&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;ET&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Valid strings for the base_estimator parameter&quot;</span>
-                <span class="s2">&quot; are: &#39;rf&#39; or &#39;et&#39;, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
+                <span class="s2">&quot; are: &#39;RF&#39; or &#39;ET&#39;, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;rf&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;RF&quot;</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                                    <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                                                    <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;et&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;ET&quot;</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                                  <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                                                  <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>

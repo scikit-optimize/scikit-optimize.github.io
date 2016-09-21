@@ -15,7 +15,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f9f492afc18>
+    <matplotlib.figure.Figure at 0x7f91ac231c50>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -116,7 +116,7 @@ from skopt import gp_minimize, forest_minimize, dummy_minimize
 bounds = [(-5.0, 10.0), (0.0, 15.0)]
 n_calls = 160
 
-forest_res = forest_minimize(branin, bounds, n_calls=n_calls, base_estimator="et",
+forest_res = forest_minimize(branin, bounds, n_calls=n_calls, base_estimator="ET",
                              random_state=4)
 
 _ = plot_evaluations(forest_res, bins=10)
@@ -202,7 +202,7 @@ and `plot_objective()`.
 bounds = [(0., 1.),] * 6
 
 forest_res = forest_minimize(hart6, bounds, n_calls=n_calls,
-                             base_estimator="et", random_state=4)
+                             base_estimator="ET", random_state=4)
 ```
 
 
@@ -232,7 +232,7 @@ bounds = [(0., 1.),] * 8
 n_calls = 200
 
 forest_res = forest_minimize(hart6, bounds, n_calls=n_calls,
-                             base_estimator="et", random_state=4)
+                             base_estimator="ET", random_state=4)
 
 _ = plot_evaluations(forest_res)
 _ = plot_objective(forest_res)
