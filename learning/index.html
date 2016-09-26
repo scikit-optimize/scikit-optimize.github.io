@@ -1055,6 +1055,9 @@ table {
         <span class="class_name"><a href="#skopt.learning.ExtraTreesRegressor">ExtraTreesRegressor</a></span>
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.learning.GaussianProcessRegressor">GaussianProcessRegressor</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.learning.GradientBoostingQuantileRegressor">GradientBoostingQuantileRegressor</a></span>
         </li>
         <li class="mono">
@@ -1100,10 +1103,12 @@ table {
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
 <span class="kn">from</span> <span class="nn">.gbrt</span> <span class="kn">import</span> <span class="n">GradientBoostingQuantileRegressor</span>
+<span class="kn">from</span> <span class="nn">.gpr</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;RandomForestRegressor&quot;</span><span class="p">,</span>
            <span class="s2">&quot;ExtraTreesRegressor&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;GradientBoostingQuantileRegressor&quot;</span><span class="p">)</span>
+           <span class="s2">&quot;GradientBoostingQuantileRegressor&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;GaussianProcessRegressor&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1329,6 +1334,412 @@ table {
             </div>
             <div class="item">
             <p id="skopt.learning.ExtraTreesRegressor.min_variance" class="name">var <span class="ident">min_variance</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="skopt.learning.GaussianProcessRegressor" class="name">class <span class="ident">GaussianProcessRegressor</span></p>
+      
+  
+    <div class="desc"><p>GaussianProcessRegressor that allows noise tunability.</p>
+<p>The implementation is based on Algorithm 2.1 of Gaussian Processes
+for Machine Learning (GPML) by Rasmussen and Williams.</p>
+<p>In addition to standard scikit-learn estimator API,
+GaussianProcessRegressor:</p>
+<ul>
+<li>allows prediction without prior fitting (based on the GP prior)</li>
+<li>provides an additional method sample_y(X), which evaluates samples
+     drawn from the GPR (prior or posterior) at given inputs</li>
+<li>exposes a method log_marginal_likelihood(theta), which can be used
+     externally for other ways of selecting hyperparameters, e.g., via
+     Markov chain Monte Carlo.</li>
+</ul>
+<p>Read more in the :ref:<code>User Guide &lt;gaussian_process&gt;</code>.</p>
+<h2>Parameters</h2>
+<p>kernel : kernel object
+    The kernel specifying the covariance function of the GP. If None is
+    passed, the kernel "1.0 * RBF(1.0)" is used as default. Note that
+    the kernel's hyperparameters are optimized during fitting.</p>
+<p>alpha : float or array-like, optional (default: 1e-10)
+    Value added to the diagonal of the kernel matrix during fitting.
+    Larger values correspond to increased noise level in the observations
+    and reduce potential numerical issue during fitting. If an array is
+    passed, it must have the same number of entries as the data used for
+    fitting and is used as datapoint-dependent noise level. Note that this
+    is equivalent to adding a WhiteKernel with c=alpha. Allowing to specify
+    the noise level directly as a parameter is mainly for convenience and
+    for consistency with Ridge.</p>
+<p>optimizer : string or callable, optional (default: "fmin_l_bfgs_b")
+    Can either be one of the internally supported optimizers for optimizing
+    the kernel's parameters, specified by a string, or an externally
+    defined optimizer passed as a callable. If a callable is passed, it
+    must have the signature::</p>
+<div class="codehilite"><pre><span></span>    def optimizer(obj_func, initial_theta, bounds):
+        # * &#39;obj_func&#39; is the objective function to be maximized, which
+        #   takes the hyperparameters theta as parameter and an
+        #   optional flag eval_gradient, which determines if the
+        #   gradient is returned additionally to the function value
+        # * &#39;initial_theta&#39;: the initial value for theta, which can be
+        #   used by local optimizers
+        # * &#39;bounds&#39;: the bounds on the values of theta
+        ....
+        # Returned are the best found hyperparameters theta and
+        # the corresponding value of the target function.
+        return theta_opt, func_min
+
+Per default, the &#39;fmin_l_bfgs_b&#39; algorithm from scipy.optimize
+is used. If None is passed, the kernel&#39;s parameters are kept fixed.
+Available internal optimizers are::
+
+    &#39;fmin_l_bfgs_b&#39;
+</pre></div>
+
+
+<p>n_restarts_optimizer: int, optional (default: 0)
+    The number of restarts of the optimizer for finding the kernel's
+    parameters which maximize the log-marginal likelihood. The first run
+    of the optimizer is performed from the kernel's initial parameters,
+    the remaining ones (if any) from thetas sampled log-uniform randomly
+    from the space of allowed theta-values. If greater than 0, all bounds
+    must be finite. Note that n_restarts_optimizer == 0 implies that one
+    run is performed.</p>
+<p>normalize_y: boolean, optional (default: False)
+    Whether the target values y are normalized, i.e., the mean of the
+    observed target values become zero. This parameter should be set to
+    True if the target values' mean is expected to differ considerable from
+    zero. When enabled, the normalization effectively modifies the GP's
+    prior based on the data, which contradicts the likelihood principle;
+    normalization is thus disabled per default.</p>
+<p>copy_X_train : bool, optional (default: True)
+    If True, a persistent copy of the training data is stored in the
+    object. Otherwise, just a reference to the training data is stored,
+    which might cause predictions to change if the data is modified
+    externally.</p>
+<p>random_state : integer or numpy.RandomState, optional
+    The generator used to initialize the centers. If an integer is
+    given, it fixes the seed. Defaults to the global numpy random
+    number generator.</p>
+<p>noise: string, "gaussian", optional
+    If set to "gaussian", then it is assumed that <code>y</code> is a noisy
+    estimate of <code>f(x)</code> where the noise is gaussian.</p>
+<h2>Attributes</h2>
+<p>X_train_ : array-like, shape = (n_samples, n_features)
+    Feature values in training data (also required for prediction)</p>
+<p>y_train_: array-like, shape = (n_samples, [n_output_dims])
+    Target values in training data (also required for prediction)</p>
+<p>kernel_: kernel object
+    The kernel used for prediction. The structure of the kernel is the
+    same as the one passed as parameter but with optimized hyperparameters</p>
+<p>L_: array-like, shape = (n_samples, n_samples)
+    Lower-triangular Cholesky decomposition of the kernel in <code>X_train_</code></p>
+<p>alpha_: array-like, shape = (n_samples,)
+    Dual coefficients of training data points in kernel space</p>
+<p>log_marginal_likelihood_value_: float
+    The log-marginal-likelihood of <code>self.kernel_.theta</code></p>
+<p>noise_: float
+    Estimate of the gaussian noise. Useful only when noise is set to
+    "gaussian".</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.learning.GaussianProcessRegressor" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">GaussianProcessRegressor</span><span class="p">(</span><span class="n">sk_GaussianProcessRegressor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    GaussianProcessRegressor that allows noise tunability.</span>
+
+<span class="sd">    The implementation is based on Algorithm 2.1 of Gaussian Processes</span>
+<span class="sd">    for Machine Learning (GPML) by Rasmussen and Williams.</span>
+
+<span class="sd">    In addition to standard scikit-learn estimator API,</span>
+<span class="sd">    GaussianProcessRegressor:</span>
+
+<span class="sd">       * allows prediction without prior fitting (based on the GP prior)</span>
+<span class="sd">       * provides an additional method sample_y(X), which evaluates samples</span>
+<span class="sd">         drawn from the GPR (prior or posterior) at given inputs</span>
+<span class="sd">       * exposes a method log_marginal_likelihood(theta), which can be used</span>
+<span class="sd">         externally for other ways of selecting hyperparameters, e.g., via</span>
+<span class="sd">         Markov chain Monte Carlo.</span>
+
+<span class="sd">    Read more in the :ref:`User Guide &lt;gaussian_process&gt;`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kernel : kernel object</span>
+<span class="sd">        The kernel specifying the covariance function of the GP. If None is</span>
+<span class="sd">        passed, the kernel &quot;1.0 * RBF(1.0)&quot; is used as default. Note that</span>
+<span class="sd">        the kernel&#39;s hyperparameters are optimized during fitting.</span>
+
+<span class="sd">    alpha : float or array-like, optional (default: 1e-10)</span>
+<span class="sd">        Value added to the diagonal of the kernel matrix during fitting.</span>
+<span class="sd">        Larger values correspond to increased noise level in the observations</span>
+<span class="sd">        and reduce potential numerical issue during fitting. If an array is</span>
+<span class="sd">        passed, it must have the same number of entries as the data used for</span>
+<span class="sd">        fitting and is used as datapoint-dependent noise level. Note that this</span>
+<span class="sd">        is equivalent to adding a WhiteKernel with c=alpha. Allowing to specify</span>
+<span class="sd">        the noise level directly as a parameter is mainly for convenience and</span>
+<span class="sd">        for consistency with Ridge.</span>
+
+<span class="sd">    optimizer : string or callable, optional (default: &quot;fmin_l_bfgs_b&quot;)</span>
+<span class="sd">        Can either be one of the internally supported optimizers for optimizing</span>
+<span class="sd">        the kernel&#39;s parameters, specified by a string, or an externally</span>
+<span class="sd">        defined optimizer passed as a callable. If a callable is passed, it</span>
+<span class="sd">        must have the signature::</span>
+
+<span class="sd">            def optimizer(obj_func, initial_theta, bounds):</span>
+<span class="sd">                # * &#39;obj_func&#39; is the objective function to be maximized, which</span>
+<span class="sd">                #   takes the hyperparameters theta as parameter and an</span>
+<span class="sd">                #   optional flag eval_gradient, which determines if the</span>
+<span class="sd">                #   gradient is returned additionally to the function value</span>
+<span class="sd">                # * &#39;initial_theta&#39;: the initial value for theta, which can be</span>
+<span class="sd">                #   used by local optimizers</span>
+<span class="sd">                # * &#39;bounds&#39;: the bounds on the values of theta</span>
+<span class="sd">                ....</span>
+<span class="sd">                # Returned are the best found hyperparameters theta and</span>
+<span class="sd">                # the corresponding value of the target function.</span>
+<span class="sd">                return theta_opt, func_min</span>
+
+<span class="sd">        Per default, the &#39;fmin_l_bfgs_b&#39; algorithm from scipy.optimize</span>
+<span class="sd">        is used. If None is passed, the kernel&#39;s parameters are kept fixed.</span>
+<span class="sd">        Available internal optimizers are::</span>
+
+<span class="sd">            &#39;fmin_l_bfgs_b&#39;</span>
+
+<span class="sd">    n_restarts_optimizer: int, optional (default: 0)</span>
+<span class="sd">        The number of restarts of the optimizer for finding the kernel&#39;s</span>
+<span class="sd">        parameters which maximize the log-marginal likelihood. The first run</span>
+<span class="sd">        of the optimizer is performed from the kernel&#39;s initial parameters,</span>
+<span class="sd">        the remaining ones (if any) from thetas sampled log-uniform randomly</span>
+<span class="sd">        from the space of allowed theta-values. If greater than 0, all bounds</span>
+<span class="sd">        must be finite. Note that n_restarts_optimizer == 0 implies that one</span>
+<span class="sd">        run is performed.</span>
+
+<span class="sd">    normalize_y: boolean, optional (default: False)</span>
+<span class="sd">        Whether the target values y are normalized, i.e., the mean of the</span>
+<span class="sd">        observed target values become zero. This parameter should be set to</span>
+<span class="sd">        True if the target values&#39; mean is expected to differ considerable from</span>
+<span class="sd">        zero. When enabled, the normalization effectively modifies the GP&#39;s</span>
+<span class="sd">        prior based on the data, which contradicts the likelihood principle;</span>
+<span class="sd">        normalization is thus disabled per default.</span>
+
+<span class="sd">    copy_X_train : bool, optional (default: True)</span>
+<span class="sd">        If True, a persistent copy of the training data is stored in the</span>
+<span class="sd">        object. Otherwise, just a reference to the training data is stored,</span>
+<span class="sd">        which might cause predictions to change if the data is modified</span>
+<span class="sd">        externally.</span>
+
+<span class="sd">    random_state : integer or numpy.RandomState, optional</span>
+<span class="sd">        The generator used to initialize the centers. If an integer is</span>
+<span class="sd">        given, it fixes the seed. Defaults to the global numpy random</span>
+<span class="sd">        number generator.</span>
+
+<span class="sd">    noise: string, &quot;gaussian&quot;, optional</span>
+<span class="sd">        If set to &quot;gaussian&quot;, then it is assumed that `y` is a noisy</span>
+<span class="sd">        estimate of `f(x)` where the noise is gaussian.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train_ : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">        Feature values in training data (also required for prediction)</span>
+
+<span class="sd">    y_train_: array-like, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">        Target values in training data (also required for prediction)</span>
+
+<span class="sd">    kernel_: kernel object</span>
+<span class="sd">        The kernel used for prediction. The structure of the kernel is the</span>
+<span class="sd">        same as the one passed as parameter but with optimized hyperparameters</span>
+
+<span class="sd">    L_: array-like, shape = (n_samples, n_samples)</span>
+<span class="sd">        Lower-triangular Cholesky decomposition of the kernel in ``X_train_``</span>
+
+<span class="sd">    alpha_: array-like, shape = (n_samples,)</span>
+<span class="sd">        Dual coefficients of training data points in kernel space</span>
+
+<span class="sd">    log_marginal_likelihood_value_: float</span>
+<span class="sd">        The log-marginal-likelihood of ``self.kernel_.theta``</span>
+
+<span class="sd">    noise_: float</span>
+<span class="sd">        Estimate of the gaussian noise. Useful only when noise is set to</span>
+<span class="sd">        &quot;gaussian&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">normalize_y</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">noise</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="n">normalize_y</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="n">copy_X_train</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit Gaussian process regression model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">            Training data</span>
+
+<span class="sd">        y : array-like, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">            Target values</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : returns an instance of self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">!=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected noise to be &#39;gaussian&#39;, got </span><span class="si">%s</span><span class="s2">&quot;</span>
+                             <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">+</span> <span class="n">WhiteKernel</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+            <span class="c1"># The noise component of this kernel should be set to zero</span>
+            <span class="c1"># while estimating K(X_test, X_test)</span>
+            <span class="c1"># Note that the term K(X, X) should include the noise but</span>
+            <span class="c1"># this (K(X, X))^-1y is precomputed as the attribute `alpha_`.</span>
+            <span class="c1"># (Notice the underscore).</span>
+            <span class="c1"># This has been described in Eq 2.24 of</span>
+            <span class="c1"># http://www.gaussianprocess.org/gpml/chapters/RW2.pdf</span>
+            <span class="c1"># Hence this hack</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">white_present</span><span class="p">,</span> <span class="n">white_param</span> <span class="o">=</span> <span class="n">_param_for_white_kernel_in_Sum</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">)</span>
+                <span class="c1"># This should always be true. Just in case.</span>
+                <span class="k">if</span> <span class="n">white_present</span><span class="p">:</span>
+                    <span class="n">noise_kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="n">white_param</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="n">noise_kernel</span><span class="o">.</span><span class="n">noise_level</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
+                        <span class="o">**</span><span class="p">{</span><span class="n">white_param</span><span class="p">:</span> <span class="n">WhiteKernel</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)})</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.learning.GaussianProcessRegressor">GaussianProcessRegressor</a></li>
+          <li>sklearn.gaussian_process.gpr.GaussianProcessRegressor</li>
+          <li>sklearn.base.BaseEstimator</li>
+          <li>sklearn.base.RegressorMixin</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.learning.GaussianProcessRegressor.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, kernel=None, alpha=0.0, optimizer=&#39;fmin_l_bfgs_b&#39;, n_restarts_optimizer=0, normalize_y=False, copy_X_train=True, random_state=None, noise=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.learning.GaussianProcessRegressor.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+             <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">normalize_y</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">noise</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+        <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
+        <span class="n">normalize_y</span><span class="o">=</span><span class="n">normalize_y</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="n">copy_X_train</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.learning.GaussianProcessRegressor.fit">
+    <p>def <span class="ident">fit</span>(</p><p>self, X, y)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Fit Gaussian process regression model</p>
+<h2>Parameters</h2>
+<p>X : array-like, shape = (n_samples, n_features)
+    Training data</p>
+<p>y : array-like, shape = (n_samples, [n_output_dims])
+    Target values</p>
+<h2>Returns</h2>
+<p>self : returns an instance of self.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor.fit', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.learning.GaussianProcessRegressor.fit" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fit Gaussian process regression model</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">        Training data</span>
+<span class="sd">    y : array-like, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">        Target values</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    self : returns an instance of self.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">!=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected noise to be &#39;gaussian&#39;, got </span><span class="si">%s</span><span class="s2">&quot;</span>
+                         <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">+</span> <span class="n">WhiteKernel</span><span class="p">()</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+        <span class="c1"># The noise component of this kernel should be set to zero</span>
+        <span class="c1"># while estimating K(X_test, X_test)</span>
+        <span class="c1"># Note that the term K(X, X) should include the noise but</span>
+        <span class="c1"># this (K(X, X))^-1y is precomputed as the attribute `alpha_`.</span>
+        <span class="c1"># (Notice the underscore).</span>
+        <span class="c1"># This has been described in Eq 2.24 of</span>
+        <span class="c1"># http://www.gaussianprocess.org/gpml/chapters/RW2.pdf</span>
+        <span class="c1"># Hence this hack</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">white_present</span><span class="p">,</span> <span class="n">white_param</span> <span class="o">=</span> <span class="n">_param_for_white_kernel_in_Sum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">)</span>
+            <span class="c1"># This should always be true. Just in case.</span>
+            <span class="k">if</span> <span class="n">white_present</span><span class="p">:</span>
+                <span class="n">noise_kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="n">white_param</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="n">noise_kernel</span><span class="o">.</span><span class="n">noise_level</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
+                    <span class="o">**</span><span class="p">{</span><span class="n">white_param</span><span class="p">:</span> <span class="n">WhiteKernel</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)})</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.learning.GaussianProcessRegressor.noise" class="name">var <span class="ident">noise</span></p>
             
 
             

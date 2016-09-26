@@ -111,7 +111,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=0.8989, f(x^*)=-0.3402'
+    'x^*=-0.4770, f(x^*)=-0.5625'
 
 
 
@@ -133,68 +133,68 @@ for key, value in sorted(res.items()):
     print()
 ```
 
-    fun = -0.340184282888
+    fun = -0.562540232051
     
-    func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.08568382  0.00968566  0.02089359
-      0.18016374 -0.23109335  0.16242712 -0.07013189 -0.34018428 -0.02545741
-     -0.19362344 -0.03004592  0.06602537]
+    func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09002946 -0.04237854  0.03806005
+     -0.20223996 -0.13259817  0.26546289 -0.42315714 -0.35121192  0.14205274
+     -0.36350223 -0.56254023  0.06602537]
     
     models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f926c8e5a68>
+    random_state = <mtrand.RandomState object at 0x7f93bd142ab0>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
     
-    specs = {'args': {'random_state': 777, 'n_calls': 15, 'func': <function f at 0x7f9278bbbd08>, 'n_random_starts': 0, 'acq_func': 'LCB', 'callback': None, 'n_restarts_optimizer': 5, 'x0': [0.0], 'y0': None, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), 'verbose': False, 'dimensions': [(-2.0, 2.0)], 'xi': 0.01, 'n_points': 10000, 'kappa': 1.96, 'acq_optimizer': 'auto'}, 'function': 'base_minimize'}
+    specs = {'function': 'base_minimize', 'args': {'x0': [0.0], 'n_points': 10000, 'verbose': False, 'random_state': 777, 'acq_func': 'LCB', 'y0': None, 'callback': None, 'n_calls': 15, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5),
+                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
+                 optimizer='fmin_l_bfgs_b', random_state=777), 'acq_optimizer': 'auto', 'func': <function f at 0x7f93c9e36d08>, 'n_restarts_optimizer': 5, 'kappa': 1.96, 'n_random_starts': 0, 'dimensions': [(-2.0, 2.0)], 'xi': 0.01}}
     
-    x = [0.8988885384156996]
+    x = [-0.47701228275212976]
     
-    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.6738684537303534], [1.2779567121512889], [2.0], [-1.1458275232943411], [0.8003534114036317], [0.61449397905161895], [1.6003175576513764], [0.8988885384156996], [1.0023303296887589], [-0.57885104856190195], [1.9999999999999998], [2.0]]
+    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.7706505677188598], [1.1789622049849457], [1.5429127927759865], [0.9167323209730952], [0.71963658431051836], [-1.0705399564442766], [0.85181693110420054], [-0.53221537323817647], [-0.6101469022520023], [0.87490702813533872], [-0.47701228275212976], [2.0]]
     
 
 
@@ -209,7 +209,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f926c8f98d0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f93bd15aac8>
 
 
 
