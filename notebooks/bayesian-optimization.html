@@ -1069,7 +1069,7 @@ table {
         <li class="mono"><a href="../learning/index.html">skopt.learning</a></li>
         <li class="mono"><a href="../optimizer/index.html">skopt.optimizer</a></li>
         <li class="mono"><a href="../plots.m.html">skopt.plots</a></li>
-        <li class="mono"><a href="../space.m.html">skopt.space</a></li>
+        <li class="mono"><a href="../space/index.html">skopt.space</a></li>
       </ul>
     </li>
 
@@ -1183,7 +1183,7 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;x^*=-0.4770, f(x^*)=-0.5625&#39;
+<div class="codehilite"><pre><span></span>&#39;x^*=1.7080, f(x^*)=-0.0934&#39;
 </pre></div>
 
 
@@ -1204,11 +1204,11 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>fun = -0.562540232051
+<div class="codehilite"><pre><span></span>fun = -0.0933827773839
 
-func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09002946 -0.04237854  0.03806005
- -0.20223996 -0.13259817  0.26546289 -0.42315714 -0.35121192  0.14205274
- -0.36350223 -0.56254023  0.06602537]
+func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09240142  0.00150194  0.05578467
+  0.12585428  0.09935103  0.11790199  0.25532408 -0.01687742  0.20012151
+ -0.02752978 -0.02931617  0.07467448]
 
 models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
@@ -1254,18 +1254,18 @@ models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              n_restarts_optimizer=0, noise=&#39;gaussian&#39;, normalize_y=True,
              optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777)]
 
-random_state = &lt;mtrand.RandomState object at 0x7f6dbb0abd80&gt;
+random_state = &lt;mtrand.RandomState object at 0x7f2ca5712f30&gt;
 
-space = Space([Real(low=-2.0, high=2.0, prior=uniform)])
+space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
 
-specs = {&#39;function&#39;: &#39;base_minimize&#39;, &#39;args&#39;: {&#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+specs = {&#39;function&#39;: &#39;base_minimize&#39;, &#39;args&#39;: {&#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;func&#39;: &lt;function f at 0x7f2cb2414f28&gt;, &#39;y0&#39;: None, &#39;kappa&#39;: 1.96, &#39;n_restarts_optimizer&#39;: 5, &#39;n_calls&#39;: 15, &#39;n_random_starts&#39;: 0, &#39;xi&#39;: 0.01, &#39;random_state&#39;: 777, &#39;dimensions&#39;: [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], &#39;x0&#39;: [0.0], &#39;verbose&#39;: False, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;callback&#39;: None, &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5),
              n_restarts_optimizer=0, noise=&#39;gaussian&#39;, normalize_y=True,
-             optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777), &#39;kappa&#39;: 1.96, &#39;n_calls&#39;: 15, &#39;x0&#39;: [0.0], &#39;xi&#39;: 0.01, &#39;dimensions&#39;: [(-2.0, 2.0)], &#39;acq_func&#39;: &#39;LCB&#39;, &#39;func&#39;: &lt;function f at 0x7f6dc7d84d90&gt;, &#39;n_restarts_optimizer&#39;: 5, &#39;n_random_starts&#39;: 0, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;verbose&#39;: False, &#39;random_state&#39;: 777, &#39;n_points&#39;: 10000, &#39;y0&#39;: None, &#39;callback&#39;: None}}
+             optimizer=&#39;fmin_l_bfgs_b&#39;, random_state=777), &#39;n_points&#39;: 10000}}
 
-x = [-0.47701228275212976]
+x = [1.7079881909995787]
 
-x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.7706505677188598], [1.1789622049849457], [1.5429127927759865], [0.9167323209730952], [0.71963658431051836], [-1.0705399564442766], [0.85181693110420054], [-0.53221537323817647], [-0.6101469022520023], [0.87490702813533872], [-0.47701228275212976], [2.0]]
+x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.9555859958431872], [2.0], [-1.1927053040584774], [1.3109444551249587], [1.8146398553388812], [2.0], [-0.8166035648518295], [2.0], [2.0], [-2.0], [-2.0], [1.2793920116626194]]
 </pre></div>
 
 
@@ -1275,7 +1275,7 @@ x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.7706505677188598], [1.1789622
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f6dbb0c1a20&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f2ca5731fd0&gt;
 </pre></div>
 
 

@@ -73,7 +73,7 @@ res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 
 
 
-    'Best score=2.8595'
+    'Best score=2.9070'
 
 
 
@@ -90,11 +90,11 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=3
-    - learning_rate=0.095738
-    - max_features=6
-    - min_samples_split=28
-    - min_samples_leaf=1
+    - max_depth=5
+    - learning_rate=0.094588
+    - max_features=5
+    - min_samples_split=30
+    - min_samples_leaf=5
 
 
 
@@ -182,7 +182,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f72601b1828>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7ffac86a9828>
 
 
 
@@ -273,14 +273,14 @@ print("""Best parameters:
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=3.9233
+    Best score=3.8863
     Best parameters:
-        - n_components=12
-        - max_depth=5
-        - learning_rate=0.098871
-        - max_features=4
-        - min_samples_split=12
-        - min_samples_leaf=6
+        - n_components=13
+        - max_depth=4
+        - learning_rate=0.092924
+        - max_features=14
+        - min_samples_split=5
+        - min_samples_leaf=20
 
 
 We've started with a gaussian process algorithm; now add dummy and forest minimization functions to get a survey of the field.
@@ -349,7 +349,7 @@ plot_convergence(("gp_optimize", res_gp),
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f724706ec88>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7ffac8668208>
 
 
 

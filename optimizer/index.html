@@ -2312,6 +2312,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
+    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
     <span class="c1"># Default GP</span>
