@@ -183,14 +183,14 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
                  optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f0085f28d38>
+    random_state = <mtrand.RandomState object at 0x7f3be7d13e58>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
     
-    specs = {'args': {'random_state': 777, 'n_random_starts': 0, 'acq_optimizer': 'auto', 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'function': 'base_minimize', 'args': {'verbose': False, 'n_calls': 15, 'func': <function f at 0x7f3bf4019f28>, 'random_state': 777, 'n_random_starts': 0, 'x0': [0.0], 'callback': None, 'acq_optimizer': 'auto', 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), 'func': <function f at 0x7f009222cf28>, 'xi': 0.01, 'verbose': False, 'callback': None, 'kappa': 1.96, 'n_points': 10000, 'n_restarts_optimizer': 5, 'n_calls': 15, 'acq_func': 'LCB', 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'x0': [0.0], 'y0': None}, 'function': 'base_minimize'}
+                 optimizer='fmin_l_bfgs_b', random_state=777), 'kappa': 1.96, 'xi': 0.01, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'n_points': 10000, 'n_restarts_optimizer': 5, 'acq_func': 'LCB', 'y0': None}}
     
     x = [1.7079881909995787]
     
@@ -209,7 +209,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f008554b3c8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f3be7335390>
 
 
 
