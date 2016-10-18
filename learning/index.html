@@ -1103,7 +1103,8 @@ table {
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
 <span class="kn">from</span> <span class="nn">.gbrt</span> <span class="kn">import</span> <span class="n">GradientBoostingQuantileRegressor</span>
-<span class="kn">from</span> <span class="nn">.gpr</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;RandomForestRegressor&quot;</span><span class="p">,</span>
            <span class="s2">&quot;ExtraTreesRegressor&quot;</span><span class="p">,</span>
@@ -1624,6 +1625,119 @@ Available internal optimizers are::
                     <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
                         <span class="o">**</span><span class="p">{</span><span class="n">white_param</span><span class="p">:</span> <span class="n">WhiteKernel</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)})</span>
         <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In addition to the mean of the predictive distribution, also its</span>
+<span class="sd">        standard deviation (return_std=True) or covariance (return_cov=True),</span>
+<span class="sd">        the gradient of the mean and the standard-deviation with respect to X</span>
+<span class="sd">        can be optionally provided.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">            Query points where the GP is evaluated</span>
+
+<span class="sd">        return_std : bool, default: False</span>
+<span class="sd">            If True, the standard-deviation of the predictive distribution at</span>
+<span class="sd">            the query points is returned along with the mean.</span>
+
+<span class="sd">        return_cov : bool, default: False</span>
+<span class="sd">            If True, the covariance of the joint predictive distribution at</span>
+<span class="sd">            the query points is returned along with the mean</span>
+
+<span class="sd">        return_mean_grad: bool, default: False</span>
+<span class="sd">            Whether or not to return the gradient of the mean.</span>
+<span class="sd">            Only valid when X is a single point.</span>
+
+<span class="sd">        return_std_grad: bool, default: False</span>
+<span class="sd">            Whether or not to return the gradient of the std.</span>
+<span class="sd">            Only valid when X is a single point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y_mean : array, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">            Mean of predictive distribution a query points</span>
+<span class="sd">        y_std : array, shape = (n_samples,), optional</span>
+<span class="sd">            Standard deviation of predictive distribution at query points.</span>
+<span class="sd">            Only returned when return_std is True.</span>
+<span class="sd">        y_cov : array, shape = (n_samples, n_samples), optional</span>
+<span class="sd">            Covariance of joint predictive distribution a query points.</span>
+<span class="sd">            Only returned when return_cov is True.</span>
+<span class="sd">        y_mean_grad: shape = (n_samples, n_features)</span>
+<span class="sd">            The gradient of the predicted mean</span>
+<span class="sd">        y_std_grad: shape = (n_samples, n_features)</span>
+<span class="sd">            The gradient of the predicted std.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">return_std</span> <span class="ow">and</span> <span class="n">return_cov</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Not returning standard deviation of predictions when &quot;</span>
+                <span class="s2">&quot;returning full covariance.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_std_grad</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Not returning std_gradient without returning &quot;</span>
+                <span class="s2">&quot;the std.&quot;</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">return_mean_grad</span> <span class="ow">or</span> <span class="n">return_std_grad</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not implemented for n_samples &gt; 1&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;X_train_&quot;</span><span class="p">):</span>  <span class="c1"># Unfitted;predict based on GP prior</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+            <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
+            <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>  <span class="c1"># Line 4 (y_mean = f_star)</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+
+            <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>  <span class="c1"># Line 6</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+
+            <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="c1"># compute inverse K_inv of K based on its Cholesky</span>
+                <span class="c1"># decomposition L and its inverse L_inv</span>
+                <span class="n">L_inv</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">K_inv</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                <span class="c1"># Compute variance of predictive distribution</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="n">y_var</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ki,kj,ij-&gt;k&quot;</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_inv</span><span class="p">)</span>
+
+                <span class="c1"># Check if any of the variances is negative because of</span>
+                <span class="c1"># numerical issues. If yes: set the variance to 0.</span>
+                <span class="n">y_var_negative</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">&lt;</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y_var_negative</span><span class="p">):</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
+                                  <span class="s2">&quot;Setting those variances to 0.&quot;</span><span class="p">)</span>
+                    <span class="n">y_var</span><span class="p">[</span><span class="n">y_var_negative</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">y_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">return_mean_grad</span><span class="p">:</span>
+                <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">gradient_x</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+                <span class="n">grad_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">return_std_grad</span><span class="p">:</span>
+                    <span class="c1"># XXX: Cache np.dot(K_trans, K_inv) from above</span>
+                    <span class="n">grad_std</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_trans</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_inv</span><span class="p">,</span> <span class="n">grad</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">y_std</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span><span class="p">,</span> <span class="n">grad_std</span>
+
+                <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">grad_mean</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span>
 </pre></div>
 
   </div>
@@ -1730,6 +1844,156 @@ Available internal optimizers are::
                 <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
                     <span class="o">**</span><span class="p">{</span><span class="n">white_param</span><span class="p">:</span> <span class="n">WhiteKernel</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)})</span>
     <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.learning.GaussianProcessRegressor.predict">
+    <p>def <span class="ident">predict</span>(</p><p>self, X, return_std=False, return_cov=False, return_mean_grad=False, return_std_grad=False)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>In addition to the mean of the predictive distribution, also its
+standard deviation (return_std=True) or covariance (return_cov=True),
+the gradient of the mean and the standard-deviation with respect to X
+can be optionally provided.</p>
+<h2>Parameters</h2>
+<p>X : array-like, shape = (n_samples, n_features)
+    Query points where the GP is evaluated</p>
+<p>return_std : bool, default: False
+    If True, the standard-deviation of the predictive distribution at
+    the query points is returned along with the mean.</p>
+<p>return_cov : bool, default: False
+    If True, the covariance of the joint predictive distribution at
+    the query points is returned along with the mean</p>
+<p>return_mean_grad: bool, default: False
+    Whether or not to return the gradient of the mean.
+    Only valid when X is a single point.</p>
+<p>return_std_grad: bool, default: False
+    Whether or not to return the gradient of the std.
+    Only valid when X is a single point.</p>
+<h2>Returns</h2>
+<p>y_mean : array, shape = (n_samples, [n_output_dims])
+    Mean of predictive distribution a query points
+y_std : array, shape = (n_samples,), optional
+    Standard deviation of predictive distribution at query points.
+    Only returned when return_std is True.
+y_cov : array, shape = (n_samples, n_samples), optional
+    Covariance of joint predictive distribution a query points.
+    Only returned when return_cov is True.
+y_mean_grad: shape = (n_samples, n_features)
+    The gradient of the predicted mean
+y_std_grad: shape = (n_samples, n_features)
+    The gradient of the predicted std.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor.predict', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.learning.GaussianProcessRegressor.predict" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In addition to the mean of the predictive distribution, also its</span>
+<span class="sd">    standard deviation (return_std=True) or covariance (return_cov=True),</span>
+<span class="sd">    the gradient of the mean and the standard-deviation with respect to X</span>
+<span class="sd">    can be optionally provided.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">        Query points where the GP is evaluated</span>
+<span class="sd">    return_std : bool, default: False</span>
+<span class="sd">        If True, the standard-deviation of the predictive distribution at</span>
+<span class="sd">        the query points is returned along with the mean.</span>
+<span class="sd">    return_cov : bool, default: False</span>
+<span class="sd">        If True, the covariance of the joint predictive distribution at</span>
+<span class="sd">        the query points is returned along with the mean</span>
+<span class="sd">    return_mean_grad: bool, default: False</span>
+<span class="sd">        Whether or not to return the gradient of the mean.</span>
+<span class="sd">        Only valid when X is a single point.</span>
+<span class="sd">    return_std_grad: bool, default: False</span>
+<span class="sd">        Whether or not to return the gradient of the std.</span>
+<span class="sd">        Only valid when X is a single point.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y_mean : array, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">        Mean of predictive distribution a query points</span>
+<span class="sd">    y_std : array, shape = (n_samples,), optional</span>
+<span class="sd">        Standard deviation of predictive distribution at query points.</span>
+<span class="sd">        Only returned when return_std is True.</span>
+<span class="sd">    y_cov : array, shape = (n_samples, n_samples), optional</span>
+<span class="sd">        Covariance of joint predictive distribution a query points.</span>
+<span class="sd">        Only returned when return_cov is True.</span>
+<span class="sd">    y_mean_grad: shape = (n_samples, n_features)</span>
+<span class="sd">        The gradient of the predicted mean</span>
+<span class="sd">    y_std_grad: shape = (n_samples, n_features)</span>
+<span class="sd">        The gradient of the predicted std.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">return_std</span> <span class="ow">and</span> <span class="n">return_cov</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;Not returning standard deviation of predictions when &quot;</span>
+            <span class="s2">&quot;returning full covariance.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_std_grad</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_std</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Not returning std_gradient without returning &quot;</span>
+            <span class="s2">&quot;the std.&quot;</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">return_mean_grad</span> <span class="ow">or</span> <span class="n">return_std_grad</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not implemented for n_samples &gt; 1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;X_train_&quot;</span><span class="p">):</span>  <span class="c1"># Unfitted;predict based on GP prior</span>
+        <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+            <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+        <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">y_mean</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
+        <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+        <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>  <span class="c1"># Line 4 (y_mean = f_star)</span>
+        <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+        <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
+            <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>  <span class="c1"># Line 6</span>
+            <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+        <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="c1"># compute inverse K_inv of K based on its Cholesky</span>
+            <span class="c1"># decomposition L and its inverse L_inv</span>
+            <span class="n">L_inv</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">K_inv</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="c1"># Compute variance of predictive distribution</span>
+            <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">y_var</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ki,kj,ij-&gt;k&quot;</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_inv</span><span class="p">)</span>
+            <span class="c1"># Check if any of the variances is negative because of</span>
+            <span class="c1"># numerical issues. If yes: set the variance to 0.</span>
+            <span class="n">y_var_negative</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">&lt;</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y_var_negative</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
+                              <span class="s2">&quot;Setting those variances to 0.&quot;</span><span class="p">)</span>
+                <span class="n">y_var</span><span class="p">[</span><span class="n">y_var_negative</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">y_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_mean_grad</span><span class="p">:</span>
+            <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">gradient_x</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+            <span class="n">grad_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">return_std_grad</span><span class="p">:</span>
+                <span class="c1"># XXX: Cache np.dot(K_trans, K_inv) from above</span>
+                <span class="n">grad_std</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_trans</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_inv</span><span class="p">,</span> <span class="n">grad</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">y_std</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span><span class="p">,</span> <span class="n">grad_std</span>
+            <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">grad_mean</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span>
 </pre></div>
 
   </div>

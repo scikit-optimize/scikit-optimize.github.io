@@ -1098,7 +1098,7 @@ table {
 
 
 <span class="k">def</span> <span class="nf">_gaussian_acquisition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
-                          <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                          <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper so that the output of this function can be</span>
 <span class="sd">    directly passed to a minimizer.</span>
@@ -1110,7 +1110,7 @@ table {
 
     <span class="c1"># Evaluate acquisition function</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;LCB&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">return_grad</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;EI&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="o">-</span><span class="n">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;PI&quot;</span><span class="p">:</span>
@@ -1119,7 +1119,7 @@ table {
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Acquisition function not implemented.&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the lower confidence bound to estimate the acquisition</span>
 <span class="sd">    values.</span>
@@ -1144,17 +1144,29 @@ table {
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Useless if ``method`` is set to &quot;LCB&quot;.</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
 <span class="sd">        Acquisition function values computed at X.</span>
+
+<span class="sd">    * `grad`: [array-like, shape=(n_samples, n_features)]:</span>
+<span class="sd">        Gradient at X.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Compute posterior.</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-        <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
+        <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
 
 
 <span class="k">def</span> <span class="nf">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
@@ -1382,7 +1394,7 @@ obtain the <code>X</code> with maximum improvement.</p>
       
   <div class="item">
     <div class="name def" id="skopt.acquisition.gaussian_lcb">
-    <p>def <span class="ident">gaussian_lcb</span>(</p><p>X, model, kappa=1.96)</p>
+    <p>def <span class="ident">gaussian_lcb</span>(</p><p>X, model, kappa=1.96, return_grad=False)</p>
     </div>
     
 
@@ -1412,16 +1424,27 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
     exploration over exploitation and vice versa.
     Useless if <code>method</code> is set to "LCB".</p>
 </li>
+<li>
+<p><code>return_grad</code>: [boolean, optional]:
+    Whether or not to return the grad. Implemented only for the case where
+    <code>X</code> is a single sample.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
-<li><code>values</code>: [array-like, shape=(X.shape[0],)]:
-    Acquisition function values computed at X.</li>
+<li>
+<p><code>values</code>: [array-like, shape=(X.shape[0],)]:
+    Acquisition function values computed at X.</p>
+</li>
+<li>
+<p><code>grad</code>: [array-like, shape=(n_samples, n_features)]:
+    Gradient at X.</p>
+</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_lcb', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_lcb" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the lower confidence bound to estimate the acquisition</span>
 <span class="sd">    values.</span>
@@ -1446,17 +1469,29 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Useless if ``method`` is set to &quot;LCB&quot;.</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
 <span class="sd">        Acquisition function values computed at X.</span>
+
+<span class="sd">    * `grad`: [array-like, shape=(n_samples, n_features)]:</span>
+<span class="sd">        Gradient at X.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Compute posterior.</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-        <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
+        <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
 </pre></div>
 
   </div>
