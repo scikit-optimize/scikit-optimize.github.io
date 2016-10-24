@@ -1053,9 +1053,11 @@ table {
       
   <ul>
     <li class="mono"><a href="#skopt.dummy_minimize">dummy_minimize</a></li>
+    <li class="mono"><a href="#skopt.dump">dump</a></li>
     <li class="mono"><a href="#skopt.forest_minimize">forest_minimize</a></li>
     <li class="mono"><a href="#skopt.gbrt_minimize">gbrt_minimize</a></li>
     <li class="mono"><a href="#skopt.gp_minimize">gp_minimize</a></li>
+    <li class="mono"><a href="#skopt.load">load</a></li>
   </ul>
 
     </li>
@@ -1080,6 +1082,8 @@ table {
         <li><a href="https://scikit-optimize.github.io/notebooks/bayesian-optimization.html">Bayesian optimization</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimization.html">Hyperparameter optimization</a></li>
+        
+        <li><a href="https://scikit-optimize.github.io/notebooks/store-and-load-results.html">Store and load results</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/strategy-comparison.html">Strategy comparison</a></li>
         
@@ -1197,6 +1201,7 @@ python setup.py develop
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">dump</span>
 
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1&quot;</span>
@@ -1212,7 +1217,10 @@ python setup.py develop
            <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
            <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
            <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">)</span>
+           <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+           <span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1466,6 +1474,98 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.dump">
+    <p>def <span class="ident">dump</span>(</p><p>res, filename, store_objective=True, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Store an skopt optimization result into a file.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    Optimization result object to be stored.</p>
+</li>
+<li>
+<p><code>filename</code> [string or <code>pathlib.Path</code>]:
+    The path of the file in which it is to be stored. The compression
+    method corresponding to one of the supported filename extensions ('.z',
+    '.gz', '.bz2', '.xz' or '.lzma') will be used automatically.</p>
+</li>
+<li>
+<p><code>store_objective</code> [boolean, default=True]:
+    Whether the objective function should be stored. Set <code>store_objective</code>
+    to <code>False</code> if your objective function (<code>.specs['args']['func']</code>) is
+    unserializable (i.e. if an exception is raised when trying to serialize
+    the optimization result).</p>
+<p>Notice that if <code>store_objective</code> is set to <code>False</code>, a deep copy of the
+optimization result is created, potentially leading to performance
+problems if <code>res</code> is very large. If the objective function is not
+critical, one can delete it before calling <code>skopt.dump()</code> and thus avoid
+deep copying of <code>res</code>.</p>
+</li>
+<li>
+<p><code>**kwargs</code> [other keyword arguments]:
+    All other keyword arguments will be passed to <code>joblib.dump</code>.</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dump', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.dump" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Store an skopt optimization result into a file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        Optimization result object to be stored.</span>
+
+<span class="sd">    * `filename` [string or `pathlib.Path`]:</span>
+<span class="sd">        The path of the file in which it is to be stored. The compression</span>
+<span class="sd">        method corresponding to one of the supported filename extensions (&#39;.z&#39;,</span>
+<span class="sd">        &#39;.gz&#39;, &#39;.bz2&#39;, &#39;.xz&#39; or &#39;.lzma&#39;) will be used automatically.</span>
+
+<span class="sd">    * `store_objective` [boolean, default=True]:</span>
+<span class="sd">        Whether the objective function should be stored. Set `store_objective`</span>
+<span class="sd">        to `False` if your objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) is</span>
+<span class="sd">        unserializable (i.e. if an exception is raised when trying to serialize</span>
+<span class="sd">        the optimization result).</span>
+
+<span class="sd">        Notice that if `store_objective` is set to `False`, a deep copy of the</span>
+<span class="sd">        optimization result is created, potentially leading to performance</span>
+<span class="sd">        problems if `res` is very large. If the objective function is not</span>
+<span class="sd">        critical, one can delete it before calling `skopt.dump()` and thus avoid</span>
+<span class="sd">        deep copying of `res`.</span>
+
+<span class="sd">    * `**kwargs` [other keyword arguments]:</span>
+<span class="sd">        All other keyword arguments will be passed to `joblib.dump`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">store_objective</span><span class="p">:</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;func&#39;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]:</span>
+        <span class="c1"># If the user does not want to store the objective and it is indeed</span>
+        <span class="c1"># present in the provided object, then create a deep copy of it and</span>
+        <span class="c1"># remove the objective function before dumping it with joblib.dump.</span>
+        <span class="n">res_without_func</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">res_without_func</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res_without_func</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the user does not want to store the objective and it is already</span>
+        <span class="c1"># missing in the provided object, dump it without copying.</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2451,6 +2551,70 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.load">
+    <p>def <span class="ident">load</span>(</p><p>filename, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Reconstruct a skopt optimization result from a file
+persisted with skopt.dump.</p>
+<p>Notice that the loaded optimization result can be missing
+the objective function (<code>.specs['args']['func']</code>) if <a href="#skopt.dump"><code>dump</code></a>
+was called with <code>store_objective=False</code>.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>filename</code> [string or <code>pathlib.Path</code>]:
+    The path of the file from which to load the optimization result.</p>
+</li>
+<li>
+<p><code>**kwargs</code> [other keyword arguments]:
+    All other keyword arguments will be passed to <code>joblib.load</code>.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    Reconstructed OptimizeResult instance.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.load', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.load" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reconstruct a skopt optimization result from a file</span>
+<span class="sd">    persisted with skopt.dump.</span>
+
+<span class="sd">    Notice that the loaded optimization result can be missing</span>
+<span class="sd">    the objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) if `skopt.dump`</span>
+<span class="sd">    was called with `store_objective=False`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `filename` [string or `pathlib.Path`]:</span>
+<span class="sd">        The path of the file from which to load the optimization result.</span>
+
+<span class="sd">    * `**kwargs` [other keyword arguments]:</span>
+<span class="sd">        All other keyword arguments will be passed to `joblib.load`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        Reconstructed OptimizeResult instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">load_</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
   </div>

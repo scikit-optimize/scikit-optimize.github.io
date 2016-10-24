@@ -3,8 +3,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>skopt.space API documentation</title>
-    <meta name="description" content="Utilities to define a search space." />
+    <title>skopt API documentation</title>
+    <meta name="description" content="Scikit-Optimize, or `skopt`, is a simple and efficient library
+for sequential model-based optimizati..." />
 
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1047,20 +1048,30 @@ table {
     <ul id="index">
     <li class="set"><h3><a href="https://scikit-optimize.github.io/">Index</a></h3></li>
 
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
+
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-    <li class="mono"><a href="#skopt.space.sp_version">sp_version</a></li>
+    <li class="mono"><a href="../#skopt.dummy_minimize">dummy_minimize</a></li>
+    <li class="mono"><a href="../#skopt.dump">dump</a></li>
+    <li class="mono"><a href="../#skopt.forest_minimize">forest_minimize</a></li>
+    <li class="mono"><a href="../#skopt.gbrt_minimize">gbrt_minimize</a></li>
+    <li class="mono"><a href="../#skopt.gp_minimize">gp_minimize</a></li>
+    <li class="mono"><a href="../#skopt.load">load</a></li>
   </ul>
 
     </li>
 
 
-
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="space.m.html">skopt.space.space</a></li>
-        <li class="mono"><a href="transformers.m.html">skopt.space.transformers</a></li>
+        <li class="mono"><a href="../acquisition.m.html">skopt.acquisition</a></li>
+        <li class="mono"><a href="../benchmarks.m.html">skopt.benchmarks</a></li>
+        <li class="mono"><a href="../callbacks.m.html">skopt.callbacks</a></li>
+        <li class="mono"><a href="../learning/index.html">skopt.learning</a></li>
+        <li class="mono"><a href="../optimizer/index.html">skopt.optimizer</a></li>
+        <li class="mono"><a href="../plots.m.html">skopt.plots</a></li>
+        <li class="mono"><a href="../space/index.html">skopt.space</a></li>
       </ul>
     </li>
 
@@ -1084,44 +1095,109 @@ table {
 
     <article id="content">
           
-  
-
-  
-
-
-  <header id="section-intro">
-  <h1 class="title"><span class="name">skopt.space</span> module</h1>
-  <p>Utilities to define a search space.</p>
-  
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.space" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Utilities to define a search space.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="o">*</span>
+          <h1>Store and load <code>skopt</code> optimization results</h1>
+<p>Mikhail Pak, October 2016.</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
 </pre></div>
 
-  </div>
 
-  </header>
+<h2>Problem statement</h2>
+<p>We often want to store optimization results in a file. This can be useful, for example,</p>
+<ul>
+<li>if you want to share your results with colleagues;</li>
+<li>if you want to archive and/or document your work;</li>
+<li>or if you want to postprocess your results in a different Python instance or on an another computer.</li>
+</ul>
+<p>The process of converting an object into a byte stream that can be stored in a file is called <em>serialization</em>.
+Conversely, <em>deserialization</em> means loading an object from a byte stream.</p>
+<p><strong>Warning:</strong> Deserialization is not secure against malicious or erroneous code. Never load serialized data from untrusted or unauthenticated sources!</p>
+<h2>Simple example</h2>
+<p>We will use the same optimization problem as in the <a href="https://github.com/scikit-optimize/scikit-optimize/blob/master/examples/bayesian-optimization.ipynb"><code>bayesian-optimization.ipynb</code></a> notebook:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
+
+<span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+                  <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
+                  <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>            <span class="c1"># the starting point</span>
+                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
+                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f including at x0</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
+</pre></div>
 
 
+<p>As long as your Python session is active, you can access all the optimization results via the <code>res</code> object.</p>
+<p>So how can you store this data in a file? <code>skopt</code> conveniently provides functions <code>skopt.dump()</code> and <code>skopt.load()</code> that handle this for you. These functions are essentially thin wrappers around the <a href="http://pythonhosted.org/joblib"><code>joblib</code></a> module's <code>dump()</code> and <code>load()</code>.</p>
+<p>We will now show how to use <code>skopt.dump()</code> and <code>skopt.load()</code> for storing and loading results.</p>
+<h2>Using <code>skopt.dump()</code> and <code>skopt.load()</code></h2>
+<p>For storing optimization results into a file, call the <code>skopt.dump()</code> function:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">dump</span><span class="p">,</span> <span class="n">load</span>
 
-  <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="skopt.space.sp_version" class="name">var <span class="ident">sp_version</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
+<span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
+</pre></div>
 
 
-  </section>
+<p>And load from file using <code>skopt.load()</code>:</p>
+<div class="codehilite"><pre><span></span><span class="n">res_loaded</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
 
+<span class="n">res_loaded</span><span class="o">.</span><span class="n">fun</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>-0.17493386623950199
+</pre></div>
+
+
+<p>You can fine-tune the serialization and deserialization process by calling <code>skopt.dump()</code> and <code>skopt.load()</code> with additional keyword arguments. See the <code>joblib</code> documentation (<a href="https://pythonhosted.org/joblib/generated/joblib.dump.html">dump</a> and <a href="https://pythonhosted.org/joblib/generated/joblib.load.html">load</a>) for the additional parameters.</p>
+<p>For instance, you can specify the compression algorithm and compression level (highest in this case):</p>
+<div class="codehilite"><pre><span></span><span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">getsize</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Without compression: {} bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">getsize</span><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Compressed with gz:  {} bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">getsize</span><span class="p">(</span><span class="s1">&#39;result.gz&#39;</span><span class="p">)))</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>Without compression: 66251 bytes
+Compressed with gz:  20071 bytes
+</pre></div>
+
+
+<h3>Unserializable objective functions</h3>
+<p>Notice that if your objective function is non-trivial (e.g. it calls MATLAB engine from Python), it might be not serializable and <code>skopt.dump()</code> will raise an exception when you try to store the optimization results.
+In this case you should disable storing the objective function by calling <code>skopt.dump()</code> with the keyword argument <code>store_objective=False</code>:</p>
+<div class="codehilite"><pre><span></span><span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Notice that the entry <code>'func'</code> is absent in the loaded object but is still present in the local variable:</p>
+<div class="codehilite"><pre><span></span><span class="n">res_loaded_without_objective</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Loaded object: &#39;</span><span class="p">,</span> <span class="n">res_loaded_without_objective</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Local variable:&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>Loaded object:  dict_keys([&#39;dimensions&#39;, &#39;callback&#39;, &#39;acq_optimizer&#39;, &#39;xi&#39;, &#39;kappa&#39;, &#39;n_calls&#39;, &#39;random_state&#39;, &#39;base_estimator&#39;, &#39;y0&#39;, &#39;n_restarts_optimizer&#39;, &#39;verbose&#39;, &#39;n_points&#39;, &#39;acq_func&#39;, &#39;x0&#39;, &#39;n_random_starts&#39;])
+Local variable: dict_keys([&#39;dimensions&#39;, &#39;callback&#39;, &#39;xi&#39;, &#39;func&#39;, &#39;kappa&#39;, &#39;n_calls&#39;, &#39;acq_optimizer&#39;, &#39;acq_func&#39;, &#39;n_points&#39;, &#39;base_estimator&#39;, &#39;n_restarts_optimizer&#39;, &#39;random_state&#39;, &#39;y0&#39;, &#39;verbose&#39;, &#39;x0&#39;, &#39;n_random_starts&#39;])
+</pre></div>
+
+
+<h2>Possible problems</h2>
+<ul>
+<li><strong>Python versions incompatibility:</strong> In general, objects serialized in Python 2 cannot be deserialized in Python 3 and vice versa.</li>
+<li><strong>Security issues:</strong> Once again, do not load any files from untrusted sources.</li>
+<li><strong>Extremely large results objects:</strong> If your optimization results object is extremely large, calling <code>skopt.dump()</code> with <code>store_objective=False</code> might cause performance issues. This is due to creation of a deep copy without the objective function. If the objective function it is not critical to you, you can simply delete it before calling <code>skopt.dump()</code>. In this case, no deep copy is created:</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="k">del</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
+
+<span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
+</pre></div>
     </article>
   <div class="clear"> </div>
   <footer id="footer">
