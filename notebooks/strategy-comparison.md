@@ -10,12 +10,11 @@ np.random.seed(123)
 
 %matplotlib inline
 import matplotlib.pyplot as plt
-plt.rcParams["figure.figsize"] = (10, 6)
 plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f26bc221240>
+    <matplotlib.figure.Figure at 0x7f2f9c3f2278>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -128,22 +127,16 @@ Note that this can take a few minutes.
 ```python
 from skopt.plots import plot_convergence
 
-plot_convergence(("dummy_minimize", dummy_res),
-                 ("gp_minimize", gp_res),
-                 ("forest_minimize('rf')", rf_res),
-                 ("forest_minimize('et)", et_res), 
-                 true_minimum=0.397887, yscale="log")
+plot = plot_convergence(("dummy_minimize", dummy_res),
+                       ("gp_minimize", gp_res),
+                       ("forest_minimize('rf')", rf_res),
+                       ("forest_minimize('et)", et_res), 
+                       true_minimum=0.397887, yscale="log")
+plot.legend(loc="best", prop={'size': 6}, numpoints=1);
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f2685420940>
-
-
-
-
-![png](strategy-comparison_files/strategy-comparison_9_1.png)
+![png](strategy-comparison_files/strategy-comparison_9_0.png)
 
 
 This plot shows the value of the minimum found (y axis) as a function of the number

@@ -1102,12 +1102,11 @@ table {
 
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">set_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f26bc221240&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f2f9c3f2278&gt;
 </pre></div>
 
 
@@ -1202,19 +1201,16 @@ models. This makes the comparison more robust against models that get
 <p>Note that this can take a few minutes.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
 
-<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
-                 <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
+                       <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f2685420940&gt;
-</pre></div>
-
-
-<p><img alt="png" src="strategy-comparison_files/strategy-comparison_9_1.png" /></p>
+<p><img alt="png" src="strategy-comparison_files/strategy-comparison_9_0.png" /></p>
 <p>This plot shows the value of the minimum found (y axis) as a function of the number
 of iterations performed so far (x axis). The dashed red line indicates the
 true value of the minimum of the branin function.</p>

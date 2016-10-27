@@ -10,7 +10,6 @@ np.random.seed(777)
 
 %matplotlib inline
 import matplotlib.pyplot as plt
-plt.rcParams["figure.figsize"] = (10, 6)
 ```
 
 ## Problem statement
@@ -184,14 +183,14 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f5c59aab3a8>
+    random_state = <mtrand.RandomState object at 0x7f48a3e1c438>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
     
-    specs = {'function': 'base_minimize', 'args': {'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'xi': 0.01, 'y0': None, 'n_random_starts': 0, 'acq_optimizer': 'auto', 'n_points': 10000, 'n_calls': 15, 'kappa': 1.96, 'n_restarts_optimizer': 5, 'acq_func': 'LCB', 'x0': [0.0], 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'args': {'callback': None, 'verbose': False, 'n_points': 10000, 'kappa': 1.96, 'x0': [0.0], 'acq_optimizer': 'auto', 'n_restarts_optimizer': 5, 'acq_func': 'LCB', 'y0': None, 'xi': 0.01, 'n_calls': 15, 'func': <function f at 0x7f48b0addea0>, 'n_random_starts': 0, 'random_state': 777, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=0, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'callback': None, 'verbose': False, 'func': <function f at 0x7f5c6679dea0>, 'random_state': 777}}
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)]}, 'function': 'base_minimize'}
     
     x = [-0.33900924076046079]
     
@@ -204,18 +203,11 @@ Together these attributes can be used to visually inspect the results of the min
 
 ```python
 from skopt.plots import plot_convergence
-plot_convergence(res)
+plot_convergence(res);
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f5c59ac5cc0>
-
-
-
-
-![png](bayesian-optimization_files/bayesian-optimization_16_1.png)
+![png](bayesian-optimization_files/bayesian-optimization_16_0.png)
 
 
 Let us visually examine
@@ -234,7 +226,7 @@ The second column shows the acquisition function values after every surrogate mo
 
 
 ```python
-plt.rcParams["figure.figsize"] = (20, 20)
+plt.rcParams["figure.figsize"] = (6, 10)
 
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
 x_gp = res.space.transform(x.tolist())
@@ -253,6 +245,13 @@ for n_iter in range(5):
     plt.fill(np.concatenate([x, x[::-1]]),
              np.concatenate([fx - 1.9600 * noise_level, fx[::-1] + 1.9600 * noise_level]),
              alpha=.2, fc="r", ec="None")
+    if n_iter != 4:
+        plt.tick_params(
+            axis='x',          # changes apply to the x-axis
+            which='both',      # both major and minor ticks are affected
+            bottom='off',      # ticks along the bottom edge are off
+            top='off',         # ticks along the top edge are off
+            labelbottom='off') # labels along the bottom edge are off
 
     # Plot GP(x) + contours
     y_pred, sigma = gp.predict(x_gp, return_std=True)
@@ -264,28 +263,35 @@ for n_iter in range(5):
 
     # Plot sampled points
     plt.plot(curr_x_iters, curr_func_vals,
-             "r.", markersize=15, label="Observations")
+             "r.", markersize=8, label="Observations")
     plt.title(r"$x_{%d} = %.4f, f(x_{%d}) = %.4f$" % (
               n_iter, res.x_iters[n_iter][0], n_iter, res.func_vals[n_iter]))
     plt.grid()
 
     if n_iter == 0:
-        plt.legend(loc="best", prop={'size': 8}, numpoints=1)
+        plt.legend(loc="best", prop={'size': 6}, numpoints=1)
 
     plt.subplot(5, 2, 2*n_iter+2)
     acq = gaussian_lcb(x_gp, gp)
     plt.plot(x, acq, "b", label="LCB(x)")
+    if n_iter != 4:
+        plt.tick_params(
+            axis='x',          # changes apply to the x-axis
+            which='both',      # both major and minor ticks are affected
+            bottom='off',      # ticks along the bottom edge are off
+            top='off',         # ticks along the top edge are off
+            labelbottom='off') # labels along the bottom edge are off
     plt.fill_between(x.ravel(), -2.0, acq.ravel(), alpha=0.3, color='blue')
 
     next_x = res.x_iters[n_iter + 1]
     next_acq = gaussian_lcb(res.space.transform([next_x]), gp)
-    plt.plot(next_x, next_acq, "bo", markersize=10, label="Next query point")
+    plt.plot(next_x, next_acq, "bo", markersize=6, label="Next query point")
     plt.grid()
     
     if n_iter == 0:
-        plt.legend(loc="best", prop={'size': 12}, numpoints=1)
+        plt.legend(loc="best", prop={'size': 6}, numpoints=1)
 
-plt.suptitle("Sequential model-based minimization using gp_minimize.", fontsize=20)
+plt.suptitle("Sequential model-based minimization using gp_minimize.", fontsize=10)
 plt.show()
 ```
 
@@ -297,8 +303,9 @@ Finally, as we increase the number of points, the GP model approaches the actual
 
 
 ```python
+plt.rcParams["figure.figsize"] = (6, 4)
+
 # Plot f(x) + contours
-plt.rcParams["figure.figsize"] = (10, 6)
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
 x_gp = res.space.transform(x.tolist())
 
@@ -333,7 +340,7 @@ next_x = np.argmin(acq)
 plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
 
 plt.title(r"$x^* = %.4f, f(x^*) = %.4f$" % (res.x[0], res.fun))
-plt.legend(loc="best")
+plt.legend(loc="best", prop={'size': 8}, numpoints=1)
 plt.grid()
 
 plt.show()

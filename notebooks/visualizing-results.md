@@ -10,12 +10,11 @@ np.random.seed(123)
 
 %matplotlib inline
 import matplotlib.pyplot as plt
-plt.rcParams["figure.figsize"] = (10, 6)
 plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7fd8982b7208>
+    <matplotlib.figure.Figure at 0x7fde3807af60>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
