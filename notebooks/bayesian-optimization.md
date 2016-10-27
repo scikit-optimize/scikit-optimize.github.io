@@ -98,7 +98,8 @@ res = gp_minimize(f,                  # the function to minimize
                   acq_func="LCB",     # the acquisition function (optional)
                   n_calls=15,         # the number of evaluations of f including at x0
                   n_random_starts=0,  # the number of random initialization points
-                  random_state=777)
+                  random_state=777,
+                  noise=0.1**2)
 ```
 
 Accordingly, the approximated minimum is found to be:
@@ -111,7 +112,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=1.0764, f(x^*)=-0.2225'
+    'x^*=-0.3390, f(x^*)=-0.9066'
 
 
 
@@ -133,68 +134,68 @@ for key, value in sorted(res.items()):
     print()
 ```
 
-    fun = -0.22247877841
+    fun = -0.906643745289
     
-    func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09240142  0.00150194  0.05578469
-      0.12585429  0.85973216  0.09839041 -0.22247878 -0.06946048  0.18332887
-     -0.10777535 -0.02940504  0.09190434]
+    func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09172426  0.00150194  0.05658501
+      0.12220788  0.85973216  0.09839041  0.25529044 -0.00599222 -0.61164474
+     -0.90664375 -0.84707683 -0.84074289]
     
     models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777)]
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f89209a0ca8>
+    random_state = <mtrand.RandomState object at 0x7f5c59aab3a8>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
     
-    specs = {'args': {'verbose': False, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'function': 'base_minimize', 'args': {'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'xi': 0.01, 'y0': None, 'n_random_starts': 0, 'acq_optimizer': 'auto', 'n_points': 10000, 'n_calls': 15, 'kappa': 1.96, 'n_restarts_optimizer': 5, 'acq_func': 'LCB', 'x0': [0.0], 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
-                 n_restarts_optimizer=0, noise='gaussian', normalize_y=True,
-                 optimizer='fmin_l_bfgs_b', random_state=777), 'n_calls': 15, 'y0': None, 'x0': [0.0], 'kappa': 1.96, 'callback': None, 'acq_func': 'LCB', 'random_state': 777, 'n_restarts_optimizer': 5, 'acq_optimizer': 'auto', 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'xi': 0.01, 'func': <function f at 0x7f892ccdb1e0>, 'n_points': 10000, 'n_random_starts': 0}, 'function': 'base_minimize'}
+                 n_restarts_optimizer=0, noise=0.010000000000000002,
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'callback': None, 'verbose': False, 'func': <function f at 0x7f5c6679dea0>, 'random_state': 777}}
     
-    x = [1.0764414688904642]
+    x = [-0.33900924076046079]
     
-    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.9555859837610829], [2.0], [-1.1927052802876714], [1.3109444782110167], [0.40149974265149657], [-1.5085932154601376], [1.0764414688904642], [1.1675398425136341], [-1.5390012870554517], [-0.60371022260789631], [-1.9347180446328138], [1.3951676385714862]]
+    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.8517089381176524], [2.0], [-1.1915279339683462], [1.2957241148400129], [0.40149974265149657], [-1.5085932154601376], [-0.81650922365031198], [-1.2334758759137854], [-0.20192500033697414], [-0.33900924076046079], [-0.20433782410853585], [-0.30271204061909707]]
     
 
 
@@ -209,7 +210,7 @@ plot_convergence(res)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f89209c3908>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f5c59ac5cc0>
 
 
 
@@ -236,6 +237,8 @@ The second column shows the acquisition function values after every surrogate mo
 plt.rcParams["figure.figsize"] = (20, 20)
 
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
+x_gp = res.space.transform(x.tolist())
+
 fx = np.array([f(x_i, noise_level=0.0) for x_i in x])
 
 # Plot first five iterations.
@@ -252,7 +255,7 @@ for n_iter in range(5):
              alpha=.2, fc="r", ec="None")
 
     # Plot GP(x) + contours
-    y_pred, sigma = gp.predict(x, return_std=True)
+    y_pred, sigma = gp.predict(x_gp, return_std=True)
     plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
     plt.fill(np.concatenate([x, x[::-1]]),
              np.concatenate([y_pred - 1.9600 * sigma, 
@@ -270,13 +273,13 @@ for n_iter in range(5):
         plt.legend(loc="best", prop={'size': 8}, numpoints=1)
 
     plt.subplot(5, 2, 2*n_iter+2)
-    acq = gaussian_lcb(x, gp)
+    acq = gaussian_lcb(x_gp, gp)
     plt.plot(x, acq, "b", label="LCB(x)")
     plt.fill_between(x.ravel(), -2.0, acq.ravel(), alpha=0.3, color='blue')
 
-    next_x = np.asarray(res.x_iters[n_iter + 1])
-    next_acq = gaussian_lcb(next_x.reshape(-1, 1), gp)
-    plt.plot(next_x[0], next_acq, "bo", markersize=10, label="Next query point")
+    next_x = res.x_iters[n_iter + 1]
+    next_acq = gaussian_lcb(res.space.transform([next_x]), gp)
+    plt.plot(next_x, next_acq, "bo", markersize=10, label="Next query point")
     plt.grid()
     
     if n_iter == 0:
@@ -297,6 +300,8 @@ Finally, as we increase the number of points, the GP model approaches the actual
 # Plot f(x) + contours
 plt.rcParams["figure.figsize"] = (10, 6)
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
+x_gp = res.space.transform(x.tolist())
+
 fx = [f(x_i, noise_level=0.0) for x_i in x]
 plt.plot(x, fx, "r--", label="True (unknown)")
 plt.fill(np.concatenate([x, x[::-1]]),
@@ -306,7 +311,9 @@ plt.fill(np.concatenate([x, x[::-1]]),
 
 # Plot GP(x) + concours
 gp = res.models[-1]
-y_pred, sigma = gp.predict(x, return_std=True)
+
+
+y_pred, sigma = gp.predict(x_gp, return_std=True)
 
 plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
 plt.fill(np.concatenate([x, x[::-1]]),
@@ -320,8 +327,8 @@ plt.plot(res.x_iters,
          "r.", markersize=15, label="Observations")
 
 # Plot LCB(x) + next query point
-acq = gaussian_lcb(x, gp)
-plt.plot(x, gaussian_lcb(x, gp), "b", label="LCB(x)")
+acq = gaussian_lcb(x_gp, gp)
+plt.plot(x, acq, "b", label="LCB(x)")
 next_x = np.argmin(acq)
 plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
 
