@@ -184,14 +184,14 @@ print("""Best parameters:
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=2.9937
+    Best score=2.9695
     Best parameters:
-        - k=13
-        - max_depth=4
-        - learning_rate=0.085036
-        - max_features=13
-        - min_samples_split=7
-        - min_samples_leaf=4
+        - k=8
+        - max_depth=3
+        - learning_rate=0.091761
+        - max_features=5
+        - min_samples_split=23
+        - min_samples_leaf=6
 
 
 ## Convergence plot
