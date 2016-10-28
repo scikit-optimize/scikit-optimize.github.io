@@ -9,14 +9,13 @@ Katie Malone, August 2016
 %matplotlib inline
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams["figure.figsize"] = (10, 6)
 ```
 
 ## Problem statement
 
 Tuning the hyper-parameters of a machine learning model is often carried out using an exhaustive exploration of (a subset of) the space all hyper-parameter configurations (e.g., using `sklearn.model_selection.GridSearchCV`), which often results in a very time consuming operation. 
 
-In this notebook, we illustrate how `skopt` can be used to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.
+In this notebook, we illustrate how to couple `gp_minimize` with sklearn's estimators to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.
 
 ## Objective 
 
@@ -30,6 +29,7 @@ from sklearn.model_selection import cross_val_score
 
 boston = load_boston()
 X, y = boston.data, boston.target
+n_features = X.shape[1]
 reg = GradientBoostingRegressor(n_estimators=50, random_state=0)
 
 def objective(params):
@@ -51,7 +51,7 @@ Next, we need to define the bounds of the dimensions of the search space we want
 ```python
 space  = [(1, 5),                           # max_depth
           (10**-5, 10**-1, "log-uniform"),  # learning_rate
-          (1, X.shape[1]),                  # max_features
+          (1, n_features),                  # max_features
           (2, 30),                          # min_samples_split
           (1, 30)]                          # min_samples_leaf
 
@@ -60,12 +60,12 @@ x0 = [3, 0.01, 6, 2, 1]
 
 ## Optimize all the things!
 
-With these two pieces, we are now ready for sequential model-based optimisation. Here we compare gaussian process-based optimisation versus forest-based optimisation.
+With these two pieces, we are now ready for sequential model-based optimisation. Here we use gaussian process-based optimisation.
 
 
 ```python
 from skopt import gp_minimize
-res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
+res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0, n_random_starts=0)
 
 "Best score=%.4f" % res_gp.fun
 ```
@@ -73,7 +73,7 @@ res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
 
 
 
-    'Best score=2.9070'
+    'Best score=2.9307'
 
 
 
@@ -90,160 +90,71 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=5
-    - learning_rate=0.094588
-    - max_features=5
-    - min_samples_split=30
-    - min_samples_leaf=5
-
-
-
-```python
-from skopt import forest_minimize
-res_forest = forest_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
-
-"Best score=%.4f" % res_forest.fun
-```
-
-
-
-
-    'Best score=2.9195'
-
-
-
-
-```python
-print("""Best parameters:
-- max_depth=%d
-- learning_rate=%.6f
-- max_features=%d
-- min_samples_split=%d
-- min_samples_leaf=%d""" % (res_forest.x[0], res_forest.x[1], 
-                            res_forest.x[2], res_forest.x[3], 
-                            res_forest.x[4]))
-```
-
-    Best parameters:
     - max_depth=4
-    - learning_rate=0.089097
-    - max_features=8
-    - min_samples_split=6
-    - min_samples_leaf=3
-
-
-As a baseline, let us also compare with random search in the space of hyper-parameters, which is equivalent to `sklearn.model_selection.RandomizedSearchCV`.
-
-
-```python
-from skopt import dummy_minimize
-res_dummy = dummy_minimize(objective, space, x0=x0, n_calls=50, random_state=0)
-
-"Best score=%.4f" % res_dummy.fun
-```
-
-
-
-
-    'Best score=3.0592'
-
-
-
-
-```python
-print("""Best parameters:
-- max_depth=%d
-- learning_rate=%.4f
-- max_features=%d
-- min_samples_split=%d
-- min_samples_leaf=%d""" % (res_dummy.x[0], res_dummy.x[1], 
-                            res_dummy.x[2], res_dummy.x[3], 
-                            res_dummy.x[4]))
-```
-
-    Best parameters:
-    - max_depth=5
-    - learning_rate=0.0596
+    - learning_rate=0.096450
     - max_features=10
-    - min_samples_split=23
-    - min_samples_leaf=1
-
-
-## Convergence plot
-
-
-```python
-from skopt.plots import plot_convergence
-plot_convergence(("gp_optimize", res_gp),
-                 ("forest_optimize", res_forest),
-                 ("dummy_optimize", res_dummy))
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f6cd48b14a8>
-
-
-
-
-![png](hyperparameter-optimization_files/hyperparameter-optimization_18_1.png)
+    - min_samples_split=30
+    - min_samples_leaf=2
 
 
 ## Part 2: Tuning a scikit-learn pipeline with `skopt`
 
-### Introduction
+Scikit-learn objects (transformers, estimators) are often not used singly, but instead chained together into a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipeline</a>.  When that happens, there can be several different sets of hyperparameters to examine, one for each object.  In the same way that `GridSearchCV` can be applied to a pipeline to tune the hyperparameters of several objects at once, we can do a more efficient search (this example uses GPs) over more than one scikit-learn object.
 
-Scikit-learn objects (transformers, estimators) are often not used singly, but instead chained together into a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipeline</a>.  When that happens, there can be several different sets of hyperparameters to examine, one for each object.  In the same way that `GridSearchCV` can be applied to a pipeline to tune the hyperparameters of several objects at once, we can do a more efficient search (this example uses GPs) over more than one scikit-learn object.  
-
-We'll do that here now.  A common method for reducing dimensionality is to preprocess with <a href="http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">principal components analysis</a>, or PCA.  A free parameter of PCA is how many components to use; now we'll optimize over this parameter as well as the parameters of the gradient boosted classifier.  It's not guaranteed that using PCA will give us better results than the classifier all by itself, and there are other problems where PCA might make more sense than it does here, but a reasonable person might want to try it out anyway.  Here's how you can do that.
+A common technique to deal with high-dimensional data is to do some feature-selection before using your tree-based models. Here we use the mutual information feature selector to tune the number of features to input into the gradient booster. An advantage being that it can handle both discrete and continuous features
 
 
 ```python
-from sklearn.decomposition import PCA
+from functools import partial
 from sklearn.pipeline import Pipeline
+from sklearn.feature_selection import SelectKBest, mutual_info_regression
 
-pca = PCA()
+mutual_info_regression = partial(mutual_info_regression, discrete_features=[3, 7])
+skb = SelectKBest(mutual_info_regression, k=5)
+
 reg_pipe = GradientBoostingRegressor(n_estimators=50, random_state=0)
-pipe = Pipeline([('pca', pca), ('reg', reg_pipe)])
+pipe = Pipeline([('skb', skb), ('reg', reg_pipe)])
 ```
 
 ### Defining the search space
 
-Our parameter space has dimensions for the n_components parameter of PCA, as well as several parameters of the decision tree.
-Optionally, we can also define a starting point for the search.
+Our parameter space has dimensions for the k parameter of SelectKBest, as well as several parameters of the GradientBoostingRegressor. We start with the same point as without the pipeline so that the comparison is valid.
 
 
 ```python
-pipe_space  = [(1,13),                           # n_components of PCA
-          (1, 5),                           # max_depth of GBR
-          (10**-5, 10**-1, "log-uniform"),  # learning_rate of GBR
-          (1, 20),                          # max_features of GBR
-          (2, 30),                          # min_samples_split of GBR
-          (1, 30)]                          # min_samples_leaf of GBR
+pipe_space  = [(1, n_features),                  # n_features of SelectKBest
+               (1, 5),                           # max_depth of GBR
+               (10**-5, 10**-1, "log-uniform"),  # learning_rate of GBR
+               (1, 20),                          # max_features of GBR
+               (2, 30),                          # min_samples_split of GBR
+               (1, 30)]                          # min_samples_leaf of GBR
 
 
-pipe_x0 = [13].extend(x0)  # optional starting point
+pipe_x0 = [n_features] + x0   # optional starting point
 ```
 
-The updated objective function (which I've named `objective_pipe`) is very similar to the objective function that we've had before, except now there are two places where parameters get set--we're changing the parameters of both `pca` and `reg` at the same time.
+The updated objective function (which I've named `objective_pipe`) is very similar to the objective function that we've had before, except now there are two places where parameters get set--we're changing the parameters of both `skb` and `reg` at the same time.
 
 
 ```python
 def objective_pipe(params):
-    n_components, max_depth,\
+    k, max_depth,\
     learning_rate, max_features,\
     min_samples_split, min_samples_leaf = params
     
-    # set PCA n_components parameter
-    pipe.set_params(pca__n_components=n_components)
+    # If the max_features returned by the minimization objective
+    # is greater than k
+    max_features = min(max_features, k)
+
+    # set number of features to select
+    pipe.set_params(skb__k=k)
 
     # set decision tree classifier parameters
     pipe.set_params(reg__max_depth=max_depth,
-                   reg__learning_rate=learning_rate,
-                   reg__max_features=n_components,
-                   reg__min_samples_split=min_samples_split,
-                   reg__min_samples_leaf=min_samples_leaf)
+                    reg__learning_rate=learning_rate,
+                    reg__max_features=max_features,
+                    reg__min_samples_split=min_samples_split,
+                    reg__min_samples_leaf=min_samples_leaf)
 
     error = -np.mean(cross_val_score(pipe, X, y, cv=5, n_jobs=-1,
                                      scoring="neg_mean_absolute_error"))
@@ -263,98 +174,40 @@ warnings.filterwarnings("ignore") # this minimize call issues a lot of warnings-
 pipe_res_gp = gp_minimize(objective_pipe, pipe_space, x0=pipe_x0, n_calls=50, random_state=0)
 print("Best score=%.4f" % pipe_res_gp.fun)
 print("""Best parameters:
-    - n_components=%d
+    - k=%d
     - max_depth=%d
     - learning_rate=%.6f
     - max_features=%d
     - min_samples_split=%d
     - min_samples_leaf=%d""" % (pipe_res_gp.x[0], pipe_res_gp.x[1],
-                                pipe_res_gp.x[2], pipe_res_gp.x[3],
+                                pipe_res_gp.x[2], min(pipe_res_gp.x[3], pipe_res_gp.x[0]),
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=3.8863
+    Best score=2.9937
     Best parameters:
-        - n_components=13
+        - k=13
         - max_depth=4
-        - learning_rate=0.092924
-        - max_features=14
-        - min_samples_split=5
-        - min_samples_leaf=20
-
-
-We've started with a gaussian process algorithm; now add dummy and forest minimization functions to get a survey of the field.
-
-
-```python
-pipe_res_dummy = dummy_minimize(objective_pipe, pipe_space, x0=pipe_x0, n_calls=50, random_state=0)
-print("Best score=%.4f" % pipe_res_dummy.fun)
-print("""Best parameters:
-    - n_components=%d
-    - max_depth=%d
-    - learning_rate=%.6f
-    - max_features=%d
-    - min_samples_split=%d
-    - min_samples_leaf=%d""" % (pipe_res_dummy.x[0], pipe_res_dummy.x[1],
-                                pipe_res_dummy.x[2], pipe_res_dummy.x[3],
-                                pipe_res_dummy.x[4], pipe_res_dummy.x[5]))
-```
-
-    Best score=4.3505
-    Best parameters:
-        - n_components=6
-        - max_depth=4
-        - learning_rate=0.077229
-        - max_features=17
-        - min_samples_split=20
-        - min_samples_leaf=13
-
-
-
-```python
-from skopt import forest_minimize
-pipe_res_forest = forest_minimize(objective_pipe, pipe_space, x0=pipe_x0, n_calls=50, random_state=0)
-print("Best score=%.4f" % pipe_res_forest.fun)
-print("""Best parameters:
-    - n_components=%d
-    - max_depth=%d
-    - learning_rate=%.6f
-    - max_features=%d
-    - min_samples_split=%d
-    - min_samples_leaf=%d""" % (pipe_res_forest.x[0], pipe_res_forest.x[1],
-                                pipe_res_forest.x[2], pipe_res_forest.x[3],
-                                pipe_res_forest.x[4], pipe_res_forest.x[5]))
-```
-
-    Best score=3.8386
-    Best parameters:
-        - n_components=11
-        - max_depth=3
-        - learning_rate=0.098992
+        - learning_rate=0.085036
         - max_features=13
-        - min_samples_split=5
-        - min_samples_leaf=2
+        - min_samples_split=7
+        - min_samples_leaf=4
 
+
+## Convergence plot
+
+Let us now compare the convergence of the regressor with and without the pipeline using the `plot_convergence` utility.
 
 
 ```python
+from skopt.plots import plot_convergence
+
 plot_convergence(("gp_optimize", res_gp),
-                 ("forest_optimize", res_forest),
-                 ("dummy_optimize", res_dummy),
-                 ("gp_optimize_w_pca", pipe_res_gp),
-                 ("forest_optimize_w_pca", pipe_res_forest),
-                 ("dummy_optimize_w_pca", pipe_res_dummy))
+                 ("gp_optimize_w_minfo", pipe_res_gp));
 ```
 
 
+![png](hyperparameter-optimization_files/hyperparameter-optimization_23_0.png)
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f6cbff37198>
-
-
-
-
-![png](hyperparameter-optimization_files/hyperparameter-optimization_31_1.png)
-
-
-So, interestingly, our PCA pipelines seem to do much worse than the classifiers do all by themselves.  As we said above, there are other problems where PCA might make more sense than it does here.  But now, instead of that being an argument that you'd make based on theoretical reasons, you've actually tried it both ways and found empirically that PCA is probably not something you want to use here.
+So, interestingly, our pipelines do not seem to do much better than the regressors themselves. This could mean that there is enough data to prevent the model from overfitting, hence we do not gain a lot by doing feature selection.

@@ -1101,13 +1101,12 @@ Katie Malone, August 2016</p>
 <div class="codehilite"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 </pre></div>
 
 
 <h2>Problem statement</h2>
 <p>Tuning the hyper-parameters of a machine learning model is often carried out using an exhaustive exploration of (a subset of) the space all hyper-parameter configurations (e.g., using <code>sklearn.model_selection.GridSearchCV</code>), which often results in a very time consuming operation. </p>
-<p>In this notebook, we illustrate how <code>skopt</code> can be used to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.</p>
+<p>In this notebook, we illustrate how to couple <code>gp_minimize</code> with sklearn's estimators to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.</p>
 <h2>Objective</h2>
 <p>The first step is to define the objective function we want to minimize, in this case the cross-validation mean absolute error of a gradient boosting regressor over the Boston dataset, as a function of its hyper-parameters:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
@@ -1116,6 +1115,7 @@ Katie Malone, August 2016</p>
 
 <span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">reg</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
@@ -1135,7 +1135,7 @@ Katie Malone, August 2016</p>
 <p>Next, we need to define the bounds of the dimensions of the search space we want to explore, and (optionally) the starting point:</p>
 <div class="codehilite"><pre><span></span><span class="n">space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth</span>
           <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>  <span class="c1"># learning_rate</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>                  <span class="c1"># max_features</span>
+          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="p">),</span>                  <span class="c1"># max_features</span>
           <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>                          <span class="c1"># min_samples_split</span>
           <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>                          <span class="c1"># min_samples_leaf</span>
 
@@ -1144,15 +1144,15 @@ Katie Malone, August 2016</p>
 
 
 <h2>Optimize all the things!</h2>
-<p>With these two pieces, we are now ready for sequential model-based optimisation. Here we compare gaussian process-based optimisation versus forest-based optimisation.</p>
+<p>With these two pieces, we are now ready for sequential model-based optimisation. Here we use gaussian process-based optimisation.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">fun</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;Best score=2.9070&#39;
+<div class="codehilite"><pre><span></span>&#39;Best score=2.9307&#39;
 </pre></div>
 
 
@@ -1168,133 +1168,62 @@ Katie Malone, August 2016</p>
 
 
 <div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=5
-- learning_rate=0.094588
-- max_features=5
-- min_samples_split=30
-- min_samples_leaf=5
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="n">res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">fun</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>&#39;Best score=2.9195&#39;
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">- max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
-<span class="s2">- max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                            <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
-                            <span class="n">res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best parameters:
 - max_depth=4
-- learning_rate=0.089097
-- max_features=8
-- min_samples_split=6
-- min_samples_leaf=3
-</pre></div>
-
-
-<p>As a baseline, let us also compare with random search in the space of hyper-parameters, which is equivalent to <code>sklearn.model_selection.RandomizedSearchCV</code>.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
-<span class="n">res_dummy</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">fun</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>&#39;Best score=3.0592&#39;
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">- max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- learning_rate=</span><span class="si">%.4f</span><span class="s2"></span>
-<span class="s2">- max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">- min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                            <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> 
-                            <span class="n">res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best parameters:
-- max_depth=5
-- learning_rate=0.0596
+- learning_rate=0.096450
 - max_features=10
-- min_samples_split=23
-- min_samples_leaf=1
+- min_samples_split=30
+- min_samples_leaf=2
 </pre></div>
 
 
-<h2>Convergence plot</h2>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
-<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;gp_optimize&quot;</span><span class="p">,</span> <span class="n">res_gp</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_optimize&quot;</span><span class="p">,</span> <span class="n">res_forest</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;dummy_optimize&quot;</span><span class="p">,</span> <span class="n">res_dummy</span><span class="p">))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f6cd48b14a8&gt;
-</pre></div>
-
-
-<p><img alt="png" src="hyperparameter-optimization_files/hyperparameter-optimization_18_1.png" /></p>
 <h2>Part 2: Tuning a scikit-learn pipeline with <code>skopt</code></h2>
-<h3>Introduction</h3>
-<p>Scikit-learn objects (transformers, estimators) are often not used singly, but instead chained together into a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipeline</a>.  When that happens, there can be several different sets of hyperparameters to examine, one for each object.  In the same way that <code>GridSearchCV</code> can be applied to a pipeline to tune the hyperparameters of several objects at once, we can do a more efficient search (this example uses GPs) over more than one scikit-learn object.  </p>
-<p>We'll do that here now.  A common method for reducing dimensionality is to preprocess with <a href="http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">principal components analysis</a>, or PCA.  A free parameter of PCA is how many components to use; now we'll optimize over this parameter as well as the parameters of the gradient boosted classifier.  It's not guaranteed that using PCA will give us better results than the classifier all by itself, and there are other problems where PCA might make more sense than it does here, but a reasonable person might want to try it out anyway.  Here's how you can do that.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<p>Scikit-learn objects (transformers, estimators) are often not used singly, but instead chained together into a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">pipeline</a>.  When that happens, there can be several different sets of hyperparameters to examine, one for each object.  In the same way that <code>GridSearchCV</code> can be applied to a pipeline to tune the hyperparameters of several objects at once, we can do a more efficient search (this example uses GPs) over more than one scikit-learn object.</p>
+<p>A common technique to deal with high-dimensional data is to do some feature-selection before using your tree-based models. Here we use the mutual information feature selector to tune the number of features to input into the gradient booster. An advantage being that it can handle both discrete and continuous features</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span><span class="p">,</span> <span class="n">mutual_info_regression</span>
 
-<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+<span class="n">mutual_info_regression</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">mutual_info_regression</span><span class="p">,</span> <span class="n">discrete_features</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">skb</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">mutual_info_regression</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
 <span class="n">reg_pipe</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">pca</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;reg&#39;</span><span class="p">,</span> <span class="n">reg_pipe</span><span class="p">)])</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;skb&#39;</span><span class="p">,</span> <span class="n">skb</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;reg&#39;</span><span class="p">,</span> <span class="n">reg_pipe</span><span class="p">)])</span>
 </pre></div>
 
 
 <h3>Defining the search space</h3>
-<p>Our parameter space has dimensions for the n_components parameter of PCA, as well as several parameters of the decision tree.
-Optionally, we can also define a starting point for the search.</p>
-<div class="codehilite"><pre><span></span><span class="n">pipe_space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span>                           <span class="c1"># n_components of PCA</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth of GBR</span>
-          <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>  <span class="c1"># learning_rate of GBR</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>                          <span class="c1"># max_features of GBR</span>
-          <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>                          <span class="c1"># min_samples_split of GBR</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>                          <span class="c1"># min_samples_leaf of GBR</span>
+<p>Our parameter space has dimensions for the k parameter of SelectKBest, as well as several parameters of the GradientBoostingRegressor. We start with the same point as without the pipeline so that the comparison is valid.</p>
+<div class="codehilite"><pre><span></span><span class="n">pipe_space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="p">),</span>                  <span class="c1"># n_features of SelectKBest</span>
+               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth of GBR</span>
+               <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>  <span class="c1"># learning_rate of GBR</span>
+               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>                          <span class="c1"># max_features of GBR</span>
+               <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>                          <span class="c1"># min_samples_split of GBR</span>
+               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>                          <span class="c1"># min_samples_leaf of GBR</span>
 
 
-<span class="n">pipe_x0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>  <span class="c1"># optional starting point</span>
+<span class="n">pipe_x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_features</span><span class="p">]</span> <span class="o">+</span> <span class="n">x0</span>   <span class="c1"># optional starting point</span>
 </pre></div>
 
 
-<p>The updated objective function (which I've named <code>objective_pipe</code>) is very similar to the objective function that we've had before, except now there are two places where parameters get set--we're changing the parameters of both <code>pca</code> and <code>reg</code> at the same time.</p>
+<p>The updated objective function (which I've named <code>objective_pipe</code>) is very similar to the objective function that we've had before, except now there are two places where parameters get set--we're changing the parameters of both <code>skb</code> and <code>reg</code> at the same time.</p>
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">objective_pipe</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="n">n_components</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span>\
+    <span class="n">k</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span>\
     <span class="n">learning_rate</span><span class="p">,</span> <span class="n">max_features</span><span class="p">,</span>\
     <span class="n">min_samples_split</span><span class="p">,</span> <span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">params</span>
 
-    <span class="c1"># set PCA n_components parameter</span>
-    <span class="n">pipe</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">pca__n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="c1"># If the max_features returned by the minimization objective</span>
+    <span class="c1"># is greater than k</span>
+    <span class="n">max_features</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_features</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="c1"># set number of features to select</span>
+    <span class="n">pipe</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">skb__k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
 
     <span class="c1"># set decision tree classifier parameters</span>
     <span class="n">pipe</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">reg__max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-                   <span class="n">reg__learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
-                   <span class="n">reg__max_features</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
-                   <span class="n">reg__min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
-                   <span class="n">reg__min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">)</span>
+                    <span class="n">reg__learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+                    <span class="n">reg__max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span>
+                    <span class="n">reg__min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+                    <span class="n">reg__min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">)</span>
 
     <span class="n">error</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
                                      <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_absolute_error&quot;</span><span class="p">))</span>
@@ -1311,95 +1240,39 @@ Optionally, we can also define a starting point for the search.</p>
 <span class="n">pipe_res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective_pipe</span><span class="p">,</span> <span class="n">pipe_space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">pipe_x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">    - n_components=</span><span class="si">%d</span><span class="s2"></span>
+<span class="s2">    - k=</span><span class="si">%d</span><span class="s2"></span>
 <span class="s2">    - max_depth=</span><span class="si">%d</span><span class="s2"></span>
 <span class="s2">    - learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
 <span class="s2">    - max_features=</span><span class="si">%d</span><span class="s2"></span>
 <span class="s2">    - min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
 <span class="s2">    - min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
                                 <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">pipe_res_gp</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>Best score=3.8863
+<div class="codehilite"><pre><span></span>Best score=2.9937
 Best parameters:
-    - n_components=13
+    - k=13
     - max_depth=4
-    - learning_rate=0.092924
-    - max_features=14
-    - min_samples_split=5
-    - min_samples_leaf=20
-</pre></div>
-
-
-<p>We've started with a gaussian process algorithm; now add dummy and forest minimization functions to get a survey of the field.</p>
-<div class="codehilite"><pre><span></span><span class="n">pipe_res_dummy</span> <span class="o">=</span> <span class="n">dummy_minimize</span><span class="p">(</span><span class="n">objective_pipe</span><span class="p">,</span> <span class="n">pipe_space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">pipe_x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">    - n_components=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
-<span class="s2">    - max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                                <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">pipe_res_dummy</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best score=4.3505
-Best parameters:
-    - n_components=6
-    - max_depth=4
-    - learning_rate=0.077229
-    - max_features=17
-    - min_samples_split=20
-    - min_samples_leaf=13
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="n">pipe_res_forest</span> <span class="o">=</span> <span class="n">forest_minimize</span><span class="p">(</span><span class="n">objective_pipe</span><span class="p">,</span> <span class="n">pipe_space</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">pipe_x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
-<span class="s2">    - n_components=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - max_depth=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - learning_rate=</span><span class="si">%.6f</span><span class="s2"></span>
-<span class="s2">    - max_features=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - min_samples_split=</span><span class="si">%d</span><span class="s2"></span>
-<span class="s2">    - min_samples_leaf=</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                                <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">pipe_res_forest</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>Best score=3.8386
-Best parameters:
-    - n_components=11
-    - max_depth=3
-    - learning_rate=0.098992
+    - learning_rate=0.085036
     - max_features=13
-    - min_samples_split=5
-    - min_samples_leaf=2
+    - min_samples_split=7
+    - min_samples_leaf=4
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;gp_optimize&quot;</span><span class="p">,</span> <span class="n">res_gp</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_optimize&quot;</span><span class="p">,</span> <span class="n">res_forest</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;dummy_optimize&quot;</span><span class="p">,</span> <span class="n">res_dummy</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;gp_optimize_w_pca&quot;</span><span class="p">,</span> <span class="n">pipe_res_gp</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;forest_optimize_w_pca&quot;</span><span class="p">,</span> <span class="n">pipe_res_forest</span><span class="p">),</span>
-                 <span class="p">(</span><span class="s2">&quot;dummy_optimize_w_pca&quot;</span><span class="p">,</span> <span class="n">pipe_res_dummy</span><span class="p">))</span>
+<h2>Convergence plot</h2>
+<p>Let us now compare the convergence of the regressor with and without the pipeline using the <code>plot_convergence</code> utility.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
+
+<span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;gp_optimize&quot;</span><span class="p">,</span> <span class="n">res_gp</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">&quot;gp_optimize_w_minfo&quot;</span><span class="p">,</span> <span class="n">pipe_res_gp</span><span class="p">));</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f6cbff37198&gt;
-</pre></div>
-
-
-<p><img alt="png" src="hyperparameter-optimization_files/hyperparameter-optimization_31_1.png" /></p>
-<p>So, interestingly, our PCA pipelines seem to do much worse than the classifiers do all by themselves.  As we said above, there are other problems where PCA might make more sense than it does here.  But now, instead of that being an argument that you'd make based on theoretical reasons, you've actually tried it both ways and found empirically that PCA is probably not something you want to use here.</p>
+<p><img alt="png" src="hyperparameter-optimization_files/hyperparameter-optimization_23_0.png" /></p>
+<p>So, interestingly, our pipelines do not seem to do much better than the regressors themselves. This could mean that there is enough data to prevent the model from overfitting, hence we do not gain a lot by doing feature selection.</p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">

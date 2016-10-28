@@ -1051,6 +1051,7 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
+    <li class="mono"><a href="#skopt.optimizer.base_minimize">base_minimize</a></li>
     <li class="mono"><a href="#skopt.optimizer.dummy_minimize">dummy_minimize</a></li>
     <li class="mono"><a href="#skopt.optimizer.forest_minimize">forest_minimize</a></li>
     <li class="mono"><a href="#skopt.optimizer.gbrt_minimize">gbrt_minimize</a></li>
@@ -1094,12 +1095,15 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">.dummy</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">base_minimize</span>
+<span class="kn">from</span> <span class="nn">.dummy</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
 <span class="kn">from</span> <span class="nn">.forest</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
 <span class="kn">from</span> <span class="nn">.gbrt</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
 <span class="kn">from</span> <span class="nn">.gp</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gp_minimize&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;base_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span> <span class="s2">&quot;gp_minimize&quot;</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1111,6 +1115,447 @@ table {
   <section id="section-items">
 
     <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="skopt.optimizer.base_minimize">
+    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><h2>Parameters</h2>
+<ul>
+<li>
+<p><code>func</code> [callable]:
+    Function to minimize. Should take a array of parameters and
+    return the function values.</p>
+</li>
+<li>
+<p><code>dimensions</code> [list, shape=(n_dims,)]:
+    List of search space dimensions.
+    Each search dimension can be defined either as</p>
+<ul>
+<li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
+  dimensions),</li>
+<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+  dimensions),</li>
+<li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
+<li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
+  <code>Categorical</code>).</li>
+</ul>
+</li>
+<li>
+<p><code>base_estimator</code> [sklearn regressor]:
+    Should inherit from <code>sklearn.base.RegressorMixin</code>.
+    In addition, should have an optional <code>return_std</code> argument,
+    which returns <code>std(Y | x)`` along with</code>E[Y | x]`</p>
+</li>
+<li>
+<p><code>n_calls</code> [int, default=100]:
+    Number of calls to <code>func</code>.</p>
+</li>
+<li>
+<p><code>n_random_starts</code> [int, default=10]:
+    Number of evaluations of <code>func</code> with random initialization points
+    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
+</li>
+<li>
+<p><code>acq_func</code> [string, default=<code>"EI"</code>]:
+    Function to minimize over the posterior distribution. Can be either</p>
+<ul>
+<li><code>"LCB"</code> for lower confidence bound,</li>
+<li><code>"EI"</code> for negative expected improvement,</li>
+<li><code>"PI"</code> for negative probability of improvement.</li>
+</ul>
+</li>
+<li>
+<p><code>acq_optimizer</code> [string, <code>"auto"</code>, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"auto"</code>]:
+    Method to minimize the acquistion function. The fit model
+    is updated with the optimal value obtained by optimizing <code>acq_func</code>
+    with <code>acq_optimizer</code>.</p>
+<ul>
+<li>If set to <code>"sampling"</code>, then <code>acq_func</code> is optimized by computing
+  <code>acq_func</code> at <code>n_points</code> sampled randomly.</li>
+<li>If set to <code>"lbfgs"</code>, then <code>acq_func</code> is optimized by<ul>
+<li>Sampling <code>n_restarts_optimizer</code> points randomly.</li>
+<li><code>"lbfgs"</code> is run for 20 iterations with these points as initial
+    points to find local minima.</li>
+<li>The optimal of these local minima is used to update the prior.</li>
+</ul>
+</li>
+<li>If set to <code>"auto"</code>, then it is set to <code>"lbfgs"`` if
+  all the search dimensions are Real (continuous). It defaults to</code>"sampling"` for all other cases.</li>
+</ul>
+</li>
+<li>
+<p><code>x0</code> [list, list of lists or <code>None</code>]:
+    Initial input points.</p>
+<ul>
+<li>If it is a list of lists, use it as a list of input points.</li>
+<li>If it is a list, use it as a single initial input point.</li>
+<li>If it is <code>None</code>, no initial input points are used.</li>
+</ul>
+</li>
+<li>
+<p><code>y0</code> [list, scalar or <code>None</code>]
+    Evaluation of initial input points.</p>
+<ul>
+<li>If it is a list, then it corresponds to evaluations of the function
+  at each element of <code>x0</code> : the i-th element of <code>y0</code> corresponds
+  to the function evaluated at the i-th element of <code>x0</code>.</li>
+<li>If it is a scalar, then it corresponds to the evaluation of the
+  function at <code>x0</code>.</li>
+<li>If it is None and <code>x0</code> is provided, then the function is evaluated
+  at each element of <code>x0</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+<li>
+<p><code>verbose</code> [boolean, default=False]:
+    Control the verbosity. It is advised to set the verbosity to True
+    for long optimization runs.</p>
+</li>
+<li>
+<p><code>callback</code> [callable, list of callables, optional]
+    If callable then <code>callback(res)</code> is called after each call to <code>func</code>.
+    If list of callables, then each callable in the list is called.</p>
+</li>
+<li>
+<p><code>n_points</code> [int, default=500]:
+    Number of points to sample to determine the next "best" point.
+    Useless if acq_optimizer is set to <code>"lbfgs"</code>.</p>
+</li>
+<li>
+<p><code>n_restarts_optimizer</code> [int, default=5]:
+    The number of restarts of the optimizer when <code>acq_optimizer</code> is <code>"lbfgs"</code>.</p>
+</li>
+<li>
+<p><code>xi</code> [float, default=0.01]:
+    Controls how much improvement one wants over the previous best
+    values. Used when the acquisition is either <code>"EI"</code> or <code>"PI"</code>.</p>
+</li>
+<li>
+<p><code>kappa</code> [float, default=1.96]:
+    Controls how much of the variance in the predicted values should be
+    taken into account. If set to be very high, then we are favouring
+    exploration over exploitation and vice versa.
+    Used when the acquisition is <code>"LCB"</code>.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li>
+<p><code>res</code> [<code>OptimizeResult</code>, scipy object]:
+    The optimization result returned as a OptimizeResult object.
+    Important attributes are:</p>
+<ul>
+<li><code>x</code> [list]: location of the minimum.</li>
+<li><code>fun</code> [float]: function value at the minimum.</li>
+<li><code>models</code>: surrogate models used for each iteration.</li>
+<li><code>x_iters</code> [list of lists]: location of function evaluation for each
+   iteration.</li>
+<li><code>func_vals</code> [array]: function value for each iteration.</li>
+<li><code>space</code> [Space]: the optimization space.</li>
+<li><code>specs</code> [dict]`: the call specifications.</li>
+<li><code>rng</code> [RandomState instance]: State of the random state
+   at the end of minimization.</li>
+</ul>
+<p>For more details related to the OptimizeResult object, refer
+http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.base_minimize', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.optimizer.base_minimize" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+                  <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                  <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `func` [callable]:</span>
+<span class="sd">        Function to minimize. Should take a array of parameters and</span>
+<span class="sd">        return the function values.</span>
+
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
+
+<span class="sd">    * `base_estimator` [sklearn regressor]:</span>
+<span class="sd">        Should inherit from `sklearn.base.RegressorMixin`.</span>
+<span class="sd">        In addition, should have an optional `return_std` argument,</span>
+<span class="sd">        which returns `std(Y | x)`` along with `E[Y | x]`</span>
+
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func`.</span>
+
+<span class="sd">    * `n_random_starts` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with random initialization points</span>
+<span class="sd">        before approximating the `func` with `base_estimator`.</span>
+
+<span class="sd">    * `acq_func` [string, default=`&quot;EI&quot;`]:</span>
+<span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
+
+<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound,</span>
+<span class="sd">        - `&quot;EI&quot;` for negative expected improvement,</span>
+<span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
+
+<span class="sd">    * `acq_optimizer` [string, `&quot;auto&quot;`, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
+<span class="sd">        Method to minimize the acquistion function. The fit model</span>
+<span class="sd">        is updated with the optimal value obtained by optimizing `acq_func`</span>
+<span class="sd">        with `acq_optimizer`.</span>
+
+<span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
+<span class="sd">          `acq_func` at `n_points` sampled randomly.</span>
+<span class="sd">        - If set to `&quot;lbfgs&quot;`, then `acq_func` is optimized by</span>
+<span class="sd">              - Sampling `n_restarts_optimizer` points randomly.</span>
+<span class="sd">              - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
+<span class="sd">                points to find local minima.</span>
+<span class="sd">              - The optimal of these local minima is used to update the prior.</span>
+<span class="sd">        - If set to `&quot;auto&quot;`, then it is set to `&quot;lbfgs&quot;`` if</span>
+<span class="sd">          all the search dimensions are Real (continuous). It defaults to</span>
+<span class="sd">          `&quot;sampling&quot;` for all other cases.</span>
+
+<span class="sd">    * `x0` [list, list of lists or `None`]:</span>
+<span class="sd">        Initial input points.</span>
+
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list, scalar or `None`]</span>
+<span class="sd">        Evaluation of initial input points.</span>
+
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
+
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, list of callables, optional]</span>
+<span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
+<span class="sd">        If list of callables, then each callable in the list is called.</span>
+
+<span class="sd">    * `n_points` [int, default=500]:</span>
+<span class="sd">        Number of points to sample to determine the next &quot;best&quot; point.</span>
+<span class="sd">        Useless if acq_optimizer is set to `&quot;lbfgs&quot;`.</span>
+
+<span class="sd">    * `n_restarts_optimizer` [int, default=5]:</span>
+<span class="sd">        The number of restarts of the optimizer when `acq_optimizer` is `&quot;lbfgs&quot;`.</span>
+
+<span class="sd">    * `xi` [float, default=0.01]:</span>
+<span class="sd">        Controls how much improvement one wants over the previous best</span>
+<span class="sd">        values. Used when the acquisition is either `&quot;EI&quot;` or `&quot;PI&quot;`.</span>
+
+<span class="sd">    * `kappa` [float, default=1.96]:</span>
+<span class="sd">        Controls how much of the variance in the predicted values should be</span>
+<span class="sd">        taken into account. If set to be very high, then we are favouring</span>
+<span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        The optimization result returned as a OptimizeResult object.</span>
+<span class="sd">        Important attributes are:</span>
+
+<span class="sd">        - `x` [list]: location of the minimum.</span>
+<span class="sd">        - `fun` [float]: function value at the minimum.</span>
+<span class="sd">        - `models`: surrogate models used for each iteration.</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
+<span class="sd">           iteration.</span>
+<span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
+<span class="sd">        - `space` [Space]: the optimization space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
+<span class="sd">        - `rng` [RandomState instance]: State of the random state</span>
+<span class="sd">           at the end of minimization.</span>
+
+<span class="sd">        For more details related to the OptimizeResult object, refer</span>
+<span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+             <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has to be a regressor.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
+
+    <span class="c1"># Check params</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+
+    <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0` should be a list, but got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
+
+    <span class="n">n_init_func_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">n_total_init_calls</span> <span class="o">=</span> <span class="n">n_random_starts</span> <span class="o">+</span> <span class="n">n_init_func_calls</span>
+
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected `n_calls` &gt; 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_calls</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected `n_random_starts` &gt;= 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_random_starts</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either set `n_random_starts` &gt; 0, or provide `x0`&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">n_total_init_calls</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected `n_calls` &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_total_init_calls</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
+
+    <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VerboseCallback</span><span class="p">(</span>
+            <span class="n">n_init</span><span class="o">=</span><span class="n">n_init_func_calls</span><span class="p">,</span> <span class="n">n_random</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+            <span class="n">n_total</span><span class="o">=</span><span class="n">n_calls</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x0</span><span class="p">):</span>
+            <span class="n">y0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">x0</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y0</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                    <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">x0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`y0` should be an iterable or a scalar, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">y0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0` and `y0` should have the same length&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">,</span> <span class="n">y0</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`y0` elements should be scalars&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Random function evaluations.</span>
+    <span class="n">X_rand</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">X_rand</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">y0</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X_rand</span><span class="p">):</span>
+        <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span>
+                <span class="n">x0</span> <span class="o">+</span> <span class="n">X_rand</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+                    <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_real</span><span class="p">:</span>
+            <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;lbfgs&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
+    <span class="k">elif</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39;, &#39;sampling&#39; or &#39;auto&#39;, &quot;</span>
+            <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">acq_optimizer</span><span class="p">)</span>
+
+    <span class="c1"># Bayesian optimization loop</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_total_init_calls</span>
+    <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_model_iter</span><span class="p">):</span>
+        <span class="n">gp</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xi</span><span class="p">),</span> <span class="n">yi</span><span class="p">)</span>
+
+        <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
+                                          <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
+                <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
+            <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+
+        <span class="k">elif</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_restarts_optimizer</span><span class="p">):</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                               <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_l_bfgs_b</span><span class="p">(</span>
+                        <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span>
+                        <span class="n">bounds</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
+                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
+                    <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span>
+
+        <span class="c1"># lbfg should handle this but just in case there are precision errors.</span>
+        <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">next_x</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">))</span>
+        <span class="n">Xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
+        <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+                <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+
+    <span class="c1"># Pack results</span>
+    <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.dummy_minimize">
