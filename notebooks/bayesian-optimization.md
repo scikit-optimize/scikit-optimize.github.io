@@ -183,14 +183,14 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7f65af26a2d0>
+    random_state = <mtrand.RandomState object at 0x7fce64bbf318>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
     
-    specs = {'args': {'n_random_starts': 0, 'callback': None, 'func': <function f at 0x7f65bbf27ea0>, 'verbose': False, 'n_calls': 15, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'kappa': 1.96, 'acq_optimizer': 'auto', 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'function': 'base_minimize', 'args': {'verbose': False, 'kappa': 1.96, 'xi': 0.01, 'random_state': 777, 'n_restarts_optimizer': 5, 'n_calls': 15, 'acq_optimizer': 'auto', 'func': <function f at 0x7fce71887ea0>, 'n_random_starts': 0, 'y0': None, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=0, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'n_points': 10000, 'x0': [0.0], 'random_state': 777, 'y0': None, 'xi': 0.01, 'acq_func': 'LCB', 'n_restarts_optimizer': 5}, 'function': 'base_minimize'}
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'x0': [0.0], 'acq_func': 'LCB', 'n_points': 10000, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'callback': None}}
     
     x = [-0.33900924076046079]
     
