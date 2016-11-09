@@ -1225,6 +1225,10 @@ table {
 <span class="sd">        Controls how much improvement one wants over the previous best</span>
 <span class="sd">        values. Useful only when ``method`` is set to &quot;EI&quot;</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
@@ -1246,7 +1250,7 @@ table {
     <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>
@@ -1292,6 +1296,10 @@ table {
 <span class="sd">        Controls how much improvement one wants over the previous best</span>
 <span class="sd">        values. Useful only when ``method`` is set to &quot;EI&quot;</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
@@ -1317,7 +1325,7 @@ table {
     <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">exploit</span> <span class="o">+</span> <span class="n">explore</span>
 
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
 
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
@@ -1416,6 +1424,11 @@ obtain the <code>X</code> with maximum improvement.</p>
     Controls how much improvement one wants over the previous best
     values. Useful only when <code>method</code> is set to "EI"</p>
 </li>
+<li>
+<p><code>return_grad</code>: [boolean, optional]:
+    Whether or not to return the grad. Implemented only for the case where
+    <code>X</code> is a single sample.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1460,6 +1473,10 @@ obtain the <code>X</code> with maximum improvement.</p>
 <span class="sd">        Controls how much improvement one wants over the previous best</span>
 <span class="sd">        values. Useful only when ``method`` is set to &quot;EI&quot;</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
@@ -1485,7 +1502,7 @@ obtain the <code>X</code> with maximum improvement.</p>
     <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">exploit</span> <span class="o">+</span> <span class="n">explore</span>
 
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
 
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
@@ -1658,6 +1675,11 @@ obtain the <code>X</code> with maximum improvement.</p>
     Controls how much improvement one wants over the previous best
     values. Useful only when <code>method</code> is set to "EI"</p>
 </li>
+<li>
+<p><code>return_grad</code>: [boolean, optional]:
+    Whether or not to return the grad. Implemented only for the case where
+    <code>X</code> is a single sample.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1703,6 +1725,10 @@ obtain the <code>X</code> with maximum improvement.</p>
 <span class="sd">        Controls how much improvement one wants over the previous best</span>
 <span class="sd">        values. Useful only when ``method`` is set to &quot;EI&quot;</span>
 
+<span class="sd">    * `return_grad`: [boolean, optional]:</span>
+<span class="sd">        Whether or not to return the grad. Implemented only for the case where</span>
+<span class="sd">        ``X`` is a single sample.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `values`: [array-like, shape=(X.shape[0],)]:</span>
@@ -1724,7 +1750,7 @@ obtain the <code>X</code> with maximum improvement.</p>
     <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>

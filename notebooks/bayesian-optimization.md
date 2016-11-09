@@ -111,7 +111,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=-0.3390, f(x^*)=-0.9066'
+    'x^*=1.7080, f(x^*)=-0.0934'
 
 
 
@@ -133,11 +133,11 @@ for key, value in sorted(res.items()):
     print()
 ```
 
-    fun = -0.906643745289
+    fun = -0.0933827773839
     
     func_vals = [ 0.22468304  0.05499527 -0.09338278 -0.09172426  0.00150194  0.05658501
-      0.12220788  0.85973216  0.09839041  0.25529044 -0.00599222 -0.61164474
-     -0.90664375 -0.84707683 -0.84074289]
+      0.12220788  0.1031603   0.11790199  0.25532443 -0.01687742  0.20012151
+     -0.02752978 -0.02931617  0.09190506]
     
     models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
@@ -183,18 +183,18 @@ for key, value in sorted(res.items()):
                  n_restarts_optimizer=0, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777)]
     
-    random_state = <mtrand.RandomState object at 0x7fce64bbf318>
+    random_state = <mtrand.RandomState object at 0x7fc9a60651b0>
     
     space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
     
-    specs = {'function': 'base_minimize', 'args': {'verbose': False, 'kappa': 1.96, 'xi': 0.01, 'random_state': 777, 'n_restarts_optimizer': 5, 'n_calls': 15, 'acq_optimizer': 'auto', 'func': <function f at 0x7fce71887ea0>, 'n_random_starts': 0, 'y0': None, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+    specs = {'args': {'y0': None, 'acq_optimizer': 'auto', 'random_state': 777, 'verbose': False, 'xi': 0.01, 'n_calls': 15, 'x0': [0.0], 'callback': None, 'n_random_starts': 0, 'n_points': 10000, 'func': <function f at 0x7fc9b23550d0>, 'kappa': 1.96, 'acq_func': 'LCB', 'n_restarts_optimizer': 5, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=0, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777), 'x0': [0.0], 'acq_func': 'LCB', 'n_points': 10000, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'callback': None}}
+                 normalize_y=True, optimizer='fmin_l_bfgs_b', random_state=777)}, 'function': 'base_minimize'}
     
-    x = [-0.33900924076046079]
+    x = [1.7079881909995787]
     
-    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.8517089381176524], [2.0], [-1.1915279339683462], [1.2957241148400129], [0.40149974265149657], [-1.5085932154601376], [-0.81650922365031198], [-1.2334758759137854], [-0.20192500033697414], [-0.33900924076046079], [-0.20433782410853585], [-0.30271204061909707]]
+    x_iters = [[0.0], [-2.0], [1.7079881909995787], [1.8517089381176524], [2.0], [-1.1915279339683462], [1.2957241148400129], [1.7030982760696016], [2.0], [-0.81660454575516184], [2.0], [2.0], [-2.0], [-2.0], [1.3952187808321916]]
     
 
 
