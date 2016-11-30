@@ -1118,7 +1118,7 @@ table {
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.base_minimize">
-    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
 
@@ -1246,6 +1246,14 @@ table {
     exploration over exploitation and vice versa.
     Used when the acquisition is <code>"LCB"</code>.</p>
 </li>
+<li>
+<p><code>n_jobs</code> [int, default=1]
+    Number of cores to run in parallel while running the lbfgs optimizations
+    over the acquisition function. Valid only when <code>acq_optimizer</code> is
+    set to "lbfgs."
+    Defaults to 1 core. If <code>n_jobs=-1</code>, then number of jobs is set
+    to number of cores.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1277,7 +1285,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                   <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1378,6 +1386,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        taken into account. If set to be very high, then we are favouring</span>
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
+
+<span class="sd">    * `n_jobs` [int, default=1]</span>
+<span class="sd">        Number of cores to run in parallel while running the lbfgs optimizations</span>
+<span class="sd">        over the acquisition function. Valid only when `acq_optimizer` is</span>
+<span class="sd">        set to &quot;lbfgs.&quot;</span>
+<span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
+<span class="sd">        to number of cores.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1500,6 +1515,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">n_model_iter</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_total_init_calls</span>
     <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
+    <span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_model_iter</span><span class="p">):</span>
         <span class="n">gp</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
 
@@ -1520,21 +1537,25 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="k">elif</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
             <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_restarts_optimizer</span><span class="p">):</span>
-                <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                               <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
+                                           <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
 
-                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-                    <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_l_bfgs_b</span><span class="p">(</span>
-                        <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
-                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span>
-                        <span class="n">bounds</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
-                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                        <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+                <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
+                    <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span>
+                    <span class="n">bounds</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
+                    <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                    <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
-                    <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span>
+            <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+            <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+            <span class="n">best_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">cand_acqs</span><span class="p">[</span><span class="n">best_ind</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
+                <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">best_ind</span><span class="p">],</span> <span class="n">a</span>
 
         <span class="c1"># lbfg should handle this but just in case there are precision errors.</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
@@ -2424,7 +2445,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
     </div>
     
 
@@ -2590,6 +2611,14 @@ guided by the surrogate model.</p>
   Setting to zero might cause stability issues.</li>
 </ul>
 </li>
+<li>
+<p><code>n_jobs</code> [int, default=1]
+    Number of cores to run in parallel while running the lbfgs optimizations
+    over the acquisition function. Valid only when <code>acq_optimizer</code> is
+    set to "lbfgs."
+    Defaults to 1 core. If <code>n_jobs=-1</code>, then number of jobs is set
+    to number of cores.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -2621,7 +2650,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                 <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
-                <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+                <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
 <span class="sd">    If every function evaluation is expensive, for instance</span>
@@ -2759,6 +2788,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - Set this to a value close to zero (1e-10) if the function is noise-free.</span>
 <span class="sd">          Setting to zero might cause stability issues.</span>
 
+<span class="sd">    * `n_jobs` [int, default=1]</span>
+<span class="sd">        Number of cores to run in parallel while running the lbfgs optimizations</span>
+<span class="sd">        over the acquisition function. Valid only when `acq_optimizer` is</span>
+<span class="sd">        set to &quot;lbfgs.&quot;</span>
+<span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
+<span class="sd">        to number of cores.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -2804,7 +2840,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
         <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-        <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+        <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
 </pre></div>
 
   </div>
