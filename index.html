@@ -1207,20 +1207,21 @@ python setup.py develop
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2&quot;</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;optimizer&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;plots&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;space&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;load&quot;</span><span class="p">,</span>
-           <span class="p">)</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;optimizer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plots&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;space&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1552,9 +1553,9 @@ deep copying of <code>res</code>.</p>
 <span class="sd">    * `**kwargs` [other keyword arguments]:</span>
 <span class="sd">        All other keyword arguments will be passed to `joblib.dump`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">store_objective</span><span class="p">:</span>
         <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="s1">&#39;func&#39;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]:</span>
         <span class="c1"># If the user does not want to store the objective and it is indeed</span>
         <span class="c1"># present in the provided object, then create a deep copy of it and</span>
@@ -1562,6 +1563,7 @@ deep copying of <code>res</code>.</p>
         <span class="n">res_without_func</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">res_without_func</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
         <span class="n">dump_</span><span class="p">(</span><span class="n">res_without_func</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># If the user does not want to store the objective and it is already</span>
         <span class="c1"># missing in the provided object, dump it without copying.</span>
@@ -1733,7 +1735,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                     <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -2171,7 +2174,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
     <span class="c1"># Default estimator</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+        <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">)</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">,</span>
                                                            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                                                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
@@ -2332,7 +2335,8 @@ guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>n_restarts_optimizer</code> [int, default=5]:
-    The number of restarts of the optimizer when <code>acq_optimizer</code> is <code>"lbfgs"</code>.</p>
+    The number of restarts of the optimizer when <code>acq_optimizer</code>
+    is <code>"lbfgs"</code>.</p>
 </li>
 <li>
 <p><code>kappa</code> [float, default=1.96]:
@@ -2354,15 +2358,15 @@ guided by the surrogate model.</p>
   mean zero and a fixed variance.</li>
 <li>If the variance is known before-hand, this can be set directly
   to the variance of the noise.</li>
-<li>Set this to a value close to zero (1e-10) if the function is noise-free.
-  Setting to zero might cause stability issues.</li>
+<li>Set this to a value close to zero (1e-10) if the function is
+  noise-free. Setting to zero might cause stability issues.</li>
 </ul>
 </li>
 <li>
 <p><code>n_jobs</code> [int, default=1]
-    Number of cores to run in parallel while running the lbfgs optimizations
-    over the acquisition function. Valid only when <code>acq_optimizer</code> is
-    set to "lbfgs."
+    Number of cores to run in parallel while running the lbfgs
+    optimizations over the acquisition function. Valid only
+    when <code>acq_optimizer</code> is set to "lbfgs."
     Defaults to 1 core. If <code>n_jobs=-1</code>, then number of jobs is set
     to number of cores.</p>
 </li>
@@ -2514,7 +2518,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Useless if acq_optimizer is set to `&quot;lbfgs&quot;`.</span>
 
 <span class="sd">    * `n_restarts_optimizer` [int, default=5]:</span>
-<span class="sd">        The number of restarts of the optimizer when `acq_optimizer` is `&quot;lbfgs&quot;`.</span>
+<span class="sd">        The number of restarts of the optimizer when `acq_optimizer`</span>
+<span class="sd">        is `&quot;lbfgs&quot;`.</span>
 
 <span class="sd">    * `kappa` [float, default=1.96]:</span>
 <span class="sd">        Controls how much of the variance in the predicted values should be</span>
@@ -2532,13 +2537,13 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">          mean zero and a fixed variance.</span>
 <span class="sd">        - If the variance is known before-hand, this can be set directly</span>
 <span class="sd">          to the variance of the noise.</span>
-<span class="sd">        - Set this to a value close to zero (1e-10) if the function is noise-free.</span>
-<span class="sd">          Setting to zero might cause stability issues.</span>
+<span class="sd">        - Set this to a value close to zero (1e-10) if the function is</span>
+<span class="sd">          noise-free. Setting to zero might cause stability issues.</span>
 
 <span class="sd">    * `n_jobs` [int, default=1]</span>
-<span class="sd">        Number of cores to run in parallel while running the lbfgs optimizations</span>
-<span class="sd">        over the acquisition function. Valid only when `acq_optimizer` is</span>
-<span class="sd">        set to &quot;lbfgs.&quot;</span>
+<span class="sd">        Number of cores to run in parallel while running the lbfgs</span>
+<span class="sd">        optimizations over the acquisition function. Valid only</span>
+<span class="sd">        when `acq_optimizer` is set to &quot;lbfgs.&quot;</span>
 <span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
 <span class="sd">        to number of cores.</span>
 
@@ -2566,19 +2571,21 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
-    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
+    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
+                                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">cov_amplitude</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
-        <span class="n">matern</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
-                        <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
-                        <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+        <span class="n">matern</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
+            <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
+            <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
+            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
             <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">matern</span><span class="p">,</span>
-            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
         <span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
@@ -2650,7 +2657,6 @@ was called with <code>store_objective=False</code>.</p>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
 <span class="sd">        Reconstructed OptimizeResult instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">return</span> <span class="n">load_</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 

@@ -1101,15 +1101,15 @@ table {
 
 
 <span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                             <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                            <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
 <span class="sd">    This is because lbfgs allows only 1-D input.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span>
+                                 <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_gaussian_acquisition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
@@ -1126,15 +1126,18 @@ table {
     <span class="c1"># Evaluate acquisition function</span>
     <span class="k">if</span> <span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;LCB&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">return_grad</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">acq_func</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;EI&quot;</span><span class="p">:</span>
             <span class="n">func_and_grad</span> <span class="o">=</span> <span class="n">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">return_grad</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">func_and_grad</span> <span class="o">=</span> <span class="n">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">return_grad</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="n">func_and_grad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">func_and_grad</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="n">func_and_grad</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Acquisition function not implemented.&quot;</span><span class="p">)</span>
 
@@ -1179,11 +1182,14 @@ table {
     <span class="c1"># Compute posterior.</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
@@ -1236,10 +1242,12 @@ table {
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -1252,11 +1260,14 @@ table {
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
+
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>
         <span class="n">improve_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">std</span> <span class="o">-</span> <span class="n">std_grad</span> <span class="o">*</span> <span class="n">improve</span>
         <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span>
+
         <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">improve_grad</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">values</span>
 
@@ -1307,10 +1318,12 @@ table {
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -1331,7 +1344,7 @@ table {
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>
         <span class="n">improve_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">std</span> <span class="o">-</span> <span class="n">std_grad</span> <span class="o">*</span> <span class="n">improve</span>
-        <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">cdf_grad</span> <span class="o">=</span> <span class="n">improve_grad</span> <span class="o">*</span> <span class="n">pdf</span>
         <span class="n">pdf_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">improve</span> <span class="o">*</span> <span class="n">cdf_grad</span>
         <span class="n">exploit_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">cdf</span> <span class="o">-</span> <span class="n">pdf_grad</span>
@@ -1367,15 +1380,15 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_acquisition_1D', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_acquisition_1D" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                             <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+                            <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
 <span class="sd">    This is because lbfgs allows only 1-D input.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span>
+                                 <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1484,10 +1497,12 @@ obtain the <code>X</code> with maximum improvement.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -1508,7 +1523,7 @@ obtain the <code>X</code> with maximum improvement.</p>
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>
         <span class="n">improve_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">std</span> <span class="o">-</span> <span class="n">std_grad</span> <span class="o">*</span> <span class="n">improve</span>
-        <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">cdf_grad</span> <span class="o">=</span> <span class="n">improve_grad</span> <span class="o">*</span> <span class="n">pdf</span>
         <span class="n">pdf_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">improve</span> <span class="o">*</span> <span class="n">cdf_grad</span>
         <span class="n">exploit_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">cdf</span> <span class="o">-</span> <span class="n">pdf_grad</span>
@@ -1618,11 +1633,14 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
     <span class="c1"># Compute posterior.</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
@@ -1736,10 +1754,12 @@ obtain the <code>X</code> with maximum improvement.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -1752,11 +1772,14 @@ obtain the <code>X</code> with maximum improvement.</p>
     <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">std_grad</span><span class="p">)</span>
+
         <span class="c1"># Substitute (y_opt - xi - mu) / sigma = t and apply chain rule.</span>
         <span class="c1"># improve_grad is the gradient of t wrt x.</span>
         <span class="n">improve_grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu_grad</span> <span class="o">*</span> <span class="n">std</span> <span class="o">-</span> <span class="n">std_grad</span> <span class="o">*</span> <span class="n">improve</span>
         <span class="n">improve_grad</span> <span class="o">/=</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span>
+
         <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">improve_grad</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">values</span>
 </pre></div>
