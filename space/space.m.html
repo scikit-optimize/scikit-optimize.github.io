@@ -1181,7 +1181,7 @@ table {
         <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Real</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1323,7 +1323,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1336,8 +1336,17 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
+
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">and</span> <span class="n">transform</span> <span class="o">!=</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;normalize&#39;, got &quot;</span>
+                             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -1361,7 +1370,10 @@ table {
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
@@ -1453,6 +1465,9 @@ table {
 <span class="sd">            - as a list of categories (for `Categorical` dimensions), or</span>
 <span class="sd">            - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">              `Categorical`).</span>
+
+<span class="sd">            NOTE: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">            dimensions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
 
@@ -1734,7 +1749,7 @@ the documentation of <code>dimension</code> below.</p>
         <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Real</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1984,10 +1999,6 @@ original space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Categorical.bounds" class="name">var <span class="ident">bounds</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.bounds">bounds</a></code>
-    </p>
 
             
   
@@ -2018,6 +2029,10 @@ original space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Categorical.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.size">size</a></code>
+    </p>
 
             
   
@@ -2270,7 +2285,7 @@ original space.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -2283,8 +2298,17 @@ original space.</p></div>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
+
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">and</span> <span class="n">transform</span> <span class="o">!=</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;normalize&#39;, got &quot;</span>
+                             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -2308,7 +2332,10 @@ original space.</p></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2326,7 +2353,7 @@ original space.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Integer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, low, high)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, transform=None)</p>
     </div>
     
 
@@ -2347,7 +2374,7 @@ original space.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2358,8 +2385,16 @@ original space.</p></div>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
+    <span class="k">if</span> <span class="n">transform</span> <span class="ow">and</span> <span class="n">transform</span> <span class="o">!=</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;normalize&#39;, got &quot;</span>
+                         <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -2467,10 +2502,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Integer.bounds" class="name">var <span class="ident">bounds</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.bounds">bounds</a></code>
-    </p>
 
             
   
@@ -2501,6 +2532,20 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Integer.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.size">size</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.space.space.Integer.transform_" class="name">var <span class="ident">transform_</span></p>
+            
 
             
   
@@ -2520,16 +2565,6 @@ orignal space.</p></div>
             </div>
             <div class="item">
             <p id="skopt.space.space.Integer.transformed_size" class="name">var <span class="ident">transformed_size</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.space.space.Integer.transformer" class="name">var <span class="ident">transformer</span></p>
             
 
             
@@ -2839,10 +2874,6 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Real.bounds" class="name">var <span class="ident">bounds</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.bounds">bounds</a></code>
-    </p>
 
             
   
@@ -2883,6 +2914,10 @@ orignal space.</p></div>
             <div class="item">
             <p id="skopt.space.space.Real.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.size">size</a></code>
+    </p>
 
             
   
@@ -2950,6 +2985,9 @@ orignal space.</p></div>
 <span class="sd">            - as a list of categories (for `Categorical` dimensions), or</span>
 <span class="sd">            - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">              `Categorical`).</span>
+
+<span class="sd">            NOTE: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">            dimensions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
 
@@ -3164,6 +3202,8 @@ orignal space.</p></div>
 <li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
   <code>Categorical</code>).</li>
 </ul>
+<p>NOTE: The upper and lower bounds are inclusive for <code>Integer</code>
+dimensions.</p>
 </li>
 </ul></div>
   <div class="source_cont">
@@ -3183,6 +3223,8 @@ orignal space.</p></div>
 <span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
+<span class="sd">        NOTE: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">        dimensions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
 </pre></div>

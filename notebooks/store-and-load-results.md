@@ -90,8 +90,8 @@ print('Without compression: {} bytes'.format(getsize('result.pkl')))
 print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
-    Without compression: 77884 bytes
-    Compressed with gz:  20434 bytes
+    Without compression: 77706 bytes
+    Compressed with gz:  20463 bytes
 
 
 ### Unserializable objective functions
@@ -114,8 +114,8 @@ print('Loaded object: ', res_loaded_without_objective.specs['args'].keys())
 print('Local variable:', res.specs['args'].keys())
 ```
 
-    Loaded object:  dict_keys(['random_state', 'kappa', 'y0', 'base_estimator', 'n_jobs', 'callback', 'acq_optimizer', 'acq_func', 'dimensions', 'xi', 'n_points', 'n_random_starts', 'verbose', 'n_restarts_optimizer', 'x0', 'n_calls'])
-    Local variable: dict_keys(['y0', 'xi', 'n_jobs', 'callback', 'n_points', 'dimensions', 'func', 'n_random_starts', 'verbose', 'n_restarts_optimizer', 'x0', 'n_calls', 'random_state', 'kappa', 'base_estimator', 'acq_optimizer', 'acq_func'])
+    Loaded object:  dict_keys(['n_restarts_optimizer', 'acq_func', 'n_random_starts', 'y0', 'xi', 'random_state', 'verbose', 'base_estimator', 'x0', 'kappa', 'acq_optimizer', 'n_calls', 'callback', 'n_jobs', 'dimensions', 'n_points'])
+    Local variable: dict_keys(['n_restarts_optimizer', 'acq_func', 'verbose', 'x0', 'kappa', 'acq_optimizer', 'n_calls', 'n_jobs', 'xi', 'n_random_starts', 'y0', 'func', 'random_state', 'base_estimator', 'callback', 'n_points', 'dimensions'])
 
 
 ## Possible problems

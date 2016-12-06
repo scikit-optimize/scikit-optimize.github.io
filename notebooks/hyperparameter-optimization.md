@@ -73,7 +73,7 @@ res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0, n_rand
 
 
 
-    'Best score=2.9307'
+    'Best score=2.9049'
 
 
 
@@ -91,10 +91,10 @@ print("""Best parameters:
 
     Best parameters:
     - max_depth=4
-    - learning_rate=0.096450
-    - max_features=10
-    - min_samples_split=30
-    - min_samples_leaf=2
+    - learning_rate=0.096643
+    - max_features=7
+    - min_samples_split=3
+    - min_samples_leaf=1
 
 
 ## Part 2: Tuning a scikit-learn pipeline with `skopt`
@@ -184,14 +184,14 @@ print("""Best parameters:
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=2.9727
+    Best score=2.9352
     Best parameters:
-        - k=8
-        - max_depth=3
-        - learning_rate=0.092913
-        - max_features=5
-        - min_samples_split=23
-        - min_samples_leaf=5
+        - k=12
+        - max_depth=5
+        - learning_rate=0.096033
+        - max_features=10
+        - min_samples_split=17
+        - min_samples_leaf=3
 
 
 ## Convergence plot
