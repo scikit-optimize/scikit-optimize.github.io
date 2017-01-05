@@ -73,7 +73,7 @@ res_gp = gp_minimize(objective, space, x0=x0, n_calls=50, random_state=0, n_rand
 
 
 
-    'Best score=2.9049'
+    'Best score=2.8891'
 
 
 
@@ -91,9 +91,9 @@ print("""Best parameters:
 
     Best parameters:
     - max_depth=4
-    - learning_rate=0.096643
+    - learning_rate=0.100000
     - max_features=7
-    - min_samples_split=3
+    - min_samples_split=30
     - min_samples_leaf=1
 
 
@@ -184,14 +184,14 @@ print("""Best parameters:
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=3.0023
+    Best score=2.9448
     Best parameters:
-        - k=12
-        - max_depth=4
-        - learning_rate=0.099549
-        - max_features=12
-        - min_samples_split=6
-        - min_samples_leaf=4
+        - k=9
+        - max_depth=3
+        - learning_rate=0.100000
+        - max_features=9
+        - min_samples_split=30
+        - min_samples_leaf=1
 
 
 ## Convergence plot

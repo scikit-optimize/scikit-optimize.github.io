@@ -1119,7 +1119,7 @@ table {
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.base_minimize">
-    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
 
@@ -1173,22 +1173,21 @@ table {
 </ul>
 </li>
 <li>
-<p><code>acq_optimizer</code> [string, <code>"auto"</code>, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"auto"</code>]:
+<p><code>acq_optimizer</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"lbfgs"</code>]:
     Method to minimize the acquistion function. The fit model
     is updated with the optimal value obtained by optimizing <code>acq_func</code>
     with <code>acq_optimizer</code>.</p>
 <ul>
-<li>If set to <code>"sampling"</code>, then <code>acq_func</code> is optimized by computing
-  <code>acq_func</code> at <code>n_points</code> sampled randomly.</li>
-<li>If set to <code>"lbfgs"</code>, then <code>acq_func</code> is optimized by<ul>
-<li>Sampling <code>n_restarts_optimizer</code> points randomly.</li>
+<li>If set to <code>"sampling"</code>, then the point among these <code>n_points</code>
+  where the <code>acq_func</code> is minimum is the next candidate minimum.</li>
+<li>If set to <code>"lbfgs"</code>, then<ul>
+<li>The <code>n_restarts_optimizer</code> no. of points which the acquisition
+    function is least are taken as start points.</li>
 <li><code>"lbfgs"</code> is run for 20 iterations with these points as initial
     points to find local minima.</li>
 <li>The optimal of these local minima is used to update the prior.</li>
 </ul>
 </li>
-<li>If set to <code>"auto"</code>, then it is set to <code>"lbfgs"`` if
-  all the search dimensions are Real (continuous). It defaults to</code>"sampling"` for all other cases.</li>
 </ul>
 </li>
 <li>
@@ -1286,7 +1285,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.optimizer.base_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                   <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                   <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -1331,21 +1330,19 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `&quot;EI&quot;` for negative expected improvement,</span>
 <span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
 
-<span class="sd">    * `acq_optimizer` [string, `&quot;auto&quot;`, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
+<span class="sd">    * `acq_optimizer` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;lbfgs&quot;`]:</span>
 <span class="sd">        Method to minimize the acquistion function. The fit model</span>
 <span class="sd">        is updated with the optimal value obtained by optimizing `acq_func`</span>
 <span class="sd">        with `acq_optimizer`.</span>
 
-<span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
-<span class="sd">          `acq_func` at `n_points` sampled randomly.</span>
-<span class="sd">        - If set to `&quot;lbfgs&quot;`, then `acq_func` is optimized by</span>
-<span class="sd">              - Sampling `n_restarts_optimizer` points randomly.</span>
+<span class="sd">        - If set to `&quot;sampling&quot;`, then the point among these `n_points`</span>
+<span class="sd">          where the `acq_func` is minimum is the next candidate minimum.</span>
+<span class="sd">        - If set to `&quot;lbfgs&quot;`, then</span>
+<span class="sd">              - The `n_restarts_optimizer` no. of points which the acquisition</span>
+<span class="sd">                function is least are taken as start points.</span>
 <span class="sd">              - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
 <span class="sd">                points to find local minima.</span>
 <span class="sd">              - The optimal of these local minima is used to update the prior.</span>
-<span class="sd">        - If set to `&quot;auto&quot;`, then it is set to `&quot;lbfgs&quot;`` if</span>
-<span class="sd">          all the search dimensions are Real (continuous). It defaults to</span>
-<span class="sd">          `&quot;sampling&quot;` for all other cases.</span>
 
 <span class="sd">    * `x0` [list, list of lists or `None`]:</span>
 <span class="sd">        Initial input points.</span>
@@ -1510,10 +1507,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_real</span><span class="p">:</span>
-            <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;lbfgs&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The &#39;auto&#39; option for the acq_optimizer will be removed &quot;</span>
+                      <span class="s2">&quot;in 0.4&quot;</span><span class="p">)</span>
+        <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;lbfgs&quot;</span>
     <span class="k">elif</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39;, &#39;sampling&#39; or &#39;auto&#39;, &quot;</span>
@@ -1534,18 +1530,16 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
         <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
 
+        <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
+            <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
-                                          <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
-                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">gp</span><span class="p">,</span>  <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yi</span><span class="p">),</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
-                <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">)</span>
             <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
 
         <span class="k">elif</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
-            <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-            <span class="n">x0</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
-                                           <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
 
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
@@ -1559,11 +1553,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
             <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
             <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
-            <span class="n">best_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">cand_acqs</span><span class="p">[</span><span class="n">best_ind</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
-                <span class="n">next_x</span><span class="p">,</span> <span class="n">best</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">best_ind</span><span class="p">],</span> <span class="n">a</span>
+            <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
 
         <span class="c1"># lbfgs should handle this but just in case there are precision errors.</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
@@ -1837,7 +1827,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;ET&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;ET&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
 
@@ -1948,7 +1938,7 @@ making predictions.</p>
     If provided, then <code>callback(res)</code> is called after call to func.</p>
 </li>
 <li>
-<p><code>n_points</code> [int, default=1000]:
+<p><code>n_points</code> [int, default=10000]:
     Number of points to sample when minimizing the acquisition function.</p>
 </li>
 <li>
@@ -1996,7 +1986,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                     <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
@@ -2091,7 +2081,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `callback` [callable, optional]</span>
 <span class="sd">        If provided, then `callback(res)` is called after call to func.</span>
 
-<span class="sd">    * `n_points` [int, default=1000]:</span>
+<span class="sd">    * `n_points` [int, default=10000]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
 
 <span class="sd">    * `xi` [float, default=0.01]:</span>
@@ -2164,7 +2154,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=1000, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1)</p>
     </div>
     
 
@@ -2264,7 +2254,7 @@ guided by the surrogate model.</p>
     If provided, then <code>callback(res)</code> is called after call to func.</p>
 </li>
 <li>
-<p><code>n_points</code> [int, default=1000]:
+<p><code>n_points</code> [int, default=10000]:
     Number of points to sample when minimizing the acquisition function.</p>
 </li>
 <li>
@@ -2314,7 +2304,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                  <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                  <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -2396,7 +2386,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    * `callback` [callable, optional]</span>
 <span class="sd">        If provided, then `callback(res)` is called after call to func.</span>
 
-<span class="sd">    * `n_points` [int, default=1000]:</span>
+<span class="sd">    * `n_points` [int, default=10000]:</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
 
 <span class="sd">    * `xi` [float, default=0.01]:</span>
@@ -2459,7 +2449,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
     </div>
     
 
@@ -2539,23 +2529,19 @@ guided by the surrogate model.</p>
 </ul>
 </li>
 <li>
-<p><code>acq_optimizer</code> [string, <code>"auto"</code>, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"auto"</code>]:
+<p><code>acq_optimizer</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"lbfgs"</code>]:
     Method to minimize the acquistion function. The fit model
     is updated with the optimal value obtained by optimizing <code>acq_func</code>
     with <code>acq_optimizer</code>.</p>
-<ul>
-<li>If set to <code>"sampling"</code>, then <code>acq_func</code> is optimized by computing
-  <code>acq_func</code> at <code>n_points</code> sampled randomly.</li>
-<li>If set to <code>"lbfgs"</code>, then <code>acq_func</code> is optimized by<ul>
-<li>Sampling <code>n_restarts_optimizer</code> points randomly.</li>
-<li><code>"lbfgs"</code> is run for 20 iterations with these points as initial
-    points to find local minima.</li>
-<li>The optimal of these local minima is used to update the prior.</li>
-</ul>
-</li>
-<li>If set to <code>"auto"</code>, then it is set to <code>"lbfgs"`` if
-  all the search dimensions are Real (continuous). It defaults to</code>"sampling"` for all other cases.</li>
-</ul>
+<p>The <code>acq_func</code> is computed at <code>n_points</code> sampled randomly.
+- If set to <code>"sampling"</code>, then the point among these <code>n_points</code>
+  where the <code>acq_func</code> is minimum is the next candidate minimum.
+- If set to <code>"lbfgs"</code>, then
+      - The <code>n_restarts_optimizer</code> no. of points which the acquisition
+        function is least are taken as start points.
+      - <code>"lbfgs"</code> is run for 20 iterations with these points as initial
+        points to find local minima.
+      - The optimal of these local minima is used to update the prior.</p>
 </li>
 <li>
 <p><code>x0</code> [list, list of lists or <code>None</code>]:
@@ -2595,7 +2581,7 @@ guided by the surrogate model.</p>
     If list of callables, then each callable in the list is called.</p>
 </li>
 <li>
-<p><code>n_points</code> [int, default=500]:
+<p><code>n_points</code> [int, default=10000]:
     Number of points to sample to determine the next "best" point.
     Useless if acq_optimizer is set to <code>"lbfgs"</code>.</p>
 </li>
@@ -2664,7 +2650,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.optimizer.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                 <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -2736,21 +2722,20 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `&quot;EI&quot;` for negative expected improvement.</span>
 <span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
 
-<span class="sd">    * `acq_optimizer` [string, `&quot;auto&quot;`, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`]:</span>
+<span class="sd">    * `acq_optimizer` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;lbfgs&quot;`]:</span>
 <span class="sd">        Method to minimize the acquistion function. The fit model</span>
 <span class="sd">        is updated with the optimal value obtained by optimizing `acq_func`</span>
 <span class="sd">        with `acq_optimizer`.</span>
 
-<span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
-<span class="sd">          `acq_func` at `n_points` sampled randomly.</span>
-<span class="sd">        - If set to `&quot;lbfgs&quot;`, then `acq_func` is optimized by</span>
-<span class="sd">              - Sampling `n_restarts_optimizer` points randomly.</span>
+<span class="sd">        The `acq_func` is computed at `n_points` sampled randomly.</span>
+<span class="sd">        - If set to `&quot;sampling&quot;`, then the point among these `n_points`</span>
+<span class="sd">          where the `acq_func` is minimum is the next candidate minimum.</span>
+<span class="sd">        - If set to `&quot;lbfgs&quot;`, then</span>
+<span class="sd">              - The `n_restarts_optimizer` no. of points which the acquisition</span>
+<span class="sd">                function is least are taken as start points.</span>
 <span class="sd">              - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
 <span class="sd">                points to find local minima.</span>
 <span class="sd">              - The optimal of these local minima is used to update the prior.</span>
-<span class="sd">        - If set to `&quot;auto&quot;`, then it is set to `&quot;lbfgs&quot;`` if</span>
-<span class="sd">          all the search dimensions are Real (continuous). It defaults to</span>
-<span class="sd">          `&quot;sampling&quot;` for all other cases.</span>
 
 <span class="sd">    * `x0` [list, list of lists or `None`]:</span>
 <span class="sd">        Initial input points.</span>
@@ -2782,7 +2767,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
 <span class="sd">        If list of callables, then each callable in the list is called.</span>
 
-<span class="sd">    * `n_points` [int, default=500]:</span>
+<span class="sd">    * `n_points` [int, default=10000]:</span>
 <span class="sd">        Number of points to sample to determine the next &quot;best&quot; point.</span>
 <span class="sd">        Useless if acq_optimizer is set to `&quot;lbfgs&quot;`.</span>
 
@@ -2854,7 +2839,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
             <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">matern</span><span class="p">,</span>
-            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
         <span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
