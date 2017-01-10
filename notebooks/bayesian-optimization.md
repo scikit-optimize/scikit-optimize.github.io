@@ -38,9 +38,9 @@ For $t=1:T$:
 
 Acquisition functions $\text{u}(x)$ specify which sample $x$ should be tried next:
 
+- Expected improvement (default): $-\text{EI}(x) = -\mathbb{E} [f(x) - f(x_t^+)] $;
 - Lower confidence bound: $\text{LCB}(x) = \mu_{GP}(x) + \kappa \sigma_{GP}(x)$;
 - Probability of improvement: $-\text{PI}(x) = -P(f(x) \geq f(x_t^+) + \kappa) $;
-- Expected improvement: $-\text{EI}(x) = -\mathbb{E} [f(x) - f(x_t^+)] $;
 
 where $x_t^+$ is the best point observed so far.
 
@@ -87,18 +87,13 @@ Bayesian optimization based on gaussian process regression is implemented in `sk
 
 ```python
 from skopt import gp_minimize
-from skopt.acquisition import gaussian_lcb
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import Matern
 
 res = gp_minimize(f,                  # the function to minimize
                   [(-2.0, 2.0)],      # the bounds on each dimension of x
-                  x0=[0.],            # the starting point
-                  acq_func="LCB",     # the acquisition function (optional)
-                  n_calls=15,         # the number of evaluations of f including at x0
-                  n_random_starts=0,  # the number of random initialization points
-                  random_state=777,
-                  noise=0.1**2)
+                  n_calls=15,         # the number of evaluations of f 
+                  n_random_starts=5,  # the number of random initialization points
+                  noise=0.1**2,       # the noise level (optional)
+                  random_state=123)   # the random seed
 ```
 
 Accordingly, the approximated minimum is found to be:
@@ -111,7 +106,7 @@ Accordingly, the approximated minimum is found to be:
 
 
 
-    'x^*=-1.9519, f(x^*)=-0.0976'
+    'x^*=-0.2822, f(x^*)=-0.9367'
 
 
 
@@ -128,89 +123,63 @@ For further inspection of the results, attributes of the `res` named tuple provi
 
 
 ```python
-for key, value in sorted(res.items()):
-    print(key, "=", value)
-    print()
+print(res)
 ```
 
-    fun = -0.0975743363057
-    
-    func_vals = [ 0.22468304  0.05499527 -0.09757434 -0.09184212  0.00170117  0.02089359
-      0.09730396  0.12126918  0.11863174 -0.08165902 -0.01881382  0.20085126
-     -0.02762003 -0.03463269  0.05754133]
-    
-    models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+              fun: -0.93670035163142562
+        func_vals: array([-0.09466083,  0.39544565,  0.02514932,  0.72729686, -0.33257737,
+           -0.20867547,  0.08901042,  0.12009287,  0.11790199, -0.39257419,
+           -0.01614767, -0.65937816, -0.93670035, -0.8804359 , -0.82409141])
+           models: [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bcd9c2fc0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d168>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3360>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d5a0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3510>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d288>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3168>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d510>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3558>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d3a8>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c35a0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d480>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c31b0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d558>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3630>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d3f0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3678>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d360>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c36c0>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3708>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3750>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c3798>), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bce3c37e0>)]
-    
-    random_state = <mtrand.RandomState object at 0x7f7bcd9c2f30>
-    
-    space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
-    
-    specs = {'args': {'x0': [0.0], 'random_state': 777, 'verbose': False, 'y0': None, 'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d2d0>)]
+     random_state: <mtrand.RandomState object at 0x7efc0bc3d1f8>
+            space: Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
+            specs: {'args': {'base_estimator': GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=<mtrand.RandomState object at 0x7f7bcd9c2ee8>), 'xi': 0.01, 'n_calls': 15, 'kappa': 1.96, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'n_jobs': 1, 'callback': None, 'acq_optimizer': 'lbfgs', 'acq_func': 'LCB', 'n_random_starts': 0, 'n_restarts_optimizer': 5, 'n_points': 10000, 'func': <function f at 0x7f7bda675a60>}, 'function': 'base_minimize'}
-    
-    x = [-1.9518566270799287]
-    
-    x_iters = [[0.0], [-2.0], [-1.9518566270799287], [-1.9224724437589771], [-1.8672330525710128], [2.0], [-1.291215647428805], [1.3495724025409817], [-2.0], [-1.9161783967599357], [-1.7624132570127446], [-2.0], [-1.9342999468530875], [-1.6993415324999108], [-1.6370680436079659]]
-    
+                 random_state=<mtrand.RandomState object at 0x7efc0bc3d120>), 'x0': None, 'n_restarts_optimizer': 5, 'random_state': 123, 'y0': None, 'acq_func': 'EI', 'xi': 0.01, 'dimensions': [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], 'kappa': 1.96, 'n_calls': 15, 'acq_optimizer': 'lbfgs', 'verbose': False, 'func': <function f at 0x7efc17effa60>, 'n_jobs': 1, 'n_points': 10000, 'callback': None, 'n_random_starts': 5}, 'function': 'base_minimize'}
+                x: [-0.2822136540337663]
+          x_iters: [[0.78587674239144656], [-0.85544266019848214], [-1.0925941857431876], [0.20525907633156493], [0.87787587914225229], [0.99884404472542521], [-1.50563519899507], [1.3397735169808027], [2.0], [0.91760635946062452], [-2.0], [-0.3528029670101176], [-0.2822136540337663], [-0.22151488833405852], [-0.2507343063515064]]
 
 
 Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:
@@ -225,48 +194,34 @@ plot_convergence(res);
 ![png](bayesian-optimization_files/bayesian-optimization_16_0.png)
 
 
-Let us visually examine
+Let us now visually examine
 
 1. The approximation of the fit gp model to the original function.
-2. The acquistion values (The lower confidence bound) that determine the next point to be queried.
-
-At the points closer to the points previously evaluated at, the variance dips to zero.
-
-The first column shows the following:
-1. The true function.
-2. The approximation to the original function by the gaussian process model
-3. How sure the GP is about the function.
-
-The second column shows the acquisition function values after every surrogate model is fit. It is possible that we do not choose the global minimum but a local minimum depending on the minimizer used to minimize the acquisition function.
+2. The acquistion values that determine the next point to be queried.
 
 
 ```python
-plt.rcParams["figure.figsize"] = (6, 10)
+from skopt.acquisition import gaussian_ei
+
+plt.rcParams["figure.figsize"] = (8, 14)
 
 x = np.linspace(-2, 2, 400).reshape(-1, 1)
 x_gp = res.space.transform(x.tolist())
-
 fx = np.array([f(x_i, noise_level=0.0) for x_i in x])
 
-# Plot first five iterations.
+# Plot the 5 iterations following the 5 random points
 for n_iter in range(5):
     gp = res.models[n_iter]
-    curr_x_iters = res.x_iters[: n_iter+1]
-    curr_func_vals = res.func_vals[: n_iter+1]
+    curr_x_iters = res.x_iters[:5+n_iter]
+    curr_func_vals = res.func_vals[:5+n_iter]
 
     # Plot true function.
     plt.subplot(5, 2, 2*n_iter+1)
     plt.plot(x, fx, "r--", label="True (unknown)")
     plt.fill(np.concatenate([x, x[::-1]]),
-             np.concatenate([fx - 1.9600 * noise_level, fx[::-1] + 1.9600 * noise_level]),
+             np.concatenate([fx - 1.9600 * noise_level, 
+                             fx[::-1] + 1.9600 * noise_level]),
              alpha=.2, fc="r", ec="None")
-    if n_iter != 4:
-        plt.tick_params(
-            axis='x',          # changes apply to the x-axis
-            which='both',      # both major and minor ticks are affected
-            bottom='off',      # ticks along the bottom edge are off
-            top='off',         # ticks along the top edge are off
-            labelbottom='off') # labels along the bottom edge are off
 
     # Plot GP(x) + contours
     y_pred, sigma = gp.predict(x_gp, return_std=True)
@@ -279,34 +234,38 @@ for n_iter in range(5):
     # Plot sampled points
     plt.plot(curr_x_iters, curr_func_vals,
              "r.", markersize=8, label="Observations")
-    plt.title(r"$x_{%d} = %.4f, f(x_{%d}) = %.4f$" % (
-              n_iter, res.x_iters[n_iter][0], n_iter, res.func_vals[n_iter]))
+    
+    # Adjust plot layout
     plt.grid()
 
     if n_iter == 0:
         plt.legend(loc="best", prop={'size': 6}, numpoints=1)
-
-    plt.subplot(5, 2, 2*n_iter+2)
-    acq = gaussian_lcb(x_gp, gp)
-    plt.plot(x, acq, "b", label="LCB(x)")
+        
     if n_iter != 4:
-        plt.tick_params(
-            axis='x',          # changes apply to the x-axis
-            which='both',      # both major and minor ticks are affected
-            bottom='off',      # ticks along the bottom edge are off
-            top='off',         # ticks along the top edge are off
-            labelbottom='off') # labels along the bottom edge are off
-    plt.fill_between(x.ravel(), -2.0, acq.ravel(), alpha=0.3, color='blue')
+        plt.tick_params(axis='x', which='both', bottom='off', 
+                        top='off', labelbottom='off') 
 
-    next_x = res.x_iters[n_iter + 1]
-    next_acq = gaussian_lcb(res.space.transform([next_x]), gp)
+    # Plot EI(x)
+    plt.subplot(5, 2, 2*n_iter+2)
+    acq = gaussian_ei(x_gp, gp, y_opt=np.min(curr_func_vals))
+    plt.plot(x, acq, "b", label="EI(x)")
+    plt.fill_between(x.ravel(), -2.0, acq.ravel(), alpha=0.3, color='blue')
+    
+    next_x = res.x_iters[5+n_iter]
+    next_acq = gaussian_ei(res.space.transform([next_x]), gp, y_opt=np.min(curr_func_vals))
     plt.plot(next_x, next_acq, "bo", markersize=6, label="Next query point")
+    
+    # Adjust plot layout
+    plt.ylim(0, 0.1)
     plt.grid()
     
     if n_iter == 0:
         plt.legend(loc="best", prop={'size': 6}, numpoints=1)
+        
+    if n_iter != 4:
+        plt.tick_params(axis='x', which='both', bottom='off', 
+                        top='off', labelbottom='off') 
 
-plt.suptitle("Sequential model-based minimization using gp_minimize.", fontsize=10)
 plt.show()
 ```
 
@@ -314,7 +273,17 @@ plt.show()
 ![png](bayesian-optimization_files/bayesian-optimization_18_0.png)
 
 
-Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are clustered around the minimum because the GP does not gain anything more by further exploration.
+The first column shows the following:
+
+1. The true function.
+2. The approximation to the original function by the gaussian process model
+3. How sure the GP is about the function.
+
+The second column shows the acquisition function values after every surrogate model is fit. It is possible that we do not choose the global minimum but a local minimum depending on the minimizer used to minimize the acquisition function.
+
+At the points closer to the points previously evaluated at, the variance dips to zero. 
+
+Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are clustered around the minimum because the GP does not gain anything more by further exploration:
 
 
 ```python
@@ -331,10 +300,8 @@ plt.fill(np.concatenate([x, x[::-1]]),
                          [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
          alpha=.2, fc="r", ec="None")
 
-# Plot GP(x) + concours
+# Plot GP(x) + contours
 gp = res.models[-1]
-
-
 y_pred, sigma = gp.predict(x_gp, return_std=True)
 
 plt.plot(x, y_pred, "g--", label=r"$\mu_{GP}(x)$")
@@ -348,12 +315,6 @@ plt.plot(res.x_iters,
          res.func_vals, 
          "r.", markersize=15, label="Observations")
 
-# Plot LCB(x) + next query point
-acq = gaussian_lcb(x_gp, gp)
-plt.plot(x, acq, "b", label="LCB(x)")
-next_x = np.argmin(acq)
-plt.plot([x[next_x]], [acq[next_x]], "b.", markersize=15, label="Next query point")
-
 plt.title(r"$x^* = %.4f, f(x^*) = %.4f$" % (res.x[0], res.fun))
 plt.legend(loc="best", prop={'size': 8}, numpoints=1)
 plt.grid()
@@ -362,5 +323,5 @@ plt.show()
 ```
 
 
-![png](bayesian-optimization_files/bayesian-optimization_20_0.png)
+![png](bayesian-optimization_files/bayesian-optimization_21_0.png)
 
