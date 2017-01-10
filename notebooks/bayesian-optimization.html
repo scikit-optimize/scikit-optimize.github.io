@@ -1131,9 +1131,9 @@ table {
 <h2>Acquisition functions</h2>
 <p>Acquisition functions $\text{u}(x)$ specify which sample $x$ should be tried next:</p>
 <ul>
-<li>Expected improvement (default): $-\text{EI}(x) = -\mathbb{E} [f(x) - f(x_t^+)] $;</li>
 <li>Lower confidence bound: $\text{LCB}(x) = \mu_{GP}(x) + \kappa \sigma_{GP}(x)$;</li>
 <li>Probability of improvement: $-\text{PI}(x) = -P(f(x) \geq f(x_t^+) + \kappa) $;</li>
+<li>Expected improvement: $-\text{EI}(x) = -\mathbb{E} [f(x) - f(x_t^+)] $;</li>
 </ul>
 <p>where $x_t^+$ is the best point observed so far.</p>
 <p>In most cases, acquisition functions provide knobs (e.g., $\kappa$) for
@@ -1167,13 +1167,18 @@ controlling the exploration-exploitation trade-off.
 <p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_8_0.png" /></p>
 <p>Bayesian optimization based on gaussian process regression is implemented in <code>skopt.gp_minimize</code> and can be carried out as follows:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
+<span class="kn">from</span> <span class="nn">skopt.acquisition</span> <span class="kn">import</span> <span class="n">gaussian_lcb</span>
+<span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Matern</span>
 
 <span class="n">res</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span>                  <span class="c1"># the function to minimize</span>
                   <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
-                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f </span>
-                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
-                  <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>       <span class="c1"># the noise level (optional)</span>
-                  <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>   <span class="c1"># the random seed</span>
+                  <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>            <span class="c1"># the starting point</span>
+                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
+                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f including at x0</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">,</span>
+                  <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
 
@@ -1182,7 +1187,7 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;x^*=-0.2822, f(x^*)=-0.9367&#39;
+<div class="codehilite"><pre><span></span>&#39;x^*=-1.9519, f(x^*)=-0.0976&#39;
 </pre></div>
 
 
@@ -1197,64 +1202,89 @@ controlling the exploration-exploitation trade-off.
 <li><code>space</code> [Space]: the optimization space.</li>
 <li><code>specs</code> [dict]: parameters passed to the function.</li>
 </ul>
-<div class="codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>          fun: -0.93670035163142562
-    func_vals: array([-0.09466083,  0.39544565,  0.02514932,  0.72729686, -0.33257737,
-       -0.20867547,  0.08901042,  0.12009287,  0.11790199, -0.39257419,
-       -0.01614767, -0.65937816, -0.93670035, -0.8804359 , -0.82409141])
-       models: [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+<div class="codehilite"><pre><span></span>fun = -0.0975743363057
+
+func_vals = [ 0.22468304  0.05499527 -0.09757434 -0.09184212  0.00170117  0.02089359
+  0.09730396  0.12126918  0.11863174 -0.08165902 -0.01881382  0.20085126
+ -0.02762003 -0.03463269  0.05754133]
+
+models = [GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d168&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea1f8&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d5a0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea5a0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d288&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea1b0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d510&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea2d0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d3a8&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea3a8&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d480&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea5e8&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d558&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea510&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d3f0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea678&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d360&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea6c0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d2d0&gt;)]
- random_state: &lt;mtrand.RandomState object at 0x7efc0bc3d1f8&gt;
-        space: Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
-        specs: {&#39;args&#39;: {&#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea288&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+             n_restarts_optimizer=2, noise=0.010000000000000002,
+             normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea750&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+             n_restarts_optimizer=2, noise=0.010000000000000002,
+             normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea798&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+             n_restarts_optimizer=2, noise=0.010000000000000002,
+             normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea7e0&gt;), GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
+             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+             n_restarts_optimizer=2, noise=0.010000000000000002,
+             normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea828&gt;)]
+
+random_state = &lt;mtrand.RandomState object at 0x7f19f9fea168&gt;
+
+space = Space([Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)])
+
+specs = {&#39;args&#39;: {&#39;x0&#39;: [0.0], &#39;n_calls&#39;: 15, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;func&#39;: &lt;function f at 0x7f1a062b0a60&gt;, &#39;n_random_starts&#39;: 0, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;n_jobs&#39;: 1, &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=0.0, copy_X_train=True,
              kernel=1**2 * Matern(length_scale=1, nu=2.5),
              n_restarts_optimizer=2, noise=0.010000000000000002,
              normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-             random_state=&lt;mtrand.RandomState object at 0x7efc0bc3d120&gt;), &#39;x0&#39;: None, &#39;n_restarts_optimizer&#39;: 5, &#39;random_state&#39;: 123, &#39;y0&#39;: None, &#39;acq_func&#39;: &#39;EI&#39;, &#39;xi&#39;: 0.01, &#39;dimensions&#39;: [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], &#39;kappa&#39;: 1.96, &#39;n_calls&#39;: 15, &#39;acq_optimizer&#39;: &#39;lbfgs&#39;, &#39;verbose&#39;: False, &#39;func&#39;: &lt;function f at 0x7efc17effa60&gt;, &#39;n_jobs&#39;: 1, &#39;n_points&#39;: 10000, &#39;callback&#39;: None, &#39;n_random_starts&#39;: 5}, &#39;function&#39;: &#39;base_minimize&#39;}
-            x: [-0.2822136540337663]
-      x_iters: [[0.78587674239144656], [-0.85544266019848214], [-1.0925941857431876], [0.20525907633156493], [0.87787587914225229], [0.99884404472542521], [-1.50563519899507], [1.3397735169808027], [2.0], [0.91760635946062452], [-2.0], [-0.3528029670101176], [-0.2822136540337663], [-0.22151488833405852], [-0.2507343063515064]]
+             random_state=&lt;mtrand.RandomState object at 0x7f19f9fea120&gt;), &#39;n_points&#39;: 10000, &#39;random_state&#39;: 777, &#39;verbose&#39;: False, &#39;n_restarts_optimizer&#39;: 5, &#39;dimensions&#39;: [Real(low=-2.0, high=2.0, prior=uniform, transform=normalize)], &#39;y0&#39;: None, &#39;callback&#39;: None, &#39;acq_optimizer&#39;: &#39;lbfgs&#39;}, &#39;function&#39;: &#39;base_minimize&#39;}
+
+x = [-1.9518566270799287]
+
+x_iters = [[0.0], [-2.0], [-1.9518566270799287], [-1.9224724437589771], [-1.8672330525710128], [2.0], [-1.291215647428805], [1.3495724025409817], [-2.0], [-1.9161783967599357], [-1.7624132570127446], [-2.0], [-1.9342999468530875], [-1.6993415324999108], [-1.6370680436079659]]
 </pre></div>
 
 
@@ -1265,32 +1295,43 @@ controlling the exploration-exploitation trade-off.
 
 
 <p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_16_0.png" /></p>
-<p>Let us now visually examine</p>
+<p>Let us visually examine</p>
 <ol>
 <li>The approximation of the fit gp model to the original function.</li>
-<li>The acquistion values that determine the next point to be queried.</li>
+<li>The acquistion values (The lower confidence bound) that determine the next point to be queried.</li>
 </ol>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.acquisition</span> <span class="kn">import</span> <span class="n">gaussian_ei</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<p>At the points closer to the points previously evaluated at, the variance dips to zero.</p>
+<p>The first column shows the following:
+1. The true function.
+2. The approximation to the original function by the gaussian process model
+3. How sure the GP is about the function.</p>
+<p>The second column shows the acquisition function values after every surrogate model is fit. It is possible that we do not choose the global minimum but a local minimum depending on the minimizer used to minimize the acquisition function.</p>
+<div class="codehilite"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">x_gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
 <span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
 
-<span class="c1"># Plot the 5 iterations following the 5 random points</span>
+<span class="c1"># Plot first five iterations.</span>
 <span class="k">for</span> <span class="n">n_iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">n_iter</span><span class="p">]</span>
-    <span class="n">curr_x_iters</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[:</span><span class="mi">5</span><span class="o">+</span><span class="n">n_iter</span><span class="p">]</span>
-    <span class="n">curr_func_vals</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="mi">5</span><span class="o">+</span><span class="n">n_iter</span><span class="p">]</span>
+    <span class="n">curr_x_iters</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[:</span> <span class="n">n_iter</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">curr_func_vals</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span> <span class="n">n_iter</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="c1"># Plot true function.</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_iter</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-             <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">fx</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span><span class="p">,</span> 
-                             <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span><span class="p">]),</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">fx</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span><span class="p">]),</span>
              <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_iter</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>          <span class="c1"># changes apply to the x-axis</span>
+            <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>      <span class="c1"># both major and minor ticks are affected</span>
+            <span class="n">bottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>      <span class="c1"># ticks along the bottom edge are off</span>
+            <span class="n">top</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>         <span class="c1"># ticks along the top edge are off</span>
+            <span class="n">labelbottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> <span class="c1"># labels along the bottom edge are off</span>
 
     <span class="c1"># Plot GP(x) + contours</span>
     <span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_gp</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -1303,52 +1344,40 @@ controlling the exploration-exploitation trade-off.
     <span class="c1"># Plot sampled points</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">curr_x_iters</span><span class="p">,</span> <span class="n">curr_func_vals</span><span class="p">,</span>
              <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Adjust plot layout</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x_{</span><span class="si">%d</span><span class="s2">} = </span><span class="si">%.4f</span><span class="s2">, f(x_{</span><span class="si">%d</span><span class="s2">}) = </span><span class="si">%.4f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span>
+              <span class="n">n_iter</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="n">n_iter</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[</span><span class="n">n_iter</span><span class="p">]))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">n_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">n_iter</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> 
-                        <span class="n">top</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> 
-
-    <span class="c1"># Plot EI(x)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_iter</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_ei</span><span class="p">(</span><span class="n">x_gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">curr_func_vals</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;EI(x)&quot;</span><span class="p">)</span>
+    <span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x_gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;LCB(x)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_iter</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>          <span class="c1"># changes apply to the x-axis</span>
+            <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>      <span class="c1"># both major and minor ticks are affected</span>
+            <span class="n">bottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>      <span class="c1"># ticks along the bottom edge are off</span>
+            <span class="n">top</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>         <span class="c1"># ticks along the top edge are off</span>
+            <span class="n">labelbottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> <span class="c1"># labels along the bottom edge are off</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">acq</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 
-    <span class="n">next_x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="mi">5</span><span class="o">+</span><span class="n">n_iter</span><span class="p">]</span>
-    <span class="n">next_acq</span> <span class="o">=</span> <span class="n">gaussian_ei</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">next_x</span><span class="p">]),</span> <span class="n">gp</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">curr_func_vals</span><span class="p">))</span>
+    <span class="n">next_x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="n">n_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">next_acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">next_x</span><span class="p">]),</span> <span class="n">gp</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">next_acq</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Adjust plot layout</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">n_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">n_iter</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> 
-                        <span class="n">top</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> 
-
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Sequential model-based minimization using gp_minimize.&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
 <p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_18_0.png" /></p>
-<p>The first column shows the following:</p>
-<ol>
-<li>The true function.</li>
-<li>The approximation to the original function by the gaussian process model</li>
-<li>How sure the GP is about the function.</li>
-</ol>
-<p>The second column shows the acquisition function values after every surrogate model is fit. It is possible that we do not choose the global minimum but a local minimum depending on the minimizer used to minimize the acquisition function.</p>
-<p>At the points closer to the points previously evaluated at, the variance dips to zero. </p>
-<p>Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are clustered around the minimum because the GP does not gain anything more by further exploration:</p>
+<p>Finally, as we increase the number of points, the GP model approaches the actual function. The final few points are clustered around the minimum because the GP does not gain anything more by further exploration.</p>
 <div class="codehilite"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="c1"># Plot f(x) + contours</span>
@@ -1362,8 +1391,10 @@ controlling the exploration-exploitation trade-off.
                          <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span> <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
          <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
 
-<span class="c1"># Plot GP(x) + contours</span>
+<span class="c1"># Plot GP(x) + concours</span>
 <span class="n">gp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
 <span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_gp</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">r&quot;$\mu_{GP}(x)$&quot;</span><span class="p">)</span>
@@ -1377,6 +1408,12 @@ controlling the exploration-exploitation trade-off.
          <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">,</span> 
          <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
 
+<span class="c1"># Plot LCB(x) + next query point</span>
+<span class="n">acq</span> <span class="o">=</span> <span class="n">gaussian_lcb</span><span class="p">(</span><span class="n">x_gp</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;LCB(x)&quot;</span><span class="p">)</span>
+<span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="p">[</span><span class="n">acq</span><span class="p">[</span><span class="n">next_x</span><span class="p">]],</span> <span class="s2">&quot;b.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">r&quot;$x^* = </span><span class="si">%.4f</span><span class="s2">, f(x^*) = </span><span class="si">%.4f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
@@ -1385,7 +1422,7 @@ controlling the exploration-exploitation trade-off.
 </pre></div>
 
 
-<p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_21_0.png" /></p>
+<p><img alt="png" src="bayesian-optimization_files/bayesian-optimization_20_0.png" /></p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">

@@ -184,13 +184,13 @@ print("""Best parameters:
                                 pipe_res_gp.x[4], pipe_res_gp.x[5]))
 ```
 
-    Best score=2.9062
+    Best score=2.8704
     Best parameters:
         - k=13
         - max_depth=5
         - learning_rate=0.100000
         - max_features=7
-        - min_samples_split=2
+        - min_samples_split=30
         - min_samples_leaf=1
 
 
