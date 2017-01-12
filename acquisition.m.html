@@ -1100,20 +1100,20 @@ table {
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                            <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
+                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
 <span class="sd">    This is because lbfgs allows only 1-D input.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span>
+                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
                                  <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_gaussian_acquisition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
-                          <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                          <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper so that the output of this function can be</span>
 <span class="sd">    directly passed to a minimizer.</span>
@@ -1122,6 +1122,11 @@ table {
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X should be 2-dimensional.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;xi&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kappa&quot;</span><span class="p">,</span> <span class="mf">1.96</span><span class="p">)</span>
 
     <span class="c1"># Evaluate acquisition function</span>
     <span class="k">if</span> <span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;LCB&quot;</span><span class="p">:</span>
@@ -1368,7 +1373,7 @@ table {
       
   <div class="item">
     <div class="name def" id="skopt.acquisition.gaussian_acquisition_1D">
-    <p>def <span class="ident">gaussian_acquisition_1D</span>(</p><p>X, model, y_opt=None, acq_func=&#39;LCB&#39;, xi=0.01, kappa=1.96)</p>
+    <p>def <span class="ident">gaussian_acquisition_1D</span>(</p><p>X, model, y_opt=None, acq_func=&#39;LCB&#39;, acq_func_kwargs=None)</p>
     </div>
     
 
@@ -1379,15 +1384,15 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_acquisition_1D', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_acquisition_1D" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                            <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
+                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
 <span class="sd">    This is because lbfgs allows only 1-D input.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span>
+                                 <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
                                  <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
