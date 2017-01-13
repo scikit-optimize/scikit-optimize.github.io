@@ -44,6 +44,32 @@ res = gp_minimize(obj_fun,            # the function to minimize
                   random_state=777)
 ```
 
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:174: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated at this point before.")
+
+
 As long as your Python session is active, you can access all the optimization results via the `res` object.
 
 So how can you store this data in a file? `skopt` conveniently provides functions `skopt.dump()` and `skopt.load()` that handle this for you. These functions are essentially thin wrappers around the [`joblib`](http://pythonhosted.org/joblib) module's `dump()` and `load()`.
@@ -90,8 +116,8 @@ print('Without compression: {} bytes'.format(getsize('result.pkl')))
 print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
-    Without compression: 77655 bytes
-    Compressed with gz:  20958 bytes
+    Without compression: 77685 bytes
+    Compressed with gz:  21092 bytes
 
 
 ### Unserializable objective functions
@@ -114,8 +140,8 @@ print('Loaded object: ', res_loaded_without_objective.specs['args'].keys())
 print('Local variable:', res.specs['args'].keys())
 ```
 
-    Loaded object:  dict_keys(['xi', 'x0', 'random_state', 'kappa', 'verbose', 'n_random_starts', 'base_estimator', 'callback', 'y0', 'n_points', 'n_calls', 'acq_optimizer', 'n_jobs', 'dimensions', 'acq_func', 'n_restarts_optimizer'])
-    Local variable: dict_keys(['xi', 'random_state', 'x0', 'func', 'n_points', 'n_calls', 'kappa', 'acq_optimizer', 'n_random_starts', 'callback', 'verbose', 'base_estimator', 'y0', 'n_jobs', 'dimensions', 'acq_func', 'n_restarts_optimizer'])
+    Loaded object:  dict_keys(['n_calls', 'xi', 'callback', 'verbose', 'dimensions', 'n_points', 'kappa', 'acq_func', 'n_restarts_optimizer', 'n_random_starts', 'acq_optimizer', 'x0', 'base_estimator', 'y0', 'n_jobs', 'random_state'])
+    Local variable: dict_keys(['xi', 'acq_func', 'n_points', 'kappa', 'n_restarts_optimizer', 'n_random_starts', 'x0', 'y0', 'callback', 'n_calls', 'verbose', 'n_jobs', 'dimensions', 'random_state', 'acq_optimizer', 'base_estimator', 'func'])
 
 
 ## Possible problems
