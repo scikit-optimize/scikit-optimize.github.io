@@ -1106,19 +1106,19 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f03a8170208&gt;
+<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f72f86b32e8&gt;
 </pre></div>
 
 
 <p>Bayesian optimization or sequential model-based optimization uses a surrogate model
 to model the expensive to evaluate function <code>func</code>. There are several choices
-for what kind of surrogate model to use. This example compares the performance of:</p>
+for what kind of surrogate model to use. This notebook compares the performance of:</p>
 <ul>
 <li>gaussian processes,</li>
 <li>extra trees, and</li>
 <li>random forests </li>
 </ul>
-<p>as surrogate models. A purely random optimization strategy is used as a baseline.</p>
+<p>as surrogate models. A purely random optimization strategy is also used as a baseline.</p>
 <h1>Toy model</h1>
 <p>We will use the <code>branin</code> function as toy model for the expensive function. In
 a real world application this function would be unknown and expensive to evaluate.</p>
@@ -1165,7 +1165,7 @@ a real world application this function would be unknown and expensive to evaluat
 <p>This shows the value of the two-dimensional branin function and the three minima.</p>
 <h1>Objective</h1>
 <p>The objective of this example is to find one of these minima in as few iterations
-as possible. One iteration is defined as one call to the branin function.</p>
+as possible. One iteration is defined as one call to the <code>branin</code> function.</p>
 <p>We will evaluate each model several times using a different seed for the
 random number generator. Then compare the average performance of these
 models. This makes the comparison more robust against models that get
@@ -1175,13 +1175,12 @@ models. This makes the comparison more robust against models that get
 
 <span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">]</span>
 <span class="n">n_calls</span> <span class="o">=</span> <span class="mi">80</span>
 </pre></div>
 
 
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> 
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
 
 <span class="c1"># Random search</span>
@@ -1202,10 +1201,11 @@ models. This makes the comparison more robust against models that get
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
 
 <span class="n">plot</span> <span class="o">=</span> <span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
-                       <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
-                       <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
-                       <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
-                       <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+                        <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
+                        <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+
 <span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 

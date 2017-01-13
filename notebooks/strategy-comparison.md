@@ -14,18 +14,18 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f03a8170208>
+    <matplotlib.figure.Figure at 0x7f72f86b32e8>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
 to model the expensive to evaluate function `func`. There are several choices
-for what kind of surrogate model to use. This example compares the performance of:
+for what kind of surrogate model to use. This notebook compares the performance of:
 
 * gaussian processes,
 * extra trees, and
 * random forests 
 
-as surrogate models. A purely random optimization strategy is used as a baseline.
+as surrogate models. A purely random optimization strategy is also used as a baseline.
 
 
 # Toy model
@@ -84,7 +84,7 @@ This shows the value of the two-dimensional branin function and the three minima
 # Objective
 
 The objective of this example is to find one of these minima in as few iterations
-as possible. One iteration is defined as one call to the branin function.
+as possible. One iteration is defined as one call to the `branin` function.
 
 We will evaluate each model several times using a different seed for the
 random number generator. Then compare the average performance of these
@@ -98,14 +98,13 @@ from skopt import gp_minimize, forest_minimize, dummy_minimize
 
 func = partial(branin, noise_level=2.0)
 bounds = [(-5.0, 10.0), (0.0, 15.0)]
-x0 = [2.5, 7.5]
 n_calls = 80
 ```
 
 
 ```python
 def run(minimizer, n_iter=20):
-    return [minimizer(func, bounds, x0=x0, n_calls=n_calls, random_state=n) 
+    return [minimizer(func, bounds, n_calls=n_calls, random_state=n) 
             for n in range(n_iter)]
 
 # Random search
@@ -128,10 +127,11 @@ Note that this can take a few minutes.
 from skopt.plots import plot_convergence
 
 plot = plot_convergence(("dummy_minimize", dummy_res),
-                       ("gp_minimize", gp_res),
-                       ("forest_minimize('rf')", rf_res),
-                       ("forest_minimize('et)", et_res), 
-                       true_minimum=0.397887, yscale="log")
+                        ("gp_minimize", gp_res),
+                        ("forest_minimize('rf')", rf_res),
+                        ("forest_minimize('et)", et_res), 
+                        true_minimum=0.397887, yscale="log")
+
 plot.legend(loc="best", prop={'size': 6}, numpoints=1);
 ```
 
