@@ -2770,22 +2770,33 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
-    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
-                                  <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
-    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="n">is_categorical</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">is_categorical</span><span class="p">:</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
+                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
+                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
 
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">cov_amplitude</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
-        <span class="n">matern</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
-            <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
-            <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
-            <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
 
-        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
-            <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">matern</span><span class="p">,</span>
-            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
-            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_categorical</span><span class="p">:</span>
+            <span class="n">other_kernel</span> <span class="o">=</span> <span class="n">HammingKernel</span><span class="p">(</span>
+                <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">))</span>
+            <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_kernel</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
+                <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">),</span>
+                <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">,</span>
+                <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+
+    <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
+        <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">other_kernel</span><span class="p">,</span>
+        <span class="n">normalize_y</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
+        <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
         <span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
@@ -3152,8 +3163,9 @@ bayesian optimisation loop.</p>
 
             <span class="c1"># lbfgs should handle this but just in case there are</span>
             <span class="c1"># precision errors.</span>
-            <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                    <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
             <span class="c1"># note the need for [0] at the end</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
                 <span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
@@ -3399,8 +3411,9 @@ and a list of scalars for <code>y</code>.</p>
             <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
         <span class="c1"># lbfgs should handle this but just in case there are</span>
         <span class="c1"># precision errors.</span>
-        <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-            <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
+            <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="c1"># note the need for [0] at the end</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
             <span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
