@@ -1075,6 +1075,8 @@ table {
     <li class="set"><h3><a href="#">Notebooks</a></h3>
       <ul>
         
+        <li><a href="https://scikit-optimize.github.io/notebooks/ask-and-tell.html">Ask and tell</a></li>
+        
         <li><a href="https://scikit-optimize.github.io/notebooks/bayesian-optimization.html">Bayesian optimization</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimization.html">Hyperparameter optimization</a></li>
@@ -3019,7 +3021,7 @@ bayesian optimisation loop.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 
     <span class="k">def</span> <span class="nf">_check_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check arguments for sanity.&quot;&quot;&quot;</span>
@@ -3063,8 +3065,10 @@ bayesian optimisation loop.</p>
             <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_inds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated at this point before.&quot;</span><span class="p">)</span>
+                <span class="n">close_to_next_x</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">close_to_next_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                                  <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">next_x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
                 <span class="n">next_x_non_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -3076,7 +3080,8 @@ bayesian optimisation loop.</p>
                         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
                         <span class="n">next_x_non_cat</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">cat_eq</span> <span class="ow">and</span> <span class="n">non_cat_eq</span><span class="p">:</span>
-                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated at this point before.&quot;</span><span class="p">)</span>
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                                      <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
 
             <span class="c1"># return point computed from last call to tell()</span>
             <span class="k">return</span> <span class="n">next_x</span>
@@ -3147,14 +3152,14 @@ bayesian optimisation loop.</p>
 
                 <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-                    <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
-                        <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
-                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
-                        <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
-                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                        <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
-                    <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+                        <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
+                            <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
+                            <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
+                            <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                            <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
 
                 <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
                 <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
@@ -3227,7 +3232,7 @@ bayesian optimisation loop.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 </pre></div>
 
   </div>
@@ -3266,8 +3271,10 @@ that <code>base_estimator</code> is used to determine the next point.</p></div>
         <span class="n">non_cat_inds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_inds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated at this point before.&quot;</span><span class="p">)</span>
+            <span class="n">close_to_next_x</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">close_to_next_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                              <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">next_x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
             <span class="n">next_x_non_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -3279,7 +3286,8 @@ that <code>base_estimator</code> is used to determine the next point.</p></div>
                     <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
                     <span class="n">next_x_non_cat</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">cat_eq</span> <span class="ow">and</span> <span class="n">non_cat_eq</span><span class="p">:</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated at this point before.&quot;</span><span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                                  <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
         <span class="c1"># return point computed from last call to tell()</span>
         <span class="k">return</span> <span class="n">next_x</span>
 </pre></div>
@@ -3398,14 +3406,14 @@ and a list of scalars for <code>y</code>.</p>
             <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-                <span class="n">jobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
-                    <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
-                    <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
-                    <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
-                    <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                    <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">jobs</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+                    <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
+                        <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
+                        <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
+                        <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
             <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
             <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
             <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
@@ -3466,6 +3474,16 @@ and a list of scalars for <code>y</code>.</p>
 
             </div>
             <div class="item">
+            <p id="skopt.optimizer.Optimizer.n_jobs" class="name">var <span class="ident">n_jobs</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.optimizer.Optimizer.n_points" class="name">var <span class="ident">n_points</span></p>
             
 
@@ -3477,16 +3495,6 @@ and a list of scalars for <code>y</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.optimizer.Optimizer.n_restarts_optimizer" class="name">var <span class="ident">n_restarts_optimizer</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.optimizer.Optimizer.parallel" class="name">var <span class="ident">parallel</span></p>
             
 
             
