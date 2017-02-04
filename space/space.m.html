@@ -1430,10 +1430,10 @@ table {
 <span class="sd">              of the original space.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="n">categories</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
                              <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>
@@ -1484,7 +1484,7 @@ table {
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
             <span class="c1"># when len(categories) == 2, CategoricalEncoder outputs a single value</span>
             <span class="k">return</span> <span class="n">size</span> <span class="k">if</span> <span class="n">size</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">1</span>
@@ -1881,10 +1881,10 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">              of the original space.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="n">categories</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
                              <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>
@@ -1935,7 +1935,7 @@ the documentation of <code>dimension</code> below.</p>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
             <span class="c1"># when len(categories) == 2, CategoricalEncoder outputs a single value</span>
             <span class="k">return</span> <span class="n">size</span> <span class="k">if</span> <span class="n">size</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">1</span>
@@ -2013,9 +2013,9 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">          of the original space.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="n">categories</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
                          <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">transform</span><span class="p">)</span>

@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7fc3b5e845c0>
+    <matplotlib.figure.Figure at 0x7f22a817cb38>
 
 
 Bayesian optimization is used to tune parameters for walking robots or other experiments

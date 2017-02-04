@@ -2588,21 +2588,26 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
-    <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
-    <span class="n">is_categorical</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">is_categorical</span><span class="p">:</span>
-        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
+    <span class="n">dim_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
+    <span class="n">is_cat</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dim_types</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">is_cat</span><span class="p">:</span>
+        <span class="n">transformed_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
                                       <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
-                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
+        <span class="n">transformed_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dim_type</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dim_types</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim_type</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
+                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;onehot&quot;</span><span class="p">))</span>
+            <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">))</span>
 
-    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dims</span><span class="p">)</span>
     <span class="c1"># Default GP</span>
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">cov_amplitude</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">is_categorical</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_cat</span><span class="p">:</span>
             <span class="n">other_kernel</span> <span class="o">=</span> <span class="n">HammingKernel</span><span class="p">(</span>
                 <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span><span class="p">))</span>
             <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
