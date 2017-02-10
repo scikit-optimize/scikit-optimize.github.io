@@ -2213,7 +2213,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
     </div>
     
 
@@ -2290,6 +2290,22 @@ guided by the surrogate model.</p>
 <li><code>"LCB"</code> for lower confidence bound.</li>
 <li><code>"EI"</code> for negative expected improvement.</li>
 <li><code>"PI"</code> for negative probability of improvement.</li>
+<li><code>"gp_hedge"</code> Probabilistically choose one of the above three
+  acquisition functions at every iteration. The weightage
+  given to these gains can be set by <code>\eta</code> through <code>acq_func_kwargs</code>.<ul>
+<li>The gains <code>g_i</code> are initialized to zero.</li>
+<li>At every iteration,<ul>
+<li>Each acquisition function is optimised independently to propose an
+  candidate point <code>X_i</code>.</li>
+<li>Out of all these candidate points, the next point <code>X_best</code> is
+  chosen by $softmax(\eta g_i)$</li>
+<li>After fitting the surrogate model with <code>(X_best, y_best)</code>,
+  the gains are updated such that $g_i -= \mu(X_i)$
+  Reference: https://dslpitt.org/uai/papers/11/p327-hoffman.pdf</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
@@ -2414,7 +2430,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.gp_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                 <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -2485,6 +2501,18 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - `&quot;LCB&quot;` for lower confidence bound.</span>
 <span class="sd">        - `&quot;EI&quot;` for negative expected improvement.</span>
 <span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
+<span class="sd">        - `&quot;gp_hedge&quot;` Probabilistically choose one of the above three</span>
+<span class="sd">          acquisition functions at every iteration. The weightage</span>
+<span class="sd">          given to these gains can be set by `\eta` through `acq_func_kwargs`.</span>
+<span class="sd">            - The gains `g_i` are initialized to zero.</span>
+<span class="sd">            - At every iteration,</span>
+<span class="sd">                - Each acquisition function is optimised independently to propose an</span>
+<span class="sd">                  candidate point `X_i`.</span>
+<span class="sd">                - Out of all these candidate points, the next point `X_best` is</span>
+<span class="sd">                  chosen by $softmax(\eta g_i)$</span>
+<span class="sd">                - After fitting the surrogate model with `(X_best, y_best)`,</span>
+<span class="sd">                  the gains are updated such that $g_i -= \mu(X_i)$</span>
+<span class="sd">          Reference: https://dslpitt.org/uai/papers/11/p327-hoffman.pdf</span>
 
 <span class="sd">    * `acq_optimizer` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;lbfgs&quot;`]:</span>
 <span class="sd">        Method to minimize the acquistion function. The fit model</span>
@@ -2745,9 +2773,23 @@ bayesian optimisation loop.</p>
 <p><code>acq_func</code> [string, default=<code>"EI"</code>]:
     Function to minimize over the posterior distribution. Can be either</p>
 <ul>
-<li><code>"LCB"</code> for lower confidence bound,</li>
-<li><code>"EI"</code> for negative expected improvement,</li>
+<li><code>"LCB"</code> for lower confidence bound.</li>
+<li><code>"EI"</code> for negative expected improvement.</li>
 <li><code>"PI"</code> for negative probability of improvement.</li>
+<li><code>"gp_hedge"</code> Probabilistically choose one of the above three
+  acquisition functions at every iteration.<ul>
+<li>The gains <code>g_i</code> are initialized to zero.</li>
+<li>At every iteration,<ul>
+<li>Each acquisition function is optimised independently to propose an
+  candidate point <code>X_i</code>.</li>
+<li>Out of all these candidate points, the next point <code>X_best</code> is
+  chosen by $softmax(\eta g_i)$</li>
+<li>After fitting the surrogate model with <code>(X_best, y_best)</code>,
+  the gains are updated such that $g_i -= \mu(X_i)$</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
@@ -2834,9 +2876,19 @@ bayesian optimisation loop.</p>
 <span class="sd">    * `acq_func` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
 
-<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound,</span>
-<span class="sd">        - `&quot;EI&quot;` for negative expected improvement,</span>
+<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound.</span>
+<span class="sd">        - `&quot;EI&quot;` for negative expected improvement.</span>
 <span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
+<span class="sd">        - `&quot;gp_hedge&quot;` Probabilistically choose one of the above three</span>
+<span class="sd">          acquisition functions at every iteration.</span>
+<span class="sd">            - The gains `g_i` are initialized to zero.</span>
+<span class="sd">            - At every iteration,</span>
+<span class="sd">                - Each acquisition function is optimised independently to propose an</span>
+<span class="sd">                  candidate point `X_i`.</span>
+<span class="sd">                - Out of all these candidate points, the next point `X_best` is</span>
+<span class="sd">                  chosen by $softmax(\eta g_i)$</span>
+<span class="sd">                - After fitting the surrogate model with `(X_best, y_best)`,</span>
+<span class="sd">                  the gains are updated such that $g_i -= \mu(X_i)$</span>
 
 <span class="sd">    * `acq_optimizer` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;lbfgs&quot;`]:</span>
 <span class="sd">        Method to minimize the acquistion function. The fit model</span>
@@ -2876,13 +2928,23 @@ bayesian optimisation loop.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                 <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
+                 <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="c1"># Arguments that are just stored not checked</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">=</span> <span class="n">acq_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eta&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -3016,46 +3078,59 @@ bayesian optimisation loop.</p>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
                 <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;next_xs_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">-=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
 
             <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span>
                 <span class="n">n_samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_points</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">))</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
-                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">est</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span>
-                <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cand_acq_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
+                    <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">est</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span>
+                    <span class="n">acq_func</span><span class="o">=</span><span class="n">cand_acq_func</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+                <span class="c1"># Find the minimum of the acquisition function by randomly sampling</span>
+                <span class="c1"># points from the space</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
+                    <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
 
-            <span class="c1"># Find the minimum of the acquisition function by randomly sampling</span>
-            <span class="c1"># points from the space</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
-                <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+                <span class="c1"># Use BFGS to find the mimimum of the acquisition function, the</span>
+                <span class="c1"># minimization starts from `n_restarts_optimizer` different points</span>
+                <span class="c1"># and the best minimum is used</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
+                    <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
 
-            <span class="c1"># Use BFGS to find the mimimum of the acquisition function, the</span>
-            <span class="c1"># minimization starts from `n_restarts_optimizer` different points</span>
-            <span class="c1"># and the best minimum is used</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
-                <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
-
-                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-                    <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
-                        <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
-                            <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
-                            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
+                    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+                        <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+                            <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
+                                <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="n">cand_acq_func</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
                             <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
                             <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                             <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
 
-                <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
-                <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+                    <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+                    <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+                    <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
 
-                <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
+                <span class="c1"># lbfgs should handle this but just in case there are</span>
+                <span class="c1"># precision errors.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
+                    <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                        <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
 
-            <span class="c1"># lbfgs should handle this but just in case there are</span>
-            <span class="c1"># precision errors.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
-                <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                    <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
+                <span class="n">logits</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+                <span class="n">exp_logits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">logits</span><span class="p">)</span>
+                <span class="n">probs</span> <span class="o">=</span> <span class="n">exp_logits</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_logits</span><span class="p">)</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">probs</span><span class="p">))]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
             <span class="c1"># note the need for [0] at the end</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
                 <span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
@@ -3081,7 +3156,7 @@ bayesian optimisation loop.</p>
             
   <div class="item">
     <div class="name def" id="skopt.Optimizer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, random_state=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator, n_random_starts=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;lbfgs&#39;, random_state=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
     </div>
     
 
@@ -3092,13 +3167,21 @@ bayesian optimisation loop.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-             <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
+             <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
              <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="c1"># Arguments that are just stored not checked</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">=</span> <span class="n">acq_func</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eta&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_points&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
@@ -3274,39 +3357,52 @@ and a list of scalars for <code>y</code>.</p>
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
             <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;next_xs_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">-=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
         <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span>
             <span class="n">n_samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_points</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">))</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
-            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">est</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span>
-            <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
-        <span class="c1"># Find the minimum of the acquisition function by randomly sampling</span>
-        <span class="c1"># points from the space</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
-            <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
-        <span class="c1"># Use BFGS to find the mimimum of the acquisition function, the</span>
-        <span class="c1"># minimization starts from `n_restarts_optimizer` different points</span>
-        <span class="c1"># and the best minimum is used</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
-            <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
-            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
-                    <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
-                        <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
-                        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cand_acq_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">est</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span>
+                <span class="n">acq_func</span><span class="o">=</span><span class="n">cand_acq_func</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+            <span class="c1"># Find the minimum of the acquisition function by randomly sampling</span>
+            <span class="c1"># points from the space</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span>
+            <span class="c1"># Use BFGS to find the mimimum of the acquisition function, the</span>
+            <span class="c1"># minimization starts from `n_restarts_optimizer` different points</span>
+            <span class="c1"># and the best minimum is used</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;lbfgs&quot;</span><span class="p">:</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">]]</span>
+                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span>
+                        <span class="n">delayed</span><span class="p">(</span><span class="n">fmin_l_bfgs_b</span><span class="p">)(</span>
+                            <span class="n">gaussian_acquisition_1D</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="n">cand_acq_func</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
                         <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
                         <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                         <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
-            <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
-            <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
-            <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
-        <span class="c1"># lbfgs should handle this but just in case there are</span>
-        <span class="c1"># precision errors.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
-            <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">cand_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+                <span class="n">cand_acqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="n">cand_xs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">cand_acqs</span><span class="p">)]</span>
+            <span class="c1"># lbfgs should handle this but just in case there are</span>
+            <span class="c1"># precision errors.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
+                <span class="n">next_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                    <span class="n">next_x</span><span class="p">,</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">transformed_bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
+            <span class="n">logits</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+            <span class="n">exp_logits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">logits</span><span class="p">)</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">exp_logits</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_logits</span><span class="p">)</span>
+            <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">probs</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># note the need for [0] at the end</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
             <span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
@@ -3340,6 +3436,16 @@ and a list of scalars for <code>y</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.Optimizer.acq_func_kwargs" class="name">var <span class="ident">acq_func_kwargs</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.Optimizer.eta" class="name">var <span class="ident">eta</span></p>
             
 
             
