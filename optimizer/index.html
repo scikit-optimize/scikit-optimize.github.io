@@ -1545,7 +1545,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <ul>
 <li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
   dimensions),</li>
-<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+<li>a <code>(upper_bound, lower_bound, prior)</code> tuple (for <code>Real</code>
   dimensions),</li>
 <li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
 <li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
@@ -1566,7 +1566,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 </ul>
 </li>
 <li>
-<p><code>y0</code> [list, scalar or <code>None</code>]
+<p><code>y0</code> [list, scalar or <code>None</code>]:
     Evaluation of initial input points.</p>
 <ul>
 <li>If it is a list, then it corresponds to evaluations of the function
@@ -1635,7 +1635,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
 <span class="sd">          dimensions),</span>
-<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">        - a `(upper_bound, lower_bound, prior)` tuple (for `Real`</span>
 <span class="sd">          dimensions),</span>
 <span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
@@ -1651,7 +1651,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        - If it is a list, use it as a single initial input point.</span>
 <span class="sd">        - If it is `None`, no initial input points are used.</span>
 
-<span class="sd">    * `y0` [list, scalar or `None`]</span>
+<span class="sd">    * `y0` [list, scalar or `None`]:</span>
 <span class="sd">        Evaluation of initial input points.</span>
 
 <span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
@@ -1806,7 +1806,7 @@ guided by the surrogate model.</p>
 <ul>
 <li>a <code>(upper_bound, lower_bound)</code> tuple (for <code>Real</code> or <code>Integer</code>
   dimensions),</li>
-<li>a <code>(upper_bound, lower_bound, "prior")</code> tuple (for <code>Real</code>
+<li>a <code>(upper_bound, lower_bound, prior)</code> tuple (for <code>Real</code>
   dimensions),</li>
 <li>as a list of categories (for <code>Categorical</code> dimensions), or</li>
 <li>an instance of a <code>Dimension</code> object (<code>Real</code>, <code>Integer</code> or
@@ -1962,7 +1962,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 
 <span class="sd">        - a `(upper_bound, lower_bound)` tuple (for `Real` or `Integer`</span>
 <span class="sd">          dimensions),</span>
-<span class="sd">        - a `(upper_bound, lower_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">        - a `(upper_bound, lower_bound, prior)` tuple (for `Real`</span>
 <span class="sd">          dimensions),</span>
 <span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
@@ -2481,30 +2481,34 @@ guided by the surrogate model.</p>
 <li>Each acquisition function is optimised independently to propose an
   candidate point <code>X_i</code>.</li>
 <li>Out of all these candidate points, the next point <code>X_best</code> is
-  chosen by $softmax(\eta g_i)$</li>
+  chosen by <code>softmax(\eta g_i)</code></li>
 <li>After fitting the surrogate model with <code>(X_best, y_best)</code>,
-  the gains are updated such that $g_i -= \mu(X_i)$
-  Reference: https://dslpitt.org/uai/papers/11/p327-hoffman.pdf</li>
+  the gains are updated such that <code>g_i -= \mu(X_i)</code></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
+<p>Reference: https://dslpitt.org/uai/papers/11/p327-hoffman.pdf</p>
 </li>
 <li>
 <p><code>acq_optimizer</code> [string, <code>"sampling"</code> or <code>"lbfgs"</code>, default=<code>"lbfgs"</code>]:
     Method to minimize the acquistion function. The fit model
     is updated with the optimal value obtained by optimizing <code>acq_func</code>
     with <code>acq_optimizer</code>.</p>
-<p>The <code>acq_func</code> is computed at <code>n_points</code> sampled randomly.
-- If set to <code>"sampling"</code>, then the point among these <code>n_points</code>
-  where the <code>acq_func</code> is minimum is the next candidate minimum.
-- If set to <code>"lbfgs"</code>, then
-      - The <code>n_restarts_optimizer</code> no. of points which the acquisition
-        function is least are taken as start points.
-      - <code>"lbfgs"</code> is run for 20 iterations with these points as initial
-        points to find local minima.
-      - The optimal of these local minima is used to update the prior.</p>
+<p>The <code>acq_func</code> is computed at <code>n_points</code> sampled randomly.</p>
+<ul>
+<li>If set to <code>"sampling"</code>, then the point among these <code>n_points</code>
+  where the <code>acq_func</code> is minimum is the next candidate minimum.</li>
+<li>If set to <code>"lbfgs"</code>, then<ul>
+<li>The <code>n_restarts_optimizer</code> no. of points which the acquisition
+    function is least are taken as start points.</li>
+<li><code>"lbfgs"</code> is run for 20 iterations with these points as initial
+    points to find local minima.</li>
+<li>The optimal of these local minima is used to update the prior.</li>
+</ul>
+</li>
+</ul>
 </li>
 <li>
 <p><code>x0</code> [list, list of lists or <code>None</code>]:
@@ -2692,9 +2696,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">                - Each acquisition function is optimised independently to propose an</span>
 <span class="sd">                  candidate point `X_i`.</span>
 <span class="sd">                - Out of all these candidate points, the next point `X_best` is</span>
-<span class="sd">                  chosen by $softmax(\eta g_i)$</span>
+<span class="sd">                  chosen by `softmax(\eta g_i)`</span>
 <span class="sd">                - After fitting the surrogate model with `(X_best, y_best)`,</span>
-<span class="sd">                  the gains are updated such that $g_i -= \mu(X_i)$</span>
+<span class="sd">                  the gains are updated such that `g_i -= \mu(X_i)`</span>
+
 <span class="sd">          Reference: https://dslpitt.org/uai/papers/11/p327-hoffman.pdf</span>
 
 <span class="sd">    * `acq_optimizer` [string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;lbfgs&quot;`]:</span>
@@ -2703,6 +2708,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        with `acq_optimizer`.</span>
 
 <span class="sd">        The `acq_func` is computed at `n_points` sampled randomly.</span>
+
 <span class="sd">        - If set to `&quot;sampling&quot;`, then the point among these `n_points`</span>
 <span class="sd">          where the `acq_func` is minimum is the next candidate minimum.</span>
 <span class="sd">        - If set to `&quot;lbfgs&quot;`, then</span>
