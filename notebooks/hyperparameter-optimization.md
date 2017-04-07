@@ -72,7 +72,7 @@ res_gp = gp_minimize(objective, space, n_calls=100, random_state=0)
 
 
 
-    'Best score=2.8658'
+    'Best score=2.8328'
 
 
 
@@ -89,10 +89,10 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=3
-    - learning_rate=0.129934
-    - max_features=9
-    - min_samples_split=15
+    - max_depth=5
+    - learning_rate=0.162082
+    - max_features=5
+    - min_samples_split=21
     - min_samples_leaf=1
 
 
