@@ -1172,7 +1172,7 @@ table {
 </li>
 <li>
 <p><code>n_calls</code> [int, default=100]:
-    Number of calls to <code>func</code>.</p>
+    Maximum number of calls to <code>func</code>.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
@@ -1244,9 +1244,10 @@ table {
     If list of callables, then each callable in the list is called.</p>
 </li>
 <li>
-<p><code>n_points</code> [int, default=500]:
-    Number of points to sample to determine the next "best" point.
-    Useless if acq_optimizer is set to <code>"lbfgs"</code>.</p>
+<p><code>n_points</code> [int, default=10000]:
+    If <code>acq_optimizer</code> is set to <code>"sampling"</code>, then <code>acq_func</code> is
+    optimized by computing <code>acq_func</code> at <code>n_points</code> randomly sampled
+    points.</p>
 </li>
 <li>
 <p><code>n_restarts_optimizer</code> [int, default=5]:
@@ -1333,7 +1334,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        which returns `std(Y | x)`` along with `E[Y | x]`.</span>
 
 <span class="sd">    * `n_calls` [int, default=100]:</span>
-<span class="sd">        Number of calls to `func`.</span>
+<span class="sd">        Maximum number of calls to `func`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
 <span class="sd">        Number of evaluations of `func` with random initialization points</span>
@@ -1390,9 +1391,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
 <span class="sd">        If list of callables, then each callable in the list is called.</span>
 
-<span class="sd">    * `n_points` [int, default=500]:</span>
-<span class="sd">        Number of points to sample to determine the next &quot;best&quot; point.</span>
-<span class="sd">        Useless if acq_optimizer is set to `&quot;lbfgs&quot;`.</span>
+<span class="sd">    * `n_points` [int, default=10000]:</span>
+<span class="sd">        If `acq_optimizer` is set to `&quot;sampling&quot;`, then `acq_func` is</span>
+<span class="sd">        optimized by computing `acq_func` at `n_points` randomly sampled</span>
+<span class="sd">        points.</span>
 
 <span class="sd">    * `n_restarts_optimizer` [int, default=5]:</span>
 <span class="sd">        The number of restarts of the optimizer when `acq_optimizer`</span>
@@ -1451,7 +1453,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1486,8 +1488,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">y0</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
 
-    <span class="c1"># setting the scope for the result object we will return</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># setting the scope for these variables</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="c1"># User is god and knows the value of the objective at these points</span>
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -1507,27 +1509,30 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;`y0` elements should be scalars&quot;</span><span class="p">)</span>
 
-        <span class="n">res</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
 
-        <span class="n">_eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">result</span>
 
     <span class="c1"># Bayesian optimization loop</span>
     <span class="n">n_iterations</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_init_func_calls</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+
         <span class="c1"># no need to fit a model on the last iteration</span>
         <span class="n">fit_model</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">n_iterations</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">next_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">next_y</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
 
-        <span class="n">res</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">next_y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="n">fit_model</span><span class="p">)</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">next_y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="n">fit_model</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
 
-        <span class="n">_eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+            <span class="k">break</span>
 
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 
   </div>
@@ -1632,9 +1637,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer.dummy_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                   <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                   <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1760,6 +1764,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Random search</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
     <span class="n">first</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
         <span class="n">y_i</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -1770,10 +1775,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
 
         <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_i</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
-            <span class="n">curr_res</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
-                <span class="n">c</span><span class="p">(</span><span class="n">curr_res</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+            <span class="k">break</span>
 
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">specs</span><span class="p">)</span>
@@ -2398,9 +2402,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
                          <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
-                         <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
-                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
-                         <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">)</span>
+                         <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2821,18 +2824,23 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="n">dim_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
-    <span class="n">is_cat</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dim_types</span><span class="p">])</span>
+    <span class="n">is_cat</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">Categorical</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dim_types</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">is_cat</span><span class="p">:</span>
-        <span class="n">transformed_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span>
-                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
+        <span class="n">transformed_dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">transformed_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">dim_type</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dim_types</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim_type</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
-                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;onehot&quot;</span><span class="p">))</span>
+                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;onehot&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
             <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">))</span>
+                <span class="n">transformed_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">check_dimension</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
 
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dims</span><span class="p">)</span>
     <span class="c1"># Default GP</span>
@@ -2940,7 +2948,7 @@ bayesian optimisation loop.</p>
     with <code>acq_optimizer</code>.</p>
 <ul>
 <li>If set to <code>"sampling"</code>, then <code>acq_func</code> is optimized by computing
-  <code>acq_func</code> at <code>n_points</code> sampled randomly.</li>
+  <code>acq_func</code> at <code>n_points</code> randomly sampled points.</li>
 <li>If set to <code>"lbfgs"</code>, then <code>acq_func</code> is optimized by<ul>
 <li>Sampling <code>n_restarts_optimizer</code> points randomly.</li>
 <li><code>"lbfgs"</code> is run for 20 iterations with these points as initial
@@ -3037,7 +3045,7 @@ bayesian optimisation loop.</p>
 <span class="sd">        with `acq_optimizer`.</span>
 
 <span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
-<span class="sd">          `acq_func` at `n_points` sampled randomly.</span>
+<span class="sd">          `acq_func` at `n_points` randomly sampled points.</span>
 <span class="sd">        - If set to `&quot;lbfgs&quot;`, then `acq_func` is optimized by</span>
 <span class="sd">              - Sampling `n_restarts_optimizer` points randomly.</span>
 <span class="sd">              - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
@@ -3148,31 +3156,15 @@ bayesian optimisation loop.</p>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
-                                 <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
+                                   <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
 
-            <span class="n">cat_inds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span>
-            <span class="n">non_cat_inds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span>
             <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
-
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_inds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">close_to_next_x</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">close_to_next_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
-                                  <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">next_x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
-                <span class="n">next_x_non_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                    <span class="n">next_x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">:</span>
-                    <span class="n">x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-                    <span class="n">cat_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">cat_inds</span><span class="p">]</span> <span class="o">==</span> <span class="n">next_x_arr</span><span class="p">[</span><span class="n">cat_inds</span><span class="p">])</span>
-                    <span class="n">non_cat_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-                        <span class="n">next_x_non_cat</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">cat_eq</span> <span class="ow">and</span> <span class="n">non_cat_eq</span><span class="p">:</span>
-                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
-                                      <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
+            <span class="n">min_delta_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                                  <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">,</span> <span class="mf">0.</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                              <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
 
             <span class="c1"># return point computed from last call to tell()</span>
             <span class="k">return</span> <span class="n">next_x</span>
@@ -3191,6 +3183,8 @@ bayesian optimisation loop.</p>
 <span class="sd">        To add multiple observations in a batch pass a list-of-lists for `x`</span>
 <span class="sd">        and a list of scalars for `y`.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        * `x` [list or list-of-lists]:</span>
 <span class="sd">            Point at which objective was evaluated.</span>
 <span class="sd">        * `y` [scalar or list]:</span>
@@ -3398,29 +3392,14 @@ that <code>base_estimator</code> is used to determine the next point.</p></div>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
-                             <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
-        <span class="n">cat_inds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span>
-        <span class="n">non_cat_inds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
+                               <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_inds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">close_to_next_x</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">next_x</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">close_to_next_x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">)):</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
-                              <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">next_x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
-            <span class="n">next_x_non_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="n">next_x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">:</span>
-                <span class="n">x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-                <span class="n">cat_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">cat_inds</span><span class="p">]</span> <span class="o">==</span> <span class="n">next_x_arr</span><span class="p">[</span><span class="n">cat_inds</span><span class="p">])</span>
-                <span class="n">non_cat_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_arr</span><span class="p">[</span><span class="n">non_cat_inds</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
-                    <span class="n">next_x_non_cat</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">cat_eq</span> <span class="ow">and</span> <span class="n">non_cat_eq</span><span class="p">:</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
-                                  <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
+        <span class="n">min_delta_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">,</span> <span class="mf">0.</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
+                          <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
         <span class="c1"># return point computed from last call to tell()</span>
         <span class="k">return</span> <span class="n">next_x</span>
 </pre></div>
@@ -3475,6 +3454,7 @@ which to evluate the objective. This point can be retrieved by calling
 <p>To add observations without fitting a new model set <code>fit</code> to False.</p>
 <p>To add multiple observations in a batch pass a list-of-lists for <code>x</code>
 and a list of scalars for <code>y</code>.</p>
+<h2>Parameters</h2>
 <ul>
 <li><code>x</code> [list or list-of-lists]:
     Point at which objective was evaluated.</li>
@@ -3498,6 +3478,8 @@ and a list of scalars for <code>y</code>.</p>
 <span class="sd">    To add observations without fitting a new model set `fit` to False.</span>
 <span class="sd">    To add multiple observations in a batch pass a list-of-lists for `x`</span>
 <span class="sd">    and a list of scalars for `y`.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    * `x` [list or list-of-lists]:</span>
 <span class="sd">        Point at which objective was evaluated.</span>
 <span class="sd">    * `y` [scalar or list]:</span>

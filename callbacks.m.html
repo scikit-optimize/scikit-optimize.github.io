@@ -4,7 +4,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>skopt.callbacks API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Monitor and influence the optimization procedure via callbacks.
+
+Callbacks are callables which are i..." />
 
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1063,6 +1065,12 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.callbacks.DeltaXStopper">DeltaXStopper</a></span>
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.callbacks.TimerCallback">TimerCallback</a></span>
         </li>
         <li class="mono">
@@ -1103,11 +1111,38 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">skopt.callbacks</span> module</h1>
-  
+  <p>Monitor and influence the optimization procedure via callbacks.</p>
+<p>Callbacks are callables which are invoked after each iteration of the optimizer
+and are passed the results "so far". Callbacks can monitor progress, or stop
+the optimization early by returning <code>True</code>.</p>
+<h2>Monitoring callbacks</h2>
+<ul>
+<li>VerboseCallback</li>
+<li>TimerCallback</li>
+</ul>
+<h2>Early stopping callbacks</h2>
+<ul>
+<li>DeltaXStopper</li>
+</ul>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks', this);">Show source &equiv;</a></p>
   <div id="source-skopt.callbacks" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Callable</span>
+    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Monitor and influence the optimization procedure via callbacks.</span>
+
+<span class="sd">Callbacks are callables which are invoked after each iteration of the optimizer</span>
+<span class="sd">and are passed the results &quot;so far&quot;. Callbacks can monitor progress, or stop</span>
+<span class="sd">the optimization early by returning `True`.</span>
+
+<span class="sd">Monitoring callbacks</span>
+<span class="sd">--------------------</span>
+<span class="sd">* VerboseCallback</span>
+<span class="sd">* TimerCallback</span>
+
+<span class="sd">Early stopping callbacks</span>
+<span class="sd">------------------------</span>
+<span class="sd">* DeltaXStopper</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
 
@@ -1234,6 +1269,42 @@ table {
         <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elapsed_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">EarlyStopper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decide to continue or not given the results so far.</span>
+
+<span class="sd">    The optimization procedure will be stopped if the callback returns True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `result` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DeltaXStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stop the optimization when |x1 - x2| &lt; `delta`</span>
+
+<span class="sd">    If the last two positions at which the objective has been evaluated</span>
+<span class="sd">    are less than `delta` apart stop the optimization procedure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+                                     <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -1284,6 +1355,123 @@ table {
   
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="skopt.callbacks.DeltaXStopper" class="name">class <span class="ident">DeltaXStopper</span></p>
+      
+  
+    <div class="desc"><p>Stop the optimization when |x1 - x2| &lt; <code>delta</code></p>
+<p>If the last two positions at which the objective has been evaluated
+are less than <code>delta</code> apart stop the optimization procedure.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeltaXStopper', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeltaXStopper" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DeltaXStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stop the optimization when |x1 - x2| &lt; `delta`</span>
+
+<span class="sd">    If the last two positions at which the objective has been evaluated</span>
+<span class="sd">    are less than `delta` apart stop the optimization procedure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+                                     <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.callbacks.DeltaXStopper">DeltaXStopper</a></li>
+          <li><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.callbacks.DeltaXStopper.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, delta)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeltaXStopper.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeltaXStopper.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.callbacks.DeltaXStopper.delta" class="name">var <span class="ident">delta</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="skopt.callbacks.EarlyStopper" class="name">class <span class="ident">EarlyStopper</span></p>
+      
+  
+    <div class="desc"><p>Decide to continue or not given the results so far.</p>
+<p>The optimization procedure will be stopped if the callback returns True.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.EarlyStopper', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.EarlyStopper" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">EarlyStopper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decide to continue or not given the results so far.</span>
+
+<span class="sd">    The optimization procedure will be stopped if the callback returns True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `result` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></li>
+          <li>builtins.object</li>
+          </ul>
+      </div>
+      </div>
       
       <div class="item">
       <p id="skopt.callbacks.TimerCallback" class="name">class <span class="ident">TimerCallback</span></p>
