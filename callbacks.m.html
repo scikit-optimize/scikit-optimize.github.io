@@ -1068,6 +1068,9 @@ table {
         <span class="class_name"><a href="#skopt.callbacks.DeltaXStopper">DeltaXStopper</a></span>
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.callbacks.DeltaYStopper">DeltaYStopper</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></span>
         </li>
         <li class="mono">
@@ -1144,6 +1147,8 @@ the optimization early by returning <code>True</code>.</p>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 
 <span class="k">def</span> <span class="nf">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
@@ -1285,6 +1290,26 @@ the optimization early by returning <code>True</code>.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the decision to stop or not.</span>
+
+<span class="sd">        Classes inheriting from `EarlyStop` should use this method to</span>
+<span class="sd">        implement their decision logic.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `result` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `decision`:</span>
+<span class="sd">            Return True/False if the criterion can make a decision or `None` if</span>
+<span class="sd">            there is not enough data yet to make a decision.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The _criterion method should be implemented&quot;</span>
+                                  <span class="s2">&quot; by subclasses of EarlyStopper.&quot;</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">DeltaXStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Stop the optimization when |x1 - x2| &lt; `delta`</span>
@@ -1298,11 +1323,33 @@ the optimization early by returning <code>True</code>.</p>
 
     <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
-                                     <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+                                         <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="k">class</span> <span class="nc">DeltaYStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stop the optimization if the `n_best` minima are within `delta`</span>
+
+<span class="sd">    Stop the optimizer if the absolute difference between the `n_best`</span>
+<span class="sd">    objective values is less than `delta`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">=</span> <span class="n">n_best</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">:</span>
+            <span class="n">func_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span>
+            <span class="n">worst</span> <span class="o">=</span> <span class="n">func_vals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="n">func_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># worst is always larger, so no need for abs()</span>
+            <span class="k">return</span> <span class="n">worst</span> <span class="o">-</span> <span class="n">best</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 </pre></div>
@@ -1378,11 +1425,9 @@ are less than <code>delta</code> apart stop the optimization procedure.</p></div
 
     <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
-                                     <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+                                         <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 </pre></div>
@@ -1437,6 +1482,100 @@ are less than <code>delta</code> apart stop the optimization procedure.</p></div
       </div>
       
       <div class="item">
+      <p id="skopt.callbacks.DeltaYStopper" class="name">class <span class="ident">DeltaYStopper</span></p>
+      
+  
+    <div class="desc"><p>Stop the optimization if the <code>n_best</code> minima are within <code>delta</code></p>
+<p>Stop the optimizer if the absolute difference between the <code>n_best</code>
+objective values is less than <code>delta</code>.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeltaYStopper', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeltaYStopper" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DeltaYStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stop the optimization if the `n_best` minima are within `delta`</span>
+
+<span class="sd">    Stop the optimizer if the absolute difference between the `n_best`</span>
+<span class="sd">    objective values is less than `delta`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">=</span> <span class="n">n_best</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">:</span>
+            <span class="n">func_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span>
+            <span class="n">worst</span> <span class="o">=</span> <span class="n">func_vals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="n">func_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># worst is always larger, so no need for abs()</span>
+            <span class="k">return</span> <span class="n">worst</span> <span class="o">-</span> <span class="n">best</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.callbacks.DeltaYStopper">DeltaYStopper</a></li>
+          <li><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.callbacks.DeltaYStopper.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, delta, n_best=5)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeltaYStopper.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeltaYStopper.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">=</span> <span class="n">n_best</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.callbacks.DeltaYStopper.delta" class="name">var <span class="ident">delta</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.callbacks.DeltaYStopper.n_best" class="name">var <span class="ident">n_best</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="skopt.callbacks.EarlyStopper" class="name">class <span class="ident">EarlyStopper</span></p>
       
   
@@ -1458,6 +1597,26 @@ are less than <code>delta</code> apart stop the optimization procedure.</p></div
 <span class="sd">            The optimization as a OptimizeResult object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_criterion</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the decision to stop or not.</span>
+
+<span class="sd">        Classes inheriting from `EarlyStop` should use this method to</span>
+<span class="sd">        implement their decision logic.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `result` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `decision`:</span>
+<span class="sd">            Return True/False if the criterion can make a decision or `None` if</span>
+<span class="sd">            there is not enough data yet to make a decision.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The _criterion method should be implemented&quot;</span>
+                                  <span class="s2">&quot; by subclasses of EarlyStopper.&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
