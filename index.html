@@ -3024,9 +3024,9 @@ bayesian optimisation loop.</p>
                                    <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
 
             <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
-            <span class="n">min_delta_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
-                                  <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">,</span> <span class="mf">0.</span><span class="p">):</span>
+            <span class="n">min_delta_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                               <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1e-8</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
                               <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
 
@@ -3259,9 +3259,9 @@ that <code>base_estimator</code> is used to determine the next point.</p></div>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
                                <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
-        <span class="n">min_delta_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
-                              <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">,</span> <span class="mf">0.</span><span class="p">):</span>
+        <span class="n">min_delta_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1e-8</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
                           <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
         <span class="c1"># return point computed from last call to tell()</span>
