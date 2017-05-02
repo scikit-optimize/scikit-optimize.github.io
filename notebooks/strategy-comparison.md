@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f91f425ba20>
+    <matplotlib.figure.Figure at 0x7f07a82fb1d0>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -120,7 +120,7 @@ rf_res = run(partial(forest_minimize, base_estimator="RF"))
 et_res = run(partial(forest_minimize, base_estimator="ET"))
 ```
 
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:192: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:200: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
 
 
