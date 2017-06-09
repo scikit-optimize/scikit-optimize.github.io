@@ -1058,6 +1058,7 @@ table {
   <ul>
     <li class="mono"><a href="#skopt.dummy_minimize">dummy_minimize</a></li>
     <li class="mono"><a href="#skopt.dump">dump</a></li>
+    <li class="mono"><a href="#skopt.expected_minimum">expected_minimum</a></li>
     <li class="mono"><a href="#skopt.forest_minimize">forest_minimize</a></li>
     <li class="mono"><a href="#skopt.gbrt_minimize">gbrt_minimize</a></li>
     <li class="mono"><a href="#skopt.gp_minimize">gp_minimize</a></li>
@@ -1215,7 +1216,9 @@ python setup.py develop
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">Optimizer</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">dump</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">dump</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">expected_minimum</span>
 
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.3&quot;</span>
@@ -1236,6 +1239,7 @@ python setup.py develop
     <span class="s2">&quot;Optimizer&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
     <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;expected_minimum&quot;</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -1582,6 +1586,99 @@ avoid deep copying of <code>res</code>.</p>
         <span class="c1"># If the user does not want to store the objective and it is already</span>
         <span class="c1"># missing in the provided object, dump it without copying.</span>
         <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.expected_minimum">
+    <p>def <span class="ident">expected_minimum</span>(</p><p>res, n_random_starts=20, random_state=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Compute the minimum over the predictions of the last surrogate model.</p>
+<p>Note that the returned minimum may not necessarily be an accurate
+prediction of the minimum of the true objective function.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>res</code>  [<code>OptimizeResult</code>, scipy object]:
+    The optimization result returned by a <code>skopt</code> minimizer.</p>
+</li>
+<li>
+<p><code>n_random_starts</code> [int, default=20]:
+    The number of random starts for the minimization of the surrogate
+    model.</p>
+</li>
+<li>
+<p><code>random_state</code> [int, RandomState instance, or None (default)]:
+    Set random state to something other than None for reproducible
+    results.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li>
+<p><code>x</code> [list]: location of the minimum.</p>
+</li>
+<li>
+<p><code>fun</code> [float]: the surrogate function value at the minimum.</p>
+</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.expected_minimum', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.expected_minimum" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the minimum over the predictions of the last surrogate model.</span>
+
+<span class="sd">    Note that the returned minimum may not necessarily be an accurate</span>
+<span class="sd">    prediction of the minimum of the true objective function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `res`  [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        The optimization result returned by a `skopt` minimizer.</span>
+
+<span class="sd">    * `n_random_starts` [int, default=20]:</span>
+<span class="sd">        The number of random starts for the minimization of the surrogate</span>
+<span class="sd">        model.</span>
+
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `x` [list]: location of the minimum.</span>
+
+<span class="sd">    * `fun` [float]: the surrogate function value at the minimum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">xs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">))</span>
+
+    <span class="n">best_x</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">best_fun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+    <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">sp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">fun</span> <span class="o">&lt;</span> <span class="n">best_fun</span><span class="p">:</span>
+            <span class="n">best_x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">best_fun</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">fun</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">best_x</span><span class="p">],</span> <span class="n">best_fun</span>
 </pre></div>
 
   </div>
