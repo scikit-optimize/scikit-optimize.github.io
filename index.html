@@ -1097,6 +1097,8 @@ table {
         
         <li><a href="https://scikit-optimize.github.io/notebooks/hyperparameter-optimization.html">Hyperparameter optimization</a></li>
         
+        <li><a href="https://scikit-optimize.github.io/notebooks/parallel-optimization.html">Parallel optimization</a></li>
+        
         <li><a href="https://scikit-optimize.github.io/notebooks/store-and-load-results.html">Store and load results</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/strategy-comparison.html">Strategy comparison</a></li>
@@ -3021,6 +3023,7 @@ bayesian optimisation loop.</p>
 <span class="sd">    * `acq_optimizer_kwargs` [dict]:</span>
 <span class="sd">        Additional arguments to be passed to the acquistion optimizer.</span>
 
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    * `Xi` [list]:</span>
@@ -3062,6 +3065,7 @@ bayesian optimisation loop.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;n_restarts_optimizer&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3078,6 +3082,12 @@ bayesian optimisation loop.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+
+        <span class="c1"># The cache of responses of `ask` method for n_points not None.</span>
+        <span class="c1"># This ensures that multiple calls to `ask` with n_points set</span>
+        <span class="c1"># return same sets of points.</span>
+        <span class="c1"># The cache is reset to {} at every call to `tell`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_check_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check arguments for sanity.&quot;&quot;&quot;</span>
@@ -3103,7 +3113,109 @@ bayesian optimisation loop.</p>
                              <span class="s2">&quot;&#39;sampling&#39;, got {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
 
-    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a shallow copy of an instance of the optimizer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state of the copy of optimizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span>
+            <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
+            <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span>
+            <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span><span class="p">,</span>
+            <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
+            <span class="n">acq_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="p">,</span>
+            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
+            <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gains_&quot;</span><span class="p">):</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">:</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">optimizer</span>
+
+    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Query point or multiple points at which objective should be evaluated.</span>
+
+<span class="sd">        * `n_points` [int or None, default=None]:</span>
+<span class="sd">            Number of points returned by the ask method.</span>
+<span class="sd">            If the value is None, a single point to evaluate is returned.</span>
+<span class="sd">            Otherwise a list of points to evaluate is returned of size</span>
+<span class="sd">            n_points. This is useful if you can evaluate your objective in</span>
+<span class="sd">            parallel, and thus obtain more objective function evaluations per</span>
+<span class="sd">            unit of time.</span>
+
+<span class="sd">        * `strategy` [string, default=`&quot;cl_min&quot;`]:</span>
+<span class="sd">            Method to use to sample multiple points (see also `n_points`</span>
+<span class="sd">            description). This parameter is ignored if n_points = None.</span>
+<span class="sd">            Supported options are `&quot;cl_min&quot;`, `&quot;cl_mean&quot;` or `&quot;cl_max&quot;`.</span>
+
+<span class="sd">            - If set to `&quot;cl_min&quot;`, then constant liar strtategy is used</span>
+<span class="sd">               with lie objective value being minimum of observed objective</span>
+<span class="sd">               values. `&quot;cl_mean&quot;` and `&quot;cl_max&quot;` means mean and max of values</span>
+<span class="sd">               respectively. For details on this strategy see:</span>
+
+<span class="sd">               https://hal.archives-ouvertes.fr/hal-00732512/document</span>
+
+<span class="sd">               With this strategy a copy of optimizer is created, which is</span>
+<span class="sd">               then asked for a point, and the point is told to the copy of</span>
+<span class="sd">               optimizer with some fake objective (lie), the next point is</span>
+<span class="sd">               asked from copy, it is also told to the copy with fake</span>
+<span class="sd">               objective and so on. The type of lie defines different</span>
+<span class="sd">               flavours of `cl_x` strategies.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask</span><span class="p">()</span>
+
+        <span class="n">supported_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cl_min&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_max&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n_points</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;n_points should be int &gt; 0, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_strategies</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Expected parallel_strategy to be one of &quot;</span> <span class="o">+</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">supported_strategies</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">strategy</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Caching the result with n_points not None. If some new parameters</span>
+        <span class="c1"># are provided to the ask, the cache_ is not used.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span><span class="p">[(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)]</span>
+
+        <span class="c1"># Copy of the optimizer is made in order to manage the</span>
+        <span class="c1"># deletion of points with &quot;lie&quot; objective (the copy of</span>
+        <span class="c1"># oiptimizer is simply discarded)</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_min&quot;</span><span class="p">:</span>
+                <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-min lie</span>
+            <span class="k">elif</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">:</span>
+                <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_lie</span><span class="p">)</span>  <span class="c1"># lie to the optimizer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span> <span class="n">X</span><span class="p">}</span>  <span class="c1"># cache_ the result</span>
+
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">_ask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Suggest next point at which to evaluate the objective.</span>
 
 <span class="sd">        Returns a random point for the first `n_random_starts` calls, after</span>
@@ -3175,6 +3287,8 @@ bayesian optimisation loop.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type of arguments `x` (</span><span class="si">%s</span><span class="s2">) and `y` (</span><span class="si">%s</span><span class="s2">) &quot;</span>
                              <span class="s2">&quot;not compatible.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># optimizer learned somethnig new - discard the cache_</span>
 
         <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
@@ -3306,6 +3420,7 @@ bayesian optimisation loop.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
         <span class="s2">&quot;n_restarts_optimizer&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3319,6 +3434,11 @@ bayesian optimisation loop.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+    <span class="c1"># The cache of responses of `ask` method for n_points not None.</span>
+    <span class="c1"># This ensures that multiple calls to `ask` with n_points set</span>
+    <span class="c1"># return same sets of points.</span>
+    <span class="c1"># The cache is reset to {} at every call to `tell`.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 </pre></div>
 
   </div>
@@ -3329,40 +3449,152 @@ bayesian optimisation loop.</p>
             
   <div class="item">
     <div class="name def" id="skopt.Optimizer.ask">
-    <p>def <span class="ident">ask</span>(</p><p>self)</p>
+    <p>def <span class="ident">ask</span>(</p><p>self, n_points=None, strategy=&#39;cl_min&#39;)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Suggest next point at which to evaluate the objective.</p>
-<p>Returns a random point for the first <code>n_random_starts</code> calls, after
-that <code>base_estimator</code> is used to determine the next point.</p></div>
+    <div class="desc"><p>Query point or multiple points at which objective should be evaluated.</p>
+<ul>
+<li>
+<p><code>n_points</code> [int or None, default=None]:
+    Number of points returned by the ask method.
+    If the value is None, a single point to evaluate is returned.
+    Otherwise a list of points to evaluate is returned of size
+    n_points. This is useful if you can evaluate your objective in
+    parallel, and thus obtain more objective function evaluations per
+    unit of time.</p>
+</li>
+<li>
+<p><code>strategy</code> [string, default=<code>"cl_min"</code>]:
+    Method to use to sample multiple points (see also <code>n_points</code>
+    description). This parameter is ignored if n_points = None.
+    Supported options are <code>"cl_min"</code>, <code>"cl_mean"</code> or <code>"cl_max"</code>.</p>
+<ul>
+<li>If set to <code>"cl_min"</code>, then constant liar strtategy is used
+   with lie objective value being minimum of observed objective
+   values. <code>"cl_mean"</code> and <code>"cl_max"</code> means mean and max of values
+   respectively. For details on this strategy see:</li>
+</ul>
+<p>https://hal.archives-ouvertes.fr/hal-00732512/document</p>
+<p>With this strategy a copy of optimizer is created, which is
+   then asked for a point, and the point is told to the copy of
+   optimizer with some fake objective (lie), the next point is
+   asked from copy, it is also told to the copy with fake
+   objective and so on. The type of lie defines different
+   flavours of <code>cl_x</code> strategies.</p>
+</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.ask', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.ask" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Suggest next point at which to evaluate the objective.</span>
-<span class="sd">    Returns a random point for the first `n_random_starts` calls, after</span>
-<span class="sd">    that `base_estimator` is used to determine the next point.</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Query point or multiple points at which objective should be evaluated.</span>
+<span class="sd">    * `n_points` [int or None, default=None]:</span>
+<span class="sd">        Number of points returned by the ask method.</span>
+<span class="sd">        If the value is None, a single point to evaluate is returned.</span>
+<span class="sd">        Otherwise a list of points to evaluate is returned of size</span>
+<span class="sd">        n_points. This is useful if you can evaluate your objective in</span>
+<span class="sd">        parallel, and thus obtain more objective function evaluations per</span>
+<span class="sd">        unit of time.</span>
+<span class="sd">    * `strategy` [string, default=`&quot;cl_min&quot;`]:</span>
+<span class="sd">        Method to use to sample multiple points (see also `n_points`</span>
+<span class="sd">        description). This parameter is ignored if n_points = None.</span>
+<span class="sd">        Supported options are `&quot;cl_min&quot;`, `&quot;cl_mean&quot;` or `&quot;cl_max&quot;`.</span>
+<span class="sd">        - If set to `&quot;cl_min&quot;`, then constant liar strtategy is used</span>
+<span class="sd">           with lie objective value being minimum of observed objective</span>
+<span class="sd">           values. `&quot;cl_mean&quot;` and `&quot;cl_max&quot;` means mean and max of values</span>
+<span class="sd">           respectively. For details on this strategy see:</span>
+<span class="sd">           https://hal.archives-ouvertes.fr/hal-00732512/document</span>
+<span class="sd">           With this strategy a copy of optimizer is created, which is</span>
+<span class="sd">           then asked for a point, and the point is told to the copy of</span>
+<span class="sd">           optimizer with some fake objective (lie), the next point is</span>
+<span class="sd">           asked from copy, it is also told to the copy with fake</span>
+<span class="sd">           objective and so on. The type of lie defines different</span>
+<span class="sd">           flavours of `cl_x` strategies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-=</span> <span class="mi">1</span>
-        <span class="c1"># this will not make a copy of `self.rng` and hence keep advancing</span>
-        <span class="c1"># our random state.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Random evaluations exhausted and no &quot;</span>
-                               <span class="s2">&quot;model has been fit.&quot;</span><span class="p">)</span>
-        <span class="n">next_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span>
-        <span class="n">min_delta_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
-                           <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">])</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">min_delta_x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1e-8</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The objective has been evaluated &quot;</span>
-                          <span class="s2">&quot;at this point before.&quot;</span><span class="p">)</span>
-        <span class="c1"># return point computed from last call to tell()</span>
-        <span class="k">return</span> <span class="n">next_x</span>
+    <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask</span><span class="p">()</span>
+    <span class="n">supported_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cl_min&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_max&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n_points</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;n_points should be int &gt; 0, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_strategies</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected parallel_strategy to be one of &quot;</span> <span class="o">+</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">supported_strategies</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">strategy</span>
+        <span class="p">)</span>
+    <span class="c1"># Caching the result with n_points not None. If some new parameters</span>
+    <span class="c1"># are provided to the ask, the cache_ is not used.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span><span class="p">[(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)]</span>
+    <span class="c1"># Copy of the optimizer is made in order to manage the</span>
+    <span class="c1"># deletion of points with &quot;lie&quot; objective (the copy of</span>
+    <span class="c1"># oiptimizer is simply discarded)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+        <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_min&quot;</span><span class="p">:</span>
+            <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-min lie</span>
+        <span class="k">elif</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">:</span>
+            <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_lie</span><span class="p">)</span>  <span class="c1"># lie to the optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span> <span class="n">X</span><span class="p">}</span>  <span class="c1"># cache_ the result</span>
+    <span class="k">return</span> <span class="n">X</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.Optimizer.copy">
+    <p>def <span class="ident">copy</span>(</p><p>self, random_state=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a shallow copy of an instance of the optimizer.</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>random_state</code> [int, RandomState instance, or None (default)]:
+Set random state of the copy of optimizer.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.copy', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.Optimizer.copy" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a shallow copy of an instance of the optimizer.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">    Set random state of the copy of optimizer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span>
+        <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
+        <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span>
+        <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span><span class="p">,</span>
+        <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
+        <span class="n">acq_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="p">,</span>
+        <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
+        <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gains_&quot;</span><span class="p">):</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">:</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">optimizer</span>
 </pre></div>
 
   </div>
@@ -3468,6 +3700,7 @@ and a list of scalars for <code>y</code>.</p>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type of arguments `x` (</span><span class="si">%s</span><span class="s2">) and `y` (</span><span class="si">%s</span><span class="s2">) &quot;</span>
                          <span class="s2">&quot;not compatible.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># optimizer learned somethnig new - discard the cache_</span>
     <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
         <span class="n">est</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
@@ -3560,6 +3793,26 @@ and a list of scalars for <code>y</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.Optimizer.acq_func_kwargs" class="name">var <span class="ident">acq_func_kwargs</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.Optimizer.acq_optimizer_kwargs" class="name">var <span class="ident">acq_optimizer_kwargs</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.Optimizer.cache_" class="name">var <span class="ident">cache_</span></p>
             
 
             

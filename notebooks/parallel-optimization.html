@@ -1111,132 +1111,51 @@ table {
 
     <article id="content">
           
-          <h1>Comparing surrogate models</h1>
-<p>Tim Head, July 2016.</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+          <h1>Parallel optimization</h1>
+<p>Iaroslav Shcherbatyi, May 2017.</p>
+<p>Reviewed by Manoj Kumar and Tim Head.</p>
+<h2>Introduction</h2>
+<p>For many practical black box optimization problems expensive objective can be evaluated in parallel at multiple points. This allows to get more objective evaluations per unit of time, which reduces the time necessary to reach good objective values when appropriate optimization algorithms are used, see for example results in [1] and the references therein. </p>
+<p>One such example task is a selection of number and activation function of a neural network which results in highest accuracy for some machine learning problem. For such task, multiple neural networks with different combinations of number of neurons and activation function type can be evaluated at the same time in parallel on different cpu cores / computational nodes. </p>
+<p>The “ask and tell” API of scikit-optimize exposes functionality that allows to obtain multiple points for evaluation in parallel. Intended usage of this interface is as follows:</p>
+<ol>
+<li>Initialize instance of the <code>Optimizer</code> class from skopt</li>
+<li>Obtain n points for evaluation in parallel by calling the <code>ask</code> method of an optimizer instance with the <code>n_points</code> argument set to n &gt; 0</li>
+<li>Evaluate points</li>
+<li>Provide points and corresponding objectives using the <code>tell</code> method of an optimizer instance</li>
+<li>Continue from step 2 until eg maximum number of evaluations reached</li>
+</ol>
+<h2>Example</h2>
+<p>A minimalistic example that uses joblib to parallelize evaluation of the objective function is given below.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">skopt.learning</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span>
+<span class="kn">from</span> <span class="nn">sklearn.externals.joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="c1"># example objective taken from skopt</span>
+<span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span>
 
-<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">set_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span>
+    <span class="n">base_estimator</span><span class="o">=</span><span class="n">GaussianProcessRegressor</span><span class="p">(),</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">Real</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span> 
+    <span class="n">x</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># x is a list of n_points points    </span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">()(</span><span class="n">delayed</span><span class="p">(</span><span class="n">branin</span><span class="p">)(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># evaluate points in parallel</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># takes ~ 20 sec to get here</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">optimizer</span><span class="o">.</span><span class="n">yi</span><span class="p">))</span>  <span class="c1"># print the best objective found </span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&lt;matplotlib.figure.Figure at 0x7f8d2eea0470&gt;
+<div class="codehilite"><pre><span></span>1.50606307132
 </pre></div>
 
 
-<p>Bayesian optimization or sequential model-based optimization uses a surrogate model
-to model the expensive to evaluate function <code>func</code>. There are several choices
-for what kind of surrogate model to use. This notebook compares the performance of:</p>
-<ul>
-<li>gaussian processes,</li>
-<li>extra trees, and</li>
-<li>random forests </li>
-</ul>
-<p>as surrogate models. A purely random optimization strategy is also used as a baseline.</p>
-<h1>Toy model</h1>
-<p>We will use the <code>branin</code> function as toy model for the expensive function. In
-a real world application this function would be unknown and expensive to evaluate.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <span class="n">_branin</span>
-
-<span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">_branin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-
-<span class="k">def</span> <span class="nf">plot_branin</span><span class="p">():</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-    <span class="n">x1_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">x2_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">x_ax</span><span class="p">,</span> <span class="n">y_ax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x1_values</span><span class="p">,</span> <span class="n">x2_values</span><span class="p">)</span>
-    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">x_ax</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_ax</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span>
-    <span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">branin</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">],</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
-
-    <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x_ax</span><span class="p">,</span> <span class="n">y_ax</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span>
-                       <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> 
-                                    <span class="n">vmax</span><span class="o">=</span><span class="n">fx</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-
-    <span class="n">minima</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">12.275</span><span class="p">],</span> <span class="p">[</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">2.275</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.42478</span><span class="p">,</span> <span class="mf">2.475</span><span class="p">]])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">minima</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">minima</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Minima&quot;</span><span class="p">)</span>
-
-    <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
-    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;f(x)&quot;</span><span class="p">)</span>
-
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
-
-<span class="n">plot_branin</span><span class="p">()</span>
-</pre></div>
-
-
-<p><img alt="png" src="strategy-comparison_files/strategy-comparison_4_0.png" /></p>
-<p>This shows the value of the two-dimensional branin function and the three minima.</p>
-<h1>Objective</h1>
-<p>The objective of this example is to find one of these minima in as few iterations
-as possible. One iteration is defined as one call to the <code>branin</code> function.</p>
-<p>We will evaluate each model several times using a different seed for the
-random number generator. Then compare the average performance of these
-models. This makes the comparison more robust against models that get
-"lucky".</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
-
-<span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
-<span class="n">n_calls</span> <span class="o">=</span> <span class="mi">80</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> 
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
-
-<span class="c1"># Random search</span>
-<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">dummy_minimize</span><span class="p">)</span> 
-
-<span class="c1"># Gaussian processes</span>
-<span class="n">gp_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">gp_minimize</span><span class="p">)</span>
-
-<span class="c1"># Random forest</span>
-<span class="n">rf_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;RF&quot;</span><span class="p">))</span>
-
-<span class="c1"># Extra trees </span>
-<span class="n">et_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">forest_minimize</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">))</span>
-</pre></div>
-
-
-<p>Note that this can take a few minutes.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <span class="n">plot_convergence</span>
-
-<span class="n">plot</span> <span class="o">=</span> <span class="n">plot_convergence</span><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
-                        <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
-                        <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
-                        <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span> 
-                        <span class="n">true_minimum</span><span class="o">=</span><span class="mf">0.397887</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-
-<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</pre></div>
-
-
-<p><img alt="png" src="strategy-comparison_files/strategy-comparison_9_0.png" /></p>
-<p>This plot shows the value of the minimum found (y axis) as a function of the number
-of iterations performed so far (x axis). The dashed red line indicates the
-true value of the minimum of the branin function.</p>
-<p>For the first ten iterations all methods perform equally well as they all start
-by creating ten random samples before fitting their respective model for the
-first time. After iteration ten the next point at which to evaluate <code>branin</code> is
-guided by the model, which is where differences start to appear.</p>
-<p>Each minimizer only has access to noisy observations of the objective
-function, so as time passes (more iterations) it will start observing values that
-are below the true value simply because they are fluctuations.</p>
+<p>Note that if <code>n_points</code> is set to some integer &gt; 0 for the <code>ask</code> method, the result will be a list of points, even for <code>n_points</code>=1. If the argument is set to <code>None</code> (default value) then a single point (but not a list of points) will be returned.</p>
+<p>The default "minimum constant liar" [1] parallelization strategy is used in the example, which allows to obtain multiple points for evaluation with a single call to the <code>ask</code> method with any surrogate or acquisition function. Paralellization strategy can be set using the "strategy" argument of <code>ask</code>. For supported parallelization strategies see the documentation of scikit-optimize. </p>
+<p>[1] <a href="https://hal.archives-ouvertes.fr/hal-00732512/document">https://hal.archives-ouvertes.fr/hal-00732512/document</a> .</p>
     </article>
   <div class="clear"> </div>
   <footer id="footer">
