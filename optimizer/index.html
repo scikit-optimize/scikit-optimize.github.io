@@ -1178,8 +1178,8 @@ table {
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
-    Number of evaluations of <code>func</code> with random initialization points
-    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
+    Number of evaluations of <code>func</code> with random points before
+    approximating it with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>acq_func</code> [string, default=<code>"EI"</code>]:
@@ -1339,8 +1339,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Maximum number of calls to `func`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
-<span class="sd">        Number of evaluations of `func` with random initialization points</span>
-<span class="sd">        before approximating the `func` with `base_estimator`.</span>
+<span class="sd">        Number of evaluations of `func` with random points before</span>
+<span class="sd">        approximating it with `base_estimator`.</span>
 
 <span class="sd">    * `acq_func` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
@@ -1447,62 +1447,66 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="s2">&quot;n_jobs&quot;</span><span class="p">:</span> <span class="n">n_jobs</span><span class="p">}</span>
     <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xi&quot;</span><span class="p">:</span> <span class="n">xi</span><span class="p">,</span> <span class="s2">&quot;kappa&quot;</span><span class="p">:</span> <span class="n">kappa</span><span class="p">}</span>
 
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span>
-                          <span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span>
-                          <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
-                          <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
-
     <span class="c1"># Initialize with provided points (x0 and y0) and/or random points</span>
     <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Optimization space (</span><span class="si">%s</span><span class="s2">) and initial points in x0 &quot;</span>
-                           <span class="s2">&quot;use inconsistent dimensions.&quot;</span> <span class="o">%</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0` should be a list, but got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
-
-    <span class="n">n_init_func_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">if</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">n_total_init_calls</span> <span class="o">=</span> <span class="n">n_random_starts</span> <span class="o">+</span> <span class="n">n_init_func_calls</span>
-
-    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">n_total_init_calls</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Expected `n_calls` &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_total_init_calls</span><span class="p">,</span>
-                                                  <span class="n">n_calls</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">x0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either set `n_random_starts` &gt; 0,&quot;</span>
                          <span class="s2">&quot; or provide `x0`&quot;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+
+    <span class="c1"># is the budget for calling `func` large enough?</span>
+    <span class="n">required_calls</span> <span class="o">=</span> <span class="n">n_random_starts</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">y0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="n">required_calls</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected `n_calls` &gt;= </span><span class="si">%d</span><span class="s2">, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">required_calls</span><span class="p">,</span> <span class="n">n_calls</span><span class="p">))</span>
+
+    <span class="c1"># Number of points the user wants to evaluate before it makes sense to</span>
+    <span class="c1"># fit a surrogate model</span>
+    <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_random_starts</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                          <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
+                          <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span>
+                          <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                          <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
+                          <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Optimization space (</span><span class="si">%s</span><span class="s2">) and initial points in x0 &quot;</span>
+                           <span class="s2">&quot;use inconsistent dimensions.&quot;</span> <span class="o">%</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="p">)</span>
+
     <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VerboseCallback</span><span class="p">(</span>
-            <span class="n">n_init</span><span class="o">=</span><span class="n">n_init_func_calls</span><span class="p">,</span> <span class="n">n_random</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+            <span class="n">n_init</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">y0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">n_random</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
             <span class="n">n_total</span><span class="o">=</span><span class="n">n_calls</span><span class="p">))</span>
-
-    <span class="c1"># User suggested points at which to evaluate the objective first</span>
-    <span class="k">if</span> <span class="n">x0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">y0</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
 
     <span class="c1"># setting the scope for these variables</span>
     <span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="c1"># User is god and knows the value of the objective at these points</span>
-    <span class="k">if</span> <span class="n">x0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="c1"># User suggested points at which to evaluate the objective first</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="p">))</span>
+        <span class="n">n_calls</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+
+    <span class="c1"># Pass user suggested initialisation points to the optimizer</span>
+    <span class="k">if</span> <span class="n">x0</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;`y0` should be an iterable or a scalar, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">y0</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
-            <span class="n">y0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
-            <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x0` and `y0` should have the same length&quot;</span><span class="p">)</span>
@@ -1518,12 +1522,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
             <span class="k">return</span> <span class="n">result</span>
 
     <span class="c1"># Bayesian optimization loop</span>
-    <span class="n">n_iterations</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="n">n_init_func_calls</span>
-    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_calls</span><span class="p">):</span>
         <span class="n">next_x</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
 
         <span class="c1"># no need to fit a model on the last iteration</span>
-        <span class="n">fit_model</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">n_iterations</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">fit_model</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">next_y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">next_x</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">next_y</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`func` should return a scalar&quot;</span><span class="p">)</span>
@@ -1855,8 +1858,8 @@ making predictions.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
-    Number of evaluations of <code>func</code> with random initialization points
-    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
+    Number of evaluations of <code>func</code> with random points before
+    approximating it with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>acq_func</code> [string, default=<code>"LCB"</code>]:
@@ -1949,9 +1952,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.forest_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                    <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                    <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span>
+                    <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -2006,8 +2010,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Number of calls to `func`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
-<span class="sd">        Number of evaluations of `func` with random initialization points</span>
-<span class="sd">        before approximating the `func` with `base_estimator`.</span>
+<span class="sd">        Number of evaluations of `func` with random points before</span>
+<span class="sd">        approximating it with `base_estimator`.</span>
 
 <span class="sd">    * `acq_func` [string, default=`&quot;LCB&quot;`]:</span>
 <span class="sd">        Function to minimize over the forest posterior. Can be either</span>
@@ -2169,8 +2173,8 @@ guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
-    Number of evaluations of <code>func</code> with random initialization points
-    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
+    Number of evaluations of <code>func</code> with random points before
+    approximating it with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>acq_func</code> [string, default=<code>"LCB"</code>]:
@@ -2312,8 +2316,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Number of calls to `func`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
-<span class="sd">        Number of evaluations of `func` with random initialization points</span>
-<span class="sd">        before approximating the `func` with `base_estimator`.</span>
+<span class="sd">        Number of evaluations of `func` with random points before</span>
+<span class="sd">        approximating it with `base_estimator`.</span>
 
 <span class="sd">    * `acq_func` [string, default=`&quot;LCB&quot;`]:</span>
 <span class="sd">        Function to minimize over the forest posterior. Can be either</span>
@@ -2481,8 +2485,8 @@ guided by the surrogate model.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
-    Number of evaluations of <code>func</code> with random initialization points
-    before approximating the <code>func</code> with <code>base_estimator</code>.</p>
+    Number of evaluations of <code>func</code> with random points before
+    approximating it with <code>base_estimator</code>.</p>
 </li>
 <li>
 <p><code>acq_func</code> [string, default=<code>"EI"</code>]:
@@ -2697,8 +2701,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Number of calls to `func`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
-<span class="sd">        Number of evaluations of `func` with random initialization points</span>
-<span class="sd">        before approximating the `func` with `base_estimator`.</span>
+<span class="sd">        Number of evaluations of `func` with random points before</span>
+<span class="sd">        approximating it with `base_estimator`.</span>
 
 <span class="sd">    * `acq_func` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the gaussian prior. Can be either</span>
@@ -2914,9 +2918,14 @@ bayesian optimisation loop.</p>
 </li>
 <li>
 <p><code>n_random_starts</code> [int, default=10]:
-    Number of evaluations of <code>func</code> with random initialization points
-    before approximating the <code>func</code> with <code>base_estimator</code>. While random
-    points are being suggested no model will be fit to the observations.</p>
+    DEPRECATED, use <code>n_initial_points</code> instead.</p>
+</li>
+<li>
+<p><code>n_initial_points</code> [int, default=10]:
+    Number of evaluations of <code>func</code> with initialization points
+    before approximating it with <code>base_estimator</code>. Points provided as
+    <code>x0</code> count as initialization points. If len(x0) &lt; n_initial_points
+    additional points are sampled at random.</p>
 </li>
 <li>
 <p><code>acq_func</code> [string, default=<code>"EI"</code>]:
@@ -3018,9 +3027,13 @@ bayesian optimisation loop.</p>
 <span class="sd">        argument, which returns `std(Y | x)`` along with `E[Y | x]`.</span>
 
 <span class="sd">    * `n_random_starts` [int, default=10]:</span>
-<span class="sd">        Number of evaluations of `func` with random initialization points</span>
-<span class="sd">        before approximating the `func` with `base_estimator`. While random</span>
-<span class="sd">        points are being suggested no model will be fit to the observations.</span>
+<span class="sd">        DEPRECATED, use `n_initial_points` instead.</span>
+
+<span class="sd">    * `n_initial_points` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with initialization points</span>
+<span class="sd">        before approximating it with `base_estimator`. Points provided as</span>
+<span class="sd">        `x0` count as initialization points. If len(x0) &lt; n_initial_points</span>
+<span class="sd">        additional points are sampled at random.</span>
 
 <span class="sd">    * `acq_func` [string, default=`&quot;EI&quot;`]:</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
@@ -3078,7 +3091,8 @@ bayesian optimisation loop.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-                 <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
+                 <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -3118,7 +3132,14 @@ bayesian optimisation loop.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="s2">&quot;n_random_starts will be removed in favour of &quot;</span>
+                           <span class="s2">&quot;n_initial_points.&quot;</span><span class="p">),</span>
+                          <span class="ne">DeprecationWarning</span><span class="p">)</span>
+            <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_random_starts</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 
@@ -3128,24 +3149,27 @@ bayesian optimisation loop.</p>
         <span class="c1"># The cache is reset to {} at every call to `tell`.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">_check_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span>
+                         <span class="n">acq_optimizer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check arguments for sanity.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has to be a regressor.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
 
-        <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_initial_points</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Expected `n_random_starts` &gt;= 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_random_starts</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">=</span> <span class="n">n_random_starts</span>
+                <span class="s2">&quot;Expected `n_initial_points` &gt;= 0, got </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_initial_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">=</span> <span class="n">n_initial_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_initial_points_</span> <span class="o">=</span> <span class="n">n_initial_points</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span>
                                         <span class="n">RandomForestRegressor</span><span class="p">,</span>
-                                        <span class="n">GradientBoostingQuantileRegressor</span><span class="p">))</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The tree-based regressor {0} should run with &quot;</span>
-                             <span class="s2">&quot;acq_optimizer=&#39;sampling&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
+                                        <span class="n">GradientBoostingQuantileRegressor</span><span class="p">))</span> <span class="ow">and</span>
+                <span class="ow">not</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The tree-based regressor {0} should run with &quot;</span>
+                <span class="s2">&quot;acq_optimizer=&#39;sampling&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39; or &quot;</span>
@@ -3158,13 +3182,13 @@ bayesian optimisation loop.</p>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        * `random_state` [int, RandomState instance, or None (default)]:</span>
-<span class="sd">        Set random state of the copy of optimizer.</span>
+<span class="sd">            Set the random state of the copy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span>
             <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
             <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span>
-            <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span><span class="p">,</span>
+            <span class="n">n_initial_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_initial_points_</span><span class="p">,</span>
             <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
             <span class="n">acq_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="p">,</span>
             <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
@@ -3248,7 +3272,6 @@ bayesian optimisation loop.</p>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
             <span class="n">opt</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_lie</span><span class="p">)</span>  <span class="c1"># lie to the optimizer</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span> <span class="n">X</span><span class="p">}</span>  <span class="c1"># cache_ the result</span>
 
@@ -3257,11 +3280,11 @@ bayesian optimisation loop.</p>
     <span class="k">def</span> <span class="nf">_ask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Suggest next point at which to evaluate the objective.</span>
 
-<span class="sd">        Returns a random point for the first `n_random_starts` calls, after</span>
-<span class="sd">        that `base_estimator` is used to determine the next point.</span>
+<span class="sd">        Return a random point while not at least `n_initial_points`</span>
+<span class="sd">        observations have been `tell`ed, after that `base_estimator` is used</span>
+<span class="sd">        to determine the next point.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># this will not make a copy of `self.rng` and hence keep advancing</span>
             <span class="c1"># our random state.</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -3299,12 +3322,14 @@ bayesian optimisation loop.</p>
 <span class="sd">        ----------</span>
 <span class="sd">        * `x` [list or list-of-lists]:</span>
 <span class="sd">            Point at which objective was evaluated.</span>
+
 <span class="sd">        * `y` [scalar or list]:</span>
 <span class="sd">            Value of objective at `x`.</span>
+
 <span class="sd">        * `fit` [bool, default=True]</span>
 <span class="sd">            Fit a model to observed evaluations of the objective. A model will</span>
-<span class="sd">            only be fitted after `n_random_starts` points have been queried</span>
-<span class="sd">            irrespective of the value of `fit`.</span>
+<span class="sd">            only be fitted after `n_initial_points` points have been told to the</span>
+<span class="sd">            optimizer irrespective of the value of `fit`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if y isn&#39;t a scalar it means we have been handed a batch of points</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
@@ -3314,6 +3339,7 @@ bayesian optimisation loop.</p>
                                  <span class="s2">&quot; the space.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">:</span>
@@ -3322,14 +3348,18 @@ bayesian optimisation loop.</p>
                                  <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">-=</span> <span class="mi">1</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type of arguments `x` (</span><span class="si">%s</span><span class="s2">) and `y` (</span><span class="si">%s</span><span class="s2">) &quot;</span>
                              <span class="s2">&quot;not compatible.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># optimizer learned somethnig new - discard the cache_</span>
+        <span class="c1"># optimizer learned somethnig new - discard cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># after being &quot;told&quot; n_initial_points we switch from sampling</span>
+        <span class="c1"># random points to using a surrogate model</span>
+        <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
             <span class="n">est</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
 
@@ -3426,7 +3456,7 @@ bayesian optimisation loop.</p>
             
   <div class="item">
     <div class="name def" id="skopt.optimizer.Optimizer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator, n_random_starts=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;lbfgs&#39;, random_state=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator, n_random_starts=None, n_initial_points=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;lbfgs&#39;, random_state=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
     </div>
     
 
@@ -3437,7 +3467,8 @@ bayesian optimisation loop.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.Optimizer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer.Optimizer.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
-             <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
+             <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
              <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
              <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -3471,7 +3502,12 @@ bayesian optimisation loop.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="s2">&quot;n_random_starts will be removed in favour of &quot;</span>
+                       <span class="s2">&quot;n_initial_points.&quot;</span><span class="p">),</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_random_starts</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
     <span class="c1"># The cache of responses of `ask` method for n_points not None.</span>
     <span class="c1"># This ensures that multiple calls to `ask` with n_points set</span>
@@ -3584,7 +3620,6 @@ bayesian optimisation loop.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
         <span class="n">opt</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_lie</span><span class="p">)</span>  <span class="c1"># lie to the optimizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span> <span class="n">X</span><span class="p">}</span>  <span class="c1"># cache_ the result</span>
     <span class="k">return</span> <span class="n">X</span>
 </pre></div>
@@ -3607,7 +3642,7 @@ bayesian optimisation loop.</p>
 <h2>Parameters</h2>
 <ul>
 <li><code>random_state</code> [int, RandomState instance, or None (default)]:
-Set random state of the copy of optimizer.</li>
+    Set the random state of the copy.</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.Optimizer.copy', this);">Show source &equiv;</a></p>
@@ -3617,12 +3652,12 @@ Set random state of the copy of optimizer.</li>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
-<span class="sd">    Set random state of the copy of optimizer.</span>
+<span class="sd">        Set the random state of the copy.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span>
         <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
         <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">,</span>
-        <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span><span class="p">,</span>
+        <span class="n">n_initial_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_initial_points_</span><span class="p">,</span>
         <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
         <span class="n">acq_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="p">,</span>
         <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
@@ -3688,14 +3723,20 @@ which to evaluate the objective. This point can be retrieved by calling
 and a list of scalars for <code>y</code>.</p>
 <h2>Parameters</h2>
 <ul>
-<li><code>x</code> [list or list-of-lists]:
-    Point at which objective was evaluated.</li>
-<li><code>y</code> [scalar or list]:
-    Value of objective at <code>x</code>.</li>
-<li><code>fit</code> [bool, default=True]
+<li>
+<p><code>x</code> [list or list-of-lists]:
+    Point at which objective was evaluated.</p>
+</li>
+<li>
+<p><code>y</code> [scalar or list]:
+    Value of objective at <code>x</code>.</p>
+</li>
+<li>
+<p><code>fit</code> [bool, default=True]
     Fit a model to observed evaluations of the objective. A model will
-    only be fitted after <code>n_random_starts</code> points have been queried
-    irrespective of the value of <code>fit</code>.</li>
+    only be fitted after <code>n_initial_points</code> points have been told to the
+    optimizer irrespective of the value of <code>fit</code>.</p>
+</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.Optimizer.tell', this);">Show source &equiv;</a></p>
@@ -3718,8 +3759,8 @@ and a list of scalars for <code>y</code>.</p>
 <span class="sd">        Value of objective at `x`.</span>
 <span class="sd">    * `fit` [bool, default=True]</span>
 <span class="sd">        Fit a model to observed evaluations of the objective. A model will</span>
-<span class="sd">        only be fitted after `n_random_starts` points have been queried</span>
-<span class="sd">        irrespective of the value of `fit`.</span>
+<span class="sd">        only be fitted after `n_initial_points` points have been told to the</span>
+<span class="sd">        optimizer irrespective of the value of `fit`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if y isn&#39;t a scalar it means we have been handed a batch of points</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
@@ -3729,6 +3770,7 @@ and a list of scalars for <code>y</code>.</p>
                              <span class="s2">&quot; the space.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Point (</span><span class="si">%s</span><span class="s2">) is not within the bounds of&quot;</span>
@@ -3736,11 +3778,15 @@ and a list of scalars for <code>y</code>.</p>
                              <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">-=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type of arguments `x` (</span><span class="si">%s</span><span class="s2">) and `y` (</span><span class="si">%s</span><span class="s2">) &quot;</span>
                          <span class="s2">&quot;not compatible.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># optimizer learned somethnig new - discard the cache_</span>
-    <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_random_starts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># optimizer learned somethnig new - discard cache</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># after being &quot;told&quot; n_initial_points we switch from sampling</span>
+    <span class="c1"># random points to using a surrogate model</span>
+    <span class="k">if</span> <span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
         <span class="n">est</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
