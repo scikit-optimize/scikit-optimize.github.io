@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7fc19cf30588>
+    <matplotlib.figure.Figure at 0x7f6a90ff4668>
 
 
 Bayesian optimization is used to tune parameters for walking robots or other experiments
@@ -81,7 +81,7 @@ is that you do not pass the objective function to the optimizer.
 
 ```python
 etr = ExtraTreesRegressor(random_state=2, n_estimators=200)
-opt = Optimizer([(-2.0, 2.0)], etr, acq_optimizer="sampling")
+opt = Optimizer([(-2.0, 2.0)], "ET", acq_optimizer="sampling")
 ```
 
 To obtain a suggestion for the point at which to evaluate the objective
@@ -113,7 +113,7 @@ opt.tell(next_x, f_val)
               fun: -0.063856745472530174
         func_vals: array([-0.06385675])
            models: []
-     random_state: <mtrand.RandomState object at 0x7fc19c0b1af8>
+     random_state: <mtrand.RandomState object at 0x7f6a73542b40>
             space: Space([Real(low=-2.0, high=2.0, prior=uniform, transform=identity)])
             specs: None
                 x: [-1.3229420461664514]
