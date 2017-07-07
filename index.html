@@ -1988,7 +1988,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                                        <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
@@ -2281,7 +2282,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GBRT&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GBRT&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
                          <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
@@ -2380,8 +2382,8 @@ guided by the surrogate model.</p>
   given to these gains can be set by <code>\eta</code> through <code>acq_func_kwargs</code>.<ul>
 <li>The gains <code>g_i</code> are initialized to zero.</li>
 <li>At every iteration,<ul>
-<li>Each acquisition function is optimised independently to propose an
-  candidate point <code>X_i</code>.</li>
+<li>Each acquisition function is optimised independently to
+  propose an candidate point <code>X_i</code>.</li>
 <li>Out of all these candidate points, the next point <code>X_best</code> is
   chosen by <code>softmax(\eta g_i)</code></li>
 <li>After fitting the surrogate model with <code>(X_best, y_best)</code>,
@@ -2598,8 +2600,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">          given to these gains can be set by `\eta` through `acq_func_kwargs`.</span>
 <span class="sd">            - The gains `g_i` are initialized to zero.</span>
 <span class="sd">            - At every iteration,</span>
-<span class="sd">                - Each acquisition function is optimised independently to propose an</span>
-<span class="sd">                  candidate point `X_i`.</span>
+<span class="sd">                - Each acquisition function is optimised independently to</span>
+<span class="sd">                  propose an candidate point `X_i`.</span>
 <span class="sd">                - Out of all these candidate points, the next point `X_best` is</span>
 <span class="sd">                  chosen by `softmax(\eta g_i)`</span>
 <span class="sd">                - After fitting the surrogate model with `(X_best, y_best)`,</span>
@@ -2733,7 +2735,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="p">)</span>
 
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dims</span><span class="p">)</span>
-    <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
+    <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                    <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
         <span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
@@ -3298,7 +3301,7 @@ n_jobs</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># can be None if user intends to provide spaces later manually</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="c1"># account for the case when search space is a dict</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
@@ -3527,7 +3530,7 @@ n_jobs</code>.</p>
 
         <span class="c1"># record performances with different points</span>
         <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># do not fit yet - will be fit later</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># do not fit yet - will be fit later</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
 
@@ -3640,7 +3643,7 @@ n_jobs</code>.</p>
     <span class="c1"># user wants to use `step` function directly.</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># can be None if user intends to provide spaces later manually</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="c1"># account for the case when search space is a dict</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
@@ -3906,7 +3909,7 @@ possible failures.</p>
     <span class="n">all_cv_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span>
     <span class="c1"># record performances with different points</span>
     <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># do not fit yet - will be fit later</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># do not fit yet - will be fit later</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
     <span class="c1"># merge existing and new cv_results_</span>
@@ -4329,7 +4332,8 @@ bayesian optimisation loop.</p>
 
         <span class="k">if</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span> <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor {0} should run with &quot;</span>
-                             <span class="s2">&quot;acq_optimizer=&#39;sampling&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
+                             <span class="s2">&quot;acq_optimizer&quot;</span>
+                             <span class="s2">&quot;=&#39;sampling&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
 
@@ -4485,8 +4489,8 @@ bayesian optimisation loop.</p>
 
 <span class="sd">        * `fit` [bool, default=True]</span>
 <span class="sd">            Fit a model to observed evaluations of the objective. A model will</span>
-<span class="sd">            only be fitted after `n_initial_points` points have been told to the</span>
-<span class="sd">            optimizer irrespective of the value of `fit`.</span>
+<span class="sd">            only be fitted after `n_initial_points` points have been told to</span>
+<span class="sd">            the optimizer irrespective of the value of `fit`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if y isn&#39;t a scalar it means we have been handed a batch of points</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
@@ -4891,8 +4895,8 @@ and a list of scalars for <code>y</code>.</p>
 <li>
 <p><code>fit</code> [bool, default=True]
     Fit a model to observed evaluations of the objective. A model will
-    only be fitted after <code>n_initial_points</code> points have been told to the
-    optimizer irrespective of the value of <code>fit</code>.</p>
+    only be fitted after <code>n_initial_points</code> points have been told to
+    the optimizer irrespective of the value of <code>fit</code>.</p>
 </li>
 </ul></div>
   <div class="source_cont">
@@ -4916,8 +4920,8 @@ and a list of scalars for <code>y</code>.</p>
 <span class="sd">        Value of objective at `x`.</span>
 <span class="sd">    * `fit` [bool, default=True]</span>
 <span class="sd">        Fit a model to observed evaluations of the objective. A model will</span>
-<span class="sd">        only be fitted after `n_initial_points` points have been told to the</span>
-<span class="sd">        optimizer irrespective of the value of `fit`.</span>
+<span class="sd">        only be fitted after `n_initial_points` points have been told to</span>
+<span class="sd">        the optimizer irrespective of the value of `fit`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if y isn&#39;t a scalar it means we have been handed a batch of points</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>

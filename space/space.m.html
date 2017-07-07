@@ -1207,8 +1207,8 @@ table {
                              <span class="s2">&quot; supported types.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span>
-            <span class="ow">and</span> <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+            <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
             <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1310,8 +1310,8 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
-                              <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
+                             <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
 
         <span class="c1"># Define _rvs and transformer spaces.</span>
         <span class="c1"># XXX: The _rvs is for sampling in the transformed space.</span>
@@ -1488,7 +1488,8 @@ table {
 <span class="sd">            are equally likely.</span>
 
 <span class="sd">        * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
-<span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original space.</span>
+<span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original</span>
+<span class="sd">              space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1952,8 +1953,8 @@ the documentation of <code>dimension</code> below.</p>
                              <span class="s2">&quot; supported types.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span>
-            <span class="ow">and</span> <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+            <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
             <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1995,7 +1996,8 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">            are equally likely.</span>
 
 <span class="sd">        * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
-<span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original space.</span>
+<span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original</span>
+<span class="sd">              space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2130,7 +2132,8 @@ the documentation of <code>dimension</code> below.</p>
 <li>
 <p><code>transform</code> ["onehot", "identity", default="onehot"] :</p>
 <ul>
-<li>"identity", the transformed space is the same as the original space.</li>
+<li>"identity", the transformed space is the same as the original
+  space.</li>
 <li>"onehot", the transformed space is a one-hot encoded
   representation of the original space.</li>
 </ul>
@@ -2149,7 +2152,8 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">        Prior probabilities for each category. By default all categories</span>
 <span class="sd">        are equally likely.</span>
 <span class="sd">    * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
-<span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original space.</span>
+<span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original</span>
+<span class="sd">          space.</span>
 <span class="sd">        - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">          representation of the original space.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3028,8 +3032,8 @@ orignal space.</p></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
-                              <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
+                             <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
 
         <span class="c1"># Define _rvs and transformer spaces.</span>
         <span class="c1"># XXX: The _rvs is for sampling in the transformed space.</span>
@@ -3191,8 +3195,8 @@ orignal space.</p></div>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
-                          <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
+                         <span class="s2">&quot; got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
     <span class="c1"># Define _rvs and transformer spaces.</span>
     <span class="c1"># XXX: The _rvs is for sampling in the transformed space.</span>
     <span class="c1"># The rvs on Dimension calls inverse_transform on the points sampled</span>
