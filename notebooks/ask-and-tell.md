@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f0ac4771550>
+    <matplotlib.figure.Figure at 0x7f34d81b65c0>
 
 
 Bayesian optimization is used to tune parameters for walking robots or other experiments
@@ -112,7 +112,7 @@ opt.tell(next_x, f_val)
               fun: -0.063856745472530174
         func_vals: array([-0.06385675])
            models: []
-     random_state: <mtrand.RandomState object at 0x7f0aac73ac18>
+     random_state: <mtrand.RandomState object at 0x7f34d00c4b40>
             space: Space([Real(low=-2.0, high=2.0, prior=uniform, transform=identity)])
             specs: None
                 x: [-1.3229420461664514]
