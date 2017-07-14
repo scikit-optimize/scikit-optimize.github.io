@@ -1102,7 +1102,7 @@ table {
         
         <li><a href="https://scikit-optimize.github.io/notebooks/parallel-optimization.html">Parallel optimization</a></li>
         
-        <li><a href="https://scikit-optimize.github.io/notebooks/searchcv.html">Searchcv</a></li>
+        <li><a href="https://scikit-optimize.github.io/notebooks/sklearn-gridsearchcv-replacement.html">Sklearn gridsearchcv replacement</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/store-and-load-results.html">Store and load results</a></li>
         
@@ -1122,6 +1122,7 @@ table {
 <p>This example assumes basic familiarity with <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>. </p>
 <p>Search for parameters of machine learning models that result in best cross-validation performance is necessary in almost all practical cases to get a model with best generalization estimate. A standard approach in scikit-learn is using <code>GridSearchCV</code> class, which takes a set of values for every parameter to try, and simply enumerates all combinations of parameter values. The complexity of such search grows exponentially with addition of new parameters. A more scalable approach is using <code>RandomizedSearchCV</code>, which however does not take advantage of the structure of a search space.</p>
 <p>Scikit-optimize provides a drop in replacement for <code>GridSearchCV</code>, which utilizes Bayesian Optimization where a predictive model reffered to as "surrogate" is used to model the search space and utilized in order to arrive at good parameter values combination as soon as possible.</p>
+<p>Note: for a manual hyperparameter optimization example, see "Hyperparameter Optimization" notebook.</p>
 <h2>Minimal example</h2>
 <p>A minimal example of optimizing hyperparameters of SVC (Support Vector machine Classifier) is given below.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
@@ -1151,8 +1152,8 @@ table {
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>val. score: 0.992576095026
-test score: 0.993333333333
+<div class="codehilite"><pre><span></span>val. score: 0.989606533036
+test score: 0.991111111111
 </pre></div>
 
 
@@ -1207,8 +1208,8 @@ test score: 0.993333333333
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>val. score: 0.96585003712
-test score: 0.964444444444
+<div class="codehilite"><pre><span></span>val. score: 0.963622865627
+test score: 0.966666666667
 </pre></div>
 
 
@@ -1243,22 +1244,22 @@ test score: 0.964444444444
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>0 0.0844444444444
-1 0.884444444444
-2 0.884444444444
-3 0.884444444444
-4 0.884444444444
-5 0.884444444444
-6 0.884444444444
-7 0.884444444444
-8 0.884444444444
-9 0.884444444444
+<div class="codehilite"><pre><span></span>0 0.42
+1 0.42
+2 0.42
+3 0.42
+4 0.42
+5 0.98
+6 0.98
+7 0.98
+8 0.98
+9 0.98
 10 0.98
-11 0.98
-12 0.98
-13 0.98
-14 0.98
-15 0.98
+11 0.975555555556
+12 0.975555555556
+13 0.975555555556
+14 0.975555555556
+15 0.975555555556
 </pre></div>
     </article>
   <div class="clear"> </div>

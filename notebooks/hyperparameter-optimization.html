@@ -1102,7 +1102,7 @@ table {
         
         <li><a href="https://scikit-optimize.github.io/notebooks/parallel-optimization.html">Parallel optimization</a></li>
         
-        <li><a href="https://scikit-optimize.github.io/notebooks/searchcv.html">Searchcv</a></li>
+        <li><a href="https://scikit-optimize.github.io/notebooks/sklearn-gridsearchcv-replacement.html">Sklearn gridsearchcv replacement</a></li>
         
         <li><a href="https://scikit-optimize.github.io/notebooks/store-and-load-results.html">Store and load results</a></li>
         
@@ -1127,7 +1127,8 @@ Katie Malone, August 2016</p>
 
 <h2>Problem statement</h2>
 <p>Tuning the hyper-parameters of a machine learning model is often carried out using an exhaustive exploration of (a subset of) the space all hyper-parameter configurations (e.g., using <code>sklearn.model_selection.GridSearchCV</code>), which often results in a very time consuming operation. </p>
-<p>In this notebook, we illustrate how to couple <code>gp_minimize</code> with sklearn's estimators to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations.</p>
+<p>In this notebook, we illustrate how to couple <code>gp_minimize</code> with sklearn's estimators to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations. </p>
+<p>Note: scikit-optimize provides a dedicated interface for estimator tuning via <code>BayesSearchCV</code> class which has a similar interface to those of <code>GridSearchCV</code>. This class uses functions of skopt to perform hyperparameter search efficiently. For example usage of this class, see "Scikit Learn HPO Wrapper" example notebook.</p>
 <h2>Objective</h2>
 <p>The first step is to define the objective function we want to minimize, in this case the cross-validation mean absolute error of a gradient boosting regressor over the Boston dataset, as a function of its hyper-parameters:</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
