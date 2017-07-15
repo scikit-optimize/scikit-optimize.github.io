@@ -46,8 +46,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.989606533036
-    test score: 0.991111111111
+    val. score: 0.991091314031
+    test score: 0.993333333333
 
 
 ## Advanced example 
@@ -104,8 +104,12 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.963622865627
-    test score: 0.966666666667
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:362: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated "
+
+
+    val. score: 0.964365256125
+    test score: 0.962222222222
 
 
 ## Iterative search utilizing `step` function
@@ -143,20 +147,20 @@ for i in range(16):
     print(i, score)
 ```
 
-    0 0.42
-    1 0.42
-    2 0.42
-    3 0.42
-    4 0.42
-    5 0.98
-    6 0.98
-    7 0.98
-    8 0.98
-    9 0.98
-    10 0.98
-    11 0.975555555556
-    12 0.975555555556
-    13 0.975555555556
-    14 0.975555555556
-    15 0.975555555556
+    0 0.0844444444444
+    1 0.971111111111
+    2 0.971111111111
+    3 0.971111111111
+    4 0.971111111111
+    5 0.971111111111
+    6 0.971111111111
+    7 0.971111111111
+    8 0.971111111111
+    9 0.971111111111
+    10 0.993333333333
+    11 0.993333333333
+    12 0.993333333333
+    13 0.993333333333
+    14 0.993333333333
+    15 0.993333333333
 
