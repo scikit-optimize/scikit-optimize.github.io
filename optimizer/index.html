@@ -1205,8 +1205,9 @@ table {
     is updated with the optimal value obtained by optimizing <code>acq_func</code>
     with <code>acq_optimizer</code>.</p>
 <ul>
-<li>If set to <code>"sampling"</code>, then the point among these <code>n_points</code>
-  where the <code>acq_func</code> is minimum is the next candidate minimum.</li>
+<li>If set to <code>"sampling"</code>, then <code>acq_func</code> is optimized by computing
+  <code>acq_func</code> at <code>n_points</code> randomly sampled points and the smallest
+  value found is used.</li>
 <li>If set to <code>"lbfgs"</code>, then<ul>
 <li>The <code>n_restarts_optimizer</code> no. of points which the acquisition
     function is least are taken as start points.</li>
@@ -1370,8 +1371,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        is updated with the optimal value obtained by optimizing `acq_func`</span>
 <span class="sd">        with `acq_optimizer`.</span>
 
-<span class="sd">        - If set to `&quot;sampling&quot;`, then the point among these `n_points`</span>
-<span class="sd">          where the `acq_func` is minimum is the next candidate minimum.</span>
+<span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
+<span class="sd">          `acq_func` at `n_points` randomly sampled points and the smallest</span>
+<span class="sd">          value found is used.</span>
 <span class="sd">        - If set to `&quot;lbfgs&quot;`, then</span>
 <span class="sd">              - The `n_restarts_optimizer` no. of points which the acquisition</span>
 <span class="sd">                function is least are taken as start points.</span>
@@ -1734,6 +1736,9 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">n_random_calls</span> <span class="o">=</span> <span class="n">n_calls</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;dummy&quot;</span><span class="p">,</span>
+                         <span class="c1"># explicitly set optimizer to sampling as &quot;dummy&quot;</span>
+                         <span class="c1"># minimizer does not provide gradients.</span>
+                         <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_calls</span><span class="p">,</span>
                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                          <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
@@ -3147,15 +3152,16 @@ bayesian optimisation loop.</p>
 
         <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">):</span>
-                <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
                 <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;lbfgs&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
 
         <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39; or &quot;</span>
                              <span class="s2">&quot;&#39;sampling&#39;, got {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span> <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor {0} should run with &quot;</span>
                              <span class="s2">&quot;acq_optimizer&quot;</span>
                              <span class="s2">&quot;=&#39;sampling&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
