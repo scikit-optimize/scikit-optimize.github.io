@@ -1065,6 +1065,9 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.callbacks.DeadlineStopper">DeadlineStopper</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.callbacks.DeltaXStopper">DeltaXStopper</a></span>
         </li>
         <li class="mono">
@@ -1356,6 +1359,38 @@ the optimization early by returning <code>True</code>.</p>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="k">class</span> <span class="nc">DeadlineStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stop the optimization before running out of a fixed budget of time.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `iter_time`: [list, shape=(n_iter,)]:</span>
+<span class="sd">        `iter_time[i-1]` gives the time taken to complete iteration `i`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `total_time`: fixed budget of time (seconds) that the optimization must</span>
+<span class="sd">        finish within.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_time</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DeadlineStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">total_time</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elapsed_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">:</span>
+            <span class="n">time_remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">time_remaining</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -1406,6 +1441,117 @@ the optimization early by returning <code>True</code>.</p>
   
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="skopt.callbacks.DeadlineStopper" class="name">class <span class="ident">DeadlineStopper</span></p>
+      
+  
+    <div class="desc"><p>Stop the optimization before running out of a fixed budget of time.</p>
+<h2>Attributes</h2>
+<ul>
+<li><code>iter_time</code>: [list, shape=(n_iter,)]:
+    <code>iter_time[i-1]</code> gives the time taken to complete iteration <code>i</code></li>
+</ul>
+<h2>Parameters</h2>
+<ul>
+<li><code>total_time</code>: fixed budget of time (seconds) that the optimization must
+    finish within.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeadlineStopper', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeadlineStopper" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DeadlineStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stop the optimization before running out of a fixed budget of time.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `iter_time`: [list, shape=(n_iter,)]:</span>
+<span class="sd">        `iter_time[i-1]` gives the time taken to complete iteration `i`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `total_time`: fixed budget of time (seconds) that the optimization must</span>
+<span class="sd">        finish within.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_time</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DeadlineStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">total_time</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elapsed_time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">:</span>
+            <span class="n">time_remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">time_remaining</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.callbacks.DeadlineStopper">DeadlineStopper</a></li>
+          <li><a href="#skopt.callbacks.EarlyStopper">EarlyStopper</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.callbacks.DeadlineStopper.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, total_time)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.DeadlineStopper.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.DeadlineStopper.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_time</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">DeadlineStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">=</span> <span class="n">total_time</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.callbacks.DeadlineStopper.iter_time" class="name">var <span class="ident">iter_time</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.callbacks.DeadlineStopper.total_time" class="name">var <span class="ident">total_time</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
       
       <div class="item">
       <p id="skopt.callbacks.DeltaXStopper" class="name">class <span class="ident">DeltaXStopper</span></p>
