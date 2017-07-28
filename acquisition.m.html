@@ -1211,10 +1211,12 @@ table {
 <span class="sd">        It should have a ``return_std`` parameter that returns the standard</span>
 <span class="sd">        deviation.</span>
 
-<span class="sd">    * `kappa`: [float, default 1.96]:</span>
+<span class="sd">    * `kappa`: [float, default 1.96 or &#39;inf&#39;]:</span>
 <span class="sd">        Controls how much of the variance in the predicted values should be</span>
 <span class="sd">        taken into account. If set to be very high, then we are favouring</span>
 <span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        If set to &#39;inf&#39;, the acquisition function will only use the variance</span>
+<span class="sd">        which is useful in a pure exploration setting.</span>
 <span class="sd">        Useless if ``method`` is set to &quot;LCB&quot;.</span>
 
 <span class="sd">    * `return_grad`: [boolean, optional]:</span>
@@ -1238,10 +1240,14 @@ table {
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">std</span><span class="p">,</span> <span class="o">-</span><span class="n">std_grad</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">std</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
 
 
@@ -1616,10 +1622,12 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
     deviation.</p>
 </li>
 <li>
-<p><code>kappa</code>: [float, default 1.96]:
+<p><code>kappa</code>: [float, default 1.96 or 'inf']:
     Controls how much of the variance in the predicted values should be
     taken into account. If set to be very high, then we are favouring
     exploration over exploitation and vice versa.
+    If set to 'inf', the acquisition function will only use the variance
+    which is useful in a pure exploration setting.
     Useless if <code>method</code> is set to "LCB".</p>
 </li>
 <li>
@@ -1661,10 +1669,12 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
 <span class="sd">        It should have a ``return_std`` parameter that returns the standard</span>
 <span class="sd">        deviation.</span>
 
-<span class="sd">    * `kappa`: [float, default 1.96]:</span>
+<span class="sd">    * `kappa`: [float, default 1.96 or &#39;inf&#39;]:</span>
 <span class="sd">        Controls how much of the variance in the predicted values should be</span>
 <span class="sd">        taken into account. If set to be very high, then we are favouring</span>
 <span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        If set to &#39;inf&#39;, the acquisition function will only use the variance</span>
+<span class="sd">        which is useful in a pure exploration setting.</span>
 <span class="sd">        Useless if ``method`` is set to &quot;LCB&quot;.</span>
 
 <span class="sd">    * `return_grad`: [boolean, optional]:</span>
@@ -1688,10 +1698,14 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
                 <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">std</span><span class="p">,</span> <span class="o">-</span><span class="n">std_grad</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">std</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
 </pre></div>
 
