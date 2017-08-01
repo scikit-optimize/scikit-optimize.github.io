@@ -50,7 +50,7 @@ for i in range(10):
 print(min(optimizer.yi))  # print the best objective found 
 ```
 
-    0.398676588458
+    0.404167438391
 
 
 Note that if `n_points` is set to some integer > 0 for the `ask` method, the result will be a list of points, even for `n_points`=1. If the argument is set to `None` (default value) then a single point (but not a list of points) will be returned.
