@@ -1807,6 +1807,12 @@ Available internal optimizers are::</p>
         <span class="n">L_inv</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">K_inv_</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
+        <span class="c1"># Fix deprecation warning #462</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">19</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span>
+
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
@@ -1887,7 +1893,7 @@ Available internal optimizers are::</p>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
             <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>    <span class="c1"># Line 4 (y_mean = f_star)</span>
-            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
 
             <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
@@ -2056,6 +2062,11 @@ Available internal optimizers are::</p>
     <span class="c1"># Precompute arrays needed at prediction</span>
     <span class="n">L_inv</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">K_inv_</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="c1"># Fix deprecation warning #462</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">19</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
@@ -2196,7 +2207,7 @@ can be optionally provided.</p>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
         <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
         <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>    <span class="c1"># Line 4 (y_mean = f_star)</span>
-        <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+        <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
         <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
             <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># Line 6</span>
