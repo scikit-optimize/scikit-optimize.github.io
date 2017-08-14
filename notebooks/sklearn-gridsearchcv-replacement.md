@@ -46,6 +46,10 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+      FutureWarning)
+
+
     val. score: 0.985894580549
     test score: 0.982222222222
 
@@ -104,7 +108,11 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.963622865627
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+      FutureWarning)
+
+
+    val. score: 0.96585003712
     test score: 0.964444444444
 
 
@@ -143,20 +151,24 @@ for i in range(16):
     print(i, score)
 ```
 
-    0 0.0844444444444
-    1 0.0844444444444
-    2 0.0844444444444
-    3 0.0844444444444
-    4 0.0844444444444
-    5 0.0844444444444
-    6 0.975555555556
-    7 0.975555555556
-    8 0.975555555556
-    9 0.975555555556
-    10 0.975555555556
-    11 0.975555555556
-    12 0.975555555556
-    13 0.975555555556
-    14 0.975555555556
-    15 0.975555555556
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+      FutureWarning)
+
+
+    0 0.315555555556
+    1 0.993333333333
+    2 0.993333333333
+    3 0.993333333333
+    4 0.993333333333
+    5 0.993333333333
+    6 0.993333333333
+    7 0.993333333333
+    8 0.993333333333
+    9 0.993333333333
+    10 0.993333333333
+    11 0.993333333333
+    12 0.993333333333
+    13 0.993333333333
+    14 0.993333333333
+    15 0.993333333333
 

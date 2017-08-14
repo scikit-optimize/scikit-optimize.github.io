@@ -116,8 +116,8 @@ print('Without compression: {} bytes'.format(getsize('result.pkl')))
 print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
-    Without compression: 77683 bytes
-    Compressed with gz:  21043 bytes
+    Without compression: 77685 bytes
+    Compressed with gz:  21045 bytes
 
 
 ### Unserializable objective functions
