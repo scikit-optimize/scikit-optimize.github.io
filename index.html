@@ -2699,13 +2699,12 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="n">transformed_dims</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
-    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dims</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                                     <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
-        <span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
         <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
         <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span>
         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
@@ -4432,7 +4431,10 @@ bayesian optimisation loop.</p>
                           <span class="ne">DeprecationWarning</span><span class="p">)</span>
             <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_random_starts</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">,</span>
+                              <span class="n">dimensions</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">,</span> <span class="n">GaussianProcessRegressor</span><span class="p">):</span>
             <span class="n">dimensions</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
@@ -4448,7 +4450,6 @@ bayesian optimisation loop.</p>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
 
         <span class="c1"># The cache of responses of `ask` method for n_points not None.</span>
@@ -4458,12 +4459,12 @@ bayesian optimisation loop.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">_check_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span>
-                         <span class="n">acq_optimizer</span><span class="p">):</span>
+                         <span class="n">acq_optimizer</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check arguments for sanity.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span>
-                <span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+                <span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -4842,7 +4843,9 @@ bayesian optimisation loop.</p>
                        <span class="s2">&quot;n_initial_points.&quot;</span><span class="p">),</span>
                       <span class="ne">DeprecationWarning</span><span class="p">)</span>
         <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_random_starts</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">,</span>
+                          <span class="n">dimensions</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">,</span> <span class="n">GaussianProcessRegressor</span><span class="p">):</span>
         <span class="n">dimensions</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4855,7 +4858,6 @@ bayesian optimisation loop.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_check_arguments</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
     <span class="c1"># The cache of responses of `ask` method for n_points not None.</span>
     <span class="c1"># This ensures that multiple calls to `ask` with n_points set</span>
@@ -5571,6 +5573,7 @@ and a list of scalars for <code>y</code>.</p>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Space contains exclusively categorical dimensions&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_a</span><span class="p">,</span> <span class="n">point_b</span><span class="p">):</span>
@@ -5923,6 +5926,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 
             
   
+    <div class="desc"><p>Space contains exclusively categorical dimensions</p></div>
   <div class="source_cont">
 </div>
 

@@ -1151,10 +1151,13 @@ table {
 
 
 <span class="k">def</span> <span class="nf">check_dimension</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Turn a provided dimension description into a dimension object.</span>
+
 <span class="sd">    Checks that the provided dimension falls into one of the</span>
 <span class="sd">    supported types. For a list of supported types, look at</span>
-<span class="sd">    the documentation of `dimension` below.</span>
+<span class="sd">    the documentation of ``dimension`` below.</span>
+
+<span class="sd">    If ``dimension`` is already a ``Dimension`` instance, return it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1797,6 +1800,7 @@ table {
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Space contains exclusively categorical dimensions&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_a</span><span class="p">,</span> <span class="n">point_b</span><span class="p">):</span>
@@ -1844,9 +1848,11 @@ table {
 
     
   
-    <div class="desc"><p>Checks that the provided dimension falls into one of the
+    <div class="desc"><p>Turn a provided dimension description into a dimension object.</p>
+<p>Checks that the provided dimension falls into one of the
 supported types. For a list of supported types, look at
 the documentation of <code>dimension</code> below.</p>
+<p>If <code>dimension</code> is already a <code>Dimension</code> instance, return it.</p>
 <h2>Parameters</h2>
 <ul>
 <li>
@@ -1897,10 +1903,13 @@ the documentation of <code>dimension</code> below.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.check_dimension', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.check_dimension" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">check_dimension</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Turn a provided dimension description into a dimension object.</span>
+
 <span class="sd">    Checks that the provided dimension falls into one of the</span>
 <span class="sd">    supported types. For a list of supported types, look at</span>
-<span class="sd">    the documentation of `dimension` below.</span>
+<span class="sd">    the documentation of ``dimension`` below.</span>
+
+<span class="sd">    If ``dimension`` is already a ``Dimension`` instance, return it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3667,6 +3676,7 @@ orignal space.</p></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Space contains exclusively categorical dimensions&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_a</span><span class="p">,</span> <span class="n">point_b</span><span class="p">):</span>
@@ -4019,6 +4029,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 
             
   
+    <div class="desc"><p>Space contains exclusively categorical dimensions</p></div>
   <div class="source_cont">
 </div>
 

@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7f4d3928fda0>
+    <matplotlib.figure.Figure at 0x7f71c7216d68>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
