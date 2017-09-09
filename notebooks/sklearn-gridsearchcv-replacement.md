@@ -50,8 +50,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.988864142539
-    test score: 0.991111111111
+    val. score: 0.98292501856
+    test score: 0.982222222222
 
 
 ## Advanced example 
@@ -112,8 +112,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.986636971047
-    test score: 0.988888888889
+    val. score: 0.985152190052
+    test score: 0.982222222222
 
 
 ## Iterative search utilizing `step` function
@@ -157,15 +157,15 @@ for i in range(16):
 
     0 0.0844444444444
     1 0.0844444444444
-    2 0.98
-    3 0.98
-    4 0.98
-    5 0.98
-    6 0.98
-    7 0.98
-    8 0.98
-    9 0.98
-    10 0.98
+    2 0.977777777778
+    3 0.993333333333
+    4 0.993333333333
+    5 0.993333333333
+    6 0.993333333333
+    7 0.993333333333
+    8 0.993333333333
+    9 0.993333333333
+    10 0.993333333333
     11 0.993333333333
     12 0.993333333333
     13 0.993333333333
