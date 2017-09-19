@@ -1268,6 +1268,17 @@ table {
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name.setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimension&#39;s name must be either string or None.&quot;</span><span class="p">)</span>
+
 
 <span class="k">def</span> <span class="nf">_uniform_inclusive</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
     <span class="c1"># like scipy.stats.distributions but inclusive of `high`</span>
@@ -1277,7 +1288,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Real</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 
 <span class="sd">        Parameters</span>
@@ -1302,6 +1313,9 @@ table {
 <span class="sd">              original space.</span>
 <span class="sd">            - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">              0 and 1.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with the dimension, e.g., &quot;learning rate&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
@@ -1309,6 +1323,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -1396,7 +1411,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1414,12 +1429,16 @@ table {
 <span class="sd">              original space.</span>
 <span class="sd">            - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">              0 and 1.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with dimension, e.g., &quot;number of trees&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
                              <span class="s2">&quot; upper bound {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -1484,7 +1503,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1501,8 +1520,12 @@ table {
 <span class="sd">              space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
@@ -1998,7 +2021,7 @@ the documentation of <code>dimension</code> below.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Categorical', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Categorical" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 
 <span class="sd">        Parameters</span>
@@ -2015,8 +2038,12 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">              space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
@@ -2126,7 +2153,7 @@ the documentation of <code>dimension</code> below.</p>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Categorical.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, categories, prior=None, transform=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, categories, prior=None, transform=None, name=None)</p>
     </div>
     
 
@@ -2153,11 +2180,15 @@ the documentation of <code>dimension</code> below.</p>
   representation of the original space.</li>
 </ul>
 </li>
+<li>
+<p><code>name</code> [str or None]:
+    Name associated with dimension, e.g., "colors".</p>
+</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Categorical.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Categorical.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on categorical values.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2171,8 +2202,11 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">          space.</span>
 <span class="sd">        - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">          representation of the original space.</span>
+<span class="sd">    * `name` [str or None]:</span>
+<span class="sd">        Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
@@ -2358,6 +2392,16 @@ original space.</p></div>
 
             </div>
             <div class="item">
+            <p id="skopt.space.space.Categorical.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Categorical.prior" class="name">var <span class="ident">prior</span></p>
             
 
@@ -2462,6 +2506,17 @@ original space.</p></div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name.setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimension&#39;s name must be either string or None.&quot;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2581,6 +2636,16 @@ original space.</p></div>
 
             </div>
             <div class="item">
+            <p id="skopt.space.space.Dimension.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Dimension.size" class="name">var <span class="ident">size</span></p>
             
 
@@ -2622,7 +2687,7 @@ original space.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -2640,12 +2705,16 @@ original space.</p></div>
 <span class="sd">              original space.</span>
 <span class="sd">            - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">              0 and 1.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with dimension, e.g., &quot;number of trees&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
                              <span class="s2">&quot; upper bound {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -2724,7 +2793,7 @@ original space.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Integer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, transform=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, transform=None, name=None)</p>
     </div>
     
 
@@ -2751,11 +2820,15 @@ original space.</p></div>
   0 and 1.</li>
 </ul>
 </li>
+<li>
+<p><code>name</code> [str or None]:
+    Name associated with dimension, e.g., "number of trees".</p>
+</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2769,12 +2842,15 @@ original space.</p></div>
 <span class="sd">          original space.</span>
 <span class="sd">        - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">          0 and 1.</span>
+<span class="sd">    * `name` [str or None]:</span>
+<span class="sd">        Name associated with dimension, e.g., &quot;number of trees&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
                          <span class="s2">&quot; upper bound {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
@@ -2966,6 +3042,16 @@ orignal space.</p></div>
 
             </div>
             <div class="item">
+            <p id="skopt.space.space.Integer.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Integer.size" class="name">var <span class="ident">size</span></p>
             
 
@@ -3017,7 +3103,7 @@ orignal space.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Real', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Real" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Real</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 
 <span class="sd">        Parameters</span>
@@ -3042,6 +3128,9 @@ orignal space.</p></div>
 <span class="sd">              original space.</span>
 <span class="sd">            - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">              0 and 1.</span>
+
+<span class="sd">        * `name` [str or None]:</span>
+<span class="sd">            Name associated with the dimension, e.g., &quot;learning rate&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
@@ -3049,6 +3138,7 @@ orignal space.</p></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -3150,7 +3240,7 @@ orignal space.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Real.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, prior=&#39;uniform&#39;, transform=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, prior=&#39;uniform&#39;, transform=None, name=None)</p>
     </div>
     
 
@@ -3187,11 +3277,15 @@ orignal space.</p></div>
   0 and 1.</li>
 </ul>
 </li>
+<li>
+<p><code>name</code> [str or None]:
+    Name associated with the dimension, e.g., "learning rate".</p>
+</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Real.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Real.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3211,6 +3305,8 @@ orignal space.</p></div>
 <span class="sd">          original space.</span>
 <span class="sd">        - &quot;normalize&quot;, the transformed space is scaled to be between</span>
 <span class="sd">          0 and 1.</span>
+<span class="sd">    * `name` [str or None]:</span>
+<span class="sd">        Name associated with the dimension, e.g., &quot;learning rate&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the lower bound {} has to be less than the&quot;</span>
@@ -3218,6 +3314,7 @@ orignal space.</p></div>
     <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
@@ -3416,6 +3513,16 @@ orignal space.</p></div>
             </div>
             <div class="item">
             <p id="skopt.space.space.Real.low" class="name">var <span class="ident">low</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.space.space.Real.name" class="name">var <span class="ident">name</span></p>
             
 
             
