@@ -1199,13 +1199,17 @@ table {
     <span class="k">return</span> <span class="n">ax</span>
 
 
-<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">dim_labels</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="c1"># Work out min, max of y axis for the diagonal so we can adjust</span>
     <span class="c1"># them all to the same value</span>
     <span class="n">diagonal_ylim</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
                              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]),</span>
                      <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
                              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]))</span>
+
+    <span class="k">if</span> <span class="n">dim_labels</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">dim_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)]</span>
 
     <span class="c1"># Deal with formatting of the axes</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>  <span class="c1"># rows</span>
@@ -1224,7 +1228,7 @@ table {
                 <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">ax_</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
                 <span class="c1"># for all rows except ...</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
@@ -1232,7 +1236,19 @@ table {
                 <span class="c1"># ... the bottom row</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax_</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span>
-                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                
+                <span class="c1"># configure plot for linear vs log-scale</span>
+                <span class="n">priors</span> <span class="o">=</span> <span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span><span class="p">)</span>
+                <span class="n">scale_setters</span> <span class="o">=</span> <span class="p">(</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">,</span> <span class="n">ax_</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">)</span>
+                <span class="n">loc_setters</span> <span class="o">=</span> <span class="p">(</span><span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">,</span>
+                               <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">set_major_locator</span><span class="p">,</span> <span class="n">set_scale</span><span class="p">,</span> <span class="n">prior</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                        <span class="n">loc_setters</span><span class="p">,</span> <span class="n">scale_setters</span><span class="p">,</span> <span class="n">priors</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                        <span class="n">set_scale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">diagonal_ylim</span><span class="p">)</span>
@@ -1243,10 +1259,12 @@ table {
 
                 <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
 
-            <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
-            <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">ax</span>
 
@@ -1346,7 +1364,7 @@ table {
 
 
 <span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -1385,6 +1403,10 @@ table {
 <span class="sd">    * `zscale` [str, default=&#39;linear&#39;]</span>
 <span class="sd">        Scale to use for the z axis of the contour plots. Either &#39;linear&#39;</span>
 <span class="sd">        or &#39;log&#39;.</span>
+
+<span class="sd">    * `dimensions` [list of str, default=None] Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1432,10 +1454,11 @@ table {
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                                  <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Partial dependence&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Partial dependence&quot;</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
 
 <span class="sd">    The scatter plot matrix shows at which points in the search</span>
@@ -1457,6 +1480,10 @@ table {
 <span class="sd">    * `bins` [int, bins=20]:</span>
 <span class="sd">        Number of bins to use for histograms on the diagonal.</span>
 
+<span class="sd">    * `dimensions` [list of str, default=None] Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `ax`: [`Axes`]:</span>
@@ -1474,7 +1501,12 @@ table {
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">),</span> <span class="n">bins</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">bins</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_</span><span class="p">,</span>
                               <span class="nb">range</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
             <span class="c1"># lower triangle</span>
@@ -1484,7 +1516,8 @@ table {
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                                  <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Number of samples&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Number of samples&quot;</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1804,7 +1837,7 @@ the influence of all other dimensions.</p>
       
   <div class="item">
     <div class="name def" id="skopt.plots.plot_evaluations">
-    <p>def <span class="ident">plot_evaluations</span>(</p><p>result, bins=20)</p>
+    <p>def <span class="ident">plot_evaluations</span>(</p><p>result, bins=20, dimensions=None)</p>
     </div>
     
 
@@ -1830,6 +1863,11 @@ dimension. A red point indicates the found minimum.</p>
 <p><code>bins</code> [int, bins=20]:
     Number of bins to use for histograms on the diagonal.</p>
 </li>
+<li>
+<p><code>dimensions</code> [list of str, default=None] Labels of the dimension
+    variables. <code>None</code> defaults to <code>space.dimensions[i].name</code>, or
+    if also <code>None</code> to <code>['X_0', 'X_1', ..]</code>.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1839,7 +1877,7 @@ dimension. A red point indicates the found minimum.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_evaluations', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.plot_evaluations" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
 
 <span class="sd">    The scatter plot matrix shows at which points in the search</span>
@@ -1861,6 +1899,10 @@ dimension. A red point indicates the found minimum.</p>
 <span class="sd">    * `bins` [int, bins=20]:</span>
 <span class="sd">        Number of bins to use for histograms on the diagonal.</span>
 
+<span class="sd">    * `dimensions` [list of str, default=None] Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `ax`: [`Axes`]:</span>
@@ -1878,7 +1920,12 @@ dimension. A red point indicates the found minimum.</p>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">),</span> <span class="n">bins</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">bins</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_</span><span class="p">,</span>
                               <span class="nb">range</span><span class="o">=</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
             <span class="c1"># lower triangle</span>
@@ -1888,7 +1935,8 @@ dimension. A red point indicates the found minimum.</p>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                                  <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Number of samples&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Number of samples&quot;</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1899,7 +1947,7 @@ dimension. A red point indicates the found minimum.</p>
       
   <div class="item">
     <div class="name def" id="skopt.plots.plot_objective">
-    <p>def <span class="ident">plot_objective</span>(</p><p>result, levels=10, n_points=40, n_samples=250, size=2, zscale=&#39;linear&#39;)</p>
+    <p>def <span class="ident">plot_objective</span>(</p><p>result, levels=10, n_points=40, n_samples=250, size=2, zscale=&#39;linear&#39;, dimensions=None)</p>
     </div>
     
 
@@ -1946,6 +1994,11 @@ A red point indicates the found minimum.</p>
     Scale to use for the z axis of the contour plots. Either 'linear'
     or 'log'.</p>
 </li>
+<li>
+<p><code>dimensions</code> [list of str, default=None] Labels of the dimension
+    variables. <code>None</code> defaults to <code>space.dimensions[i].name</code>, or
+    if also <code>None</code> to <code>['X_0', 'X_1', ..]</code>.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1956,7 +2009,7 @@ A red point indicates the found minimum.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_objective', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.plot_objective" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -1995,6 +2048,10 @@ A red point indicates the found minimum.</p>
 <span class="sd">    * `zscale` [str, default=&#39;linear&#39;]</span>
 <span class="sd">        Scale to use for the z axis of the contour plots. Either &#39;linear&#39;</span>
 <span class="sd">        or &#39;log&#39;.</span>
+
+<span class="sd">    * `dimensions` [list of str, default=None] Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2042,7 +2099,8 @@ A red point indicates the found minimum.</p>
                 <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                                  <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="s2">&quot;Partial dependence&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Partial dependence&quot;</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
 </pre></div>
 
   </div>
