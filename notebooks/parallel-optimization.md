@@ -37,8 +37,8 @@ from sklearn.externals.joblib import Parallel, delayed
 from skopt.benchmarks import branin
 
 optimizer = Optimizer(
-    base_estimator=GaussianProcessRegressor(),
-    dimensions=[Real(-5.0, 10.0), Real(0.0, 15.0)]
+    dimensions=[Real(-5.0, 10.0), Real(0.0, 15.0)],
+    random_state=1
 )
 
 for i in range(10): 
@@ -50,7 +50,7 @@ for i in range(10):
 print(min(optimizer.yi))  # print the best objective found 
 ```
 
-    1.86965815015
+    0.398093944873
 
 
 Note that if `n_points` is set to some integer > 0 for the `ask` method, the result will be a list of points, even for `n_points`=1. If the argument is set to `None` (default value) then a single point (but not a list of points) will be returned.

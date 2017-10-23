@@ -44,29 +44,29 @@ res = gp_minimize(obj_fun,            # the function to minimize
                   random_state=777)
 ```
 
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:367: UserWarning: The objective has been evaluated at this point before.
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
 
 
@@ -117,7 +117,7 @@ print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
     Without compression: 83178 bytes
-    Compressed with gz:  22643 bytes
+    Compressed with gz:  22626 bytes
 
 
 ### Unserializable objective functions
