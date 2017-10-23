@@ -46,12 +46,12 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
 
 
-    val. score: 0.991091314031
-    test score: 0.993333333333
+    val. score: 0.985894580549
+    test score: 0.982222222222
 
 
 ## Advanced example 
@@ -108,12 +108,12 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
 
 
-    val. score: 0.985152190052
-    test score: 0.982222222222
+    val. score: 0.991833704529
+    test score: 0.993333333333
 
 
 ## Iterative search utilizing `step` function
@@ -151,22 +151,22 @@ for i in range(16):
     print(i, score)
 ```
 
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
 
 
-    0 0.213333333333
-    1 0.213333333333
-    2 0.213333333333
-    3 0.213333333333
-    4 0.213333333333
-    5 0.213333333333
-    6 0.988888888889
-    7 0.988888888889
+    0 0.0844444444444
+    1 0.971111111111
+    2 0.971111111111
+    3 0.984444444444
+    4 0.984444444444
+    5 0.984444444444
+    6 0.984444444444
+    7 0.984444444444
     8 0.988888888889
     9 0.988888888889
-    10 0.973333333333
-    11 0.991111111111
+    10 0.988888888889
+    11 0.993333333333
     12 0.993333333333
     13 0.993333333333
     14 0.993333333333

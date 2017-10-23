@@ -2798,9 +2798,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
-    <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span>
-        <span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">),</span>
-        <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span>
+            <span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">),</span>
+            <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span>
         <span class="n">func</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">base_estimator</span><span class="p">,</span>
