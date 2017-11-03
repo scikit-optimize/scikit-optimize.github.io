@@ -117,7 +117,7 @@ print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
     Without compression: 83178 bytes
-    Compressed with gz:  22626 bytes
+    Compressed with gz:  22633 bytes
 
 
 ### Unserializable objective functions

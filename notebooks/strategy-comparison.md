@@ -14,7 +14,7 @@ plt.set_cmap("viridis")
 ```
 
 
-    <matplotlib.figure.Figure at 0x7fa54ccc5be0>
+    <matplotlib.figure.Figure at 0x7fdd477be668>
 
 
 Bayesian optimization or sequential model-based optimization uses a surrogate model
@@ -103,7 +103,7 @@ n_calls = 80
 
 
 ```python
-def run(minimizer, n_iter=20):
+def run(minimizer, n_iter=10):
     return [minimizer(func, bounds, n_calls=n_calls, random_state=n) 
             for n in range(n_iter)]
 
