@@ -50,8 +50,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.988121752042
-    test score: 0.988888888889
+    val. score: 0.98292501856
+    test score: 0.982222222222
 
 
 ## Advanced example 
@@ -110,11 +110,9 @@ print("test score: %s" % opt.score(X_test, y_test))
 
     /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
-    val. score: 0.98292501856
+    val. score: 0.985894580549
     test score: 0.982222222222
 
 
@@ -159,18 +157,18 @@ for i in range(16):
 
     0 0.0844444444444
     1 0.0844444444444
-    2 0.0844444444444
-    3 0.0844444444444
-    4 0.671111111111
-    5 0.975555555556
-    6 0.975555555556
-    7 0.975555555556
+    2 0.98
+    3 0.98
+    4 0.98
+    5 0.98
+    6 0.98
+    7 0.98
     8 0.975555555556
     9 0.975555555556
-    10 0.98
-    11 0.98
-    12 0.986666666667
-    13 0.986666666667
+    10 0.975555555556
+    11 0.975555555556
+    12 0.993333333333
+    13 0.993333333333
     14 0.993333333333
     15 0.993333333333
 
