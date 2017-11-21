@@ -2807,8 +2807,8 @@ given by n_iter.</p>
     Either estimator needs to provide a <code>score</code> function,
     or <code>scoring</code> must be passed.</p>
 <p>search_spaces : dict, list of dict or list of tuple containing
-    (dict, int), or None.
-    One of 4 following cases:
+    (dict, int).
+    One of these cases:
     1. dictionary, where keys are parameter names (strings)
     and values are skopt.space.Dimension instances (Real, Integer
     or Categorical) or any other valid value that defines skopt
@@ -2823,9 +2823,7 @@ given by n_iter.</p>
     where first element of every tuple is a dictionary representing
     some search subspace, similarly as in case 2, and second element
     is a number of iterations that will be spent optimizing over
-    this subspace.
-    4. None, in which case it is assumed that a user will provide
-    search space via the <code>add_spaces</code> function.</p>
+    this subspace.</p>
 <p>n_iter : int, default=128
     Number of parameter settings that are sampled. n_iter trades
     off runtime vs quality of the solution.</p>
@@ -2905,7 +2903,8 @@ cross-validation strategies that can be used here.
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split</p>
 <p>X, y = load_iris(True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, random_state=0)</p>
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,
+                                                    random_state=0)</p>
 <h1>log-uniform: understand as search over p = exp(x) by varying x</h1>
 <p>opt = BayesSearchCV(
     SVC(),
@@ -3032,8 +3031,8 @@ n_jobs</code>.</p>
 <span class="sd">        or ``scoring`` must be passed.</span>
 
 <span class="sd">    search_spaces : dict, list of dict or list of tuple containing</span>
-<span class="sd">        (dict, int), or None.</span>
-<span class="sd">        One of 4 following cases:</span>
+<span class="sd">        (dict, int).</span>
+<span class="sd">        One of these cases:</span>
 <span class="sd">        1. dictionary, where keys are parameter names (strings)</span>
 <span class="sd">        and values are skopt.space.Dimension instances (Real, Integer</span>
 <span class="sd">        or Categorical) or any other valid value that defines skopt</span>
@@ -3049,8 +3048,6 @@ n_jobs</code>.</p>
 <span class="sd">        some search subspace, similarly as in case 2, and second element</span>
 <span class="sd">        is a number of iterations that will be spent optimizing over</span>
 <span class="sd">        this subspace.</span>
-<span class="sd">        4. None, in which case it is assumed that a user will provide</span>
-<span class="sd">        search space via the `add_spaces` function.</span>
 
 <span class="sd">    n_iter : int, default=128</span>
 <span class="sd">        Number of parameter settings that are sampled. n_iter trades</span>
@@ -3144,7 +3141,8 @@ n_jobs</code>.</p>
 <span class="sd">    from sklearn.model_selection import train_test_split</span>
 
 <span class="sd">    X, y = load_iris(True)</span>
-<span class="sd">    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, random_state=0)</span>
+<span class="sd">    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,</span>
+<span class="sd">                                                        random_state=0)</span>
 
 <span class="sd">    # log-uniform: understand as search over p = exp(x) by varying x</span>
 <span class="sd">    opt = BayesSearchCV(</span>
@@ -3256,43 +3254,17 @@ n_jobs</code>.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 
-        <span class="c1"># set of space name: space dict. Stored as a dict, in order</span>
-        <span class="c1"># to make it easy to add or remove search spaces, in case</span>
-        <span class="c1"># user wants to use `step` function directly.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1"># make sklearn.base.clone work</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
-
-        <span class="c1"># can be None if user intends to provide spaces later manually</span>
-        <span class="k">if</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c1"># account for the case when search space is a dict</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_spaces</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">))),</span> <span class="n">search_spaces</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
-
-        <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
-
-        <span class="c1"># this dict is used in order to keep track of skopt Optimizer</span>
-        <span class="c1"># instances for different search spaces. `str(space)` is used as key</span>
-        <span class="c1"># as `space` is a dict, which is unhashable. however, str(space)</span>
-        <span class="c1"># is fixed and unique if space is not changed.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">BayesSearchCV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
              <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span>
@@ -3302,6 +3274,12 @@ n_jobs</code>.</p>
 
     <span class="k">def</span> <span class="nf">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_space</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks whether the search space argument is correct&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_space</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The search_spaces parameter should contain at least one&quot;</span>
+                <span class="s2">&quot;non-empty search space, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">search_space</span>
+            <span class="p">)</span>
 
         <span class="c1"># check if space is a single dict, convert to list if so</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -3346,55 +3324,6 @@ n_jobs</code>.</p>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Search space should be provided as a dict or list of dict,&quot;</span>
                 <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">search_space</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">add_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add a parameter search space over which to search for parameter</span>
-<span class="sd">        values. Naming of search subspaces is necessary in order to specify</span>
-<span class="sd">        for the `step` function over which subspace to perform search step.</span>
-
-<span class="sd">        names: str or list of str</span>
-<span class="sd">            Define names for the parameter search subspaces.</span>
-<span class="sd">            if search_spaces is a single dict, then names should be str</span>
-<span class="sd">            representing name of the single search subspace.</span>
-<span class="sd">            if search_spaces is a list of dicts, defines names for every</span>
-<span class="sd">            search subspace in the list.</span>
-
-<span class="sd">        search_spaces : dict, list of dict or list of tuple (dict, int)</span>
-<span class="sd">            Define search subspaces over which to search for parameters</span>
-<span class="sd">            of the model.</span>
-<span class="sd">            One of 3 following cases:</span>
-<span class="sd">            1. dictionary, where keys are parameter names (strings)</span>
-<span class="sd">            and values are skopt.space.Dimension instances (Real, Integer</span>
-<span class="sd">            or Categorical) or any other valid value that defines skopt</span>
-<span class="sd">            dimension (see skopt.Optimizer docs). Represents search space</span>
-<span class="sd">            over parameters of the provided estimator.</span>
-<span class="sd">            2. list of dictionaries: a list of dictionaries, where every</span>
-<span class="sd">            dictionary fits the description given in case 1 above.</span>
-<span class="sd">            If a list of dictionary objects is given, then the search is</span>
-<span class="sd">            performed sequentially for every parameter space with maximum</span>
-<span class="sd">            number of evaluations set to self.n_iter.</span>
-<span class="sd">            3. list of (dict, int &gt; 0): an extension of case 2 above,</span>
-<span class="sd">            where first element of every tuple is a dictionary representing</span>
-<span class="sd">            some search subspace, similarly as in case 2, and second element</span>
-<span class="sd">            is a number of iterations that will be spent optimizing over</span>
-<span class="sd">            this subspace.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">names</span><span class="p">]</span>
-
-        <span class="c1"># first check whether space already exits ...</span>
-        <span class="k">for</span> <span class="n">space</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Search space </span><span class="si">%s</span><span class="s2"> already exists!&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">space</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">space</span>
 
     <span class="c1"># copied for compatibility with 0.19 sklearn from 0.18 BaseSearchCV</span>
     <span class="nd">@property</span>
@@ -3448,8 +3377,7 @@ n_jobs</code>.</p>
                 <span class="n">error_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">error_score</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">parameters</span> <span class="ow">in</span> <span class="n">parameter_iterable</span>
-            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv_iter</span>
-        <span class="p">)</span>
+            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv_iter</span><span class="p">)</span>
 
         <span class="c1"># if one choose to see train score, &quot;out&quot; will contain train score info</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">:</span>
@@ -3575,77 +3503,27 @@ n_jobs</code>.</p>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dimensions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">params_space</span><span class="p">)</span>
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">optimizer</span>
 
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space_id</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate n_jobs parameters and evaluate them in parallel.</span>
-
-<span class="sd">        Having a separate function for a single step for search allows to</span>
-<span class="sd">        save easily checkpoints for the parameter search and restore from</span>
-<span class="sd">        possible failures.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        X : array-like or sparse matrix, shape = [n_samples, n_features]</span>
-<span class="sd">            The training input samples. Internally, it will be converted to</span>
-<span class="sd">            ``dtype=np.float32`` and if a sparse matrix is provided</span>
-<span class="sd">            to a sparse ``csc_matrix``.</span>
-
-<span class="sd">        y : array-like, shape = [n_samples] or [n_samples, n_outputs]</span>
-<span class="sd">            The target values (class labels) as integers or strings.</span>
-
-<span class="sd">        space_id : hashable</span>
-<span class="sd">            Identifier of parameter search space. Add search spaces with</span>
-
-<span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
-<span class="sd">            Group labels for the samples used while splitting the dataset into</span>
-<span class="sd">            train/test set.</span>
-
-<span class="sd">        n_jobs : int, default=1</span>
-<span class="sd">            Number of parameters to evaluate in parallel.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        params_dict: dictionary with parameter values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># convert n_jobst to int &gt; 0 if necessary</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># use the cached optimizer for particular parameter space</span>
-        <span class="k">if</span> <span class="n">space_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown space </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">space_id</span><span class="p">)</span>
-
-        <span class="c1"># get the search space for a step</span>
-        <span class="n">search_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">search_space</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">search_space</span>
-
-        <span class="c1"># create optimizer if not created already</span>
-        <span class="k">if</span> <span class="n">space_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">)</span>
-        <span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
 
         <span class="c1"># get parameter values to evaluate</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
 
-        <span class="c1"># self.cv_results_ is reset at every call to _fit, keep current</span>
+        <span class="c1"># HACK: self.cv_results_ is reset at every call to _fit, keep current</span>
         <span class="n">all_cv_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span>
 
-        <span class="c1"># record performances with different points</span>
+        <span class="c1"># HACK: this adds compatibility with different versions of sklearn</span>
         <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># do not fit yet - will be fit later</span>
-
-        <span class="c1"># this adds compatibility with different versions of sklearn</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
 
         <span class="c1"># merge existing and new cv_results_</span>
@@ -3661,35 +3539,46 @@ n_jobs</code>.</p>
         <span class="c1"># optimizer minimizes objective, hence provide negative score</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">score</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">local_results</span><span class="p">])</span>
 
-        <span class="c1"># fit the best model if necessary</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_best_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape = [n_samples, n_features]</span>
-<span class="sd">            Training vector, where n_samples in the number of samples and</span>
-<span class="sd">            n_features is the number of features.</span>
+<span class="sd">        X : array-like or sparse matrix, shape = [n_samples, n_features]</span>
+<span class="sd">            The training input samples.</span>
 
 <span class="sd">        y : array-like, shape = [n_samples] or [n_samples, n_output]</span>
-<span class="sd">            Target relative to X for classification or regression;</span>
+<span class="sd">            Target relative to X for classification or regression (class</span>
+<span class="sd">            labels should be integers or strings).</span>
 
 <span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
 <span class="sd">            Group labels for the samples used while splitting the dataset into</span>
 <span class="sd">            train/test set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># check if the list of parameter spaces is provided. If not, then</span>
-        <span class="c1"># only step in manual mode can be used.</span>
+        <span class="c1"># check if space is a single dict, convert to list if so</span>
+        <span class="n">search_spaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Please provide search space using `add_spaces` first before&quot;</span>
-                <span class="s2">&quot;calling fit method.&quot;</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="p">[</span><span class="s1">&#39;random_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_state</span>
+
+        <span class="c1"># Instantiate optimizers for all the search spaces.</span>
+        <span class="n">optimizers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">search_space</span> <span class="ow">in</span> <span class="n">search_spaces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">search_space</span> <span class="o">=</span> <span class="n">search_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">optimizers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizers_</span> <span class="o">=</span> <span class="n">optimizers</span>  <span class="c1"># will save the states of the optimizers</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="n">n_jobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
 
@@ -3697,26 +3586,30 @@ n_jobs</code>.</p>
         <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">space_id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="n">elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
-
+        <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
             <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
             <span class="c1"># self.n_iter</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                <span class="n">space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">elem</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">search_space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">search_space</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
 
             <span class="c1"># do the optimization for particular search space</span>
             <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
-                <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span>
+                <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
-                    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
                     <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
                 <span class="p">)</span>
                 <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
+
+        <span class="c1"># Refit the best model on the the whole dataset</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_best_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -3737,7 +3630,7 @@ n_jobs</code>.</p>
             
   <div class="item">
     <div class="name def" id="skopt.BayesSearchCV.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces=None, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=True)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=True)</p>
     </div>
     
 
@@ -3747,131 +3640,21 @@ n_jobs</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.BayesSearchCV.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="c1"># set of space name: space dict. Stored as a dict, in order</span>
-    <span class="c1"># to make it easy to add or remove search spaces, in case</span>
-    <span class="c1"># user wants to use `step` function directly.</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1"># make sklearn.base.clone work</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
-    <span class="c1"># can be None if user intends to provide spaces later manually</span>
-    <span class="k">if</span> <span class="n">search_spaces</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="c1"># account for the case when search space is a dict</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_spaces</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">))),</span> <span class="n">search_spaces</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
-    <span class="k">if</span> <span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
-    <span class="c1"># this dict is used in order to keep track of skopt Optimizer</span>
-    <span class="c1"># instances for different search spaces. `str(space)` is used as key</span>
-    <span class="c1"># as `space` is a dict, which is unhashable. however, str(space)</span>
-    <span class="c1"># is fixed and unique if space is not changed.</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">BayesSearchCV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
          <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span>
          <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="n">iid</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="n">refit</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
          <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">pre_dispatch</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">error_score</span><span class="p">,</span>
          <span class="n">return_train_score</span><span class="o">=</span><span class="n">return_train_score</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="skopt.BayesSearchCV.add_spaces">
-    <p>def <span class="ident">add_spaces</span>(</p><p>self, names, search_spaces)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Add a parameter search space over which to search for parameter
-values. Naming of search subspaces is necessary in order to specify
-for the <code>step</code> function over which subspace to perform search step.</p>
-<p>names: str or list of str
-    Define names for the parameter search subspaces.
-    if search_spaces is a single dict, then names should be str
-    representing name of the single search subspace.
-    if search_spaces is a list of dicts, defines names for every
-    search subspace in the list.</p>
-<p>search_spaces : dict, list of dict or list of tuple (dict, int)
-    Define search subspaces over which to search for parameters
-    of the model.
-    One of 3 following cases:
-    1. dictionary, where keys are parameter names (strings)
-    and values are skopt.space.Dimension instances (Real, Integer
-    or Categorical) or any other valid value that defines skopt
-    dimension (see skopt.Optimizer docs). Represents search space
-    over parameters of the provided estimator.
-    2. list of dictionaries: a list of dictionaries, where every
-    dictionary fits the description given in case 1 above.
-    If a list of dictionary objects is given, then the search is
-    performed sequentially for every parameter space with maximum
-    number of evaluations set to self.n_iter.
-    3. list of (dict, int &gt; 0): an extension of case 2 above,
-    where first element of every tuple is a dictionary representing
-    some search subspace, similarly as in case 2, and second element
-    is a number of iterations that will be spent optimizing over
-    this subspace.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.add_spaces', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.BayesSearchCV.add_spaces" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add a parameter search space over which to search for parameter</span>
-<span class="sd">    values. Naming of search subspaces is necessary in order to specify</span>
-<span class="sd">    for the `step` function over which subspace to perform search step.</span>
-<span class="sd">    names: str or list of str</span>
-<span class="sd">        Define names for the parameter search subspaces.</span>
-<span class="sd">        if search_spaces is a single dict, then names should be str</span>
-<span class="sd">        representing name of the single search subspace.</span>
-<span class="sd">        if search_spaces is a list of dicts, defines names for every</span>
-<span class="sd">        search subspace in the list.</span>
-<span class="sd">    search_spaces : dict, list of dict or list of tuple (dict, int)</span>
-<span class="sd">        Define search subspaces over which to search for parameters</span>
-<span class="sd">        of the model.</span>
-<span class="sd">        One of 3 following cases:</span>
-<span class="sd">        1. dictionary, where keys are parameter names (strings)</span>
-<span class="sd">        and values are skopt.space.Dimension instances (Real, Integer</span>
-<span class="sd">        or Categorical) or any other valid value that defines skopt</span>
-<span class="sd">        dimension (see skopt.Optimizer docs). Represents search space</span>
-<span class="sd">        over parameters of the provided estimator.</span>
-<span class="sd">        2. list of dictionaries: a list of dictionaries, where every</span>
-<span class="sd">        dictionary fits the description given in case 1 above.</span>
-<span class="sd">        If a list of dictionary objects is given, then the search is</span>
-<span class="sd">        performed sequentially for every parameter space with maximum</span>
-<span class="sd">        number of evaluations set to self.n_iter.</span>
-<span class="sd">        3. list of (dict, int &gt; 0): an extension of case 2 above,</span>
-<span class="sd">        where first element of every tuple is a dictionary representing</span>
-<span class="sd">        some search subspace, similarly as in case 2, and second element</span>
-<span class="sd">        is a number of iterations that will be spent optimizing over</span>
-<span class="sd">        this subspace.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">names</span><span class="p">]</span>
-    <span class="c1"># first check whether space already exits ...</span>
-    <span class="k">for</span> <span class="n">space</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Search space </span><span class="si">%s</span><span class="s2"> already exists!&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">space</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">space</span>
 </pre></div>
 
   </div>
@@ -3890,11 +3673,11 @@ for the <code>step</code> function over which subspace to perform search step.</
   
     <div class="desc"><p>Run fit on the estimator with randomly drawn parameters.</p>
 <h2>Parameters</h2>
-<p>X : array-like, shape = [n_samples, n_features]
-    Training vector, where n_samples in the number of samples and
-    n_features is the number of features.</p>
+<p>X : array-like or sparse matrix, shape = [n_samples, n_features]
+    The training input samples.</p>
 <p>y : array-like, shape = [n_samples] or [n_samples, n_output]
-    Target relative to X for classification or regression;</p>
+    Target relative to X for classification or regression (class
+    labels should be integers or strings).</p>
 <p>groups : array-like, with shape (n_samples,), optional
     Group labels for the samples used while splitting the dataset into
     train/test set.</p></div>
@@ -3905,143 +3688,59 @@ for the <code>step</code> function over which subspace to perform search step.</
     <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X : array-like, shape = [n_samples, n_features]</span>
-<span class="sd">        Training vector, where n_samples in the number of samples and</span>
-<span class="sd">        n_features is the number of features.</span>
+<span class="sd">    X : array-like or sparse matrix, shape = [n_samples, n_features]</span>
+<span class="sd">        The training input samples.</span>
 <span class="sd">    y : array-like, shape = [n_samples] or [n_samples, n_output]</span>
-<span class="sd">        Target relative to X for classification or regression;</span>
+<span class="sd">        Target relative to X for classification or regression (class</span>
+<span class="sd">        labels should be integers or strings).</span>
 <span class="sd">    groups : array-like, with shape (n_samples,), optional</span>
 <span class="sd">        Group labels for the samples used while splitting the dataset into</span>
 <span class="sd">        train/test set.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># check if the list of parameter spaces is provided. If not, then</span>
-    <span class="c1"># only step in manual mode can be used.</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Please provide search space using `add_spaces` first before&quot;</span>
-            <span class="s2">&quot;calling fit method.&quot;</span>
-        <span class="p">)</span>
+    <span class="c1"># check if space is a single dict, convert to list if so</span>
+    <span class="n">search_spaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="p">[</span><span class="s1">&#39;random_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_state</span>
+    <span class="c1"># Instantiate optimizers for all the search spaces.</span>
+    <span class="n">optimizers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">search_space</span> <span class="ow">in</span> <span class="n">search_spaces</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">search_space</span> <span class="o">=</span> <span class="n">search_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">optimizers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">optimizers_</span> <span class="o">=</span> <span class="n">optimizers</span>  <span class="c1"># will save the states of the optimizers</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">n_jobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
     <span class="c1"># account for case n_jobs &lt; 0</span>
     <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">space_id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
         <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
         <span class="c1"># self.n_iter</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">elem</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">search_space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">search_space</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
         <span class="c1"># do the optimization for particular search space</span>
         <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
-            <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space_id</span><span class="p">,</span>
+            <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
                 <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
             <span class="p">)</span>
             <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="skopt.BayesSearchCV.step">
-    <p>def <span class="ident">step</span>(</p><p>self, X, y, space_id, groups=None, n_jobs=1)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Generate n_jobs parameters and evaluate them in parallel.</p>
-<p>Having a separate function for a single step for search allows to
-save easily checkpoints for the parameter search and restore from
-possible failures.</p>
-<h2>Parameters</h2>
-<p>X : array-like or sparse matrix, shape = [n_samples, n_features]
-    The training input samples. Internally, it will be converted to
-    <code>dtype=np.float32</code> and if a sparse matrix is provided
-    to a sparse <code>csc_matrix</code>.</p>
-<p>y : array-like, shape = [n_samples] or [n_samples, n_outputs]
-    The target values (class labels) as integers or strings.</p>
-<p>space_id : hashable
-    Identifier of parameter search space. Add search spaces with</p>
-<p>groups : array-like, with shape (n_samples,), optional
-    Group labels for the samples used while splitting the dataset into
-    train/test set.</p>
-<p>n_jobs : int, default=1
-    Number of parameters to evaluate in parallel.</p>
-<h2>Returns</h2>
-<p>params_dict: dictionary with parameter values.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.step', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.BayesSearchCV.step" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">space_id</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate n_jobs parameters and evaluate them in parallel.</span>
-<span class="sd">    Having a separate function for a single step for search allows to</span>
-<span class="sd">    save easily checkpoints for the parameter search and restore from</span>
-<span class="sd">    possible failures.</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    X : array-like or sparse matrix, shape = [n_samples, n_features]</span>
-<span class="sd">        The training input samples. Internally, it will be converted to</span>
-<span class="sd">        ``dtype=np.float32`` and if a sparse matrix is provided</span>
-<span class="sd">        to a sparse ``csc_matrix``.</span>
-<span class="sd">    y : array-like, shape = [n_samples] or [n_samples, n_outputs]</span>
-<span class="sd">        The target values (class labels) as integers or strings.</span>
-<span class="sd">    space_id : hashable</span>
-<span class="sd">        Identifier of parameter search space. Add search spaces with</span>
-<span class="sd">    groups : array-like, with shape (n_samples,), optional</span>
-<span class="sd">        Group labels for the samples used while splitting the dataset into</span>
-<span class="sd">        train/test set.</span>
-<span class="sd">    n_jobs : int, default=1</span>
-<span class="sd">        Number of parameters to evaluate in parallel.</span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    params_dict: dictionary with parameter values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># convert n_jobst to int &gt; 0 if necessary</span>
-    <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># use the cached optimizer for particular parameter space</span>
-    <span class="k">if</span> <span class="n">space_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown space </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">space_id</span><span class="p">)</span>
-    <span class="c1"># get the search space for a step</span>
-    <span class="n">search_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">search_space</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">search_space</span>
-    <span class="c1"># create optimizer if not created already</span>
-    <span class="k">if</span> <span class="n">space_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">)</span>
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_</span><span class="p">[</span><span class="n">space_id</span><span class="p">]</span>
-    <span class="c1"># get parameter values to evaluate</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
-    <span class="n">params_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
-    <span class="c1"># self.cv_results_ is reset at every call to _fit, keep current</span>
-    <span class="n">all_cv_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span>
-    <span class="c1"># record performances with different points</span>
-    <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># do not fit yet - will be fit later</span>
-    <span class="c1"># this adds compatibility with different versions of sklearn</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
-    <span class="c1"># merge existing and new cv_results_</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">:</span>
-        <span class="n">all_cv_results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">all_cv_results</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">])</span>
-    <span class="c1"># feed the point and objective back into optimizer</span>
-    <span class="n">local_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">][</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">):]</span>
-    <span class="c1"># optimizer minimizes objective, hence provide negative score</span>
-    <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">score</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">local_results</span><span class="p">])</span>
-    <span class="c1"># fit the best model if necessary</span>
+    <span class="c1"># Refit the best model on the the whole dataset</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit_best_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -4050,16 +3749,6 @@ possible failures.</p>
   </div>
   
           <h3>Instance variables</h3>
-            <div class="item">
-            <p id="skopt.BayesSearchCV.best_index_" class="name">var <span class="ident">best_index_</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
             <div class="item">
             <p id="skopt.BayesSearchCV.best_params_" class="name">var <span class="ident">best_params_</span></p>
             
@@ -4091,27 +3780,7 @@ possible failures.</p>
 
             </div>
             <div class="item">
-            <p id="skopt.BayesSearchCV.cv_results_" class="name">var <span class="ident">cv_results_</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
             <p id="skopt.BayesSearchCV.grid_scores_" class="name">var <span class="ident">grid_scores_</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.BayesSearchCV.multimetric_" class="name">var <span class="ident">multimetric_</span></p>
             
 
             
@@ -4131,7 +3800,7 @@ possible failures.</p>
 
             </div>
             <div class="item">
-            <p id="skopt.BayesSearchCV.optimizer_" class="name">var <span class="ident">optimizer_</span></p>
+            <p id="skopt.BayesSearchCV.optimizer_kwargs" class="name">var <span class="ident">optimizer_kwargs</span></p>
             
 
             
@@ -4152,16 +3821,6 @@ possible failures.</p>
             </div>
             <div class="item">
             <p id="skopt.BayesSearchCV.search_spaces" class="name">var <span class="ident">search_spaces</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.BayesSearchCV.search_spaces_" class="name">var <span class="ident">search_spaces_</span></p>
             
 
             

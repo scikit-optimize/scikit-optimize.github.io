@@ -1157,14 +1157,10 @@ table {
 
 <div class="codehilite"><pre><span></span>/home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
   FutureWarning)
-/home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
 
 
-val. score: 0.985894580549
-test score: 0.982222222222
+val. score: 0.988864142539
+test score: 0.991111111111
 </pre></div>
 
 
@@ -1221,66 +1217,10 @@ test score: 0.982222222222
 
 <div class="codehilite"><pre><span></span>/home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
   FutureWarning)
-/home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
 
 
-val. score: 0.985152190052
-test score: 0.982222222222
-</pre></div>
-
-
-<h2>Iterative search utilizing <code>step</code> function</h2>
-<p>A single call to <code>step</code> function of the <code>BayesSearchCV</code> instance allows to perform partial search for at most <code>n_jobs</code> points in parallel. This allows to use custom stopping criterions and to pickle a parameter search class instance to the file for recovery in case of failures of any sort or in case computations need to be transported to a different machine. </p>
-<p>An example usage is shown below. </p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">opt</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span><span class="n">SVC</span><span class="p">())</span>
-
-<span class="c1"># add instance of a search space </span>
-<span class="n">opt</span><span class="o">.</span><span class="n">add_spaces</span><span class="p">(</span><span class="s1">&#39;space_1&#39;</span><span class="p">,</span> <span class="p">{</span>
-    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
-    <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+1</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
-<span class="p">})</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;space_1&#39;</span><span class="p">)</span>
-    <span class="c1"># save the model or use custom stopping criterion here</span>
-    <span class="c1"># model is updated after every step</span>
-    <span class="c1"># ...</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>/home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
-  FutureWarning)
-
-
-0 0.0844444444444
-1 0.0844444444444
-2 0.0844444444444
-3 0.0844444444444
-4 0.962222222222
-5 0.962222222222
-6 0.962222222222
-7 0.962222222222
-8 0.962222222222
-9 0.962222222222
-10 0.988888888889
-11 0.988888888889
-12 0.988888888889
-13 0.988888888889
-14 0.993333333333
-15 0.993333333333
+val. score: 0.991833704529
+test score: 0.993333333333
 </pre></div>
     </article>
   <div class="clear"> </div>

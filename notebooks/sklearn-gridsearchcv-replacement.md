@@ -48,14 +48,10 @@ print("test score: %s" % opt.score(X_test, y_test))
 
     /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
-    val. score: 0.985894580549
-    test score: 0.982222222222
+    val. score: 0.988864142539
+    test score: 0.991111111111
 
 
 ## Advanced example 
@@ -114,67 +110,8 @@ print("test score: %s" % opt.score(X_test, y_test))
 
     /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
-    val. score: 0.985152190052
-    test score: 0.982222222222
-
-
-## Iterative search utilizing `step` function
-
-A single call to `step` function of the `BayesSearchCV` instance allows to perform partial search for at most `n_jobs` points in parallel. This allows to use custom stopping criterions and to pickle a parameter search class instance to the file for recovery in case of failures of any sort or in case computations need to be transported to a different machine. 
-
-An example usage is shown below. 
-
-
-```python
-from skopt.space import Real, Categorical, Integer
-from skopt import BayesSearchCV
-
-from sklearn.datasets import load_digits
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
-
-X, y = load_digits(10, True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, random_state=0)
-
-opt = BayesSearchCV(SVC())
-
-# add instance of a search space 
-opt.add_spaces('space_1', {
-    'C': Real(1e-6, 1e+6, prior='log-uniform'),
-    'gamma': Real(1e-6, 1e+1, prior='log-uniform'),
-})
-
-for i in range(16):
-    opt.step(X_train, y_train, 'space_1')
-    # save the model or use custom stopping criterion here
-    # model is updated after every step
-    # ...
-    score = opt.score(X_test, y_test)
-    print(i, score)
-```
-
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
-      FutureWarning)
-
-
-    0 0.0844444444444
-    1 0.0844444444444
-    2 0.0844444444444
-    3 0.0844444444444
-    4 0.962222222222
-    5 0.962222222222
-    6 0.962222222222
-    7 0.962222222222
-    8 0.962222222222
-    9 0.962222222222
-    10 0.988888888889
-    11 0.988888888889
-    12 0.988888888889
-    13 0.988888888889
-    14 0.993333333333
-    15 0.993333333333
+    val. score: 0.991833704529
+    test score: 0.993333333333
 
