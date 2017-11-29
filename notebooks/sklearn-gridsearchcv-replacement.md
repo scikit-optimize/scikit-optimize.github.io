@@ -48,28 +48,10 @@ print("test score: %s" % opt.score(X_test, y_test))
 
     /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:368: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
-    val. score: 0.985152190052
-    test score: 0.982222222222
+    val. score: 0.991833704529
+    test score: 0.993333333333
 
 
 ## Advanced example 
@@ -130,6 +112,6 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.988864142539
-    test score: 0.991111111111
+    val. score: 0.985894580549
+    test score: 0.982222222222
 
