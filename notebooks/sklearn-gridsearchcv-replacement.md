@@ -50,8 +50,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.991833704529
-    test score: 0.993333333333
+    val. score: 0.985894580549
+    test score: 0.982222222222
 
 
 ## Advanced example 
