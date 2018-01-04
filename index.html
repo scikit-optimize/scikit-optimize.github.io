@@ -3346,8 +3346,8 @@ n_jobs</code>.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span>
-        <span class="n">cv</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">_validation</span><span class="o">.</span><span class="n">check_cv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span>
-            <span class="n">is_classifier</span><span class="p">(</span><span class="n">estimator</span><span class="p">))</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">_validation</span><span class="o">.</span><span class="n">check_cv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">is_classifier</span><span class="p">(</span><span class="n">estimator</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scorer_</span> <span class="o">=</span> <span class="n">check_scoring</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">)</span>
 
@@ -3537,9 +3537,32 @@ n_jobs</code>.</p>
         <span class="n">local_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">][</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">):]</span>
 
         <span class="c1"># optimizer minimizes objective, hence provide negative score</span>
-        <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">score</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">local_results</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">score</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">local_results</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Count total iterations that will be taken to explore</span>
+<span class="sd">        all subspaces with `fit` method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        max_iter: int, total number of iterations to explore</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_iter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">elem</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
+
+            <span class="n">total_iter</span> <span class="o">+=</span> <span class="n">n_iter</span>
+
+        <span class="k">return</span> <span class="n">total_iter</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -3554,12 +3577,19 @@ n_jobs</code>.</p>
 <span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
 <span class="sd">            Group labels for the samples used while splitting the dataset into</span>
 <span class="sd">            train/test set.</span>
+
+<span class="sd">        callback: [callable, list of callables, optional]</span>
+<span class="sd">            If callable then `callback(res)` is called after each parameter</span>
+<span class="sd">            combination tested. If list of callables, then each callable in</span>
+<span class="sd">            the list is called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># check if space is a single dict, convert to list if so</span>
         <span class="n">search_spaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
@@ -3599,11 +3629,14 @@ n_jobs</code>.</p>
                 <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
                 <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
+                <span class="n">optim_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
                     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
                     <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
                 <span class="p">)</span>
                 <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
+
+                <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optim_result</span><span class="p">):</span>
+                    <span class="k">break</span>
 
         <span class="c1"># Refit the best model on the the whole dataset</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
@@ -3665,7 +3698,7 @@ n_jobs</code>.</p>
             
   <div class="item">
     <div class="name def" id="skopt.BayesSearchCV.fit">
-    <p>def <span class="ident">fit</span>(</p><p>self, X, y=None, groups=None)</p>
+    <p>def <span class="ident">fit</span>(</p><p>self, X, y=None, groups=None, callback=None)</p>
     </div>
     
 
@@ -3680,11 +3713,15 @@ n_jobs</code>.</p>
     labels should be integers or strings).</p>
 <p>groups : array-like, with shape (n_samples,), optional
     Group labels for the samples used while splitting the dataset into
-    train/test set.</p></div>
+    train/test set.</p>
+<p>callback: [callable, list of callables, optional]
+    If callable then <code>callback(res)</code> is called after each parameter
+    combination tested. If list of callables, then each callable in
+    the list is called.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.fit', this);">Show source &equiv;</a></p>
   <div id="source-skopt.BayesSearchCV.fit" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3696,11 +3733,16 @@ n_jobs</code>.</p>
 <span class="sd">    groups : array-like, with shape (n_samples,), optional</span>
 <span class="sd">        Group labels for the samples used while splitting the dataset into</span>
 <span class="sd">        train/test set.</span>
+<span class="sd">    callback: [callable, list of callables, optional]</span>
+<span class="sd">        If callable then `callback(res)` is called after each parameter</span>
+<span class="sd">        combination tested. If list of callables, then each callable in</span>
+<span class="sd">        the list is called.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># check if space is a single dict, convert to list if so</span>
     <span class="n">search_spaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
+    <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">else</span><span class="p">:</span>
@@ -3732,11 +3774,13 @@ n_jobs</code>.</p>
         <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
             <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
+            <span class="n">optim_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
                 <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
             <span class="p">)</span>
             <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
+            <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optim_result</span><span class="p">):</span>
+                <span class="k">break</span>
     <span class="c1"># Refit the best model on the the whole dataset</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit_best_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -3825,6 +3869,20 @@ n_jobs</code>.</p>
 
             
   
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.BayesSearchCV.total_iterations" class="name">var <span class="ident">total_iterations</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Count total iterations that will be taken to explore
+all subspaces with <code>fit</code> method.</p>
+<h2>Returns</h2>
+<p>max_iter: int, total number of iterations to explore</p></div>
   <div class="source_cont">
 </div>
 

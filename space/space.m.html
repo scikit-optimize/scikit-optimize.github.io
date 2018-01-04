@@ -1198,6 +1198,14 @@ table {
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimension has to be a list or tuple.&quot;</span><span class="p">)</span>
 
+    <span class="c1"># A `Dimension` described by a single value is assumed to be</span>
+    <span class="c1"># a `Categorical` dimension. This can be used in `BayesSearchCV`</span>
+    <span class="c1"># to define subspaces that fix one value, e.g. to choose the</span>
+    <span class="c1"># model type, see &quot;sklearn-gridsearchcv-replacement.ipynb&quot;</span>
+    <span class="c1"># for examples.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">]):</span>
             <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1983,6 +1991,14 @@ the documentation of <code>dimension</code> below.</p>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimension has to be a list or tuple.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># A `Dimension` described by a single value is assumed to be</span>
+    <span class="c1"># a `Categorical` dimension. This can be used in `BayesSearchCV`</span>
+    <span class="c1"># to define subspaces that fix one value, e.g. to choose the</span>
+    <span class="c1"># model type, see &quot;sklearn-gridsearchcv-replacement.ipynb&quot;</span>
+    <span class="c1"># for examples.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">]):</span>

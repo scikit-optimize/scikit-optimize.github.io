@@ -1123,8 +1123,8 @@ table {
 <p>Iaroslav Shcherbatyi, Tim Head and Gilles Louppe. June 2017.</p>
 <h2>Introduction</h2>
 <p>This example assumes basic familiarity with <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>. </p>
-<p>Search for parameters of machine learning models that result in best cross-validation performance is necessary in almost all practical cases to get a model with best generalization estimate. A standard approach in scikit-learn is using <code>GridSearchCV</code> class, which takes a set of values for every parameter to try, and simply enumerates all combinations of parameter values. The complexity of such search grows exponentially with addition of new parameters. A more scalable approach is using <code>RandomizedSearchCV</code>, which however does not take advantage of the structure of a search space.</p>
-<p>Scikit-optimize provides a drop in replacement for <code>GridSearchCV</code>, which utilizes Bayesian Optimization where a predictive model reffered to as "surrogate" is used to model the search space and utilized in order to arrive at good parameter values combination as soon as possible.</p>
+<p>Search for parameters of machine learning models that result in best cross-validation performance is necessary in almost all practical cases to get a model with best generalization estimate. A standard approach in scikit-learn is using <code>GridSearchCV</code> class, which takes a set of values for every parameter to try, and simply enumerates all combinations of parameter values. The complexity of such search grows exponentially with the addition of new parameters. A more scalable approach is using <code>RandomizedSearchCV</code>, which however does not take advantage of the structure of a search space.</p>
+<p>Scikit-optimize provides a drop-in replacement for <code>GridSearchCV</code>, which utilizes Bayesian Optimization where a predictive model referred to as "surrogate" is used to model the search space and utilized to arrive at good parameter values combination as soon as possible.</p>
 <p>Note: for a manual hyperparameter optimization example, see "Hyperparameter Optimization" notebook.</p>
 <h2>Minimal example</h2>
 <p>A minimal example of optimizing hyperparameters of SVC (Support Vector machine Classifier) is given below.</p>
@@ -1165,36 +1165,32 @@ test score: 0.993333333333
 
 
 <h2>Advanced example</h2>
-<p>In practice, one wants to enumerate over multiple predictive model classes, with different search spaces and number of evaluations per class. An example of such search over parameters of Linear SVM, Kernel SVM and decision trees is given below. </p>
+<p>In practice, one wants to enumerate over multiple predictive model classes, with different search spaces and number of evaluations per class. An example of such search over parameters of Linear SVM, Kernel SVM, and decision trees is given below. </p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
 <span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span><span class="p">,</span> <span class="n">load_digits</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span><span class="p">,</span> <span class="n">LinearSVC</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span><span class="p">,</span> <span class="n">SVC</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="c1"># used to try different model classes</span>
+<span class="c1"># pipeline class is used as estimator to enable </span>
+<span class="c1"># search over different model types</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
     <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">SVC</span><span class="p">())</span>
 <span class="p">])</span>
 
-<span class="c1"># single categorical value of &#39;model&#39; parameter is used  to set the model class</span>
-<span class="n">lin_search</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">([</span><span class="n">LinearSVC</span><span class="p">()]),</span>
-    <span class="s1">&#39;model__C&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
+<span class="c1"># single categorical value of &#39;model&#39; parameter is </span>
+<span class="c1"># sets the model class</span>
+<span class="n">linsvc_search</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">LinearSVC</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)],</span>
+    <span class="s1">&#39;model__C&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
 <span class="p">}</span>
 
-<span class="n">dtc_search</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">([</span><span class="n">DecisionTreeClassifier</span><span class="p">()]),</span>
-    <span class="s1">&#39;model__max_depth&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span>
-    <span class="s1">&#39;model__min_samples_split&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
-<span class="p">}</span>
-
+<span class="c1"># explicit dimension classes can be specified like this</span>
 <span class="n">svc_search</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">([</span><span class="n">SVC</span><span class="p">()]),</span>
     <span class="s1">&#39;model__C&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
@@ -1205,7 +1201,7 @@ test score: 0.993333333333
 
 <span class="n">opt</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
     <span class="n">pipe</span><span class="p">,</span>
-    <span class="p">[(</span><span class="n">lin_search</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="n">dtc_search</span><span class="p">,</span> <span class="mi">24</span><span class="p">),</span> <span class="p">(</span><span class="n">svc_search</span><span class="p">,</span> <span class="mi">32</span><span class="p">)],</span> <span class="c1"># (parameter space, # of evaluations)</span>
+    <span class="p">[(</span><span class="n">svc_search</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">linsvc_search</span><span class="p">,</span> <span class="mi">16</span><span class="p">)],</span> <span class="c1"># (parameter space, # of evaluations)</span>
 <span class="p">)</span>
 
 <span class="n">opt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -1215,12 +1211,85 @@ test score: 0.993333333333
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>/home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
-  FutureWarning)
-
-
-val. score: 0.991833704529
+<div class="codehilite"><pre><span></span>val. score: 0.991833704529
 test score: 0.993333333333
+</pre></div>
+
+
+<h2>Progress monitoring and control using <code>callback</code> argument of <code>fit</code> method</h2>
+<p>It is possible to monitor the progress of BayesSearchCV with an event handler that is called on every step of subspace exploration. For single job mode, this is called on every evaluation of model configuration, and for parallel mode, this is called when n_jobs model configurations are evaluated in parallel.</p>
+<p>Additionally, exploration can be stopped if the callback returns <code>True</code>. This can be used to stop the exploration early, for instance when the accuracy that you get is sufficiently high. </p>
+<p>An example usage is shown below. </p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">searchcv</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
+    <span class="n">SVC</span><span class="p">(),</span>
+    <span class="n">search_spaces</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">)},</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+
+<span class="c1"># callback handler</span>
+<span class="k">def</span> <span class="nf">on_step</span><span class="p">(</span><span class="n">optim_result</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">searchcv</span><span class="o">.</span><span class="n">best_score_</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;best score: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">score</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mf">0.98</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Interrupting!&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="n">searchcv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">on_step</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>best score: 0.973333333333
+best score: 0.986666666667
+Interrupting!
+
+
+
+
+
+BayesSearchCV(cv=None, error_score=&#39;raise&#39;,
+       estimator=SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=&#39;ovr&#39;, degree=3, gamma=&#39;auto&#39;, kernel=&#39;rbf&#39;,
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False),
+       fit_params=None, iid=True, n_iter=10, n_jobs=1,
+       optimizer_kwargs=None, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None,
+       refit=True, return_train_score=True, scoring=None,
+       search_spaces={&#39;C&#39;: (0.01, 100.0, &#39;log-uniform&#39;)}, verbose=0)
+</pre></div>
+
+
+<h2>Counting total iterations that will be used to explore all subspaces</h2>
+<p>Subspaces in previous examples can further increase in complexity if you add new model subspaces or dimensions for feature extraction pipelines. For monitoring of progress, you would like to know the total number of iterations it will take to explore all subspaces. This can be calculated with <code>total_iterations</code> property, as in the code below.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">searchcv</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
+    <span class="n">SVC</span><span class="p">(),</span>
+    <span class="n">search_spaces</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">({</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)},</span> <span class="mi">19</span><span class="p">),</span>  <span class="c1"># 19 iterations for this subspace</span>
+        <span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)}</span>
+    <span class="p">],</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="mi">23</span>
+<span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">searchcv</span><span class="o">.</span><span class="n">total_iterations</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>42
 </pre></div>
     </article>
   <div class="clear"> </div>
