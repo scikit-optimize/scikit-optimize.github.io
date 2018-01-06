@@ -104,8 +104,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.991833704529
-    test score: 0.993333333333
+    val. score: 0.985894580549
+    test score: 0.982222222222
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -144,8 +144,10 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.973333333333
-    best score: 0.986666666667
+    best score: 0.933333333333
+    best score: 0.966666666667
+    best score: 0.966666666667
+    best score: 0.98
     Interrupting!
 
 
