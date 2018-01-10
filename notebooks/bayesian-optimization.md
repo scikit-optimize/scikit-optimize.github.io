@@ -127,7 +127,7 @@ For further inspection of the results, attributes of the `res` named tuple provi
 print(res)
 ```
 
-              fun: -1.0714985908064383
+              fun: -1.0714985913973782
         func_vals: array([-0.18788762, -0.96229886, -0.34643484, -0.46587165, -0.1773319 ,
            -0.80809029, -1.07149859, -0.92120939, -0.1608395 , -0.80998886,
            -0.32494081,  0.0329113 , -0.02279617,  0.05849308,  0.69296704])
@@ -176,15 +176,15 @@ print(res)
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
                  random_state=843828734)]
-     random_state: <mtrand.RandomState object at 0x7f3da6e93120>
+     random_state: <mtrand.RandomState object at 0x7fae1ed1b900>
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')])
-            specs: {'args': {'n_jobs': 1, 'kappa': 1.96, 'xi': 0.01, 'n_restarts_optimizer': 5, 'n_points': 10000, 'callback': None, 'verbose': False, 'random_state': <mtrand.RandomState object at 0x7f3da6e93120>, 'y0': None, 'x0': None, 'acq_optimizer': 'auto', 'acq_func': 'EI', 'n_random_starts': 5, 'n_calls': 15, 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+            specs: {'args': {'n_jobs': 1, 'kappa': 1.96, 'xi': 0.01, 'n_restarts_optimizer': 5, 'n_points': 10000, 'callback': None, 'verbose': False, 'random_state': <mtrand.RandomState object at 0x7fae1ed1b900>, 'y0': None, 'x0': None, 'acq_optimizer': 'auto', 'acq_func': 'EI', 'n_random_starts': 5, 'n_calls': 15, 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'func': <function f at 0x7f3db3a280d0>}, 'function': 'base_minimize'}
-                x: [-0.2572822321543613]
-          x_iters: [[0.85182128209290919], [-0.28611629525269677], [0.76353942010744724], [0.87660124061909261], [-0.035524266269610472], [-0.30626086081540094], [-0.2572822321543613], [-0.22378966562926261], [1.0553495096977938], [-0.25562401679960356], [-0.52442654243976894], [-1.9992867763849413], [1.999866281741757], [-1.2339044799440428], [0.45960222721663557]]
+                 random_state=843828734), 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'func': <function f at 0x7fae2b5f5158>}, 'function': 'base_minimize'}
+                x: [-0.2572822328764519]
+          x_iters: [[0.8518212820929092], [-0.2861162952526968], [0.7635394201074472], [0.8766012406190926], [-0.03552426626961047], [-0.30626086081540094], [-0.2572822328764519], [-0.22378966525678323], [1.0553495093568217], [-0.2556240157568981], [-0.5244265431946435], [-1.9992867763849413], [1.999866281741757], [-1.2339044799440428], [0.45960222739042633]]
 
 
 Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:
