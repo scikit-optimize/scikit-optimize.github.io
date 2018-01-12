@@ -1122,6 +1122,7 @@ table {
           <h1>Tuning a scikit-learn estimator with <code>skopt</code></h1>
 <p>Gilles Louppe, July 2016 <br />
 Katie Malone, August 2016</p>
+<p>If you are looking for a <code>GridSearchCV</code> replacement checkout <a href="sklearn-gridsearchcv-replacement.ipynb">the <code>BayesSearchCV</code> example</a> instead.</p>
 <div class="codehilite"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
@@ -1131,9 +1132,9 @@ Katie Malone, August 2016</p>
 <h2>Problem statement</h2>
 <p>Tuning the hyper-parameters of a machine learning model is often carried out using an exhaustive exploration of (a subset of) the space all hyper-parameter configurations (e.g., using <code>sklearn.model_selection.GridSearchCV</code>), which often results in a very time consuming operation. </p>
 <p>In this notebook, we illustrate how to couple <code>gp_minimize</code> with sklearn's estimators to tune hyper-parameters using sequential model-based optimisation, hopefully resulting in equivalent or better solutions, but within less evaluations. </p>
-<p>Note: scikit-optimize provides a dedicated interface for estimator tuning via <code>BayesSearchCV</code> class which has a similar interface to those of <code>GridSearchCV</code>. This class uses functions of skopt to perform hyperparameter search efficiently. For example usage of this class, see "Scikit Learn HPO Wrapper" example notebook.</p>
+<p>Note: scikit-optimize provides a dedicated interface for estimator tuning via <code>BayesSearchCV</code> class which has a similar interface to those of <code>GridSearchCV</code>. This class uses functions of skopt to perform hyperparameter search efficiently. For example usage of this class, see <a href="sklearn-gridsearchcv-replacement.ipynb">the <code>BayesSearchCV</code> example</a> example notebook.</p>
 <h2>Objective</h2>
-<p>The first step is to define the objective function we want to minimize, in this case the cross-validation mean absolute error of a gradient boosting regressor over the Boston dataset, as a function of its hyper-parameters:</p>
+<p>To tune the hyper-parameters of our model we need to define a model, decide which parameters to optimize, and define the objective function we want to minimize.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
@@ -1142,41 +1143,47 @@ Katie Malone, August 2016</p>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
 <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+<span class="c1"># gradient boosted trees tend to do well on problems like this</span>
 <span class="n">reg</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
 
-<span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="n">max_depth</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">max_features</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="p">,</span> <span class="n">min_samples_leaf</span> <span class="o">=</span> <span class="n">params</span>
 
-    <span class="n">reg</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
-                   <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
-                   <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span>
-                   <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span> 
-                   <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">)</span>
+<p>Next, we need to define the bounds of the dimensions of the search space we want to explore and pick the objective. In this case the cross-validation mean absolute error of a gradient boosting regressor over the Boston dataset, as a function of its hyper-parameters.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <span class="n">use_named_args</span>
+
+
+<span class="c1"># The list of hyper-parameters we want to optimize. For each one we define the bounds,</span>
+<span class="c1"># the corresponding scikit-learn parameter name, as well as how to sample values</span>
+<span class="c1"># from that dimension (`&#39;log-uniform&#39;` for the learning rate)</span>
+<span class="n">space</span>  <span class="o">=</span> <span class="p">[</span><span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;max_depth&#39;</span><span class="p">),</span>
+          <span class="n">Real</span><span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">),</span>
+          <span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;max_features&#39;</span><span class="p">),</span>
+          <span class="n">Integer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">),</span>
+          <span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">)]</span>
+
+<span class="c1"># this decorator allows your objective function to receive a the parameters as</span>
+<span class="c1"># keyword arguments. This is particularly convenient when you want to set scikit-learn</span>
+<span class="c1"># estimator parameters</span>
+<span class="nd">@use_named_args</span><span class="p">(</span><span class="n">space</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="n">reg</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
                                     <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_absolute_error&quot;</span><span class="p">))</span>
 </pre></div>
 
 
-<p>Next, we need to define the bounds of the dimensions of the search space we want to explore:</p>
-<div class="codehilite"><pre><span></span><span class="n">space</span>  <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>                           <span class="c1"># max_depth</span>
-          <span class="p">(</span><span class="mi">10</span><span class="o">**-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">),</span>   <span class="c1"># learning_rate</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_features</span><span class="p">),</span>                  <span class="c1"># max_features</span>
-          <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>                         <span class="c1"># min_samples_split</span>
-          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span>                         <span class="c1"># min_samples_leaf</span>
-</pre></div>
-
-
 <h2>Optimize all the things!</h2>
 <p>With these two pieces, we are now ready for sequential model-based optimisation. Here we use gaussian process-based optimisation.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">res_gp</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">fun</span>
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span>&#39;Best score=2.8846&#39;
+<div class="codehilite"><pre><span></span>&#39;Best score=2.9064&#39;
 </pre></div>
 
 
@@ -1193,7 +1200,7 @@ Katie Malone, August 2016</p>
 
 <div class="codehilite"><pre><span></span>Best parameters:
 - max_depth=2
-- learning_rate=0.162194
+- learning_rate=0.166161
 - max_features=13
 - min_samples_split=2
 - min_samples_leaf=1
