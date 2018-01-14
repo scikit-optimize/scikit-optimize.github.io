@@ -50,8 +50,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.9829250185597624
-    test score: 0.9822222222222222
+    val. score: 0.9866369710467706
+    test score: 0.9866666666666667
 
 
 ## Advanced example 
@@ -104,8 +104,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.991833704528582
-    test score: 0.9933333333333333
+    val. score: 0.9881217520415738
+    test score: 0.9888888888888889
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -144,10 +144,16 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
+    best score: 0.96
     best score: 0.9733333333333334
     best score: 0.9733333333333334
-    best score: 0.98
-    Interrupting!
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
 
 
 
@@ -160,7 +166,7 @@ searchcv.fit(X, y, callback=on_step)
       tol=0.001, verbose=False),
            fit_params=None, iid=True, n_iter=10, n_jobs=1,
            optimizer_kwargs=None, pre_dispatch='2*n_jobs', random_state=None,
-           refit=True, return_train_score=True, scoring=None,
+           refit=True, return_train_score=False, scoring=None,
            search_spaces={'C': (0.01, 100.0, 'log-uniform')}, verbose=0)
 
 

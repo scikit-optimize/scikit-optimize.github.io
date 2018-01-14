@@ -2928,8 +2928,8 @@ cross-validation strategies that can be used here.
     If set to 'raise', the error is raised. If a numeric value is given,
     FitFailedWarning is raised. This parameter does not affect the refit
     step, which will always raise the error.</p>
-<p>return_train_score : boolean, default=True
-    If <code>'False'</code>, the <code>cv_results_</code> attribute will not include training
+<p>return_train_score : boolean, default=False
+    If <code>'True'</code>, the <code>cv_results_</code> attribute will include training
     scores.</p>
 <h2>Example</h2>
 <p>from skopt import BayesSearchCV</p>
@@ -3161,8 +3161,8 @@ n_jobs</code>.</p>
 <span class="sd">        FitFailedWarning is raised. This parameter does not affect the refit</span>
 <span class="sd">        step, which will always raise the error.</span>
 
-<span class="sd">    return_train_score : boolean, default=True</span>
-<span class="sd">        If ``&#39;False&#39;``, the ``cv_results_`` attribute will not include training</span>
+<span class="sd">    return_train_score : boolean, default=False</span>
+<span class="sd">        If ``&#39;True&#39;``, the ``cv_results_`` attribute will include training</span>
 <span class="sd">        scores.</span>
 
 <span class="sd">    Example</span>
@@ -3294,7 +3294,7 @@ n_jobs</code>.</p>
                  <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+                 <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
@@ -3699,7 +3699,7 @@ n_jobs</code>.</p>
             
   <div class="item">
     <div class="name def" id="skopt.BayesSearchCV.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=True)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=False)</p>
     </div>
     
 
@@ -3713,7 +3713,7 @@ n_jobs</code>.</p>
              <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+             <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
