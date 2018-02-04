@@ -50,8 +50,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       FutureWarning)
 
 
-    val. score: 0.9836674090571641
-    test score: 0.9822222222222222
+    val. score: 0.991833704528582
+    test score: 0.9933333333333333
 
 
 ## Advanced example 
@@ -104,8 +104,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.9910913140311804
-    test score: 0.9933333333333333
+    val. score: 0.9851521900519673
+    test score: 0.9822222222222222
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -144,15 +144,13 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
+    best score: 0.96
     best score: 0.9733333333333334
     best score: 0.9733333333333334
     best score: 0.9733333333333334
     best score: 0.9733333333333334
     best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.98
+    best score: 0.9866666666666667
     Interrupting!
 
 
