@@ -2858,9 +2858,11 @@ given by n_iter.</p>
     some search subspace, similarly as in case 2, and second element
     is a number of iterations that will be spent optimizing over
     this subspace.</p>
-<p>n_iter : int, default=128
+<p>n_iter : int, default=50
     Number of parameter settings that are sampled. n_iter trades
-    off runtime vs quality of the solution.</p>
+    off runtime vs quality of the solution. Consider increasing
+    <code>n_points</code> if you want to try more parameter settings in
+    parallel.</p>
 <p>optimizer_kwargs : dict, optional
     Dict of arguments passed to :class:<code>Optimizer</code>.  For example,
     <code>{'base_estimator': 'RF'}</code> would use a Random Forest surrogate
@@ -2873,7 +2875,12 @@ given by n_iter.</p>
 <p>fit_params : dict, optional
     Parameters to pass to the fit method.</p>
 <p>n_jobs : int, default=1
-    Number of jobs to run in parallel.</p>
+    Number of jobs to run in parallel. At maximum there are
+    <code>n_points</code> times <code>cv</code> jobs available during each iteration.</p>
+<p>n_points : int, default=1
+    Number of parameter settings to sample in parallel. If this does
+    not align with <code>n_iter</code>, the last iteration will sample less
+    points. See also :func:<code>~Optimizer.ask</code></p>
 <p>pre_dispatch : int, or string, optional
     Controls the number of jobs that get dispatched during parallel
     execution. Reducing this number can be useful to avoid an
@@ -3083,9 +3090,11 @@ n_jobs</code>.</p>
 <span class="sd">        is a number of iterations that will be spent optimizing over</span>
 <span class="sd">        this subspace.</span>
 
-<span class="sd">    n_iter : int, default=128</span>
+<span class="sd">    n_iter : int, default=50</span>
 <span class="sd">        Number of parameter settings that are sampled. n_iter trades</span>
-<span class="sd">        off runtime vs quality of the solution.</span>
+<span class="sd">        off runtime vs quality of the solution. Consider increasing</span>
+<span class="sd">        ``n_points`` if you want to try more parameter settings in</span>
+<span class="sd">        parallel.</span>
 
 <span class="sd">    optimizer_kwargs : dict, optional</span>
 <span class="sd">        Dict of arguments passed to :class:`Optimizer`.  For example,</span>
@@ -3102,7 +3111,13 @@ n_jobs</code>.</p>
 <span class="sd">        Parameters to pass to the fit method.</span>
 
 <span class="sd">    n_jobs : int, default=1</span>
-<span class="sd">        Number of jobs to run in parallel.</span>
+<span class="sd">        Number of jobs to run in parallel. At maximum there are</span>
+<span class="sd">        ``n_points`` times ``cv`` jobs available during each iteration.</span>
+
+<span class="sd">    n_points : int, default=1</span>
+<span class="sd">        Number of parameter settings to sample in parallel. If this does</span>
+<span class="sd">        not align with ``n_iter``, the last iteration will sample less</span>
+<span class="sd">        points. See also :func:`~Optimizer.ask`</span>
 
 <span class="sd">    pre_dispatch : int, or string, optional</span>
 <span class="sd">        Controls the number of jobs that get dispatched during parallel</span>
@@ -3290,12 +3305,13 @@ n_jobs</code>.</p>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">n_points</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
@@ -3543,12 +3559,12 @@ n_jobs</code>.</p>
 
         <span class="k">return</span> <span class="n">optimizer</span>
 
-    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate n_jobs parameters and evaluate them in parallel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># get parameter values to evaluate</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
 
         <span class="c1"># HACK: self.cv_results_ is reset at every call to _fit, keep current</span>
@@ -3644,11 +3660,7 @@ n_jobs</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
 
-        <span class="n">n_jobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
-
-        <span class="c1"># account for case n_jobs &lt; 0</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span>
 
         <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
             <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
@@ -3660,14 +3672,14 @@ n_jobs</code>.</p>
 
             <span class="c1"># do the optimization for particular search space</span>
             <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
-                <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+                <span class="c1"># when n_iter &lt; n_points points left for evaluation</span>
+                <span class="n">n_points_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
 
                 <span class="n">optim_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
                     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
-                    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
+                    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points_adjusted</span>
                 <span class="p">)</span>
-                <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
+                <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_points</span>
 
                 <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optim_result</span><span class="p">):</span>
                     <span class="k">break</span>
@@ -3697,7 +3709,7 @@ n_jobs</code>.</p>
             
   <div class="item">
     <div class="name def" id="skopt.BayesSearchCV.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=False)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, estimator, search_spaces, optimizer_kwargs=None, n_iter=50, scoring=None, fit_params=None, n_jobs=1, n_points=1, iid=True, refit=True, cv=None, verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, random_state=None, error_score=&#39;raise&#39;, return_train_score=False)</p>
     </div>
     
 
@@ -3709,11 +3721,12 @@ n_jobs</code>.</p>
   <div id="source-skopt.BayesSearchCV.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
              <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">n_points</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
@@ -3793,10 +3806,7 @@ n_jobs</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="n">n_jobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span>
-    <span class="c1"># account for case n_jobs &lt; 0</span>
-    <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">n_jobs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">()</span> <span class="o">+</span> <span class="n">n_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">n_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span>
     <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
         <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
         <span class="c1"># self.n_iter</span>
@@ -3806,13 +3816,13 @@ n_jobs</code>.</p>
             <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
         <span class="c1"># do the optimization for particular search space</span>
         <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># when n_iter &lt; n_jobs points left for evaluation</span>
-            <span class="n">n_jobs_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+            <span class="c1"># when n_iter &lt; n_points points left for evaluation</span>
+            <span class="n">n_points_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
             <span class="n">optim_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
-                <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs_adjusted</span>
+                <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points_adjusted</span>
             <span class="p">)</span>
-            <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_jobs</span>
+            <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_points</span>
             <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optim_result</span><span class="p">):</span>
                 <span class="k">break</span>
     <span class="c1"># Refit the best model on the the whole dataset</span>
@@ -3869,6 +3879,16 @@ n_jobs</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.BayesSearchCV.n_iter" class="name">var <span class="ident">n_iter</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.BayesSearchCV.n_points" class="name">var <span class="ident">n_points</span></p>
             
 
             
