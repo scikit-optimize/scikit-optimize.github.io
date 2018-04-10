@@ -1129,6 +1129,7 @@ table {
   <div id="source-skopt.space.space" class="source">
     <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numbers</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">scipy.stats.distributions</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="kn">from</span> <span class="nn">scipy.stats.distributions</span> <span class="kn">import</span> <span class="n">rv_discrete</span>
@@ -1678,6 +1679,69 @@ table {
 <span class="sd">        Returns true if all dimensions are Real</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Real</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Space from yaml configuration file</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `yml_path` [str]:</span>
+<span class="sd">            Full path to yaml configuration file, example YaML below:</span>
+<span class="sd">            Space:</span>
+<span class="sd">              - Integer:</span>
+<span class="sd">                  low: -5</span>
+<span class="sd">                  high: 5</span>
+<span class="sd">              - Categorical:</span>
+<span class="sd">                  categories:</span>
+<span class="sd">                  - a</span>
+<span class="sd">                  - b</span>
+<span class="sd">              - Real:</span>
+<span class="sd">                  low: 1.0</span>
+<span class="sd">                  high: 5.0</span>
+<span class="sd">                  prior: log-uniform</span>
+<span class="sd">        * `namespace` [str, default=None]:</span>
+<span class="sd">           Namespace within configuration file to use, will use first</span>
+<span class="sd">             namespace if not provided</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `space` [Space]:</span>
+<span class="sd">           Instantiated Space object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
+                             <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
+                             <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>
+
+        <span class="c1"># Extract space options for configuration file</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;YaML does not specify a list or dictionary&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Populate list with Dimension objects</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="c1"># Make configuration case insensitive</span>
+            <span class="n">dimension_class</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">option</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="k">if</span> <span class="n">dimension_class</span> <span class="ow">in</span> <span class="n">dimension_classes</span><span class="p">:</span>
+                <span class="c1"># Instantiate Dimension subclass and add it to the list</span>
+                <span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension_classes</span><span class="p">[</span><span class="n">dimension_class</span><span class="p">](</span><span class="o">**</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+
+        <span class="n">space</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">space</span>
 
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
@@ -3690,6 +3754,69 @@ orignal space.</p></div>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Real</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Space from yaml configuration file</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `yml_path` [str]:</span>
+<span class="sd">            Full path to yaml configuration file, example YaML below:</span>
+<span class="sd">            Space:</span>
+<span class="sd">              - Integer:</span>
+<span class="sd">                  low: -5</span>
+<span class="sd">                  high: 5</span>
+<span class="sd">              - Categorical:</span>
+<span class="sd">                  categories:</span>
+<span class="sd">                  - a</span>
+<span class="sd">                  - b</span>
+<span class="sd">              - Real:</span>
+<span class="sd">                  low: 1.0</span>
+<span class="sd">                  high: 5.0</span>
+<span class="sd">                  prior: log-uniform</span>
+<span class="sd">        * `namespace` [str, default=None]:</span>
+<span class="sd">           Namespace within configuration file to use, will use first</span>
+<span class="sd">             namespace if not provided</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `space` [Space]:</span>
+<span class="sd">           Instantiated Space object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
+                             <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
+                             <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>
+
+        <span class="c1"># Extract space options for configuration file</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;YaML does not specify a list or dictionary&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Populate list with Dimension objects</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="c1"># Make configuration case insensitive</span>
+            <span class="n">dimension_class</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">option</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="k">if</span> <span class="n">dimension_class</span> <span class="ow">in</span> <span class="n">dimension_classes</span><span class="p">:</span>
+                <span class="c1"># Instantiate Dimension subclass and add it to the list</span>
+                <span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension_classes</span><span class="p">[</span><span class="n">dimension_class</span><span class="p">](</span><span class="o">**</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+
+        <span class="n">space</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">space</span>
+
     <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
 
@@ -4256,6 +4383,111 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 </div>
 
             </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.space.space.Space.from_yaml">
+    <p>def <span class="ident">from_yaml</span>(</p><p>cls, yml_path, namespace=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create Space from yaml configuration file</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>yml_path</code> [str]:
+    Full path to yaml configuration file, example YaML below:
+    Space:<ul>
+<li>Integer:
+      low: -5
+      high: 5</li>
+<li>Categorical:
+      categories:<ul>
+<li>a</li>
+<li>b</li>
+</ul>
+</li>
+<li>Real:
+      low: 1.0
+      high: 5.0
+      prior: log-uniform</li>
+</ul>
+</li>
+<li><code>namespace</code> [str, default=None]:
+   Namespace within configuration file to use, will use first
+     namespace if not provided</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>space</code> [Space]:
+   Instantiated Space object</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Space.from_yaml', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.space.Space.from_yaml" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create Space from yaml configuration file</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `yml_path` [str]:</span>
+<span class="sd">        Full path to yaml configuration file, example YaML below:</span>
+<span class="sd">        Space:</span>
+<span class="sd">          - Integer:</span>
+<span class="sd">              low: -5</span>
+<span class="sd">              high: 5</span>
+<span class="sd">          - Categorical:</span>
+<span class="sd">              categories:</span>
+<span class="sd">              - a</span>
+<span class="sd">              - b</span>
+<span class="sd">          - Real:</span>
+<span class="sd">              low: 1.0</span>
+<span class="sd">              high: 5.0</span>
+<span class="sd">              prior: log-uniform</span>
+<span class="sd">    * `namespace` [str, default=None]:</span>
+<span class="sd">       Namespace within configuration file to use, will use first</span>
+<span class="sd">         namespace if not provided</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `space` [Space]:</span>
+<span class="sd">       Instantiated Space object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
+                         <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
+                         <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>
+    <span class="c1"># Extract space options for configuration file</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;YaML does not specify a list or dictionary&#39;</span><span class="p">)</span>
+    <span class="c1"># Populate list with Dimension objects</span>
+    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="c1"># Make configuration case insensitive</span>
+        <span class="n">dimension_class</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">option</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="n">dimension_class</span> <span class="ow">in</span> <span class="n">dimension_classes</span><span class="p">:</span>
+            <span class="c1"># Instantiate Dimension subclass and add it to the list</span>
+            <span class="n">dimension</span> <span class="o">=</span> <span class="n">dimension_classes</span><span class="p">[</span><span class="n">dimension_class</span><span class="p">](</span><span class="o">**</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">space</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
       </div>
   </section>
