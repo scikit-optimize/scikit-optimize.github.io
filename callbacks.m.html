@@ -1065,6 +1065,9 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.callbacks.CheckpointSaver">CheckpointSaver</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.callbacks.DeadlineStopper">DeadlineStopper</a></span>
         </li>
         <li class="mono">
@@ -1157,6 +1160,7 @@ the optimization early by returning <code>True</code>.</p>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <span class="n">dump</span>
 
 <span class="k">def</span> <span class="nf">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1391,6 +1395,36 @@ the optimization early by returning <code>True</code>.</p>
             <span class="k">return</span> <span class="n">time_remaining</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="k">class</span> <span class="nc">CheckpointSaver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save current state after each iteration with `skopt.dump`.</span>
+
+
+<span class="sd">    Example usage:</span>
+<span class="sd">        import skopt</span>
+
+<span class="sd">        checkpoint_callback = skopt.callbacks.CheckpointSaver(&quot;./result.pkl&quot;)</span>
+<span class="sd">        skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `checkpoint_path`: location where checkpoint will be saved to;</span>
+<span class="sd">    * `dump_options`: options to pass on to `skopt.dump`, like `compress=9`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">,</span> <span class="o">**</span><span class="n">dump_options</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoint_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_options</span> <span class="o">=</span> <span class="n">dump_options</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dump_options</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1441,6 +1475,114 @@ the optimization early by returning <code>True</code>.</p>
   
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="skopt.callbacks.CheckpointSaver" class="name">class <span class="ident">CheckpointSaver</span></p>
+      
+  
+    <div class="desc"><p>Save current state after each iteration with <code>skopt.dump</code>.</p>
+<p>Example usage:
+    import skopt</p>
+<div class="codehilite"><pre><span></span>checkpoint_callback = skopt.callbacks.CheckpointSaver(&quot;./result.pkl&quot;)
+skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])
+</pre></div>
+
+
+<h2>Parameters</h2>
+<ul>
+<li><code>checkpoint_path</code>: location where checkpoint will be saved to;</li>
+<li><code>dump_options</code>: options to pass on to <code>skopt.dump</code>, like <code>compress=9</code></li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.CheckpointSaver', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.CheckpointSaver" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CheckpointSaver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save current state after each iteration with `skopt.dump`.</span>
+
+
+<span class="sd">    Example usage:</span>
+<span class="sd">        import skopt</span>
+
+<span class="sd">        checkpoint_callback = skopt.callbacks.CheckpointSaver(&quot;./result.pkl&quot;)</span>
+<span class="sd">        skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `checkpoint_path`: location where checkpoint will be saved to;</span>
+<span class="sd">    * `dump_options`: options to pass on to `skopt.dump`, like `compress=9`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">,</span> <span class="o">**</span><span class="n">dump_options</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoint_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_options</span> <span class="o">=</span> <span class="n">dump_options</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">            The optimization as a OptimizeResult object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dump_options</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.callbacks.CheckpointSaver">CheckpointSaver</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.callbacks.CheckpointSaver.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, checkpoint_path, **dump_options)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.callbacks.CheckpointSaver.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.callbacks.CheckpointSaver.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">,</span> <span class="o">**</span><span class="n">dump_options</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoint_path</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dump_options</span> <span class="o">=</span> <span class="n">dump_options</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.callbacks.CheckpointSaver.checkpoint_path" class="name">var <span class="ident">checkpoint_path</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.callbacks.CheckpointSaver.dump_options" class="name">var <span class="ident">dump_options</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
       
       <div class="item">
       <p id="skopt.callbacks.DeadlineStopper" class="name">class <span class="ident">DeadlineStopper</span></p>
