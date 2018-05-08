@@ -104,8 +104,12 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.985894580549369
-    test score: 0.9822222222222222
+    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated "
+
+
+    val. score: 0.991833704528582
+    test score: 0.9933333333333333
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -144,7 +148,8 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.98
+    best score: 0.9333333333333333
+    best score: 0.9866666666666667
     Interrupting!
 
 
