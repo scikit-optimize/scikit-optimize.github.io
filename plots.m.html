@@ -1059,6 +1059,7 @@ table {
     <li class="mono"><a href="#skopt.plots.plot_convergence">plot_convergence</a></li>
     <li class="mono"><a href="#skopt.plots.plot_evaluations">plot_evaluations</a></li>
     <li class="mono"><a href="#skopt.plots.plot_objective">plot_objective</a></li>
+    <li class="mono"><a href="#skopt.plots.plot_regret">plot_regret</a></li>
   </ul>
 
     </li>
@@ -1196,6 +1197,97 @@ table {
                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True minimum&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">or</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">plot_regret</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot one or several cumulative regret traces.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `args[i]` [`OptimizeResult`, list of `OptimizeResult`, or tuple]:</span>
+<span class="sd">        The result(s) for which to plot the cumulative regret trace.</span>
+
+<span class="sd">        - if `OptimizeResult`, then draw the corresponding single trace;</span>
+<span class="sd">        - if list of `OptimizeResult`, then draw the corresponding cumulative</span>
+<span class="sd">        regret traces in transparency, along with the average cumulative regret</span>
+<span class="sd">        trace;</span>
+<span class="sd">        - if tuple, then `args[i][0]` should be a string label and `args[i][1]`</span>
+<span class="sd">          an `OptimizeResult` or a list of `OptimizeResult`.</span>
+
+<span class="sd">    * `ax` [`Axes`, optional]:</span>
+<span class="sd">        The matplotlib axes on which to draw the plot, or `None` to create</span>
+<span class="sd">        a new one.</span>
+
+<span class="sd">    * `true_minimum` [float, optional]:</span>
+<span class="sd">        The true minimum value of the function, if known.</span>
+
+<span class="sd">    * `yscale` [None or string, optional]:</span>
+<span class="sd">        The scale for the y-axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># &lt;3 legacy python</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative regret plot&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sum_{i=0}^n(f(x_i) - optimum)$ after $n$ calls&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">regrets</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                        <span class="n">iterations</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">regrets</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">regrets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax</span>
@@ -2103,6 +2195,148 @@ A red point indicates the found minimum.</p>
 
     <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Partial dependence&quot;</span><span class="p">,</span>
                                      <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="skopt.plots.plot_regret">
+    <p>def <span class="ident">plot_regret</span>(</p><p>*args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Plot one or several cumulative regret traces.</p>
+<h2>Parameters</h2>
+<ul>
+<li>
+<p><code>args[i]</code> [<code>OptimizeResult</code>, list of <code>OptimizeResult</code>, or tuple]:
+    The result(s) for which to plot the cumulative regret trace.</p>
+<ul>
+<li>if <code>OptimizeResult</code>, then draw the corresponding single trace;</li>
+<li>if list of <code>OptimizeResult</code>, then draw the corresponding cumulative
+regret traces in transparency, along with the average cumulative regret
+trace;</li>
+<li>if tuple, then <code>args[i][0]</code> should be a string label and <code>args[i][1]</code>
+  an <code>OptimizeResult</code> or a list of <code>OptimizeResult</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>ax</code> [<code>Axes</code>, optional]:
+    The matplotlib axes on which to draw the plot, or <code>None</code> to create
+    a new one.</p>
+</li>
+<li>
+<p><code>true_minimum</code> [float, optional]:
+    The true minimum value of the function, if known.</p>
+</li>
+<li>
+<p><code>yscale</code> [None or string, optional]:
+    The scale for the y-axis.</p>
+</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>ax</code>: [<code>Axes</code>]:
+    The matplotlib axes.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_regret', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.plots.plot_regret" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_regret</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot one or several cumulative regret traces.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `args[i]` [`OptimizeResult`, list of `OptimizeResult`, or tuple]:</span>
+<span class="sd">        The result(s) for which to plot the cumulative regret trace.</span>
+
+<span class="sd">        - if `OptimizeResult`, then draw the corresponding single trace;</span>
+<span class="sd">        - if list of `OptimizeResult`, then draw the corresponding cumulative</span>
+<span class="sd">        regret traces in transparency, along with the average cumulative regret</span>
+<span class="sd">        trace;</span>
+<span class="sd">        - if tuple, then `args[i][0]` should be a string label and `args[i][1]`</span>
+<span class="sd">          an `OptimizeResult` or a list of `OptimizeResult`.</span>
+
+<span class="sd">    * `ax` [`Axes`, optional]:</span>
+<span class="sd">        The matplotlib axes on which to draw the plot, or `None` to create</span>
+<span class="sd">        a new one.</span>
+
+<span class="sd">    * `true_minimum` [float, optional]:</span>
+<span class="sd">        The true minimum value of the function, if known.</span>
+
+<span class="sd">    * `yscale` [None or string, optional]:</span>
+<span class="sd">        The scale for the y-axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `ax`: [`Axes`]:</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># &lt;3 legacy python</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative regret plot&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sum_{i=0}^n(f(x_i) - optimum)$ after $n$ calls&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">regrets</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                        <span class="n">iterations</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">regrets</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">regrets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
 </pre></div>
 
   </div>

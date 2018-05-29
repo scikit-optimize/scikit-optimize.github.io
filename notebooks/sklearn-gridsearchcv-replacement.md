@@ -48,14 +48,10 @@ print("test score: %s" % opt.score(X_test, y_test))
 
     /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
-    val. score: 0.9851521900519673
-    test score: 0.9822222222222222
+    val. score: 0.9806978470675576
+    test score: 0.9777777777777777
 
 
 ## Advanced example 
@@ -108,8 +104,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.9881217520415738
-    test score: 0.9888888888888889
+    val. score: 0.991833704528582
+    test score: 0.9933333333333333
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -148,7 +144,9 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.9333333333333333
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
     best score: 0.98
     Interrupting!
 
