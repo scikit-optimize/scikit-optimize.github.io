@@ -176,13 +176,13 @@ print(res)
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
                  random_state=843828734)]
-     random_state: <mtrand.RandomState object at 0x7f2f9504a3f0>
+     random_state: <mtrand.RandomState object at 0x7fea9e459510>
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')])
-            specs: {'args': {'n_jobs': 1, 'kappa': 1.96, 'xi': 0.01, 'n_restarts_optimizer': 5, 'n_points': 10000, 'callback': None, 'verbose': False, 'random_state': <mtrand.RandomState object at 0x7f2f9504a3f0>, 'y0': None, 'x0': None, 'acq_optimizer': 'auto', 'acq_func': 'EI', 'n_random_starts': 5, 'n_calls': 15, 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+            specs: {'args': {'n_jobs': 1, 'kappa': 1.96, 'xi': 0.01, 'n_restarts_optimizer': 5, 'n_points': 10000, 'callback': None, 'verbose': False, 'random_state': <mtrand.RandomState object at 0x7fea9e459510>, 'y0': None, 'x0': None, 'acq_optimizer': 'auto', 'acq_func': 'EI', 'n_random_starts': 5, 'n_calls': 15, 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                  kernel=1**2 * Matern(length_scale=1, nu=2.5),
                  n_restarts_optimizer=2, noise=0.010000000000000002,
                  normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'func': <function f at 0x7f2fa2840d08>}, 'function': 'base_minimize'}
+                 random_state=843828734), 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'func': <function f at 0x7feaabc50d08>}, 'function': 'base_minimize'}
                 x: [-0.2572822321543613]
           x_iters: [[0.8518212820929092], [-0.2861162952526968], [0.7635394201074472], [0.8766012406190926], [-0.03552426626961047], [-0.30626086081540094], [-0.2572822321543613], [-0.2237896656292626], [1.0553495096977938], [-0.25562401679960356], [-0.5244265424397689], [-1.9992867763849413], [1.999866281741757], [-1.2339044799440428], [0.4596022272166356]]
 
