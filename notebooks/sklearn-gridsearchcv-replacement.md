@@ -46,12 +46,76 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /home/ubuntu/miniconda3/envs/testenv/lib/python3.6/site-packages/sklearn/model_selection/_split.py:2026: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2069: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
       FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
 
 
-    val. score: 0.991833704528582
-    test score: 0.9933333333333333
+    val. score: 0.9829250185597624
+    test score: 0.9822222222222222
 
 
 ## Advanced example 
@@ -104,8 +168,130 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.9836674090571641
-    test score: 0.9822222222222222
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:922: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+
+
+    val. score: 0.9844097995545658
+    test score: 0.9844444444444445
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -144,11 +330,38 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
+    best score: 0.9466666666666667
     best score: 0.9733333333333334
     best score: 0.98
     Interrupting!
+
+
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1943: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
+      warnings.warn(CV_WARNING, FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
+    /home/ubuntu/miniconda3/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
+      "avoid this warning.", FutureWarning)
 
 
 
@@ -156,9 +369,9 @@ searchcv.fit(X, y, callback=on_step)
 
     BayesSearchCV(cv=None, error_score='raise',
            estimator=SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-      decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
-      max_iter=-1, probability=False, random_state=None, shrinking=True,
-      tol=0.001, verbose=False),
+      decision_function_shape='ovr', degree=3, gamma='auto_deprecated',
+      kernel='rbf', max_iter=-1, probability=False, random_state=None,
+      shrinking=True, tol=0.001, verbose=False),
            fit_params=None, iid=True, n_iter=10, n_jobs=1, n_points=1,
            optimizer_kwargs=None, pre_dispatch='2*n_jobs', random_state=None,
            refit=True, return_train_score=False, scoring=None,
