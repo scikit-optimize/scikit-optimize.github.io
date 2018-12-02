@@ -48,21 +48,21 @@ gp_minimize(obj_fun,                       # the function to minimize
               random_state=777);
 ```
 
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
 
 
@@ -110,25 +110,25 @@ gp_minimize(obj_fun,            # the function to minimize
               random_state=777);
 ```
 
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /home/ubuntu/scikit-optimize/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
 
 
