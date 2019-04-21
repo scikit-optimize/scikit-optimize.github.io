@@ -1309,6 +1309,14 @@ table {
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
+    <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+                         <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
+                         <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
+                         <span class="s2">&quot;(N,) vector?&quot;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">improve</span> <span class="o">=</span> <span class="n">y_opt</span> <span class="o">-</span> <span class="n">xi</span> <span class="o">-</span> <span class="n">mu</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -1383,6 +1391,14 @@ table {
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+                         <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
+                         <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
+                         <span class="s2">&quot;(N,) vector?&quot;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -1563,6 +1579,14 @@ obtain the <code>X</code> with maximum improvement.</p>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+                         <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
+                         <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
+                         <span class="s2">&quot;(N,) vector?&quot;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -1827,6 +1851,14 @@ obtain the <code>X</code> with maximum improvement.</p>
                 <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+                         <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
+                         <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
+                         <span class="s2">&quot;(N,) vector?&quot;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">std</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span>
