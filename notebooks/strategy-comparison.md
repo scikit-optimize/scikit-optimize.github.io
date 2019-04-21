@@ -151,3 +151,5 @@ guided by the model, which is where differences start to appear.
 Each minimizer only has access to noisy observations of the objective
 function, so as time passes (more iterations) it will start observing values that
 are below the true value simply because they are fluctuations.
+
+

@@ -112,9 +112,16 @@ print("""Best parameters:
 ```python
 from skopt.plots import plot_convergence
 
-plot_convergence(res_gp);
+plot_convergence(res_gp)
 ```
 
 
-![png](hyperparameter-optimization_files/hyperparameter-optimization_13_0.png)
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7fcbf7868048>
+
+
+
+
+![png](hyperparameter-optimization_files/hyperparameter-optimization_13_1.png)
 
