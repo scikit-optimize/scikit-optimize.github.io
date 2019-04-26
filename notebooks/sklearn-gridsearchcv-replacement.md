@@ -26,7 +26,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 
 X, y = load_digits(10, True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, test_size=.25, random_state=0)
 
 # log-uniform: understand as search over p = exp(x) by varying x
 opt = BayesSearchCV(
@@ -37,7 +37,8 @@ opt = BayesSearchCV(
         'degree': (1, 8),  # integer valued parameter
         'kernel': ['linear', 'poly', 'rbf'],  # categorical parameter
     },
-    n_iter=32
+    n_iter=32,
+    cv=3
 )
 
 opt.fit(X_train, y_train)
@@ -46,76 +47,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2179: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
-      FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-
-
-    val. score: 0.9925760950259837
-    test score: 0.9933333333333333
+    val. score: 0.9851521900519673
+    test score: 0.9822222222222222
 
 
 ## Advanced example 
@@ -143,8 +76,10 @@ pipe = Pipeline([
 
 # single categorical value of 'model' parameter is 
 # sets the model class
+# We will get ConvergenceWarnings because the problem is not well-conditioned.
+# But that's fine, this is just an example.
 linsvc_search = {
-    'model': [LinearSVC(max_iter=10000)],
+    'model': [LinearSVC(max_iter=1000)],
     'model__C': (1e-6, 1e+6, 'log-uniform'),
 }
 
@@ -160,6 +95,7 @@ svc_search = {
 opt = BayesSearchCV(
     pipe,
     [(svc_search, 20), (linsvc_search, 16)], # (parameter space, # of evaluations)
+    cv=3
 )
 
 opt.fit(X_train, y_train)
@@ -168,124 +104,64 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:931: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
 
 
     val. score: 0.985894580549369
-    test score: 0.9822222222222222
+    test score: 0.98
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -306,9 +182,10 @@ from sklearn.svm import SVC
 X, y = load_iris(True)
 
 searchcv = BayesSearchCV(
-    SVC(),
+    SVC(gamma='scale'),
     search_spaces={'C': (0.01, 100.0, 'log-uniform')},
-    n_iter=10
+    n_iter=10,
+    cv=3
 )
 
 
@@ -324,85 +201,10 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.96
     best score: 0.9733333333333334
     best score: 0.9733333333333334
-
-
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-
-
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
     best score: 0.9733333333333334
     best score: 0.9733333333333334
     best score: 0.9733333333333334
@@ -411,31 +213,14 @@ searchcv.fit(X, y, callback=on_step)
     best score: 0.9733333333333334
 
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_split.py:2053: FutureWarning: You should specify a value for 'cv' instead of relying on the default value. The default value will change from 3 to 5 in version 0.22.
-      warnings.warn(CV_WARNING, FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
-
-
-    best score: 0.9733333333333334
-
-
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/base.py:196: FutureWarning: The default value of gamma will change from 'auto' to 'scale' in version 0.22 to account better for unscaled features. Set gamma explicitly to 'auto' or 'scale' to avoid this warning.
-      "avoid this warning.", FutureWarning)
 
 
 
-
-
-    BayesSearchCV(cv=None, error_score='raise',
+    BayesSearchCV(cv=3, error_score='raise',
            estimator=SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-      decision_function_shape='ovr', degree=3, gamma='auto_deprecated',
-      kernel='rbf', max_iter=-1, probability=False, random_state=None,
-      shrinking=True, tol=0.001, verbose=False),
+      decision_function_shape='ovr', degree=3, gamma='scale', kernel='rbf',
+      max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False),
            fit_params=None, iid=True, n_iter=10, n_jobs=1, n_points=1,
            optimizer_kwargs=None, pre_dispatch='2*n_jobs', random_state=None,
            refit=True, return_train_score=False, scoring=None,
