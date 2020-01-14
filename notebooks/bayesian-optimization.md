@@ -1,4 +1,3 @@
-
 # Bayesian optimization with `skopt`
 
 Gilles Louppe, Manoj Kumar July 2016.
@@ -97,6 +96,12 @@ res = gp_minimize(f,                  # the function to minimize
                   random_state=123)   # the random seed
 ```
 
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+      warnings.warn(msg, category=FutureWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
+      warnings.warn(message, FutureWarning)
+
+
 Accordingly, the approximated minimum is found to be:
 
 
@@ -132,59 +137,59 @@ print(res)
            -0.80809029, -1.07149859, -0.92120939, -0.1608395 , -0.80998886,
            -0.32494081,  0.0329113 , -0.02279617,  0.05849308,  0.69296704])
            models: [GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734)]
-     random_state: <mtrand.RandomState object at 0x7f486b874cf0>
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734)]
+     random_state: RandomState(MT19937) at 0x7F35CC808380
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')])
-            specs: {'args': {'func': <function f at 0x7f481a05bb70>, 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
-                 kernel=1**2 * Matern(length_scale=1, nu=2.5),
-                 n_restarts_optimizer=2, noise=0.010000000000000002,
-                 normalize_y=True, optimizer='fmin_l_bfgs_b',
-                 random_state=843828734), 'n_calls': 15, 'n_random_starts': 5, 'acq_func': 'EI', 'acq_optimizer': 'auto', 'x0': None, 'y0': None, 'random_state': <mtrand.RandomState object at 0x7f486b874cf0>, 'verbose': False, 'callback': None, 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1}, 'function': 'base_minimize'}
+            specs: {'args': {'func': <function f at 0x7f35cc4f63b0>, 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                             kernel=1**2 * Matern(length_scale=1, nu=2.5),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, optimizer='fmin_l_bfgs_b',
+                             random_state=843828734), 'n_calls': 15, 'n_random_starts': 5, 'acq_func': 'EI', 'acq_optimizer': 'auto', 'x0': None, 'y0': None, 'random_state': RandomState(MT19937) at 0x7F35CC808380, 'verbose': False, 'callback': None, 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1}, 'function': 'base_minimize'}
                 x: [-0.25728223389301497]
-          x_iters: [[0.8518212820929092], [-0.2861162952526968], [0.7635394201074472], [0.8766012406190926], [-0.03552426626961047], [-0.30626086081540116], [-0.25728223389301497], [-0.22378966711457093], [1.0553495077507762], [-0.25562401712808525], [-0.5244265431906165], [-1.9992867763849413], [1.999866281741757], [-1.2339044799440428], [0.4596022277478369]]
+          x_iters: [[0.8518212820929092], [-0.2861162952526968], [0.7635394201074472], [0.8766012406190926], [-0.03552426626961047], [-0.30626086081540116], [-0.25728223389301497], [-0.22378966711457093], [1.0553495077507762], [-0.25562401712808525], [-0.5244265431906165], [-1.9992867763849413], [1.999866281741757], [-1.2339044799440428], [0.45960222774783643]]
 
 
 Together these attributes can be used to visually inspect the results of the minimization, such as the convergence trace or the acquisition function at the last iteration:
@@ -274,34 +279,8 @@ for n_iter in range(5):
 plt.show()
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/matplotlib/cbook/__init__.py:424: MatplotlibDeprecationWarning: 
-    Passing one of 'on', 'true', 'off', 'false' as a boolean is deprecated; use an actual boolean (True/False) instead.
-      warn_deprecated("2.2", "Passing one of 'on', 'true', 'off', 'false' as a "
 
-
-
-![png](bayesian-optimization_files/bayesian-optimization_18_1.png)
+![png](bayesian-optimization_files/bayesian-optimization_18_0.png)
 
 
 The first column shows the following:

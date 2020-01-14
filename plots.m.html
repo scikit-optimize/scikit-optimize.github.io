@@ -1109,9 +1109,9 @@ table {
   <div id="source-skopt.plots" class="source">
     <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Plotting functions.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">LogLocator</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">MaxNLocator</span>
@@ -1149,11 +1149,11 @@ table {
 <span class="sd">        The matplotlib axes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># &lt;3 legacy python</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Convergence plot&quot;</span><span class="p">)</span>
@@ -1161,7 +1161,7 @@ table {
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\min f(x)$ after $n$ calls&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
 
     <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
@@ -1170,7 +1170,7 @@ table {
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
             <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
@@ -1233,11 +1233,11 @@ table {
 <span class="sd">        The matplotlib axes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># &lt;3 legacy python</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative regret plot&quot;</span><span class="p">)</span>
@@ -1245,12 +1245,12 @@ table {
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sum_{i=0}^n(f(x_i) - optimum)$ after $n$ calls&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
 
     <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
 
-    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -1266,7 +1266,7 @@ table {
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
             <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
@@ -1293,7 +1293,7 @@ table {
     <span class="k">return</span> <span class="n">ax</span>
 
 
-<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">dim_labels</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">dim_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># Work out min, max of y axis for the diagonal so we can adjust</span>
     <span class="c1"># them all to the same value</span>
     <span class="n">diagonal_ylim</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
@@ -1301,8 +1301,8 @@ table {
                      <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
                              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]))</span>
 
-    <span class="k">if</span> <span class="n">dim_labels</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">dim_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">dim_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dim_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span>
                       <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)]</span>
 
     <span class="c1"># Deal with formatting of the axes</span>
@@ -1363,7 +1363,7 @@ table {
     <span class="k">return</span> <span class="n">ax</span>
 
 
-<span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculate the partial dependence for dimensions `i` and `j` with</span>
 <span class="sd">    respect to the objective value, as approximated by `model`.</span>
@@ -1418,10 +1418,10 @@ table {
 <span class="sd">    * `zi`: [np.array, shape=(n_points, n_points)]:</span>
 <span class="sd">        The value of the model at each point `(xi, yi)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
         <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
         <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
@@ -1458,7 +1458,7 @@ table {
 
 
 <span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -1514,7 +1514,7 @@ table {
     <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
         <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
-        <span class="n">locator</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for zscale are &#39;linear&#39; and &#39;log&#39;,&quot;</span>
                          <span class="s2">&quot; not &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">zscale</span><span class="p">)</span>
@@ -1529,7 +1529,7 @@ table {
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
                 <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span>
-                                            <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                            <span class="n">j</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                             <span class="n">sample_points</span><span class="o">=</span><span class="n">rvs_transformed</span><span class="p">,</span>
                                             <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
 
@@ -1552,7 +1552,7 @@ table {
                                      <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
 
 <span class="sd">    The scatter plot matrix shows at which points in the search</span>
@@ -1696,7 +1696,7 @@ the influence of all other dimensions.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.partial_dependence', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.partial_dependence" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculate the partial dependence for dimensions `i` and `j` with</span>
 <span class="sd">    respect to the objective value, as approximated by `model`.</span>
@@ -1751,10 +1751,10 @@ the influence of all other dimensions.</p>
 <span class="sd">    * `zi`: [np.array, shape=(n_points, n_points)]:</span>
 <span class="sd">        The value of the model at each point `(xi, yi)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bounds</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bounds</span>
         <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
         <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
@@ -1870,11 +1870,11 @@ the influence of all other dimensions.</p>
 <span class="sd">        The matplotlib axes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># &lt;3 legacy python</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Convergence plot&quot;</span><span class="p">)</span>
@@ -1882,7 +1882,7 @@ the influence of all other dimensions.</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\min f(x)$ after $n$ calls&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
 
     <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
@@ -1891,7 +1891,7 @@ the influence of all other dimensions.</p>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
             <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
@@ -1971,7 +1971,7 @@ dimension. A red point indicates the found minimum.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_evaluations', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.plot_evaluations" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Visualize the order in which points where sampled.</span>
 
 <span class="sd">    The scatter plot matrix shows at which points in the search</span>
@@ -2103,7 +2103,7 @@ A red point indicates the found minimum.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.plots.plot_objective', this);">Show source &equiv;</a></p>
   <div id="source-skopt.plots.plot_objective" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Pairwise partial dependence plot of the objective function.</span>
 
 <span class="sd">    The diagonal shows the partial dependence for dimension `i` with</span>
@@ -2159,7 +2159,7 @@ A red point indicates the found minimum.</p>
     <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
         <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
-        <span class="n">locator</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for zscale are &#39;linear&#39; and &#39;log&#39;,&quot;</span>
                          <span class="s2">&quot; not &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">zscale</span><span class="p">)</span>
@@ -2174,7 +2174,7 @@ A red point indicates the found minimum.</p>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
                 <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span>
-                                            <span class="n">j</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                            <span class="n">j</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                             <span class="n">sample_points</span><span class="o">=</span><span class="n">rvs_transformed</span><span class="p">,</span>
                                             <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
 
@@ -2279,11 +2279,11 @@ trace;</li>
 <span class="sd">        The matplotlib axes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># &lt;3 legacy python</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative regret plot&quot;</span><span class="p">)</span>
@@ -2291,12 +2291,12 @@ trace;</li>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sum_{i=0}^n(f(x_i) - optimum)$ after $n$ calls&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
 
     <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
 
-    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -2312,7 +2312,7 @@ trace;</li>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
             <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>

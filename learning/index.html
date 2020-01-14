@@ -1380,11 +1380,11 @@ fitting, <code>random_state</code> has to be fixed.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] L. Breiman, &quot;Random Forests&quot;, Machine Learning, 45(1), 5-32, 2001.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1398,7 +1398,7 @@ fitting, <code>random_state</code> has to be fixed.</p>
             <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict continuous output for X.</span>
 
@@ -1441,16 +1441,14 @@ fitting, <code>random_state</code> has to be fixed.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#skopt.learning.ExtraTreesRegressor">ExtraTreesRegressor</a></li>
-          <li>sklearn.ensemble.forest.ExtraTreesRegressor</li>
-          <li>sklearn.ensemble.forest.ForestRegressor</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.ensemble.forest.BaseForest</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.ensemble.base.BaseEnsemble</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.base.BaseEstimator</li>
-          <li>sklearn.base.MetaEstimatorMixin</li>
+          <li>sklearn.ensemble._forest.ExtraTreesRegressor</li>
+          <li>sklearn.ensemble._forest.ForestRegressor</li>
           <li>sklearn.base.RegressorMixin</li>
+          <li>sklearn.ensemble._forest.BaseForest</li>
+          <li>sklearn.base.MultiOutputMixin</li>
+          <li>sklearn.ensemble._base.BaseEnsemble</li>
+          <li>sklearn.base.MetaEstimatorMixin</li>
+          <li>sklearn.base.BaseEstimator</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -1467,11 +1465,11 @@ fitting, <code>random_state</code> has to be fixed.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.ExtraTreesRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.ExtraTreesRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1516,7 +1514,7 @@ fitting, <code>random_state</code> has to be fixed.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.ExtraTreesRegressor.predict', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.ExtraTreesRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Predict continuous output for X.</span>
 <span class="sd">    Parameters</span>
@@ -1560,7 +1558,10 @@ fitting, <code>random_state</code> has to be fixed.</p>
     <div class="desc"><p>Return the feature importances (the higher, the more important the
    feature).</p>
 <h2>Returns</h2>
-<p>feature_importances_ : array, shape = [n_features]</p></div>
+<p>feature_importances_ : array, shape = [n_features]
+    The values of this array sum to 1, unless all trees are single node
+    trees consisting of only the root node, in which case it will be an
+    array of zeros.</p></div>
   <div class="source_cont">
 </div>
 
@@ -1620,25 +1621,25 @@ GaussianProcessRegressor:</p>
     the kernel's parameters, specified by a string, or an externally
     defined optimizer passed as a callable. If a callable is passed, it
     must have the signature::</p>
-<div class="codehilite"><pre><span></span>def optimizer(obj_func, initial_theta, bounds):
-    # * &#39;obj_func&#39; is the objective function to be maximized, which
-    #   takes the hyperparameters theta as parameter and an
-    #   optional flag eval_gradient, which determines if the
-    #   gradient is returned additionally to the function value
-    # * &#39;initial_theta&#39;: the initial value for theta, which can be
-    #   used by local optimizers
-    # * &#39;bounds&#39;: the bounds on the values of theta
-    ....
-    # Returned are the best found hyperparameters theta and
-    # the corresponding value of the target function.
-    return theta_opt, func_min
+<div class="codehilite"><pre><span></span><span class="err">def optimizer(obj_func, initial_theta, bounds):</span>
+<span class="err">    # * &#39;obj_func&#39; is the objective function to be maximized, which</span>
+<span class="err">    #   takes the hyperparameters theta as parameter and an</span>
+<span class="err">    #   optional flag eval_gradient, which determines if the</span>
+<span class="err">    #   gradient is returned additionally to the function value</span>
+<span class="err">    # * &#39;initial_theta&#39;: the initial value for theta, which can be</span>
+<span class="err">    #   used by local optimizers</span>
+<span class="err">    # * &#39;bounds&#39;: the bounds on the values of theta</span>
+<span class="err">    ....</span>
+<span class="err">    # Returned are the best found hyperparameters theta and</span>
+<span class="err">    # the corresponding value of the target function.</span>
+<span class="err">    return theta_opt, func_min</span>
 </pre></div>
 
 
 <p>Per default, the 'fmin_l_bfgs_b' algorithm from scipy.optimize
 is used. If None is passed, the kernel's parameters are kept fixed.
 Available internal optimizers are::</p>
-<div class="codehilite"><pre><span></span>&#39;fmin_l_bfgs_b&#39;
+<div class="codehilite"><pre><span></span><span class="err">&#39;fmin_l_bfgs_b&#39;</span>
 </pre></div>
 
 
@@ -1833,10 +1834,10 @@ Available internal optimizers are::</p>
 <span class="sd">        Estimate of the gaussian noise. Useful only when noise is set to</span>
 <span class="sd">        &quot;gaussian&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
                  <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">normalize_y</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">noise</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
@@ -1864,7 +1865,7 @@ Available internal optimizers are::</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected noise to be &#39;gaussian&#39;, got </span><span class="si">%s</span><span class="s2">&quot;</span>
                              <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> \
                           <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
@@ -1875,7 +1876,7 @@ Available internal optimizers are::</p>
             <span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
             <span class="c1"># The noise component of this kernel should be set to zero</span>
@@ -1912,8 +1913,8 @@ Available internal optimizers are::</p>
 
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict output for X.</span>
 
@@ -1993,7 +1994,7 @@ Available internal optimizers are::</p>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
 
             <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
                 <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># Line 6</span>
                 <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
 
@@ -2044,9 +2045,10 @@ Available internal optimizers are::</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#skopt.learning.GaussianProcessRegressor">GaussianProcessRegressor</a></li>
-          <li>sklearn.gaussian_process.gpr.GaussianProcessRegressor</li>
-          <li>sklearn.base.BaseEstimator</li>
+          <li>sklearn.gaussian_process._gpr.GaussianProcessRegressor</li>
+          <li>sklearn.base.MultiOutputMixin</li>
           <li>sklearn.base.RegressorMixin</li>
+          <li>sklearn.base.BaseEstimator</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -2063,10 +2065,10 @@ Available internal optimizers are::</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GaussianProcessRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
              <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-             <span class="n">normalize_y</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">noise</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+             <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
         <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
@@ -2125,7 +2127,7 @@ Available internal optimizers are::</p>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">!=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected noise to be &#39;gaussian&#39;, got </span><span class="si">%s</span><span class="s2">&quot;</span>
                          <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> \
                       <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
@@ -2135,7 +2137,7 @@ Available internal optimizers are::</p>
             <span class="n">noise_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span> <span class="n">noise_level_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span>
         <span class="p">)</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
         <span class="c1"># The noise component of this kernel should be set to zero</span>
         <span class="c1"># while estimating K(X_test, X_test)</span>
@@ -2241,8 +2243,8 @@ can be optionally provided.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GaussianProcessRegressor.predict', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GaussianProcessRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-            <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Predict output for X.</span>
 <span class="sd">    In addition to the mean of the predictive distribution, also its</span>
@@ -2306,7 +2308,7 @@ can be optionally provided.</p>
         <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>    <span class="c1"># Line 4 (y_mean = f_star)</span>
         <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
         <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
             <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># Line 6</span>
             <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
         <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
@@ -2354,28 +2356,6 @@ can be optionally provided.</p>
 
             
   
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.learning.GaussianProcessRegressor.rng" class="name">var <span class="ident">rng</span></p>
-            
-
-            
-  
-    <div class="desc"><p>DEPRECATED: Attribute rng was deprecated in version 0.19 and will be removed in 0.21.</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="skopt.learning.GaussianProcessRegressor.y_train_mean" class="name">var <span class="ident">y_train_mean</span></p>
-            
-
-            
-  
-    <div class="desc"><p>DEPRECATED: Attribute y_train_mean was deprecated in version 0.19 and will be removed in 0.21.</p></div>
   <div class="source_cont">
 </div>
 
@@ -2445,8 +2425,8 @@ one go.</p>
 <span class="sd">        results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
@@ -2466,7 +2446,7 @@ one go.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span>
@@ -2495,7 +2475,7 @@ one go.</p>
 
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_quantiles</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_quantiles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict.</span>
 
 <span class="sd">        Predict `X` at every quantile if `return_std` is set to False.</span>
@@ -2556,8 +2536,8 @@ one go.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">],</span> <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">quantiles</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
@@ -2605,7 +2585,7 @@ one go.</p>
 <span class="sd">        Target values (real numbers in regression)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span>
@@ -2657,7 +2637,7 @@ the (0.84th quantile - 0.16th quantile) divided by 2.0</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.GradientBoostingQuantileRegressor.predict', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.GradientBoostingQuantileRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">return_quantiles</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_quantiles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Predict.</span>
 <span class="sd">    Predict `X` at every quantile if `return_std` is set to False.</span>
 <span class="sd">    If `return_std` is set to True, then return the mean</span>
@@ -2980,11 +2960,11 @@ fitting, <code>random_state</code> has to be fixed.</p>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [1] L. Breiman, &quot;Random Forests&quot;, Machine Learning, 45(1), 5-32, 2001.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -2998,7 +2978,7 @@ fitting, <code>random_state</code> has to be fixed.</p>
             <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict continuous output for X.</span>
 
 <span class="sd">        Parameters</span>
@@ -3039,16 +3019,14 @@ fitting, <code>random_state</code> has to be fixed.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#skopt.learning.RandomForestRegressor">RandomForestRegressor</a></li>
-          <li>sklearn.ensemble.forest.RandomForestRegressor</li>
-          <li>sklearn.ensemble.forest.ForestRegressor</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.ensemble.forest.BaseForest</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.ensemble.base.BaseEnsemble</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.base.BaseEstimator</li>
-          <li>sklearn.base.MetaEstimatorMixin</li>
+          <li>sklearn.ensemble._forest.RandomForestRegressor</li>
+          <li>sklearn.ensemble._forest.ForestRegressor</li>
           <li>sklearn.base.RegressorMixin</li>
+          <li>sklearn.ensemble._forest.BaseForest</li>
+          <li>sklearn.base.MultiOutputMixin</li>
+          <li>sklearn.ensemble._base.BaseEnsemble</li>
+          <li>sklearn.base.MetaEstimatorMixin</li>
+          <li>sklearn.base.BaseEstimator</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -3065,11 +3043,11 @@ fitting, <code>random_state</code> has to be fixed.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.RandomForestRegressor.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.RandomForestRegressor.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+             <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bootstrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -3114,7 +3092,7 @@ fitting, <code>random_state</code> has to be fixed.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.learning.RandomForestRegressor.predict', this);">Show source &equiv;</a></p>
   <div id="source-skopt.learning.RandomForestRegressor.predict" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Predict continuous output for X.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3157,7 +3135,10 @@ fitting, <code>random_state</code> has to be fixed.</p>
     <div class="desc"><p>Return the feature importances (the higher, the more important the
    feature).</p>
 <h2>Returns</h2>
-<p>feature_importances_ : array, shape = [n_features]</p></div>
+<p>feature_importances_ : array, shape = [n_features]
+    The values of this array sum to 1, unless all trees are single node
+    trees consisting of only the root node, in which case it will be an
+    array of zeros.</p></div>
   <div class="source_cont">
 </div>
 

@@ -1134,14 +1134,14 @@ several methods for sequential model-based optimization. <code>skopt</code> is r
 in many contexts and accessible.</p>
 <p><a href="https://travis-ci.org/scikit-optimize/scikit-optimize"><img alt="Build Status" src="https://travis-ci.org/scikit-optimize/scikit-optimize.svg?branch=master" /></a></p>
 <h2>Install</h2>
-<div class="codehilite"><pre><span></span>pip install scikit-optimize
+<div class="codehilite"><pre><span></span><span class="err">pip install scikit-optimize</span>
 </pre></div>
 
 
 <h2>Getting started</h2>
 <p>Find the minimum of the noisy function <code>f(x)</code> over the range <code>-2 &lt; x &lt; 2</code>
 with <code>skopt</code>:</p>
-<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -1157,10 +1157,10 @@ and the other <a href="https://github.com/scikit-optimize/scikit-optimize/tree/m
 <h2>Development</h2>
 <p>The library is still experimental and under heavy development.</p>
 <p>The development version can be installed through:</p>
-<div class="codehilite"><pre><span></span>git clone https://github.com/scikit-optimize/scikit-optimize.git
-cd scikit-optimize
-pip install -r requirements.txt
-python setup.py develop
+<div class="codehilite"><pre><span></span><span class="err">git clone https://github.com/scikit-optimize/scikit-optimize.git</span>
+<span class="err">cd scikit-optimize</span>
+<span class="err">pip install -r requirements.txt</span>
+<span class="err">python setup.py develop</span>
 </pre></div>
 
 
@@ -1372,8 +1372,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dummy_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1453,7 +1453,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># all our calls want random suggestions, except if we need to evaluate</span>
     <span class="c1"># some initial points</span>
-    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">n_random_calls</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">n_random_calls</span> <span class="o">=</span> <span class="n">n_calls</span>
@@ -1515,7 +1515,7 @@ avoid deep copying of <code>res</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.dump', this);">Show source &equiv;</a></p>
   <div id="source-skopt.dump" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Store an skopt optimization result into a file.</span>
 
@@ -1607,7 +1607,7 @@ prediction of the minimum of the true objective function.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.expected_minimum', this);">Show source &equiv;</a></p>
   <div id="source-skopt.expected_minimum" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the minimum over the predictions of the last surrogate model.</span>
 
@@ -1642,7 +1642,7 @@ prediction of the minimum of the true objective function.</p>
     <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">xs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">))</span>
 
-    <span class="n">best_x</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">best_x</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">best_fun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
     <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
@@ -1831,8 +1831,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div id="source-skopt.forest_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                     <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span>
-                    <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                    <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
@@ -2146,11 +2146,11 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gbrt_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gbrt_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gbrt_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-                  <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                  <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                  <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                   <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
@@ -2283,7 +2283,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="c1"># Check params</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span><span class="s2">&quot;GBRT&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                                         <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
@@ -2534,10 +2534,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.gp_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.gp_minimize" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
                 <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
@@ -2738,7 +2738,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
     <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span>
             <span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">),</span>
             <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
@@ -2892,16 +2892,16 @@ given by n_iter.</p>
     execution. Reducing this number can be useful to avoid an
     explosion of memory consumption when more jobs get dispatched
     than CPUs can process. This parameter can be:</p>
-<div class="codehilite"><pre><span></span>    - None, in which case all the jobs are immediately
-      created and spawned. Use this for lightweight and
-      fast-running jobs, to avoid delays due to on-demand
-      spawning of the jobs
+<div class="codehilite"><pre><span></span>    <span class="o">-</span> <span class="k">None</span><span class="p">,</span> <span class="k">in</span> <span class="n">which</span> <span class="k">case</span> <span class="k">all</span> <span class="n">the</span> <span class="n">jobs</span> <span class="k">are</span> <span class="n">immediately</span>
+      <span class="n">created</span> <span class="k">and</span> <span class="n">spawned</span><span class="p">.</span> <span class="n">Use</span> <span class="n">this</span> <span class="k">for</span> <span class="n">lightweight</span> <span class="k">and</span>
+      <span class="n">fast</span><span class="o">-</span><span class="n">running</span> <span class="n">jobs</span><span class="p">,</span> <span class="k">to</span> <span class="n">avoid</span> <span class="n">delays</span> <span class="n">due</span> <span class="k">to</span> <span class="k">on</span><span class="o">-</span><span class="n">demand</span>
+      <span class="n">spawning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">jobs</span>
 
-    - An int, giving the exact number of total jobs that are
-      spawned
+    <span class="o">-</span> <span class="n">An</span> <span class="nb">int</span><span class="p">,</span> <span class="n">giving</span> <span class="n">the</span> <span class="n">exact</span> <span class="nb">number</span> <span class="k">of</span> <span class="n">total</span> <span class="n">jobs</span> <span class="n">that</span> <span class="k">are</span>
+      <span class="n">spawned</span>
 
-    - A string, giving an expression as a function of n_jobs,
-      as in &#39;2*n_jobs&#39;
+    <span class="o">-</span> <span class="n">A</span> <span class="n">string</span><span class="p">,</span> <span class="n">giving</span> <span class="n">an</span> <span class="n">expression</span> <span class="k">as</span> <span class="n">a</span> <span class="k">function</span> <span class="k">of</span> <span class="n">n_jobs</span><span class="p">,</span>
+      <span class="k">as</span> <span class="k">in</span> <span class="s1">&#39;2*n_jobs&#39;</span>
 </pre></div>
 
 
@@ -2916,12 +2916,12 @@ given by n_iter.</p>
       - integer, to specify the number of folds in a <code>(Stratified)KFold</code>,
       - An object to be used as a cross-validation generator.
       - An iterable yielding train, test splits.</p>
-<div class="codehilite"><pre><span></span>For integer/None inputs, if the estimator is a classifier and ``y`` is
-either binary or multiclass, :class:`StratifiedKFold` is used. In all
-other cases, :class:`KFold` is used.
+<div class="codehilite"><pre><span></span><span class="k">For</span> <span class="kt">integer</span><span class="o">/</span><span class="n">None</span> <span class="n">inputs</span><span class="p">,</span> <span class="k">if</span> <span class="n">the</span> <span class="n">estimator</span> <span class="k">is</span> <span class="n">a</span> <span class="n">classifier</span> <span class="k">and</span> <span class="ss">``</span><span class="n">y</span><span class="ss">``</span> <span class="k">is</span>
+<span class="n">either</span> <span class="k">binary</span> <span class="k">or</span> <span class="n">multiclass</span><span class="p">,</span> <span class="p">:</span><span class="n">class</span><span class="p">:</span><span class="ss">`StratifiedKFold`</span> <span class="k">is</span> <span class="n">used</span><span class="p">.</span> <span class="k">In</span> <span class="k">all</span>
+<span class="n">other</span> <span class="n">cases</span><span class="p">,</span> <span class="p">:</span><span class="n">class</span><span class="p">:</span><span class="ss">`KFold`</span> <span class="k">is</span> <span class="n">used</span><span class="p">.</span>
 
-Refer :ref:`User Guide &lt;cross_validation&gt;` for the various
-cross-validation strategies that can be used here.
+<span class="n">Refer</span> <span class="p">:</span><span class="n">ref</span><span class="p">:</span><span class="ss">`User Guide &lt;cross_validation&gt;`</span> <span class="k">for</span> <span class="n">the</span> <span class="n">various</span>
+<span class="k">cross</span><span class="o">-</span><span class="n">validation</span> <span class="n">strategies</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">here</span><span class="p">.</span>
 </pre></div>
 
 
@@ -2971,45 +2971,45 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,
 <p>cv_results_ : dict of numpy (masked) ndarrays
     A dict with keys as column headers and values as columns, that can be
     imported into a pandas <code>DataFrame</code>.</p>
-<div class="codehilite"><pre><span></span>For instance the below given table
+<div class="codehilite"><pre><span></span><span class="k">For</span> <span class="n">instance</span> <span class="n">the</span> <span class="n">below</span> <span class="n">given</span> <span class="k">table</span>
 
-+--------------+-------------+-------------------+---+---------------+
-| param_kernel | param_gamma | split0_test_score |...|rank_test_score|
-+==============+=============+===================+===+===============+
-|    &#39;rbf&#39;     |     0.1     |        0.8        |...|       2       |
-+--------------+-------------+-------------------+---+---------------+
-|    &#39;rbf&#39;     |     0.2     |        0.9        |...|       1       |
-+--------------+-------------+-------------------+---+---------------+
-|    &#39;rbf&#39;     |     0.3     |        0.7        |...|       1       |
-+--------------+-------------+-------------------+---+---------------+
+<span class="o">+--------------+-------------+-------------------+---+---------------+</span>
+<span class="o">|</span> <span class="n">param_kernel</span> <span class="o">|</span> <span class="n">param_gamma</span> <span class="o">|</span> <span class="n">split0_test_score</span> <span class="o">|</span><span class="p">...</span><span class="o">|</span><span class="n">rank_test_score</span><span class="o">|</span>
+<span class="o">+==============+=============+===================+===+===============+</span>
+<span class="o">|</span>    <span class="s1">&#39;rbf&#39;</span>     <span class="o">|</span>     <span class="mi">0</span><span class="p">.</span><span class="mi">1</span>     <span class="o">|</span>        <span class="mi">0</span><span class="p">.</span><span class="mi">8</span>        <span class="o">|</span><span class="p">...</span><span class="o">|</span>       <span class="mi">2</span>       <span class="o">|</span>
+<span class="o">+--------------+-------------+-------------------+---+---------------+</span>
+<span class="o">|</span>    <span class="s1">&#39;rbf&#39;</span>     <span class="o">|</span>     <span class="mi">0</span><span class="p">.</span><span class="mi">2</span>     <span class="o">|</span>        <span class="mi">0</span><span class="p">.</span><span class="mi">9</span>        <span class="o">|</span><span class="p">...</span><span class="o">|</span>       <span class="mi">1</span>       <span class="o">|</span>
+<span class="o">+--------------+-------------+-------------------+---+---------------+</span>
+<span class="o">|</span>    <span class="s1">&#39;rbf&#39;</span>     <span class="o">|</span>     <span class="mi">0</span><span class="p">.</span><span class="mi">3</span>     <span class="o">|</span>        <span class="mi">0</span><span class="p">.</span><span class="mi">7</span>        <span class="o">|</span><span class="p">...</span><span class="o">|</span>       <span class="mi">1</span>       <span class="o">|</span>
+<span class="o">+--------------+-------------+-------------------+---+---------------+</span>
 
-will be represented by a ``cv_results_`` dict of::
+<span class="n">will</span> <span class="n">be</span> <span class="n">represented</span> <span class="k">by</span> <span class="n">a</span> <span class="ss">``</span><span class="n">cv_results_</span><span class="ss">``</span> <span class="n">dict</span> <span class="n">of</span><span class="p">::</span>
 
-    {
-    &#39;param_kernel&#39; : masked_array(data = [&#39;rbf&#39;, &#39;rbf&#39;, &#39;rbf&#39;],
-                                  mask = False),
-    &#39;param_gamma&#39;  : masked_array(data = [0.1 0.2 0.3], mask = False),
-    &#39;split0_test_score&#39;  : [0.8, 0.9, 0.7],
-    &#39;split1_test_score&#39;  : [0.82, 0.5, 0.7],
-    &#39;mean_test_score&#39;    : [0.81, 0.7, 0.7],
-    &#39;std_test_score&#39;     : [0.02, 0.2, 0.],
-    &#39;rank_test_score&#39;    : [3, 1, 1],
-    &#39;split0_train_score&#39; : [0.8, 0.9, 0.7],
-    &#39;split1_train_score&#39; : [0.82, 0.5, 0.7],
-    &#39;mean_train_score&#39;   : [0.81, 0.7, 0.7],
-    &#39;std_train_score&#39;    : [0.03, 0.03, 0.04],
-    &#39;mean_fit_time&#39;      : [0.73, 0.63, 0.43, 0.49],
-    &#39;std_fit_time&#39;       : [0.01, 0.02, 0.01, 0.01],
-    &#39;mean_score_time&#39;    : [0.007, 0.06, 0.04, 0.04],
-    &#39;std_score_time&#39;     : [0.001, 0.002, 0.003, 0.005],
-    &#39;params&#39; : [{&#39;kernel&#39; : &#39;rbf&#39;, &#39;gamma&#39; : 0.1}, ...],
-    }
+    <span class="err">{</span>
+    <span class="s1">&#39;param_kernel&#39;</span> <span class="p">:</span> <span class="nf">masked_array</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">],</span>
+                                  <span class="n">mask</span> <span class="o">=</span> <span class="no">False</span><span class="p">),</span>
+    <span class="s1">&#39;param_gamma&#39;</span>  <span class="p">:</span> <span class="nf">masked_array</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2</span> <span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">],</span> <span class="n">mask</span> <span class="o">=</span> <span class="no">False</span><span class="p">),</span>
+    <span class="s1">&#39;split0_test_score&#39;</span>  <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;split1_test_score&#39;</span>  <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">82</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;mean_test_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">81</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;std_test_score&#39;</span>     <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">02</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">.],</span>
+    <span class="s1">&#39;rank_test_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;split0_train_score&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;split1_train_score&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">82</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;mean_train_score&#39;</span>   <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">81</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;std_train_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">03</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">03</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">04</span><span class="p">],</span>
+    <span class="s1">&#39;mean_fit_time&#39;</span>      <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">73</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">63</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">43</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">49</span><span class="p">],</span>
+    <span class="s1">&#39;std_fit_time&#39;</span>       <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">01</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">02</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01</span><span class="p">],</span>
+    <span class="s1">&#39;mean_score_time&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">007</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">06</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">04</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">04</span><span class="p">],</span>
+    <span class="s1">&#39;std_score_time&#39;</span>     <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">001</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">002</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">003</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">005</span><span class="p">],</span>
+    <span class="s1">&#39;params&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="err">{</span><span class="s1">&#39;kernel&#39;</span> <span class="p">:</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="err">}</span><span class="p">,</span> <span class="p">...],</span>
+    <span class="err">}</span>
 
-NOTE that the key ``&#39;params&#39;`` is used to store a list of parameter
-settings dict for all the parameter candidates.
+<span class="n">NOTE</span> <span class="n">that</span> <span class="n">the</span> <span class="k">key</span> <span class="ss">``</span><span class="s1">&#39;params&#39;</span><span class="ss">``</span> <span class="k">is</span> <span class="n">used</span> <span class="k">to</span> <span class="n">store</span> <span class="n">a</span> <span class="n">list</span> <span class="n">of</span> <span class="n">parameter</span>
+<span class="n">settings</span> <span class="n">dict</span> <span class="k">for</span> <span class="k">all</span> <span class="n">the</span> <span class="n">parameter</span> <span class="n">candidates</span><span class="p">.</span>
 
-The ``mean_fit_time``, ``std_fit_time``, ``mean_score_time`` and
-``std_score_time`` are all in seconds.
+<span class="n">The</span> <span class="ss">``</span><span class="n">mean_fit_time</span><span class="ss">``</span><span class="p">,</span> <span class="ss">``</span><span class="n">std_fit_time</span><span class="ss">``</span><span class="p">,</span> <span class="ss">``</span><span class="n">mean_score_time</span><span class="ss">``</span> <span class="k">and</span>
+<span class="ss">``</span><span class="n">std_score_time</span><span class="ss">``</span> <span class="n">are</span> <span class="k">all</span> <span class="k">in</span> <span class="n">seconds</span><span class="p">.</span>
 </pre></div>
 
 
@@ -3024,9 +3024,9 @@ The ``mean_fit_time``, ``std_fit_time``, ``mean_score_time`` and
 <p>best_index_ : int
     The index (of the <code>cv_results_</code> arrays) which corresponds to the best
     candidate parameter setting.</p>
-<div class="codehilite"><pre><span></span>The dict at ``search.cv_results_[&#39;params&#39;][search.best_index_]`` gives
-the parameter setting for the best model, that gives the highest
-mean score (``search.best_score_``).
+<div class="codehilite"><pre><span></span><span class="err">The dict at ``search.cv_results_[&#39;params&#39;][search.best_index_]`` gives</span>
+<span class="err">the parameter setting for the best model, that gives the highest</span>
+<span class="err">mean score (``search.best_score_``).</span>
 </pre></div>
 
 
@@ -3309,11 +3309,11 @@ n_jobs</code>.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
@@ -3321,9 +3321,14 @@ n_jobs</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
+        <span class="c1"># Temporary fix for compatibility with sklearn 0.20 and 0.21</span>
+        <span class="c1"># See scikit-optimize#762</span>
+        <span class="c1"># To be consistent with sklearn 0.21+, fit_params should be deprecated</span>
+        <span class="c1"># in the constructor and be passed in ``fit``.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="o">=</span> <span class="n">fit_params</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">BayesSearchCV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-             <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span>
+             <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
              <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="n">iid</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="n">refit</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
              <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">pre_dispatch</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">error_score</span><span class="p">,</span>
              <span class="n">return_train_score</span><span class="o">=</span><span class="n">return_train_score</span><span class="p">)</span>
@@ -3411,8 +3416,8 @@ n_jobs</code>.</p>
         <span class="n">n_splits</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter_iterable</span><span class="p">,</span> <span class="n">Sized</span><span class="p">):</span>
             <span class="n">n_candidates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_iterable</span><span class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Fitting {0} folds for each of {1} candidates, totalling&quot;</span>
-                  <span class="s2">&quot; {2} fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">n_candidates</span><span class="p">,</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting </span><span class="si">{0}</span><span class="s2"> folds for each of </span><span class="si">{1}</span><span class="s2"> candidates, totalling&quot;</span>
+                  <span class="s2">&quot; </span><span class="si">{2}</span><span class="s2"> fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">n_candidates</span><span class="p">,</span>
                                      <span class="n">n_candidates</span> <span class="o">*</span> <span class="n">n_splits</span><span class="p">))</span>
 
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
@@ -3428,8 +3433,8 @@ n_jobs</code>.</p>
                 <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span>
                 <span class="n">fit_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">,</span>
                 <span class="n">return_train_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">,</span>
-                <span class="n">return_n_test_samples</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_times</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_parameters</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">return_n_test_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_times</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">error_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">error_score</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">parameters</span> <span class="ow">in</span> <span class="n">parameter_iterable</span>
@@ -3448,7 +3453,7 @@ n_jobs</code>.</p>
 
         <span class="n">results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">_store</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_store</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;A small helper to store the scores/times to the cv_results_&quot;&quot;&quot;</span>
             <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_candidates</span><span class="p">,</span>
                                                               <span class="n">n_splits</span><span class="p">)</span>
@@ -3474,10 +3479,10 @@ n_jobs</code>.</p>
         <span class="n">test_sample_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_sample_counts</span><span class="p">[:</span><span class="n">n_splits</span><span class="p">],</span>
                                       <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
-        <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;test_score&#39;</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-               <span class="n">weights</span><span class="o">=</span><span class="n">test_sample_counts</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iid</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;test_score&#39;</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">weights</span><span class="o">=</span><span class="n">test_sample_counts</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iid</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">:</span>
-            <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;train_score&#39;</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;train_score&#39;</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;fit_time&#39;</span><span class="p">,</span> <span class="n">fit_time</span><span class="p">)</span>
         <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;score_time&#39;</span><span class="p">,</span> <span class="n">score_time</span><span class="p">)</span>
 
@@ -3490,7 +3495,7 @@ n_jobs</code>.</p>
         <span class="n">param_results</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span>
                                             <span class="n">MaskedArray</span><span class="p">,</span>
                                             <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_candidates</span><span class="p">,),</span>
-                                            <span class="n">mask</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                            <span class="n">mask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                             <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">cand_i</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidate_params</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -3513,7 +3518,7 @@ n_jobs</code>.</p>
             <span class="c1"># clone first to work around broken estimators</span>
             <span class="n">best_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
                 <span class="o">**</span><span class="n">best_parameters</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">best_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">best_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">)</span>
@@ -3565,7 +3570,7 @@ n_jobs</code>.</p>
 
         <span class="k">return</span> <span class="n">optimizer</span>
 
-    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate n_jobs parameters and evaluate them in parallel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -3583,7 +3588,7 @@ n_jobs</code>.</p>
 
         <span class="c1"># HACK: this adds compatibility with different versions of sklearn</span>
         <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
 
@@ -3626,7 +3631,7 @@ n_jobs</code>.</p>
     <span class="k">def</span> <span class="nf">_run_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -3655,7 +3660,7 @@ n_jobs</code>.</p>
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
@@ -3671,8 +3676,8 @@ n_jobs</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizers_</span> <span class="o">=</span> <span class="n">optimizers</span>  <span class="c1"># will save the states of the optimizers</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="n">n_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span>
 
@@ -3714,9 +3719,8 @@ n_jobs</code>.</p>
           <ul class="class_list">
           <li><a href="#skopt.BayesSearchCV">BayesSearchCV</a></li>
           <li>sklearn.model_selection._search.BaseSearchCV</li>
-          <li>abc.NewBase</li>
-          <li>sklearn.base.BaseEstimator</li>
           <li>sklearn.base.MetaEstimatorMixin</li>
+          <li>sklearn.base.BaseEstimator</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -3733,19 +3737,24 @@ n_jobs</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.BayesSearchCV.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-             <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">n_points</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
+    <span class="c1"># Temporary fix for compatibility with sklearn 0.20 and 0.21</span>
+    <span class="c1"># See scikit-optimize#762</span>
+    <span class="c1"># To be consistent with sklearn 0.21+, fit_params should be deprecated</span>
+    <span class="c1"># in the constructor and be passed in ``fit``.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="o">=</span> <span class="n">fit_params</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">BayesSearchCV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-         <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span>
+         <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
          <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="n">iid</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="n">refit</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
          <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">pre_dispatch</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">error_score</span><span class="p">,</span>
          <span class="n">return_train_score</span><span class="o">=</span><span class="n">return_train_score</span><span class="p">)</span>
@@ -3782,7 +3791,7 @@ n_jobs</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.BayesSearchCV.fit', this);">Show source &equiv;</a></p>
   <div id="source-skopt.BayesSearchCV.fit" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3804,7 +3813,7 @@ n_jobs</code>.</p>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
     <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
@@ -3818,8 +3827,8 @@ n_jobs</code>.</p>
         <span class="n">optimizers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">optimizers_</span> <span class="o">=</span> <span class="n">optimizers</span>  <span class="c1"># will save the states of the optimizers</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">n_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span>
     <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
         <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
@@ -3873,6 +3882,16 @@ n_jobs</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.BayesSearchCV.classes_" class="name">var <span class="ident">classes_</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.BayesSearchCV.fit_params" class="name">var <span class="ident">fit_params</span></p>
             
 
             
@@ -4183,11 +4202,11 @@ bayesian optimisation loop.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span>
-                 <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
@@ -4209,14 +4228,14 @@ bayesian optimisation loop.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eta&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
         <span class="c1"># Configure counters of points</span>
 
         <span class="c1"># Check `n_random_starts` deprecation first</span>
-        <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="s2">&quot;n_random_starts will be removed in favour of &quot;</span>
                            <span class="s2">&quot;n_initial_points.&quot;</span><span class="p">),</span>
                           <span class="ne">DeprecationWarning</span><span class="p">)</span>
@@ -4237,7 +4256,7 @@ bayesian optimisation loop.</p>
                 <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">))</span>
 
         <span class="c1"># check if regressor</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has to be a regressor.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
 
@@ -4259,17 +4278,17 @@ bayesian optimisation loop.</p>
 
         <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39; or &quot;</span>
-                             <span class="s2">&quot;&#39;sampling&#39;, got {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
+                             <span class="s2">&quot;&#39;sampling&#39;, got </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span>
             <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor {0} should run with &quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor </span><span class="si">{0}</span><span class="s2"> should run with &quot;</span>
                              <span class="s2">&quot;acq_optimizer&quot;</span>
                              <span class="s2">&quot;=&#39;sampling&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
 
         <span class="c1"># record other arguments</span>
-        <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_points&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
@@ -4307,7 +4326,7 @@ bayesian optimisation loop.</p>
         <span class="c1"># return same sets of points. Reset to {} at every call to `tell`.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a shallow copy of an instance of the optimizer.</span>
 
 <span class="sd">        Parameters</span>
@@ -4335,7 +4354,7 @@ bayesian optimisation loop.</p>
 
         <span class="k">return</span> <span class="n">optimizer</span>
 
-    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Query point or multiple points at which objective should be evaluated.</span>
 
 <span class="sd">        * `n_points` [int or None, default=None]:</span>
@@ -4366,7 +4385,7 @@ bayesian optimisation loop.</p>
 <span class="sd">               flavours of `cl_x` strategies.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask</span><span class="p">()</span>
 
         <span class="n">supported_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cl_min&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_max&quot;</span><span class="p">]</span>
@@ -4399,17 +4418,17 @@ bayesian optimisation loop.</p>
             <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
             <span class="n">ti_available</span> <span class="o">=</span> <span class="s2">&quot;ps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="n">ti</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">]</span> <span class="k">if</span> <span class="n">ti_available</span> <span class="k">else</span> <span class="bp">None</span>
+            <span class="n">ti</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">]</span> <span class="k">if</span> <span class="n">ti_available</span> <span class="k">else</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_min&quot;</span><span class="p">:</span>
                 <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-min lie</span>
-                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">:</span>
                 <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-mean lie</span>
-                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
-                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+                <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
 
             <span class="c1"># Lie to the optimizer.</span>
             <span class="k">if</span> <span class="s2">&quot;ps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">:</span>
@@ -4430,7 +4449,7 @@ bayesian optimisation loop.</p>
 <span class="sd">        observations have been `tell`ed, after that `base_estimator` is used</span>
 <span class="sd">        to determine the next point.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># this will not make a copy of `self.rng` and hence keep advancing</span>
             <span class="c1"># our random state.</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -4450,7 +4469,7 @@ bayesian optimisation loop.</p>
             <span class="c1"># return point computed from last call to tell()</span>
             <span class="k">return</span> <span class="n">next_x</span>
 
-    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Record an observation (or several) of the objective function.</span>
 
 <span class="sd">        Provide values of the objective function at points suggested by `ask()`</span>
@@ -4490,7 +4509,7 @@ bayesian optimisation loop.</p>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="n">fit</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Perform the actual work of incorporating one or more new points.</span>
 <span class="sd">        See `tell()` for the full description.</span>
 
@@ -4525,7 +4544,7 @@ bayesian optimisation loop.</p>
         <span class="c1"># after being &quot;told&quot; n_initial_points we switch from sampling</span>
         <span class="c1"># random points to using a surrogate model</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
             <span class="n">est</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span>
 
@@ -4567,7 +4586,7 @@ bayesian optimisation loop.</p>
                                 <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">),</span> <span class="n">cand_acq_func</span><span class="p">,</span>
                                       <span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">),</span>
                                 <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">,</span>
-                                <span class="n">approx_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                <span class="n">approx_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                 <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
                             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
 
@@ -4661,11 +4680,11 @@ bayesian optimisation loop.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span>
-             <span class="n">n_random_starts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
              <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
              <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+             <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="c1"># Configure acquisition function</span>
     <span class="c1"># Store and creat acquisition function set</span>
@@ -4681,12 +4700,12 @@ bayesian optimisation loop.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cand_acq_funcs_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eta&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="c1"># Configure counters of points</span>
     <span class="c1"># Check `n_random_starts` deprecation first</span>
-    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="s2">&quot;n_random_starts will be removed in favour of &quot;</span>
                        <span class="s2">&quot;n_initial_points.&quot;</span><span class="p">),</span>
                       <span class="ne">DeprecationWarning</span><span class="p">)</span>
@@ -4703,7 +4722,7 @@ bayesian optimisation loop.</p>
             <span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">))</span>
     <span class="c1"># check if regressor</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has to be a regressor.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
     <span class="c1"># treat per second acqusition function specially</span>
@@ -4721,15 +4740,15 @@ bayesian optimisation loop.</p>
             <span class="n">acq_optimizer</span> <span class="o">=</span> <span class="s2">&quot;sampling&quot;</span>
     <span class="k">if</span> <span class="n">acq_optimizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;sampling&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected acq_optimizer to be &#39;lbfgs&#39; or &quot;</span>
-                         <span class="s2">&quot;&#39;sampling&#39;, got {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
+                         <span class="s2">&quot;&#39;sampling&#39;, got </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span>
         <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor {0} should run with &quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor </span><span class="si">{0}</span><span class="s2"> should run with &quot;</span>
                          <span class="s2">&quot;acq_optimizer&quot;</span>
                          <span class="s2">&quot;=&#39;sampling&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
     <span class="c1"># record other arguments</span>
-    <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">acq_optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_points&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -4808,7 +4827,7 @@ bayesian optimisation loop.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.ask', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.ask" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Query point or multiple points at which objective should be evaluated.</span>
 <span class="sd">    * `n_points` [int or None, default=None]:</span>
 <span class="sd">        Number of points returned by the ask method.</span>
@@ -4833,7 +4852,7 @@ bayesian optimisation loop.</p>
 <span class="sd">           objective and so on. The type of lie defines different</span>
 <span class="sd">           flavours of `cl_x` strategies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ask</span><span class="p">()</span>
     <span class="n">supported_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cl_min&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">,</span> <span class="s2">&quot;cl_max&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n_points</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
@@ -4859,16 +4878,16 @@ bayesian optimisation loop.</p>
         <span class="n">x</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
         <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">ti_available</span> <span class="o">=</span> <span class="s2">&quot;ps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="n">ti</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">]</span> <span class="k">if</span> <span class="n">ti_available</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="n">ti</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">]</span> <span class="k">if</span> <span class="n">ti_available</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_min&quot;</span><span class="p">:</span>
             <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-min lie</span>
-            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;cl_mean&quot;</span><span class="p">:</span>
             <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-mean lie</span>
-            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">y_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">yi</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># CL-max lie</span>
-            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+            <span class="n">t_lie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="k">if</span> <span class="n">ti</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">log</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
         <span class="c1"># Lie to the optimizer.</span>
         <span class="k">if</span> <span class="s2">&quot;ps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">:</span>
             <span class="c1"># Use `_tell()` instead of `tell()` to prevent repeated</span>
@@ -4903,7 +4922,7 @@ bayesian optimisation loop.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.copy', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.copy" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create a shallow copy of an instance of the optimizer.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -4997,7 +5016,7 @@ and a list of scalars for <code>y</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Optimizer.tell', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Optimizer.tell" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Record an observation (or several) of the objective function.</span>
 <span class="sd">    Provide values of the objective function at points suggested by `ask()`</span>
 <span class="sd">    or other points. By default a new model will be fit to all</span>
@@ -5230,7 +5249,7 @@ and a list of scalars for <code>y</code>.</p>
             <span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">_Ellipsis</span><span class="p">()]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span>
-        <span class="k">return</span> <span class="s2">&quot;Space([{}])&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">       &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dims</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="s2">&quot;Space([</span><span class="si">{}</span><span class="s2">])&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">       &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dims</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)</span>
@@ -5243,7 +5262,7 @@ and a list of scalars for <code>y</code>.</p>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Real</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create Space from yaml configuration file</span>
 
 <span class="sd">        Parameters</span>
@@ -5280,7 +5299,7 @@ and a list of scalars for <code>y</code>.</p>
 
         <span class="c1"># Extract space options for configuration file</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">options</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">options</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>
@@ -5305,7 +5324,7 @@ and a list of scalars for <code>y</code>.</p>
 
         <span class="k">return</span> <span class="n">space</span>
 
-    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
 
 <span class="sd">        The samples are in the original space. They need to be transformed</span>
@@ -5451,8 +5470,8 @@ and a list of scalars for <code>y</code>.</p>
         <span class="sd">&quot;&quot;&quot;Check that `point` is within the bounds of the space.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">component</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">False</span>
-        <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -5697,7 +5716,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Space.rvs', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Space.rvs" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Draw random samples.</span>
 <span class="sd">    The samples are in the original space. They need to be transformed</span>
 <span class="sd">    before being passed to a model or minimizer by `space.transform()`.</span>
@@ -5915,7 +5934,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.Space.from_yaml', this);">Show source &equiv;</a></p>
   <div id="source-skopt.Space.from_yaml" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@classmethod</span>
-<span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yml_path</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create Space from yaml configuration file</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -5948,7 +5967,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
                          <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>
     <span class="c1"># Extract space options for configuration file</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">namespace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">namespace</span><span class="p">]</span>

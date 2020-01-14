@@ -1,4 +1,3 @@
-
 # Tuning a scikit-learn estimator with `skopt`
 
 Gilles Louppe, July 2016 <br />
@@ -67,6 +66,12 @@ def objective(**params):
                                     scoring="neg_mean_absolute_error"))
 ```
 
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+      warnings.warn(msg, category=FutureWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
+      warnings.warn(message, FutureWarning)
+
+
 ## Optimize all the things!
 
 With these two pieces, we are now ready for sequential model-based optimisation. Here we use gaussian process-based optimisation.
@@ -82,7 +87,7 @@ res_gp = gp_minimize(objective, space, n_calls=50, random_state=0)
 
 
 
-    'Best score=2.9241'
+    'Best score=2.9608'
 
 
 
@@ -100,7 +105,7 @@ print("""Best parameters:
 
     Best parameters:
     - max_depth=5
-    - learning_rate=0.257228
+    - learning_rate=0.114036
     - max_features=13
     - min_samples_split=100
     - min_samples_leaf=1
@@ -118,7 +123,7 @@ plot_convergence(res_gp)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f6e3201c3c8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f183e1df6d0>
 
 
 

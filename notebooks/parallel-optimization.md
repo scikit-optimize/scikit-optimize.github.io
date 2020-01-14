@@ -1,4 +1,3 @@
-
 # Parallel optimization
 
 Iaroslav Shcherbatyi, May 2017.
@@ -50,7 +49,13 @@ for i in range(10):
 print(min(optimizer.yi))  # print the best objective found 
 ```
 
-    0.3980282826813504
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+      warnings.warn(msg, category=FutureWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
+      warnings.warn(message, FutureWarning)
+
+
+    0.3980809861857484
 
 
 Note that if `n_points` is set to some integer > 0 for the `ask` method, the result will be a list of points, even for `n_points`=1. If the argument is set to `None` (default value) then a single point (but not a list of points) will be returned.

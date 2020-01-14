@@ -1,4 +1,3 @@
-
 # Store and load `skopt` optimization results
 
 Mikhail Pak, October 2016.
@@ -44,6 +43,10 @@ res = gp_minimize(obj_fun,            # the function to minimize
                   random_state=777)
 ```
 
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+      warnings.warn(msg, category=FutureWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
+      warnings.warn(message, FutureWarning)
     /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
     /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
@@ -116,8 +119,8 @@ print('Without compression: {} bytes'.format(getsize('result.pkl')))
 print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
-    Without compression: 83237 bytes
-    Compressed with gz:  22709 bytes
+    Without compression: 84113 bytes
+    Compressed with gz:  22977 bytes
 
 
 ### Unserializable objective functions

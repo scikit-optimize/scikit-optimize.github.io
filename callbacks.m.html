@@ -1160,7 +1160,7 @@ the optimization early by returning <code>True</code>.</p>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <span class="n">dump</span>
 
@@ -1168,7 +1168,7 @@ the optimization early by returning <code>True</code>.</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if callback is a callable or a list of callables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">callback</span><span class="p">]</span>
 
@@ -1212,9 +1212,9 @@ the optimization early by returning <code>True</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">iter_no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span>
         <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;started&quot;</span>
@@ -1227,15 +1227,15 @@ the optimization early by returning <code>True</code>.</p>
             <span class="n">search_status</span> <span class="o">=</span> <span class="s2">&quot;Search finished for the next optimal point.&quot;</span>
 
         <span class="k">if</span> <span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at provided point.&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at provided point.&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">eval_status</span><span class="p">))</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span> <span class="o">&lt;</span> <span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_random</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at random point.&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at random point.&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">eval_status</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2">&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">search_status</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
@@ -1246,18 +1246,18 @@ the optimization early by returning <code>True</code>.</p>
 <span class="sd">            The optimization as a OptimizeResult object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">time_taken</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">curr_y</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">curr_min</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Time taken: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_taken</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Function value obtained: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_y</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Current minimum: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_min</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_taken</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Function value obtained: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_y</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current minimum: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_min</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_total</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
 
@@ -1340,7 +1340,7 @@ the optimization early by returning <code>True</code>.</p>
                                          <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">class</span> <span class="nc">DeltaYStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
@@ -1364,7 +1364,7 @@ the optimization early by returning <code>True</code>.</p>
             <span class="k">return</span> <span class="n">worst</span> <span class="o">-</span> <span class="n">best</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">class</span> <span class="nc">DeadlineStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
@@ -1396,7 +1396,7 @@ the optimization early by returning <code>True</code>.</p>
             <span class="n">time_remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">time_remaining</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">class</span> <span class="nc">CheckpointSaver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1455,7 +1455,7 @@ the optimization early by returning <code>True</code>.</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if callback is a callable or a list of callables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">callback</span><span class="p">]</span>
 
@@ -1485,8 +1485,8 @@ the optimization early by returning <code>True</code>.</p>
     <div class="desc"><p>Save current state after each iteration with <code>skopt.dump</code>.</p>
 <p>Example usage:
     import skopt</p>
-<div class="codehilite"><pre><span></span>checkpoint_callback = skopt.callbacks.CheckpointSaver(&quot;./result.pkl&quot;)
-skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])
+<div class="codehilite"><pre><span></span><span class="n">checkpoint_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">skopt</span><span class="p">.</span><span class="n">callbacks</span><span class="p">.</span><span class="n">CheckpointSaver</span><span class="p">(</span><span class="ss">&quot;./result.pkl&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="n">skopt</span><span class="p">.</span><span class="n">gp_minimize</span><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span><span class="w"> </span><span class="n">dims</span><span class="p">,</span><span class="w"> </span><span class="n">callback</span><span class="o">=[</span><span class="n">checkpoint_callback</span><span class="o">]</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 
 
@@ -1633,7 +1633,7 @@ skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])
             <span class="n">time_remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">time_remaining</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iter_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 
   </div>
@@ -1723,7 +1723,7 @@ are less than <code>delta</code> apart stop the optimization procedure.</p></div
                                          <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 
   </div>
@@ -1806,7 +1806,7 @@ objective values is less than <code>delta</code>.</p></div>
             <span class="k">return</span> <span class="n">worst</span> <span class="o">-</span> <span class="n">best</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 
   </div>
@@ -2075,9 +2075,9 @@ you can inspect after the minimization has completed.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">iter_no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span>
         <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;started&quot;</span>
@@ -2090,15 +2090,15 @@ you can inspect after the minimization has completed.</p>
             <span class="n">search_status</span> <span class="o">=</span> <span class="s2">&quot;Search finished for the next optimal point.&quot;</span>
 
         <span class="k">if</span> <span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at provided point.&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at provided point.&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">eval_status</span><span class="p">))</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span> <span class="o">&lt;</span> <span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_random</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at random point.&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> at random point.&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">eval_status</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration No: </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">. </span><span class="si">%s</span><span class="s2">&quot;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">iter_no</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">search_status</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
@@ -2109,18 +2109,18 @@ you can inspect after the minimization has completed.</p>
 <span class="sd">            The optimization as a OptimizeResult object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">time_taken</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">curr_y</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">curr_min</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Time taken: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_taken</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Function value obtained: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_y</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Current minimum: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_min</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_taken</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Function value obtained: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_y</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current minimum: </span><span class="si">%0.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">curr_min</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_total</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 </pre></div>
 
@@ -2154,7 +2154,7 @@ you can inspect after the minimization has completed.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_total</span> <span class="o">=</span> <span class="n">n_total</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">iter_no</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
   </div>

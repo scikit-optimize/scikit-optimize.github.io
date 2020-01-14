@@ -1106,14 +1106,14 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
-                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
+                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
@@ -1125,8 +1125,8 @@ table {
                                  <span class="n">return_grad</span><span class="o">=</span><span class="n">return_grad</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_gaussian_acquisition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
-                          <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_gaussian_acquisition</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
+                          <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper so that the output of this function can be</span>
 <span class="sd">    directly passed to a minimizer.</span>
@@ -1134,10 +1134,10 @@ table {
     <span class="c1"># Check inputs</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X is {}-dimensional, however,&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X is </span><span class="si">{}</span><span class="s2">-dimensional, however,&quot;</span>
                          <span class="s2">&quot; it must be 2-dimensional.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">xi</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;xi&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="n">acq_func_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kappa&quot;</span><span class="p">,</span> <span class="mf">1.96</span><span class="p">)</span>
@@ -1170,10 +1170,10 @@ table {
 
             <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
                 <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">time_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                    <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">time_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">time_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># acq = acq / E(t)</span>
             <span class="n">inv_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">mu</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">std</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -1195,7 +1195,7 @@ table {
     <span class="k">return</span> <span class="n">acq_vals</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the lower confidence bound to estimate the acquisition</span>
 <span class="sd">    values.</span>
@@ -1240,21 +1240,21 @@ table {
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="n">std</span><span class="p">,</span> <span class="o">-</span><span class="n">std_grad</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="n">std</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the probability of improvement to calculate the acquisition values.</span>
 
@@ -1304,14 +1304,14 @@ table {
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are </span><span class="si">{}</span><span class="s2">-dimensional and </span><span class="si">{}</span><span class="s2">-dimensional, &quot;</span>
                          <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
                          <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
                          <span class="s2">&quot;(N,) vector?&quot;</span>
@@ -1337,7 +1337,7 @@ table {
     <span class="k">return</span> <span class="n">values</span>
 
 
-<span class="k">def</span> <span class="nf">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the expected improvement to calculate the acquisition values.</span>
 
@@ -1386,15 +1386,15 @@ table {
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are </span><span class="si">{}</span><span class="s2">-dimensional and </span><span class="si">{}</span><span class="s2">-dimensional, &quot;</span>
                          <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
                          <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
                          <span class="s2">&quot;(N,) vector?&quot;</span>
@@ -1452,8 +1452,8 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_acquisition_1D', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_acquisition_1D" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
-                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_acquisition_1D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>
+                            <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A wrapper around the acquisition function that is called by fmin_l_bfgs_b.</span>
 
@@ -1525,7 +1525,7 @@ obtain the <code>X</code> with maximum improvement.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_ei', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_ei" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_ei</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the expected improvement to calculate the acquisition values.</span>
 
@@ -1574,15 +1574,15 @@ obtain the <code>X</code> with maximum improvement.</p>
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are </span><span class="si">{}</span><span class="s2">-dimensional and </span><span class="si">{}</span><span class="s2">-dimensional, &quot;</span>
                          <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
                          <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
                          <span class="s2">&quot;(N,) vector?&quot;</span>
@@ -1677,7 +1677,7 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_lcb', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_lcb" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_lcb</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the lower confidence bound to estimate the acquisition</span>
 <span class="sd">    values.</span>
@@ -1722,15 +1722,15 @@ be controlled by the user through the parameter <code>kappa</code>.</p>
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="n">std</span><span class="p">,</span> <span class="o">-</span><span class="n">std_grad</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std_grad</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">kappa</span> <span class="o">==</span> <span class="s2">&quot;inf&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="o">-</span><span class="n">std</span>
             <span class="k">return</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">std</span>
@@ -1797,7 +1797,7 @@ obtain the <code>X</code> with maximum improvement.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.acquisition.gaussian_pi', this);">Show source &equiv;</a></p>
   <div id="source-skopt.acquisition.gaussian_pi" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gaussian_pi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">y_opt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">return_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the probability of improvement to calculate the acquisition values.</span>
 
@@ -1847,14 +1847,14 @@ obtain the <code>X</code> with maximum improvement.</p>
 
         <span class="k">if</span> <span class="n">return_grad</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">mu_grad</span><span class="p">,</span> <span class="n">std_grad</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                <span class="n">return_std_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># check dimensionality of mu, std so we can divide them below</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are {}-dimensional and {}-dimensional, &quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mu and std are </span><span class="si">{}</span><span class="s2">-dimensional and </span><span class="si">{}</span><span class="s2">-dimensional, &quot;</span>
                          <span class="s2">&quot;however both must be 1-dimensional. Did you train &quot;</span>
                          <span class="s2">&quot;your model with an (N, 1) vector instead of an &quot;</span>
                          <span class="s2">&quot;(N,) vector?&quot;</span>
