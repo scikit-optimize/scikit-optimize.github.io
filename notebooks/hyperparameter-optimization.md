@@ -66,8 +66,6 @@ def objective(**params):
                                     scoring="neg_mean_absolute_error"))
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
-      warnings.warn(msg, category=FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
       warnings.warn(message, FutureWarning)
 
@@ -123,7 +121,7 @@ plot_convergence(res_gp)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f6e41690f90>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f0549774ed0>
 
 
 

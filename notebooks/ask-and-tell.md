@@ -52,8 +52,6 @@ def objective(x, noise_level=noise_level):
     return np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2)) + np.random.randn() * noise_level
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
-      warnings.warn(msg, category=FutureWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
       warnings.warn(message, FutureWarning)
 
@@ -117,7 +115,7 @@ opt.tell(next_x, f_val)
               fun: -0.032758350111535384
         func_vals: array([-0.03275835])
            models: []
-     random_state: RandomState(MT19937) at 0x7F746AF90C00
+     random_state: RandomState(MT19937) at 0x7FEC600FAC00
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='identity')])
             specs: None
                 x: [-1.7121321838148869]
