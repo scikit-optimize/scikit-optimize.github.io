@@ -46,12 +46,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
-
-
-    val. score: 0.985894580549369
-    test score: 0.9822222222222222
+    val. score: 0.991833704528582
+    test score: 0.9933333333333333
 
 
 ## Advanced example 
@@ -145,31 +141,9 @@ print("test score: %s" % opt.score(X_test, y_test))
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      "the number of iterations.", ConvergenceWarning)
 
 
-    val. score: 0.985894580549369
+    val. score: 0.9851521900519673
     test score: 0.9822222222222222
 
 
@@ -210,8 +184,10 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.32
-    best score: 0.8666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
     best score: 0.98
     Interrupting!
 

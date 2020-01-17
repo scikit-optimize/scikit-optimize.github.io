@@ -3578,7 +3578,7 @@ n_jobs</code>.</p>
         <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
 
         <span class="c1"># convert parameters to python native types</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">asscalar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
 
         <span class="c1"># make lists into dictionaries</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
@@ -5291,7 +5291,7 @@ and a list of scalars for <code>y</code>.</p>
 <span class="sd">           Instantiated Space object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
                              <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
@@ -5961,7 +5961,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 <span class="sd">       Instantiated Space object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
                          <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
                          <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>

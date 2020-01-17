@@ -40,10 +40,6 @@ def branin(x, noise_level=0.):
     return _branin(x) + noise_level * np.random.randn()
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
-
-
 
 ```python
 from matplotlib.colors import LogNorm

@@ -56,10 +56,6 @@ def hart6(x):
     return hart6_(x[:6])
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
-
-
 # Starting with `branin`
 
 To start let's take advantage of the fact that `branin` is a simple

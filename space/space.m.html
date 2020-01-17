@@ -1486,7 +1486,7 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The concatenation of all transformed dimensions makes Xt to be</span>
         <span class="c1"># of type float, hence the required cast back to int.</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1717,7 +1717,7 @@ table {
 <span class="sd">           Instantiated Space object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
                              <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
@@ -2854,7 +2854,7 @@ original space.</p></div>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The concatenation of all transformed dimensions makes Xt to be</span>
         <span class="c1"># of type float, hence the required cast back to int.</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -3054,7 +3054,7 @@ orignal space.</p></div>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># The concatenation of all transformed dimensions makes Xt to be</span>
     <span class="c1"># of type float, hence the required cast back to int.</span>
-    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3793,7 +3793,7 @@ orignal space.</p></div>
 <span class="sd">           Instantiated Space object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
                              <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
@@ -4463,7 +4463,7 @@ before being passed to a model or minimizer by <code>space.transform()</code>.</
 <span class="sd">       Instantiated Space object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">dimension_classes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span>
                          <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span>
                          <span class="s1">&#39;categorical&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">}</span>

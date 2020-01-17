@@ -66,10 +66,6 @@ def objective(**params):
                                     scoring="neg_mean_absolute_error"))
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
-
-
 ## Optimize all the things!
 
 With these two pieces, we are now ready for sequential model-based optimisation. Here we use gaussian process-based optimisation.
@@ -121,7 +117,7 @@ plot_convergence(res_gp)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f0549774ed0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f03208ca310>
 
 
 

@@ -43,8 +43,6 @@ res = gp_minimize(obj_fun,            # the function to minimize
                   random_state=777)
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
     /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
     /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.

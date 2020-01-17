@@ -52,10 +52,6 @@ def objective(x, noise_level=noise_level):
     return np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2)) + np.random.randn() * noise_level
 ```
 
-    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/deprecation.py:144: FutureWarning: The sklearn.metrics.scorer module is  deprecated in version 0.22 and will be removed in version 0.24. The corresponding classes / functions should instead be imported from sklearn.metrics. Anything that cannot be imported from sklearn.metrics is now part of the private API.
-      warnings.warn(message, FutureWarning)
-
-
 Here a quick plot to visualize what the function looks like:
 
 
@@ -115,7 +111,7 @@ opt.tell(next_x, f_val)
               fun: -0.032758350111535384
         func_vals: array([-0.03275835])
            models: []
-     random_state: RandomState(MT19937) at 0x7FEC600FAC00
+     random_state: RandomState(MT19937) at 0x7F2A38035C00
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='identity')])
             specs: None
                 x: [-1.7121321838148869]
