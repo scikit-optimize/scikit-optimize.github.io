@@ -43,29 +43,29 @@ res = gp_minimize(obj_fun,            # the function to minimize
                   random_state=777)
 ```
 
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
-    /root/project/skopt/optimizer/optimizer.py:399: UserWarning: The objective has been evaluated at this point before.
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
       warnings.warn("The objective has been evaluated "
 
 
@@ -115,8 +115,8 @@ print('Without compression: {} bytes'.format(getsize('result.pkl')))
 print('Compressed with gz:  {} bytes'.format(getsize('result.gz')))
 ```
 
-    Without compression: 84135 bytes
-    Compressed with gz:  22991 bytes
+    Without compression: 84162 bytes
+    Compressed with gz:  23012 bytes
 
 
 ### Unserializable objective functions
@@ -139,8 +139,8 @@ print('Loaded object: ', res_loaded_without_objective.specs['args'].keys())
 print('Local variable:', res.specs['args'].keys())
 ```
 
-    Loaded object:  dict_keys(['dimensions', 'base_estimator', 'n_calls', 'n_random_starts', 'acq_func', 'acq_optimizer', 'x0', 'y0', 'random_state', 'verbose', 'callback', 'n_points', 'n_restarts_optimizer', 'xi', 'kappa', 'n_jobs'])
-    Local variable: dict_keys(['func', 'dimensions', 'base_estimator', 'n_calls', 'n_random_starts', 'acq_func', 'acq_optimizer', 'x0', 'y0', 'random_state', 'verbose', 'callback', 'n_points', 'n_restarts_optimizer', 'xi', 'kappa', 'n_jobs'])
+    Loaded object:  dict_keys(['dimensions', 'base_estimator', 'n_calls', 'n_random_starts', 'acq_func', 'acq_optimizer', 'x0', 'y0', 'random_state', 'verbose', 'callback', 'n_points', 'n_restarts_optimizer', 'xi', 'kappa', 'n_jobs', 'model_queue_size'])
+    Local variable: dict_keys(['func', 'dimensions', 'base_estimator', 'n_calls', 'n_random_starts', 'acq_func', 'acq_optimizer', 'x0', 'y0', 'random_state', 'verbose', 'callback', 'n_points', 'n_restarts_optimizer', 'xi', 'kappa', 'n_jobs', 'model_queue_size'])
 
 
 ## Possible problems

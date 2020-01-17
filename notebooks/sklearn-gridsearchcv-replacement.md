@@ -46,8 +46,12 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.991833704528582
-    test score: 0.9933333333333333
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated "
+
+
+    val. score: 0.985894580549369
+    test score: 0.98
 
 
 ## Advanced example 
@@ -141,10 +145,14 @@ print("test score: %s" % opt.score(X_test, y_test))
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
 
 
-    val. score: 0.9851521900519673
-    test score: 0.9822222222222222
+    val. score: 0.991833704528582
+    test score: 0.9933333333333333
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -184,8 +192,10 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
+    best score: 0.32
+    best score: 0.6
+    best score: 0.9266666666666666
+    best score: 0.9266666666666666
     best score: 0.9666666666666667
     best score: 0.9666666666666667
     best score: 0.98

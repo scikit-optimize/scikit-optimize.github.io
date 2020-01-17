@@ -1141,7 +1141,7 @@ table {
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.base_minimize">
-    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">base_minimize</span>(</p><p>func, dimensions, base_estimator, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;lbfgs&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, n_jobs=1, model_queue_size=None)</p>
     </div>
     
 
@@ -1301,6 +1301,11 @@ with the named arguments. See <code>use_named_args</code> for an example.</p>
     Defaults to 1 core. If <code>n_jobs=-1</code>, then number of jobs is set
     to number of cores.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1332,7 +1337,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1466,6 +1471,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
 <span class="sd">        to number of cores.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1526,6 +1535,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                           <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
                           <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span>
                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                          <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">,</span>
                           <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
                           <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
     <span class="c1"># check x0: element-wise data type, dimensionality</span>
@@ -1581,7 +1591,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.dummy_minimize">
-    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None, verbose=False, callback=None)</p>
+    <p>def <span class="ident">dummy_minimize</span>(</p><p>func, dimensions, n_calls=100, x0=None, y0=None, random_state=None, verbose=False, callback=None, model_queue_size=None)</p>
     </div>
     
 
@@ -1654,6 +1664,11 @@ with the named arguments. See <code>use_named_args</code> for an example.</p>
     If callable then <code>callback(res)</code> is called after each call to <code>func</code>.
     If list of callables, then each callable in the list is called.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1680,7 +1695,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.optimizer.dummy_minimize', this);">Show source &equiv;</a></p>
   <div id="source-skopt.optimizer.dummy_minimize" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                   <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -1739,6 +1755,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
 <span class="sd">        If list of callables, then each callable in the list is called.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -1772,7 +1792,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_calls</span><span class="p">,</span>
                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                          <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1783,7 +1803,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.forest_minimize">
-    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;ET&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">forest_minimize</span>(</p><p>func, dimensions, base_estimator=&#39;ET&#39;, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1, model_queue_size=None)</p>
     </div>
     
 
@@ -1925,6 +1945,11 @@ making predictions.</p>
     The number of jobs to run in parallel for <code>fit</code> and <code>predict</code>.
     If -1, then the number of jobs is set to the number of cores.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -1953,7 +1978,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                     <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span>
                     <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
-                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
 
 <span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
@@ -2076,6 +2101,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        The number of jobs to run in parallel for `fit` and `predict`.</span>
 <span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -2100,7 +2129,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                          <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
                          <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">)</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
+                         <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2111,7 +2141,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.gbrt_minimize">
-    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1)</p>
+    <p>def <span class="ident">gbrt_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;EI&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, xi=0.01, kappa=1.96, n_jobs=1, model_queue_size=None)</p>
     </div>
     
 
@@ -2240,6 +2270,11 @@ with the named arguments. See <code>use_named_args</code> for an example.</p>
     The number of jobs to run in parallel for <code>fit</code> and <code>predict</code>.
     If -1, then the number of jobs is set to the number of cores.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -2271,7 +2306,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
-                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                  <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sequential optimization using gradient boosted trees.</span>
 
 <span class="sd">    Gradient boosted regression trees are used to model the (very)</span>
@@ -2380,6 +2415,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        The number of jobs to run in parallel for `fit` and `predict`.</span>
 <span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -2411,7 +2450,8 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                          <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
                          <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
                          <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">)</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
+                         <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2422,7 +2462,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
       
   <div class="item">
     <div class="name def" id="skopt.optimizer.gp_minimize">
-    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1)</p>
+    <p>def <span class="ident">gp_minimize</span>(</p><p>func, dimensions, base_estimator=None, n_calls=100, n_random_starts=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;auto&#39;, x0=None, y0=None, random_state=None, verbose=False, callback=None, n_points=10000, n_restarts_optimizer=5, xi=0.01, kappa=1.96, noise=&#39;gaussian&#39;, n_jobs=1, model_queue_size=None)</p>
     </div>
     
 
@@ -2628,6 +2668,11 @@ with the named arguments. See <code>use_named_args</code> for an example.</p>
     Defaults to 1 core. If <code>n_jobs=-1</code>, then number of jobs is set
     to number of cores.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Returns</h2>
 <ul>
@@ -2659,7 +2704,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
                 <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
-                <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bayesian optimization using Gaussian Processes.</span>
 
 <span class="sd">    If every function evaluation is expensive, for instance</span>
@@ -2834,6 +2879,10 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
 <span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
 <span class="sd">        to number of cores.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
@@ -2870,7 +2919,7 @@ http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResul
         <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
         <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-        <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+        <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2991,6 +3040,11 @@ bayesian optimisation loop.</p>
 <p><code>acq_optimizer_kwargs</code> [dict]:
     Additional arguments to be passed to the acquistion optimizer.</p>
 </li>
+<li>
+<p><code>model_queue_size</code> [int or None, default=None]
+    Keeps list of models only as long as the argument given. In the
+    case of None, the list has no capped length.</p>
+</li>
 </ul>
 <h2>Attributes</h2>
 <ul>
@@ -3100,6 +3154,9 @@ bayesian optimisation loop.</p>
 <span class="sd">    * `acq_optimizer_kwargs` [dict]:</span>
 <span class="sd">        Additional arguments to be passed to the acquistion optimizer.</span>
 
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -3119,7 +3176,9 @@ bayesian optimisation loop.</p>
                  <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
@@ -3229,7 +3288,10 @@ bayesian optimisation loop.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
 
         <span class="c1"># Initialize storage for optimization</span>
-
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_queue_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;model_queue_size should be an int or None, &quot;</span>
+                            <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_queue_size</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_model_queue_size</span> <span class="o">=</span> <span class="n">model_queue_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3468,7 +3530,15 @@ bayesian optimisation loop.</p>
 
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;next_xs_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">gains_</span> <span class="o">-=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_xs_</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_model_queue_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_model_queue_size</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Maximum list size obtained, remove oldest model.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
 
             <span class="c1"># even with BFGS as optimizer we want to sample a large number</span>
             <span class="c1"># of points and then pick the best ones as starting points</span>
@@ -3583,7 +3653,7 @@ bayesian optimisation loop.</p>
             
   <div class="item">
     <div class="name def" id="skopt.optimizer.Optimizer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator=&#39;gp&#39;, n_random_starts=None, n_initial_points=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;auto&#39;, random_state=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, dimensions, base_estimator=&#39;gp&#39;, n_random_starts=None, n_initial_points=10, acq_func=&#39;gp_hedge&#39;, acq_optimizer=&#39;auto&#39;, random_state=None, model_queue_size=None, acq_func_kwargs=None, acq_optimizer_kwargs=None)</p>
     </div>
     
 
@@ -3597,7 +3667,9 @@ bayesian optimisation loop.</p>
              <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
              <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
              <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-             <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
     <span class="c1"># Configure acquisition function</span>
@@ -3684,6 +3756,10 @@ bayesian optimisation loop.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_non_cat_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
     <span class="c1"># Initialize storage for optimization</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_queue_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;model_queue_size should be an int or None, &quot;</span>
+                        <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_queue_size</span><span class="p">)))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_model_queue_size</span> <span class="o">=</span> <span class="n">model_queue_size</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4031,6 +4107,16 @@ and a list of scalars for <code>y</code>.</p>
             </div>
             <div class="item">
             <p id="skopt.optimizer.Optimizer.eta" class="name">var <span class="ident">eta</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.optimizer.Optimizer.max_model_queue_size" class="name">var <span class="ident">max_model_queue_size</span></p>
             
 
             
