@@ -1143,7 +1143,7 @@ table {
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">CategoricalEncoder</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Normalize</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Identity</span>
-<span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Log10</span>
+<span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">LogN</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 
 
@@ -1222,11 +1222,23 @@ table {
                              <span class="s2">&quot; supported types.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
-            <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+                <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+              <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
             <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+                <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;log-uniform&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                                             <span class="nb">int</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+              <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;log-uniform&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nb">int</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -1302,7 +1314,8 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Real</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 
 <span class="sd">        Parameters</span>
@@ -1318,7 +1331,12 @@ table {
 <span class="sd">            - If `&quot;uniform&quot;`, points are sampled uniformly between the lower</span>
 <span class="sd">              and upper bounds.</span>
 <span class="sd">            - If `&quot;log-uniform&quot;`, points are sampled uniformly between</span>
-<span class="sd">              `log10(lower)` and `log10(upper)`.`</span>
+<span class="sd">              `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">              has base `base`.</span>
+
+<span class="sd">        * `base` [int]:</span>
+<span class="sd">            The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">            - Default 10, otherwise commonly 2.</span>
 
 <span class="sd">        * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">            The following transformations are supported.</span>
@@ -1337,6 +1355,8 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1361,7 +1381,9 @@ table {
                     <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">Log10</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">))]</span>
+                    <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
@@ -1369,9 +1391,10 @@ table {
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">),</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Log10</span><span class="p">()</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -1391,7 +1414,7 @@ table {
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Real</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
-            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1428,7 +1451,8 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -1438,6 +1462,19 @@ table {
 
 <span class="sd">        * `high` [int]:</span>
 <span class="sd">            Upper bound (inclusive).</span>
+
+<span class="sd">        * `prior` [&quot;uniform&quot; or &quot;log-uniform&quot;, default=&quot;uniform&quot;]:</span>
+<span class="sd">            Distribution to use when sampling random integers for</span>
+<span class="sd">            this dimension.</span>
+<span class="sd">            - If `&quot;uniform&quot;`, intgers are sampled uniformly between the lower</span>
+<span class="sd">              and upper bounds.</span>
+<span class="sd">            - If `&quot;log-uniform&quot;`, intgers are sampled uniformly between</span>
+<span class="sd">              `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">              has base `base`.</span>
+
+<span class="sd">        * `base` [int]:</span>
+<span class="sd">            The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">            - Default 10, otherwise commonly 2.</span>
 
 <span class="sd">        * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">            The following transformations are supported.</span>
@@ -1455,6 +1492,9 @@ table {
                              <span class="s2">&quot; upper bound </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1465,12 +1505,29 @@ table {
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
                              <span class="s2">&quot; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -1478,7 +1535,8 @@ table {
                 <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">],</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">]))</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Integer(low=</span><span class="si">{}</span><span class="s2">, high=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Integer(low=</span><span class="si">{}</span><span class="s2">, high=</span><span class="si">{}</span><span class="s2">, prior=&#39;</span><span class="si">{}</span><span class="s2">&#39;, transform=&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inverse transform samples from the warped space back into the</span>
@@ -1571,7 +1629,7 @@ table {
         <span class="c1"># XXX check that sum(prior) == 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span>
             <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span><span class="p">)</span>
-            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -1580,7 +1638,7 @@ table {
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_Ellipsis</span><span class="p">(),</span> <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+            <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_Ellipsis</span><span class="p">(),)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span>
 
@@ -1853,7 +1911,7 @@ table {
                 <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">]))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="n">offset</span><span class="p">]))</span>
+                    <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]))</span>
 
             <span class="n">start</span> <span class="o">+=</span> <span class="n">offset</span>
 
@@ -2085,11 +2143,23 @@ the documentation of <code>dimension</code> below.</p>
                              <span class="s2">&quot; supported types.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
-            <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+                <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+              <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;log-uniform&quot;</span><span class="p">]):</span>
             <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+                <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;log-uniform&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                                             <span class="nb">int</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">Integer</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimension</span><span class="p">[:</span><span class="mi">2</span><span class="p">]])</span> <span class="ow">and</span>
+              <span class="n">dimension</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;log-uniform&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nb">int</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
@@ -2166,7 +2236,7 @@ the documentation of <code>dimension</code> below.</p>
         <span class="c1"># XXX check that sum(prior) == 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span>
             <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span><span class="p">)</span>
-            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -2175,7 +2245,7 @@ the documentation of <code>dimension</code> below.</p>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_Ellipsis</span><span class="p">(),</span> <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
+            <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_Ellipsis</span><span class="p">(),)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span>
 
@@ -2329,7 +2399,7 @@ the documentation of <code>dimension</code> below.</p>
     <span class="c1"># XXX check that sum(prior) == 1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span>
         <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span><span class="p">)</span>
-        <span class="p">)</span>
+    <span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2796,7 +2866,8 @@ original space.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 
 <span class="sd">        Parameters</span>
@@ -2806,6 +2877,19 @@ original space.</p></div>
 
 <span class="sd">        * `high` [int]:</span>
 <span class="sd">            Upper bound (inclusive).</span>
+
+<span class="sd">        * `prior` [&quot;uniform&quot; or &quot;log-uniform&quot;, default=&quot;uniform&quot;]:</span>
+<span class="sd">            Distribution to use when sampling random integers for</span>
+<span class="sd">            this dimension.</span>
+<span class="sd">            - If `&quot;uniform&quot;`, intgers are sampled uniformly between the lower</span>
+<span class="sd">              and upper bounds.</span>
+<span class="sd">            - If `&quot;log-uniform&quot;`, intgers are sampled uniformly between</span>
+<span class="sd">              `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">              has base `base`.</span>
+
+<span class="sd">        * `base` [int]:</span>
+<span class="sd">            The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">            - Default 10, otherwise commonly 2.</span>
 
 <span class="sd">        * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">            The following transformations are supported.</span>
@@ -2823,6 +2907,9 @@ original space.</p></div>
                              <span class="s2">&quot; upper bound </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2833,12 +2920,29 @@ original space.</p></div>
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
                              <span class="s2">&quot; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -2846,7 +2950,8 @@ original space.</p></div>
                 <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">],</span> <span class="p">[</span><span class="n">other</span><span class="o">.</span><span class="n">high</span><span class="p">]))</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Integer(low=</span><span class="si">{}</span><span class="s2">, high=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Integer(low=</span><span class="si">{}</span><span class="s2">, high=</span><span class="si">{}</span><span class="s2">, prior=&#39;</span><span class="si">{}</span><span class="s2">&#39;, transform=&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inverse transform samples from the warped space back into the</span>
@@ -2898,22 +3003,11 @@ original space.</p></div>
           <li><a href="#skopt.space.space.Dimension">Dimension</a></li>
           <li>builtins.object</li>
           </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="skopt.space.space.Integer.prior" class="name">var <span class="ident">prior</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
           <h3>Static methods</h3>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Integer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, transform=None, name=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, prior=&#39;uniform&#39;, base=10, transform=None, name=None)</p>
     </div>
     
 
@@ -2929,6 +3023,25 @@ original space.</p></div>
 <li>
 <p><code>high</code> [int]:
     Upper bound (inclusive).</p>
+</li>
+<li>
+<p><code>prior</code> ["uniform" or "log-uniform", default="uniform"]:
+    Distribution to use when sampling random integers for
+    this dimension.</p>
+<ul>
+<li>If <code>"uniform"</code>, intgers are sampled uniformly between the lower
+  and upper bounds.</li>
+<li>If <code>"log-uniform"</code>, intgers are sampled uniformly between
+  <code>log(lower, base)</code> and <code>log(upper, base)</code> where log
+  has base <code>base</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>base</code> [int]:
+    The logarithmic base to use for a log-uniform prior.</p>
+<ul>
+<li>Default 10, otherwise commonly 2.</li>
+</ul>
 </li>
 <li>
 <p><code>transform</code> ["identity", "normalize", optional]:
@@ -2948,7 +3061,8 @@ original space.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Integer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Integer.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on integer values.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2956,6 +3070,17 @@ original space.</p></div>
 <span class="sd">        Lower bound (inclusive).</span>
 <span class="sd">    * `high` [int]:</span>
 <span class="sd">        Upper bound (inclusive).</span>
+<span class="sd">    * `prior` [&quot;uniform&quot; or &quot;log-uniform&quot;, default=&quot;uniform&quot;]:</span>
+<span class="sd">        Distribution to use when sampling random integers for</span>
+<span class="sd">        this dimension.</span>
+<span class="sd">        - If `&quot;uniform&quot;`, intgers are sampled uniformly between the lower</span>
+<span class="sd">          and upper bounds.</span>
+<span class="sd">        - If `&quot;log-uniform&quot;`, intgers are sampled uniformly between</span>
+<span class="sd">          `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">          has base `base`.</span>
+<span class="sd">    * `base` [int]:</span>
+<span class="sd">        The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">        - Default 10, otherwise commonly 2.</span>
 <span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">        The following transformations are supported.</span>
 <span class="sd">        - &quot;identity&quot;, (default) the transformed space is the same as the</span>
@@ -2970,6 +3095,9 @@ original space.</p></div>
                          <span class="s2">&quot; upper bound </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -2977,12 +3105,27 @@ original space.</p></div>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
                          <span class="s2">&quot; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                 <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
+            <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3132,6 +3275,16 @@ orignal space.</p></div>
   
           <h3>Instance variables</h3>
             <div class="item">
+            <p id="skopt.space.space.Integer.base" class="name">var <span class="ident">base</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Integer.bounds" class="name">var <span class="ident">bounds</span></p>
             
 
@@ -3152,6 +3305,16 @@ orignal space.</p></div>
 
             </div>
             <div class="item">
+            <p id="skopt.space.space.Integer.log_base" class="name">var <span class="ident">log_base</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Integer.low" class="name">var <span class="ident">low</span></p>
             
 
@@ -3163,6 +3326,16 @@ orignal space.</p></div>
             </div>
             <div class="item">
             <p id="skopt.space.space.Integer.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.space.space.Integer.prior" class="name">var <span class="ident">prior</span></p>
             
 
             
@@ -3223,7 +3396,8 @@ orignal space.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Real', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Real" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Real</span><span class="p">(</span><span class="n">Dimension</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 
 <span class="sd">        Parameters</span>
@@ -3239,7 +3413,12 @@ orignal space.</p></div>
 <span class="sd">            - If `&quot;uniform&quot;`, points are sampled uniformly between the lower</span>
 <span class="sd">              and upper bounds.</span>
 <span class="sd">            - If `&quot;log-uniform&quot;`, points are sampled uniformly between</span>
-<span class="sd">              `log10(lower)` and `log10(upper)`.`</span>
+<span class="sd">              `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">              has base `base`.</span>
+
+<span class="sd">        * `base` [int]:</span>
+<span class="sd">            The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">            - Default 10, otherwise commonly 2.</span>
 
 <span class="sd">        * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">            The following transformations are supported.</span>
@@ -3258,6 +3437,8 @@ orignal space.</p></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -3282,7 +3463,9 @@ orignal space.</p></div>
                     <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">Log10</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">))]</span>
+                    <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
@@ -3290,9 +3473,10 @@ orignal space.</p></div>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">),</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Log10</span><span class="p">()</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -3312,7 +3496,7 @@ orignal space.</p></div>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Real</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
-            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -3363,7 +3547,7 @@ orignal space.</p></div>
             
   <div class="item">
     <div class="name def" id="skopt.space.space.Real.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, prior=&#39;uniform&#39;, transform=None, name=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, low, high, prior=&#39;uniform&#39;, base=10, transform=None, name=None)</p>
     </div>
     
 
@@ -3387,7 +3571,15 @@ orignal space.</p></div>
 <li>If <code>"uniform"</code>, points are sampled uniformly between the lower
   and upper bounds.</li>
 <li>If <code>"log-uniform"</code>, points are sampled uniformly between
-  <code>log10(lower)</code> and <code>log10(upper)</code>.`</li>
+  <code>log(lower, base)</code> and <code>log(upper, base)</code> where log
+  has base <code>base</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>base</code> [int]:
+    The logarithmic base to use for a log-uniform prior.</p>
+<ul>
+<li>Default 10, otherwise commonly 2.</li>
 </ul>
 </li>
 <li>
@@ -3408,7 +3600,8 @@ orignal space.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.space.Real.__init__', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.space.Real.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search space dimension that can take on any real value.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3421,7 +3614,11 @@ orignal space.</p></div>
 <span class="sd">        - If `&quot;uniform&quot;`, points are sampled uniformly between the lower</span>
 <span class="sd">          and upper bounds.</span>
 <span class="sd">        - If `&quot;log-uniform&quot;`, points are sampled uniformly between</span>
-<span class="sd">          `log10(lower)` and `log10(upper)`.`</span>
+<span class="sd">          `log(lower, base)` and `log(upper, base)` where log</span>
+<span class="sd">          has base `base`.</span>
+<span class="sd">    * `base` [int]:</span>
+<span class="sd">        The logarithmic base to use for a log-uniform prior.</span>
+<span class="sd">        - Default 10, otherwise commonly 2.</span>
 <span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, optional]:</span>
 <span class="sd">        The following transformations are supported.</span>
 <span class="sd">        - &quot;identity&quot;, (default) the transformed space is the same as the</span>
@@ -3437,6 +3634,8 @@ orignal space.</p></div>
     <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="n">high</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
@@ -3457,7 +3656,9 @@ orignal space.</p></div>
                 <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">Log10</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">))]</span>
+                <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
+                 <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
             <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
@@ -3465,9 +3666,10 @@ orignal space.</p></div>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">),</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Log10</span><span class="p">()</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">-</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3540,7 +3742,7 @@ orignal space.</p></div>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Real</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
-        <span class="p">)</span>
+    <span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3618,6 +3820,16 @@ orignal space.</p></div>
   
           <h3>Instance variables</h3>
             <div class="item">
+            <p id="skopt.space.space.Real.base" class="name">var <span class="ident">base</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Real.bounds" class="name">var <span class="ident">bounds</span></p>
             
 
@@ -3629,6 +3841,16 @@ orignal space.</p></div>
             </div>
             <div class="item">
             <p id="skopt.space.space.Real.high" class="name">var <span class="ident">high</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="skopt.space.space.Real.log_base" class="name">var <span class="ident">log_base</span></p>
             
 
             
@@ -3929,7 +4151,7 @@ orignal space.</p></div>
                 <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">]))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="n">offset</span><span class="p">]))</span>
+                    <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]))</span>
 
             <span class="n">start</span> <span class="o">+=</span> <span class="n">offset</span>
 
@@ -4169,7 +4391,7 @@ dimensions.</p>
             <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="n">offset</span><span class="p">]))</span>
+                <span class="n">dim</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">offset</span><span class="p">]))</span>
         <span class="n">start</span> <span class="o">+=</span> <span class="n">offset</span>
     <span class="c1"># Transpose</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>

@@ -81,7 +81,7 @@ res_gp = gp_minimize(objective, space, n_calls=50, random_state=0)
 
 
 
-    'Best score=2.9608'
+    'Best score=3.2137'
 
 
 
@@ -98,11 +98,11 @@ print("""Best parameters:
 ```
 
     Best parameters:
-    - max_depth=5
-    - learning_rate=0.114036
+    - max_depth=2
+    - learning_rate=0.306516
     - max_features=13
     - min_samples_split=100
-    - min_samples_leaf=1
+    - min_samples_leaf=23
 
 
 ## Convergence plot
@@ -117,7 +117,7 @@ plot_convergence(res_gp)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f827f752410>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f34a91864d0>
 
 
 
