@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skopt.utils, utility functions &mdash; scikit-optimize v0.6+61.g02ce7ba documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="skopt.space, define the optimization space" href="space.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> scikit-optimize
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.6+61.g02ce7ba
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="minimize_functions.html"><code class="docutils literal notranslate"><span class="pre">skopt</span></code>’s top level minimization functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizer.html"><code class="docutils literal notranslate"><span class="pre">skopt.Optimizer</span></code>, ask-and-tell interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bayessearchcv.html"><code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code>, GridSearchCV compatible estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="acquisition.html"><code class="docutils literal notranslate"><span class="pre">skopt.acquisition</span></code>, acquisition functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html"><code class="docutils literal notranslate"><span class="pre">skopt.callbacks</span></code>, callback functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plots.html"><code class="docutils literal notranslate"><span class="pre">skopt.plots</span></code>, plotting tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="space.html"><code class="docutils literal notranslate"><span class="pre">skopt.space</span></code>, define the optimization space</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skopt.utils</span></code>, utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">scikit-optimize</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">skopt.utils</span></code>, utility functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="skopt-utils-utility-functions">
+<span id="utility-functions"></span><h1><code class="docutils literal notranslate"><span class="pre">skopt.utils</span></code>, utility functions<a class="headerlink" href="#skopt-utils-utility-functions" title="Permalink to this headline">¶</a></h1>
+<p>This is a list of public utility functions. Other functions in this module
+are meant for internal use.</p>
+<dl class="function">
+<dt id="skopt.utils.check_x_in_space">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">check_x_in_space</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">space</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#check_x_in_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.check_x_in_space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.cook_estimator">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">cook_estimator</code><span class="sig-paren">(</span><em class="sig-param">base_estimator</em>, <em class="sig-param">space=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#cook_estimator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.cook_estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cook a default estimator.</p>
+<p>For the special base_estimator called “DUMMY” the return value is None.
+This corresponds to sampling points at random, hence there is no need
+for an estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_estimator</strong><strong> [</strong><strong>&quot;GP&quot;</strong><strong>, </strong><strong>&quot;RF&quot;</strong><strong>, </strong><strong>&quot;ET&quot;</strong><strong>, </strong><strong>&quot;GBRT&quot;</strong><strong>, </strong><strong>&quot;DUMMY&quot;</strong> (<em>*</em>) – or sklearn regressor, default=”GP”]:
+Should inherit from <cite>sklearn.base.RegressorMixin</cite>.
+In addition the <cite>predict</cite> method should have an optional <cite>return_std</cite>
+argument, which returns <cite>std(Y | x)`</cite> along with <cite>E[Y | x]</cite>.
+If base_estimator is one of [“GP”, “RF”, “ET”, “GBRT”, “DUMMY”], a
+surrogate model corresponding to the relevant <cite>X_minimize</cite> function
+is created.</p></li>
+<li><p><strong>space</strong><strong> [</strong><strong>Space instance</strong><strong>]</strong> (<em>*</em>) – Has to be provided if the base_estimator is a gaussian process.
+Ignored otherwise.</p></li>
+<li><p><strong>kwargs</strong><strong> [</strong><strong>dict</strong><strong>]</strong> (<em>*</em>) – Extra parameters provided to the base_estimator at init time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.dimensions_aslist">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">dimensions_aslist</code><span class="sig-paren">(</span><em class="sig-param">search_space</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#dimensions_aslist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.dimensions_aslist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dict representation of a search space into a list of
+dimensions, ordered by sorted(search_space.keys()).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>search_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>Represents search space. The keys are dimension names (strings)
+and values are instances of classes that inherit from the class
+skopt.space.Dimension (Real, Integer or Categorical)
+Example:</p>
+<blockquote>
+<div><p>{‘name1’: Real(0,1), ‘name2’: Integer(2,4), ‘name3’: Real(-1,1)}</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>params_space_list</strong> –</p>
+<dl class="simple">
+<dt>Example output with example inputs:</dt><dd><p>[Real(0,1), Integer(2,4), Real(-1,1)]</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of skopt.space.Dimension instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.expected_minimum">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">expected_minimum</code><span class="sig-paren">(</span><em class="sig-param">res</em>, <em class="sig-param">n_random_starts=20</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#expected_minimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.expected_minimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the minimum over the predictions of the last surrogate model.</p>
+<p>Note that the returned minimum may not necessarily be an accurate
+prediction of the minimum of the true objective function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong><strong>  [</strong><strong>OptimizeResult</strong><strong>, </strong><strong>scipy object</strong><strong>]</strong> (<em>*</em>) – The optimization result returned by a <cite>skopt</cite> minimizer.</p></li>
+<li><p><strong>n_random_starts</strong><strong> [</strong><strong>int</strong><strong>, </strong><strong>default=20</strong><strong>]</strong> (<em>*</em>) – The number of random starts for the minimization of the surrogate
+model.</p></li>
+<li><p><strong>random_state</strong><strong> [</strong><strong>int</strong><strong>, </strong><strong>RandomState instance</strong><strong>, or </strong><strong>None</strong><strong> (</strong><strong>default</strong><strong>)</strong><strong>]</strong> (<em>*</em>) – Set random state to something other than None for reproducible
+results.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>* `x` [list]</strong> (<em>location of the minimum.</em>)</p></li>
+<li><p><strong>* `fun` [float]</strong> (<em>the surrogate function value at the minimum.</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.dump">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">res</em>, <em class="sig-param">filename</em>, <em class="sig-param">store_objective=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store an skopt optimization result into a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong><strong> [</strong><strong>OptimizeResult</strong><strong>, </strong><strong>scipy object</strong><strong>]</strong> (<em>*</em>) – Optimization result object to be stored.</p></li>
+<li><p><strong>filename</strong><strong> [</strong><strong>string</strong><strong> or </strong><strong>pathlib.Path</strong><strong>]</strong> (<em>*</em>) – The path of the file in which it is to be stored. The compression
+method corresponding to one of the supported filename extensions (‘.z’,
+‘.gz’, ‘.bz2’, ‘.xz’ or ‘.lzma’) will be used automatically.</p></li>
+<li><p><strong>store_objective</strong><strong> [</strong><strong>boolean</strong><strong>, </strong><strong>default=True</strong><strong>]</strong> (<em>*</em>) – <p>Whether the objective function should be stored. Set <cite>store_objective</cite>
+to <cite>False</cite> if your objective function (<cite>.specs[‘args’][‘func’]</cite>) is
+unserializable (i.e. if an exception is raised when trying to serialize
+the optimization result).</p>
+<p>Notice that if <cite>store_objective</cite> is set to <cite>False</cite>, a deep copy of the
+optimization result is created, potentially leading to performance
+problems if <cite>res</cite> is very large. If the objective function is not
+critical, one can delete it before calling <cite>skopt.dump()</cite> and thus
+avoid deep copying of <cite>res</cite>.</p>
+</p></li>
+<li><p><strong>**kwargs</strong><strong> [</strong><strong>other keyword arguments</strong><strong>]</strong> (<em>*</em>) – All other keyword arguments will be passed to <cite>joblib.dump</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.load">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reconstruct a skopt optimization result from a file
+persisted with skopt.dump.</p>
+<p>Notice that the loaded optimization result can be missing
+the objective function (<cite>.specs[‘args’][‘func’]</cite>) if <cite>skopt.dump</cite>
+was called with <cite>store_objective=False</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong><strong> [</strong><strong>string</strong><strong> or </strong><strong>pathlib.Path</strong><strong>]</strong> (<em>*</em>) – The path of the file from which to load the optimization result.</p></li>
+<li><p><strong>**kwargs</strong><strong> [</strong><strong>other keyword arguments</strong><strong>]</strong> (<em>*</em>) – All other keyword arguments will be passed to <cite>joblib.load</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reconstructed OptimizeResult instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>* <cite>res</cite> [<cite>OptimizeResult</cite>, scipy object]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.point_asdict">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">point_asdict</code><span class="sig-paren">(</span><em class="sig-param">search_space</em>, <em class="sig-param">point_as_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#point_asdict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.point_asdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list representation of a point from a search space
+to the dictionary representation, where keys are dimension names
+and values are corresponding to the values of dimensions in the list.</p>
+<p>Counterpart to parameters_aslist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>Represents search space. The keys are dimension names (strings)
+and values are instances of classes that inherit from the class
+skopt.space.Dimension (Real, Integer or Categorical)
+Example:</p>
+<blockquote>
+<div><p>{‘name1’: Real(0,1), ‘name2’: Integer(2,4), ‘name3’: Real(-1,1)}</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>point_as_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – <p>list with parameter values.The order of parameters in the list
+is given by sorted(params_space.keys()).
+Example:</p>
+<blockquote>
+<div><p>[0.66, 3, -0.15]</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>params_dict</strong> – corresponding parameter values are assigned.
+Example output with inputs:</p>
+<blockquote>
+<div><p>{‘name1’: 0.66, ‘name2’: 3, ‘name3’: -0.15}</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary with parameter names as keys to which</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.utils.point_aslist">
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">point_aslist</code><span class="sig-paren">(</span><em class="sig-param">search_space</em>, <em class="sig-param">point_as_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/utils.html#point_aslist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.point_aslist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dictionary representation of a point from a search space to
+the list representation. The list of values is created from the values of
+the dictionary, sorted by the names of dimensions used as keys.</p>
+<p>Counterpart to parameters_asdict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>Represents search space. The keys are dimension names (strings)
+and values are instances of classes that inherit from the class
+skopt.space.Dimension (Real, Integer or Categorical)
+Example:</p>
+<blockquote>
+<div><p>{‘name1’: Real(0,1), ‘name2’: Integer(2,4), ‘name3’: Real(-1,1)}</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>point_as_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>dict with parameter names as keys to which corresponding
+parameter values are assigned.
+Example:</p>
+<blockquote>
+<div><p>{‘name1’: 0.66, ‘name2’: 3, ‘name3’: -0.15}</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>point_as_list</strong> – parameters in the list is given by sorted(params_space.keys()).
+Example output with example inputs:</p>
+<blockquote>
+<div><p>[0.66, 3, -0.15]</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list with point values.The order of</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="space.html" class="btn btn-neutral float-left" title="skopt.space, define the optimization space" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The scikit-optimize contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

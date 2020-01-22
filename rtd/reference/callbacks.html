@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skopt.callbacks, callback functions &mdash; scikit-optimize v0.6+61.g02ce7ba documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="skopt.plots, plotting tools" href="plots.html" />
+    <link rel="prev" title="skopt.acquisition, acquisition functions" href="acquisition.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> scikit-optimize
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.6+61.g02ce7ba
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="minimize_functions.html"><code class="docutils literal notranslate"><span class="pre">skopt</span></code>’s top level minimization functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizer.html"><code class="docutils literal notranslate"><span class="pre">skopt.Optimizer</span></code>, ask-and-tell interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bayessearchcv.html"><code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code>, GridSearchCV compatible estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="acquisition.html"><code class="docutils literal notranslate"><span class="pre">skopt.acquisition</span></code>, acquisition functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">skopt.callbacks</span></code>, callback functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#monitoring-callbacks">Monitoring callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#early-stopping-callbacks">Early stopping callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="plots.html"><code class="docutils literal notranslate"><span class="pre">skopt.plots</span></code>, plotting tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="space.html"><code class="docutils literal notranslate"><span class="pre">skopt.space</span></code>, define the optimization space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html"><code class="docutils literal notranslate"><span class="pre">skopt.utils</span></code>, utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">scikit-optimize</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">skopt.callbacks</span></code>, callback functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/callbacks.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-skopt.callbacks">
+<span id="skopt-callbacks-callback-functions"></span><span id="callback-functions"></span><h1><code class="docutils literal notranslate"><span class="pre">skopt.callbacks</span></code>, callback functions<a class="headerlink" href="#module-skopt.callbacks" title="Permalink to this headline">¶</a></h1>
+<p>Monitor and influence the optimization procedure via callbacks.</p>
+<p>Callbacks are callables which are invoked after each iteration of the optimizer
+and are passed the results “so far”. Callbacks can monitor progress, or stop
+the optimization early by returning <cite>True</cite>.</p>
+<div class="section" id="monitoring-callbacks">
+<h2>Monitoring callbacks<a class="headerlink" href="#monitoring-callbacks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>VerboseCallback</p></li>
+<li><p>TimerCallback</p></li>
+</ul>
+</div>
+<div class="section" id="early-stopping-callbacks">
+<h2>Early stopping callbacks<a class="headerlink" href="#early-stopping-callbacks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>DeltaXStopper</p></li>
+</ul>
+<dl class="class">
+<dt id="skopt.callbacks.CheckpointSaver">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">CheckpointSaver</code><span class="sig-paren">(</span><em class="sig-param">checkpoint_path</em>, <em class="sig-param">**dump_options</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#CheckpointSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save current state after each iteration with <cite>skopt.dump</cite>.</p>
+<dl>
+<dt>Example usage:</dt><dd><p>import skopt</p>
+<p>checkpoint_callback = skopt.callbacks.CheckpointSaver(“./result.pkl”)
+skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>checkpoint_path</strong> (<em>*</em>) – </p></li>
+<li><p><strong>dump_options</strong> (<em>*</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.DeadlineStopper">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeadlineStopper</code><span class="sig-paren">(</span><em class="sig-param">total_time</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#DeadlineStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeadlineStopper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the optimization before running out of a fixed budget of time.</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">* `iter_time`</code></dt>
+<dd><p><cite>iter_time[i-1]</cite> gives the time taken to complete iteration <cite>i</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, shape=(n_iter,)]:</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>total_time</strong> (<em>*</em>) – finish within.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.DeltaXStopper">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeltaXStopper</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#DeltaXStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeltaXStopper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the optimization when <code class="docutils literal notranslate"><span class="pre">|x1</span> <span class="pre">-</span> <span class="pre">x2|</span> <span class="pre">&lt;</span> <span class="pre">delta</span></code></p>
+<p>If the last two positions at which the objective has been evaluated
+are less than <cite>delta</cite> apart stop the optimization procedure.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.DeltaYStopper">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeltaYStopper</code><span class="sig-paren">(</span><em class="sig-param">delta</em>, <em class="sig-param">n_best=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#DeltaYStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeltaYStopper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the optimization if the <cite>n_best</cite> minima are within <cite>delta</cite></p>
+<p>Stop the optimizer if the absolute difference between the <cite>n_best</cite>
+objective values is less than <cite>delta</cite>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.EarlyStopper">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">EarlyStopper</code><a class="reference internal" href="../_modules/skopt/callbacks.html#EarlyStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.EarlyStopper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide to continue or not given the results so far.</p>
+<p>The optimization procedure will be stopped if the callback returns True.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.TimerCallback">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">TimerCallback</code><a class="reference internal" href="../_modules/skopt/callbacks.html#TimerCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.TimerCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log the elapsed time between each iteration of the minimization loop.</p>
+<p>The time for each iteration is stored in the <cite>iter_time</cite> attribute which
+you can inspect after the minimization has completed.</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">* `iter_time`</code></dt>
+<dd><p><cite>iter_time[i-1]</cite> gives the time taken to complete iteration <cite>i</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, shape=(n_iter,)]:</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="skopt.callbacks.VerboseCallback">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">VerboseCallback</code><span class="sig-paren">(</span><em class="sig-param">n_total</em>, <em class="sig-param">n_init=0</em>, <em class="sig-param">n_random=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#VerboseCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.VerboseCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback to control the verbosity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_init</strong><strong> [</strong><strong>int</strong><strong>, </strong><strong>optional</strong><strong>]</strong> (<em>*</em>) – Number of points provided by the user which are yet to be
+evaluated. This is equal to <cite>len(x0)</cite> when <cite>y0</cite> is None</p></li>
+<li><p><strong>n_random</strong><strong> [</strong><strong>int</strong><strong>, </strong><strong>optional</strong><strong>]</strong> (<em>*</em>) – Number of points randomly chosen.</p></li>
+<li><p><strong>n_total</strong><strong> [</strong><strong>int</strong><strong>]</strong> (<em>*</em>) – Total number of func calls.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">* `iter_no`</code></dt>
+<dd><p>Number of iterations of the optimization routine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]:</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="skopt.callbacks.check_callback">
+<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">check_callback</code><span class="sig-paren">(</span><em class="sig-param">callback</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/callbacks.html#check_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.check_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if callback is a callable or a list of callables.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plots.html" class="btn btn-neutral float-right" title="skopt.plots, plotting tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="acquisition.html" class="btn btn-neutral float-left" title="skopt.acquisition, acquisition functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The scikit-optimize contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

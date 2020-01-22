@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skopt.optimizer.forest &mdash; scikit-optimize v0.6+61.g02ce7ba documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> scikit-optimize
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.6+61.g02ce7ba
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">scikit-optimize</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>skopt.optimizer.forest</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skopt.optimizer.forest</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Forest based minimization algorithms.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">base_minimize</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">cook_estimator</span>
+
+
+
+<div class="viewcode-block" id="forest_minimize"><a class="viewcode-back" href="../../../reference/minimize_functions.html#skopt.forest_minimize">[docs]</a><span class="k">def</span> <span class="nf">forest_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                    <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span>
+                    <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span>
+                    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sequential optimisation using decision trees.</span>
+
+<span class="sd">    A tree based regression model is used to model the expensive to evaluate</span>
+<span class="sd">    function `func`. The model is improved by sequentially evaluating</span>
+<span class="sd">    the expensive function at the next best point. Thereby finding the</span>
+<span class="sd">    minimum of `func` with as few evaluations as possible.</span>
+
+<span class="sd">    The total number of evaluations, `n_calls`, are performed like the</span>
+<span class="sd">    following. If `x0` is provided but not `y0`, then the elements of `x0`</span>
+<span class="sd">    are first evaluated, followed by `n_random_starts` evaluations.</span>
+<span class="sd">    Finally, `n_calls - len(x0) - n_random_starts` evaluations are</span>
+<span class="sd">    made guided by the surrogate model. If `x0` and `y0` are both</span>
+<span class="sd">    provided then `n_random_starts` evaluations are first made then</span>
+<span class="sd">    `n_calls - n_random_starts` subsequent evaluations are made</span>
+<span class="sd">    guided by the surrogate model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `func` [callable]:</span>
+<span class="sd">        Function to minimize. Should take a single list of parameters</span>
+<span class="sd">        and return the objective value.</span>
+<span class="sd">    </span>
+<span class="sd">        If you have a search-space where all dimensions have names,</span>
+<span class="sd">        then you can use `skopt.utils.use_named_args` as a decorator</span>
+<span class="sd">        on your objective function, in order to call it directly</span>
+<span class="sd">        with the named arguments. See `use_named_args` for an example.</span>
+
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(lower_bound, upper_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(lower_bound, upper_bound, prior)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
+
+<span class="sd">         NOTE: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">         dimensions.</span>
+
+<span class="sd">    * `base_estimator` [string or `Regressor`, default=`&quot;ET&quot;`]:</span>
+<span class="sd">        The regressor to use as surrogate model. Can be either</span>
+
+<span class="sd">        - `&quot;RF&quot;` for random forest regressor</span>
+<span class="sd">        - `&quot;ET&quot;` for extra trees regressor</span>
+<span class="sd">        - instance of regressor with support for `return_std` in its predict</span>
+<span class="sd">          method</span>
+
+<span class="sd">        The predefined models are initilized with good defaults. If you</span>
+<span class="sd">        want to adjust the model parameters pass your own instance of</span>
+<span class="sd">        a regressor which returns the mean and standard deviation when</span>
+<span class="sd">        making predictions.</span>
+
+<span class="sd">    * `n_calls` [int, default=100]:</span>
+<span class="sd">        Number of calls to `func`.</span>
+
+<span class="sd">    * `n_random_starts` [int, default=10]:</span>
+<span class="sd">        Number of evaluations of `func` with random points before</span>
+<span class="sd">        approximating it with `base_estimator`.</span>
+
+<span class="sd">    * `acq_func` [string, default=`&quot;LCB&quot;`]:</span>
+<span class="sd">        Function to minimize over the forest posterior. Can be either</span>
+
+<span class="sd">        - `&quot;LCB&quot;` for lower confidence bound.</span>
+<span class="sd">        - `&quot;EI&quot;` for negative expected improvement.</span>
+<span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
+<span class="sd">        - `&quot;EIps&quot; for negated expected improvement per second to take into</span>
+<span class="sd">          account the function compute time. Then, the objective function is</span>
+<span class="sd">          assumed to return two values, the first being the objective value and</span>
+<span class="sd">          the second being the time taken in seconds.</span>
+<span class="sd">        - `&quot;PIps&quot;` for negated probability of improvement per second. The</span>
+<span class="sd">          return type of the objective function is assumed to be similar to</span>
+<span class="sd">          that of `&quot;EIps&quot;`</span>
+
+<span class="sd">    * `x0` [list, list of lists or `None`]:</span>
+<span class="sd">        Initial input points.</span>
+
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    * `y0` [list, scalar or `None`]:</span>
+<span class="sd">        Evaluation of initial input points.</span>
+
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
+
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    * `verbose` [boolean, default=False]:</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    * `callback` [callable, optional]</span>
+<span class="sd">        If provided, then `callback(res)` is called after call to func.</span>
+
+<span class="sd">    * `n_points` [int, default=10000]:</span>
+<span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
+
+<span class="sd">    * `xi` [float, default=0.01]:</span>
+<span class="sd">        Controls how much improvement one wants over the previous best</span>
+<span class="sd">        values. Used when the acquisition is either `&quot;EI&quot;` or `&quot;PI&quot;`.</span>
+
+<span class="sd">    * `kappa` [float, default=1.96]:</span>
+<span class="sd">        Controls how much of the variance in the predicted values should be</span>
+<span class="sd">        taken into account. If set to be very high, then we are favouring</span>
+<span class="sd">        exploration over exploitation and vice versa.</span>
+<span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
+
+<span class="sd">    * `n_jobs` [int, default=1]:</span>
+<span class="sd">        The number of jobs to run in parallel for `fit` and `predict`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
+<span class="sd">    * `model_queue_size` [int or None, default=None]</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        The optimization result returned as a OptimizeResult object.</span>
+<span class="sd">        Important attributes are:</span>
+
+<span class="sd">        - `x` [list]: location of the minimum.</span>
+<span class="sd">        - `fun` [float]: function value at the minimum.</span>
+<span class="sd">        - `models`: surrogate models used for each iteration.</span>
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
+<span class="sd">           iteration.</span>
+<span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
+<span class="sd">        - `space` [Space]: the optimization space.</span>
+<span class="sd">        - `specs` [dict]`: the call specifications.</span>
+
+<span class="sd">        For more details related to the OptimizeResult object, refer</span>
+<span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
+                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
+                         <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_random_starts</span><span class="p">,</span>
+                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                         <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
+                         <span class="n">xi</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
+                         <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The scikit-optimize contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

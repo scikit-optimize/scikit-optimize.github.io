@@ -1,0 +1,879 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>skopt.searchcv &mdash; scikit-optimize v0.6+61.g02ce7ba documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> scikit-optimize
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.6+61.g02ce7ba
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scikit-optimize</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>skopt.searchcv</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for skopt.searchcv</h1><div class="highlight"><pre>
+<span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sized</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Sized</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rankdata</span>
+
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">is_classifier</span><span class="p">,</span> <span class="n">clone</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection._search</span> <span class="kn">import</span> <span class="n">BaseSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">MaskedArray</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">indexable</span><span class="p">,</span> <span class="n">check_is_fitted</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">check_scoring</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sklearn.metrics.scorer</span> <span class="kn">import</span> <span class="n">check_scoring</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">point_asdict</span><span class="p">,</span> <span class="n">dimensions_aslist</span><span class="p">,</span> <span class="n">eval_callbacks</span>
+<span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">check_dimension</span>
+<span class="kn">from</span> <span class="nn">.callbacks</span> <span class="kn">import</span> <span class="n">check_callback</span>
+
+
+<div class="viewcode-block" id="BayesSearchCV"><a class="viewcode-back" href="../../reference/bayessearchcv.html#skopt.BayesSearchCV">[docs]</a><span class="k">class</span> <span class="nc">BayesSearchCV</span><span class="p">(</span><span class="n">BaseSearchCV</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bayesian optimization over hyper parameters.</span>
+
+<span class="sd">    BayesSearchCV implements a &quot;fit&quot; and a &quot;score&quot; method.</span>
+<span class="sd">    It also implements &quot;predict&quot;, &quot;predict_proba&quot;, &quot;decision_function&quot;,</span>
+<span class="sd">    &quot;transform&quot; and &quot;inverse_transform&quot; if they are implemented in the</span>
+<span class="sd">    estimator used.</span>
+
+<span class="sd">    The parameters of the estimator used to apply these methods are optimized</span>
+<span class="sd">    by cross-validated search over parameter settings.</span>
+
+<span class="sd">    In contrast to GridSearchCV, not all parameter values are tried out, but</span>
+<span class="sd">    rather a fixed number of parameter settings is sampled from the specified</span>
+<span class="sd">    distributions. The number of parameter settings that are tried is</span>
+<span class="sd">    given by n_iter.</span>
+
+<span class="sd">    Parameters are presented as a list of skopt.space.Dimension objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimator : estimator object.</span>
+<span class="sd">        A object of that type is instantiated for each search point.</span>
+<span class="sd">        This object is assumed to implement the scikit-learn estimator api.</span>
+<span class="sd">        Either estimator needs to provide a ``score`` function,</span>
+<span class="sd">        or ``scoring`` must be passed.</span>
+
+<span class="sd">    search_spaces : dict, list of dict or list of tuple containing</span>
+<span class="sd">        (dict, int).</span>
+<span class="sd">        One of these cases:</span>
+<span class="sd">        1. dictionary, where keys are parameter names (strings)</span>
+<span class="sd">        and values are skopt.space.Dimension instances (Real, Integer</span>
+<span class="sd">        or Categorical) or any other valid value that defines skopt</span>
+<span class="sd">        dimension (see skopt.Optimizer docs). Represents search space</span>
+<span class="sd">        over parameters of the provided estimator.</span>
+<span class="sd">        2. list of dictionaries: a list of dictionaries, where every</span>
+<span class="sd">        dictionary fits the description given in case 1 above.</span>
+<span class="sd">        If a list of dictionary objects is given, then the search is</span>
+<span class="sd">        performed sequentially for every parameter space with maximum</span>
+<span class="sd">        number of evaluations set to self.n_iter.</span>
+<span class="sd">        3. list of (dict, int &gt; 0): an extension of case 2 above,</span>
+<span class="sd">        where first element of every tuple is a dictionary representing</span>
+<span class="sd">        some search subspace, similarly as in case 2, and second element</span>
+<span class="sd">        is a number of iterations that will be spent optimizing over</span>
+<span class="sd">        this subspace.</span>
+
+<span class="sd">    n_iter : int, default=50</span>
+<span class="sd">        Number of parameter settings that are sampled. n_iter trades</span>
+<span class="sd">        off runtime vs quality of the solution. Consider increasing</span>
+<span class="sd">        ``n_points`` if you want to try more parameter settings in</span>
+<span class="sd">        parallel.</span>
+
+<span class="sd">    optimizer_kwargs : dict, optional</span>
+<span class="sd">        Dict of arguments passed to :class:`Optimizer`.  For example,</span>
+<span class="sd">        ``{&#39;base_estimator&#39;: &#39;RF&#39;}`` would use a Random Forest surrogate</span>
+<span class="sd">        instead of the default Gaussian Process.</span>
+
+<span class="sd">    scoring : string, callable or None, default=None</span>
+<span class="sd">        A string (see model evaluation documentation) or</span>
+<span class="sd">        a scorer callable object / function with signature</span>
+<span class="sd">        ``scorer(estimator, X, y)``.</span>
+<span class="sd">        If ``None``, the ``score`` method of the estimator is used.</span>
+
+<span class="sd">    fit_params : dict, optional</span>
+<span class="sd">        Parameters to pass to the fit method.</span>
+
+<span class="sd">    n_jobs : int, default=1</span>
+<span class="sd">        Number of jobs to run in parallel. At maximum there are</span>
+<span class="sd">        ``n_points`` times ``cv`` jobs available during each iteration.</span>
+
+<span class="sd">    n_points : int, default=1</span>
+<span class="sd">        Number of parameter settings to sample in parallel. If this does</span>
+<span class="sd">        not align with ``n_iter``, the last iteration will sample less</span>
+<span class="sd">        points. See also :func:`~Optimizer.ask`</span>
+
+<span class="sd">    pre_dispatch : int, or string, optional</span>
+<span class="sd">        Controls the number of jobs that get dispatched during parallel</span>
+<span class="sd">        execution. Reducing this number can be useful to avoid an</span>
+<span class="sd">        explosion of memory consumption when more jobs get dispatched</span>
+<span class="sd">        than CPUs can process. This parameter can be:</span>
+
+<span class="sd">            - None, in which case all the jobs are immediately</span>
+<span class="sd">              created and spawned. Use this for lightweight and</span>
+<span class="sd">              fast-running jobs, to avoid delays due to on-demand</span>
+<span class="sd">              spawning of the jobs</span>
+
+<span class="sd">            - An int, giving the exact number of total jobs that are</span>
+<span class="sd">              spawned</span>
+
+<span class="sd">            - A string, giving an expression as a function of n_jobs,</span>
+<span class="sd">              as in &#39;2*n_jobs&#39;</span>
+
+<span class="sd">    iid : boolean, default=True</span>
+<span class="sd">        If True, the data is assumed to be identically distributed across</span>
+<span class="sd">        the folds, and the loss minimized is the total loss per sample,</span>
+<span class="sd">        and not the mean loss across the folds.</span>
+
+<span class="sd">    cv : int, cross-validation generator or an iterable, optional</span>
+<span class="sd">        Determines the cross-validation splitting strategy.</span>
+<span class="sd">        Possible inputs for cv are:</span>
+<span class="sd">          - None, to use the default 3-fold cross validation,</span>
+<span class="sd">          - integer, to specify the number of folds in a `(Stratified)KFold`,</span>
+<span class="sd">          - An object to be used as a cross-validation generator.</span>
+<span class="sd">          - An iterable yielding train, test splits.</span>
+
+<span class="sd">        For integer/None inputs, if the estimator is a classifier and ``y`` is</span>
+<span class="sd">        either binary or multiclass, :class:`StratifiedKFold` is used. In all</span>
+<span class="sd">        other cases, :class:`KFold` is used.</span>
+
+<span class="sd">    refit : boolean, default=True</span>
+<span class="sd">        Refit the best estimator with the entire dataset.</span>
+<span class="sd">        If &quot;False&quot;, it is impossible to make predictions using</span>
+<span class="sd">        this RandomizedSearchCV instance after fitting.</span>
+
+<span class="sd">    verbose : integer</span>
+<span class="sd">        Controls the verbosity: the higher, the more messages.</span>
+
+<span class="sd">    random_state : int or RandomState</span>
+<span class="sd">        Pseudo random number generator state used for random uniform sampling</span>
+<span class="sd">        from lists of possible values instead of scipy.stats distributions.</span>
+
+<span class="sd">    error_score : &#39;raise&#39; (default) or numeric</span>
+<span class="sd">        Value to assign to the score if an error occurs in estimator fitting.</span>
+<span class="sd">        If set to &#39;raise&#39;, the error is raised. If a numeric value is given,</span>
+<span class="sd">        FitFailedWarning is raised. This parameter does not affect the refit</span>
+<span class="sd">        step, which will always raise the error.</span>
+
+<span class="sd">    return_train_score : boolean, default=False</span>
+<span class="sd">        If ``&#39;True&#39;``, the ``cv_results_`` attribute will include training</span>
+<span class="sd">        scores.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    from skopt import BayesSearchCV</span>
+<span class="sd">    # parameter ranges are specified by one of below</span>
+<span class="sd">    from skopt.space import Real, Categorical, Integer</span>
+
+<span class="sd">    from sklearn.datasets import load_iris</span>
+<span class="sd">    from sklearn.svm import SVC</span>
+<span class="sd">    from sklearn.model_selection import train_test_split</span>
+
+<span class="sd">    X, y = load_iris(True)</span>
+<span class="sd">    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,</span>
+<span class="sd">                                                        random_state=0)</span>
+
+<span class="sd">    # log-uniform: understand as search over p = exp(x) by varying x</span>
+<span class="sd">    opt = BayesSearchCV(</span>
+<span class="sd">        SVC(),</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;C&#39;: Real(1e-6, 1e+6, prior=&#39;log-uniform&#39;),</span>
+<span class="sd">            &#39;gamma&#39;: Real(1e-6, 1e+1, prior=&#39;log-uniform&#39;),</span>
+<span class="sd">            &#39;degree&#39;: Integer(1,8),</span>
+<span class="sd">            &#39;kernel&#39;: Categorical([&#39;linear&#39;, &#39;poly&#39;, &#39;rbf&#39;]),</span>
+<span class="sd">        },</span>
+<span class="sd">        n_iter=32</span>
+<span class="sd">    )</span>
+
+<span class="sd">    # executes bayesian optimization</span>
+<span class="sd">    opt.fit(X_train, y_train)</span>
+
+<span class="sd">    # model can be saved, used for predictions or scoring</span>
+<span class="sd">    print(opt.score(X_test, y_test))</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cv_results_ : dict of numpy (masked) ndarrays</span>
+<span class="sd">        A dict with keys as column headers and values as columns, that can be</span>
+<span class="sd">        imported into a pandas ``DataFrame``.</span>
+
+<span class="sd">        For instance the below given table</span>
+
+<span class="sd">        +--------------+-------------+-------------------+---+---------------+</span>
+<span class="sd">        | param_kernel | param_gamma | split0_test_score |...|rank_test_score|</span>
+<span class="sd">        +==============+=============+===================+===+===============+</span>
+<span class="sd">        |    &#39;rbf&#39;     |     0.1     |        0.8        |...|       2       |</span>
+<span class="sd">        +--------------+-------------+-------------------+---+---------------+</span>
+<span class="sd">        |    &#39;rbf&#39;     |     0.2     |        0.9        |...|       1       |</span>
+<span class="sd">        +--------------+-------------+-------------------+---+---------------+</span>
+<span class="sd">        |    &#39;rbf&#39;     |     0.3     |        0.7        |...|       1       |</span>
+<span class="sd">        +--------------+-------------+-------------------+---+---------------+</span>
+
+<span class="sd">        will be represented by a ``cv_results_`` dict of::</span>
+
+<span class="sd">            {</span>
+<span class="sd">            &#39;param_kernel&#39; : masked_array(data = [&#39;rbf&#39;, &#39;rbf&#39;, &#39;rbf&#39;],</span>
+<span class="sd">                                          mask = False),</span>
+<span class="sd">            &#39;param_gamma&#39;  : masked_array(data = [0.1 0.2 0.3], mask = False),</span>
+<span class="sd">            &#39;split0_test_score&#39;  : [0.8, 0.9, 0.7],</span>
+<span class="sd">            &#39;split1_test_score&#39;  : [0.82, 0.5, 0.7],</span>
+<span class="sd">            &#39;mean_test_score&#39;    : [0.81, 0.7, 0.7],</span>
+<span class="sd">            &#39;std_test_score&#39;     : [0.02, 0.2, 0.],</span>
+<span class="sd">            &#39;rank_test_score&#39;    : [3, 1, 1],</span>
+<span class="sd">            &#39;split0_train_score&#39; : [0.8, 0.9, 0.7],</span>
+<span class="sd">            &#39;split1_train_score&#39; : [0.82, 0.5, 0.7],</span>
+<span class="sd">            &#39;mean_train_score&#39;   : [0.81, 0.7, 0.7],</span>
+<span class="sd">            &#39;std_train_score&#39;    : [0.03, 0.03, 0.04],</span>
+<span class="sd">            &#39;mean_fit_time&#39;      : [0.73, 0.63, 0.43, 0.49],</span>
+<span class="sd">            &#39;std_fit_time&#39;       : [0.01, 0.02, 0.01, 0.01],</span>
+<span class="sd">            &#39;mean_score_time&#39;    : [0.007, 0.06, 0.04, 0.04],</span>
+<span class="sd">            &#39;std_score_time&#39;     : [0.001, 0.002, 0.003, 0.005],</span>
+<span class="sd">            &#39;params&#39; : [{&#39;kernel&#39; : &#39;rbf&#39;, &#39;gamma&#39; : 0.1}, ...],</span>
+<span class="sd">            }</span>
+
+<span class="sd">        NOTE that the key ``&#39;params&#39;`` is used to store a list of parameter</span>
+<span class="sd">        settings dict for all the parameter candidates.</span>
+
+<span class="sd">        The ``mean_fit_time``, ``std_fit_time``, ``mean_score_time`` and</span>
+<span class="sd">        ``std_score_time`` are all in seconds.</span>
+
+<span class="sd">    best_estimator_ : estimator</span>
+<span class="sd">        Estimator that was chosen by the search, i.e. estimator</span>
+<span class="sd">        which gave highest score (or smallest loss if specified)</span>
+<span class="sd">        on the left out data. Not available if refit=False.</span>
+
+<span class="sd">    best_score_ : float</span>
+<span class="sd">        Score of best_estimator on the left out data.</span>
+
+<span class="sd">    best_params_ : dict</span>
+<span class="sd">        Parameter setting that gave the best results on the hold out data.</span>
+
+<span class="sd">    best_index_ : int</span>
+<span class="sd">        The index (of the ``cv_results_`` arrays) which corresponds to the best</span>
+<span class="sd">        candidate parameter setting.</span>
+
+<span class="sd">        The dict at ``search.cv_results_[&#39;params&#39;][search.best_index_]`` gives</span>
+<span class="sd">        the parameter setting for the best model, that gives the highest</span>
+<span class="sd">        mean score (``search.best_score_``).</span>
+
+<span class="sd">    scorer_ : function</span>
+<span class="sd">        Scorer function used on the held out data to choose the best</span>
+<span class="sd">        parameters for the model.</span>
+
+<span class="sd">    n_splits_ : int</span>
+<span class="sd">        The number of cross-validation splits (folds/iterations).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The parameters selected are those that maximize the score of the held-out</span>
+<span class="sd">    data, according to the scoring parameter.</span>
+
+<span class="sd">    If `n_jobs` was set to a value higher than one, the data is copied for each</span>
+<span class="sd">    parameter setting(and not `n_jobs` times). This is done for efficiency</span>
+<span class="sd">    reasons if individual jobs take very little time, but may raise errors if</span>
+<span class="sd">    the dataset is large and not enough memory is available.  A workaround in</span>
+<span class="sd">    this case is to set `pre_dispatch`. Then, the memory is copied only</span>
+<span class="sd">    `pre_dispatch` many times. A reasonable value for `pre_dispatch` is `2 *</span>
+<span class="sd">    n_jobs`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`GridSearchCV`:</span>
+<span class="sd">        Does exhaustive search over a grid of parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span> <span class="o">=</span> <span class="n">search_spaces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">n_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="n">optimizer_kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">)</span>
+        <span class="c1"># Temporary fix for compatibility with sklearn 0.20 and 0.21</span>
+        <span class="c1"># See scikit-optimize#762</span>
+        <span class="c1"># To be consistent with sklearn 0.21+, fit_params should be deprecated</span>
+        <span class="c1"># in the constructor and be passed in ``fit``.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="o">=</span> <span class="n">fit_params</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BayesSearchCV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+             <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+             <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="n">iid</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="n">refit</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+             <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">pre_dispatch</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">error_score</span><span class="p">,</span>
+             <span class="n">return_train_score</span><span class="o">=</span><span class="n">return_train_score</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check_search_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_space</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether the search space argument is correct&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_space</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The search_spaces parameter should contain at least one&quot;</span>
+                <span class="s2">&quot;non-empty search space, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">search_space</span>
+            <span class="p">)</span>
+
+        <span class="c1"># check if space is a single dict, convert to list if so</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">search_space</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_space</span><span class="p">]</span>
+
+        <span class="c1"># check if the structure of the space is proper</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># convert to just a list of dicts</span>
+            <span class="n">dicts_only</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># 1. check the case when a tuple of space, n_iter is provided</span>
+            <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">search_space</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s2">&quot;All tuples in list of search spaces should have&quot;</span>
+                            <span class="s2">&quot;length 2, and contain (dict, int), got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">elem</span>
+                        <span class="p">)</span>
+                    <span class="n">subspace</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">elem</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="n">n_iter</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s2">&quot;Number of iterations in search space should be&quot;</span>
+                            <span class="s2">&quot;positive integer, got </span><span class="si">%s</span><span class="s2"> in tuple </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span>
+                            <span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">elem</span><span class="p">)</span>
+                        <span class="p">)</span>
+
+                    <span class="c1"># save subspaces here for further checking</span>
+                    <span class="n">dicts_only</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subspace</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">dicts_only</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s2">&quot;A search space should be provided as a dict or&quot;</span>
+                        <span class="s2">&quot;tuple (dict, int), got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">elem</span><span class="p">)</span>
+
+            <span class="c1"># 2. check all the dicts for correctness of contents</span>
+            <span class="k">for</span> <span class="n">subspace</span> <span class="ow">in</span> <span class="n">dicts_only</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">subspace</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">check_dimension</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Search space should be provided as a dict or list of dict,&quot;</span>
+                <span class="s2">&quot;got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">search_space</span><span class="p">)</span>
+
+    <span class="c1"># copied for compatibility with 0.19 sklearn from 0.18 BaseSearchCV</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">best_score_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cv_results_&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span><span class="p">]</span>
+
+    <span class="c1"># copied for compatibility with 0.19 sklearn from 0.18 BaseSearchCV</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">best_params_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cv_results_&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span><span class="p">]</span>
+
+    <span class="c1"># copied for compatibility with 0.19 sklearn from 0.18 BaseSearchCV</span>
+    <span class="k">def</span> <span class="nf">_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">parameter_iterable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Actual fitting,  performing the search over parameters.</span>
+<span class="sd">        Taken from https://github.com/scikit-learn/scikit-learn/blob/0.18.X</span>
+<span class="sd">                    .../sklearn/model_selection/_search.py</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">_validation</span><span class="o">.</span><span class="n">check_cv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">is_classifier</span><span class="p">(</span><span class="n">estimator</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scorer_</span> <span class="o">=</span> <span class="n">check_scoring</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">)</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="n">indexable</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+        <span class="n">n_splits</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter_iterable</span><span class="p">,</span> <span class="n">Sized</span><span class="p">):</span>
+            <span class="n">n_candidates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_iterable</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting </span><span class="si">{0}</span><span class="s2"> folds for each of </span><span class="si">{1}</span><span class="s2"> candidates, totalling&quot;</span>
+                  <span class="s2">&quot; </span><span class="si">{2}</span><span class="s2"> fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">n_candidates</span><span class="p">,</span>
+                                     <span class="n">n_candidates</span> <span class="o">*</span> <span class="n">n_splits</span><span class="p">))</span>
+
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
+        <span class="n">pre_dispatch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_dispatch</span>
+
+        <span class="n">cv_iter</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">pre_dispatch</span><span class="o">=</span><span class="n">pre_dispatch</span>
+        <span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">_validation</span><span class="o">.</span><span class="n">_fit_and_score</span><span class="p">)(</span>
+                <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">),</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scorer_</span><span class="p">,</span>
+                <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span>
+                <span class="n">fit_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">,</span>
+                <span class="n">return_train_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">,</span>
+                <span class="n">return_n_test_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">return_times</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">error_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">error_score</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">parameters</span> <span class="ow">in</span> <span class="n">parameter_iterable</span>
+            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv_iter</span><span class="p">)</span>
+
+        <span class="c1"># if one choose to see train score, &quot;out&quot; will contain train score info</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">train_scores</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="n">test_sample_counts</span><span class="p">,</span>
+             <span class="n">fit_time</span><span class="p">,</span> <span class="n">score_time</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">test_scores</span><span class="p">,</span> <span class="n">test_sample_counts</span><span class="p">,</span>
+             <span class="n">fit_time</span><span class="p">,</span> <span class="n">score_time</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="n">candidate_params</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[::</span><span class="n">n_splits</span><span class="p">]</span>
+        <span class="n">n_candidates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidate_params</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_store</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;A small helper to store the scores/times to the cv_results_&quot;&quot;&quot;</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_candidates</span><span class="p">,</span>
+                                                              <span class="n">n_splits</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">splits</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">split_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_splits</span><span class="p">):</span>
+                    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;split</span><span class="si">%d</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">split_i</span><span class="p">,</span> <span class="n">key_name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span> <span class="n">split_i</span><span class="p">]</span>
+
+            <span class="n">array_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+            <span class="n">results</span><span class="p">[</span><span class="s1">&#39;mean_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">key_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_means</span>
+            <span class="c1"># Weighted std is not directly available in numpy</span>
+            <span class="n">array_stds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">((</span><span class="n">array</span> <span class="o">-</span>
+                                             <span class="n">array_means</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                                            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">))</span>
+            <span class="n">results</span><span class="p">[</span><span class="s1">&#39;std_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">key_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_stds</span>
+
+            <span class="k">if</span> <span class="n">rank</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="s2">&quot;rank_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">key_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+                    <span class="n">rankdata</span><span class="p">(</span><span class="o">-</span><span class="n">array_means</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Computed the (weighted) mean and std for test scores alone</span>
+        <span class="c1"># NOTE test_sample counts (weights) remain the same for all candidates</span>
+        <span class="n">test_sample_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_sample_counts</span><span class="p">[:</span><span class="n">n_splits</span><span class="p">],</span>
+                                      <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+
+        <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;test_score&#39;</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">weights</span><span class="o">=</span><span class="n">test_sample_counts</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iid</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_train_score</span><span class="p">:</span>
+            <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;train_score&#39;</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="n">splits</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;fit_time&#39;</span><span class="p">,</span> <span class="n">fit_time</span><span class="p">)</span>
+        <span class="n">_store</span><span class="p">(</span><span class="s1">&#39;score_time&#39;</span><span class="p">,</span> <span class="n">score_time</span><span class="p">)</span>
+
+        <span class="n">best_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;rank_test_score&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">best_parameters</span> <span class="o">=</span> <span class="n">candidate_params</span><span class="p">[</span><span class="n">best_index</span><span class="p">]</span>
+
+        <span class="c1"># Use one MaskedArray and mask all the places where the param is not</span>
+        <span class="c1"># applicable for that candidate. Use defaultdict as each candidate may</span>
+        <span class="c1"># not contain all the params</span>
+        <span class="n">param_results</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span>
+                                            <span class="n">MaskedArray</span><span class="p">,</span>
+                                            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_candidates</span><span class="p">,),</span>
+                                            <span class="n">mask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                            <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">cand_i</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidate_params</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># An all masked empty array gets created for the key</span>
+                <span class="c1"># `&quot;param_%s&quot; % name` at the first occurence of `name`.</span>
+                <span class="c1"># Setting the value at an index also unmasks that index</span>
+                <span class="n">param_results</span><span class="p">[</span><span class="s2">&quot;param_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">][</span><span class="n">cand_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">param_results</span><span class="p">)</span>
+
+        <span class="c1"># Store a list of param dicts at the key &#39;params&#39;</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate_params</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="n">best_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_splits_</span> <span class="o">=</span> <span class="n">n_splits</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
+            <span class="c1"># fit the best estimator using the entire dataset</span>
+            <span class="c1"># clone first to work around broken estimators</span>
+            <span class="n">best_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
+                <span class="o">**</span><span class="n">best_parameters</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">best_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">best_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span> <span class="o">=</span> <span class="n">best_estimator</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_fit_best_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the estimator copy with best parameters found to the</span>
+<span class="sd">        provided data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape = [n_samples, n_features]</span>
+<span class="sd">            Input data, where n_samples is the number of samples and</span>
+<span class="sd">            n_features is the number of features.</span>
+
+<span class="sd">        y : array-like, shape = [n_samples] or [n_samples, n_output],</span>
+<span class="sd">            Target relative to X for classification or regression.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="ow">or</span> <span class="p">{}))</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_make_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_space</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate skopt Optimizer class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params_space : dict</span>
+<span class="sd">            Represents parameter search space. The keys are parameter</span>
+<span class="sd">            names (strings) and values are skopt.space.Dimension instances,</span>
+<span class="sd">            one of Real, Integer or Categorical.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        optimizer: Instance of the `Optimizer` class used for for search</span>
+<span class="sd">            in some parameter space.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dimensions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">params_space</span><span class="p">)</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">optimizer</span>
+
+    <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate n_jobs parameters and evaluate them in parallel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># get parameter values to evaluate</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
+
+        <span class="c1"># convert parameters to python native types</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+
+        <span class="c1"># make lists into dictionaries</span>
+        <span class="n">params_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+
+        <span class="c1"># HACK: self.cv_results_ is reset at every call to _fit, keep current</span>
+        <span class="n">all_cv_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span>
+
+        <span class="c1"># HACK: this adds compatibility with different versions of sklearn</span>
+        <span class="n">refit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refit</span> <span class="o">=</span> <span class="n">refit</span>
+
+        <span class="c1"># merge existing and new cv_results_</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">:</span>
+            <span class="n">all_cv_results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">all_cv_results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">])</span>
+
+        <span class="c1"># feed the point and objective back into optimizer</span>
+        <span class="n">local_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">][</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">):]</span>
+
+        <span class="c1"># optimizer minimizes objective, hence provide negative score</span>
+        <span class="k">return</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">score</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">local_results</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Count total iterations that will be taken to explore</span>
+<span class="sd">        all subspaces with `fit` method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        max_iter: int, total number of iterations to explore</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_iter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">elem</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
+
+            <span class="n">total_iter</span> <span class="o">+=</span> <span class="n">n_iter</span>
+
+        <span class="k">return</span> <span class="n">total_iter</span>
+
+    <span class="k">def</span> <span class="nf">_run_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="BayesSearchCV.fit"><a class="viewcode-back" href="../../reference/bayessearchcv.html#skopt.BayesSearchCV.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run fit on the estimator with randomly drawn parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like or sparse matrix, shape = [n_samples, n_features]</span>
+<span class="sd">            The training input samples.</span>
+
+<span class="sd">        y : array-like, shape = [n_samples] or [n_samples, n_output]</span>
+<span class="sd">            Target relative to X for classification or regression (class</span>
+<span class="sd">            labels should be integers or strings).</span>
+
+<span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
+<span class="sd">            Group labels for the samples used while splitting the dataset into</span>
+<span class="sd">            train/test set.</span>
+
+<span class="sd">        callback: [callable, list of callables, optional]</span>
+<span class="sd">            If callable then `callback(res)` is called after each parameter</span>
+<span class="sd">            combination tested. If list of callables, then each callable in</span>
+<span class="sd">            the list is called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># check if space is a single dict, convert to list if so</span>
+        <span class="n">search_spaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_spaces</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">search_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_spaces</span><span class="p">]</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">check_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+        <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="p">[</span><span class="s1">&#39;random_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_state</span>
+
+        <span class="c1"># Instantiate optimizers for all the search spaces.</span>
+        <span class="n">optimizers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">search_space</span> <span class="ow">in</span> <span class="n">search_spaces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">search_space</span> <span class="o">=</span> <span class="n">search_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">optimizers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_make_optimizer</span><span class="p">(</span><span class="n">search_space</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizers_</span> <span class="o">=</span> <span class="n">optimizers</span>  <span class="c1"># will save the states of the optimizers</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_results_</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_index_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multimetric_</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">n_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span>
+
+        <span class="k">for</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">search_spaces</span><span class="p">,</span> <span class="n">optimizers</span><span class="p">):</span>
+            <span class="c1"># if not provided with search subspace, n_iter is taken as</span>
+            <span class="c1"># self.n_iter</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">search_space</span><span class="p">,</span> <span class="n">n_iter</span> <span class="o">=</span> <span class="n">search_space</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
+
+            <span class="c1"># do the optimization for particular search space</span>
+            <span class="k">while</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># when n_iter &lt; n_points points left for evaluation</span>
+                <span class="n">n_points_adjusted</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+
+                <span class="n">optim_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">search_space</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
+                    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points_adjusted</span>
+                <span class="p">)</span>
+                <span class="n">n_iter</span> <span class="o">-=</span> <span class="n">n_points</span>
+
+                <span class="k">if</span> <span class="n">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">optim_result</span><span class="p">):</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># Refit the best model on the the whole dataset</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">refit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_best_model</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The scikit-optimize contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
