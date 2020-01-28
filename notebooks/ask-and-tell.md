@@ -111,7 +111,7 @@ opt.tell(next_x, f_val)
               fun: -0.032758350111535384
         func_vals: array([-0.03275835])
            models: []
-     random_state: RandomState(MT19937) at 0x7F5849A3DC00
+     random_state: RandomState(MT19937) at 0x7F45D42E4380
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='identity')])
             specs: None
                 x: [-1.7121321838148869]
