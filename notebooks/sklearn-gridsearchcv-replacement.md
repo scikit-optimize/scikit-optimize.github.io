@@ -153,8 +153,8 @@ print("test score: %s" % opt.score(X_test, y_test))
       "the number of iterations.", ConvergenceWarning)
 
 
-    val. score: 0.9844097995545658
-    test score: 0.9844444444444445
+    val. score: 0.9851521900519673
+    test score: 0.9822222222222222
 
 
 ## Progress monitoring and control using `callback` argument of `fit` method
@@ -195,15 +195,14 @@ searchcv.fit(X, y, callback=on_step)
 ```
 
     best score: 0.96
+    best score: 0.96
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
     best score: 0.9733333333333334
     best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
+    best score: 0.98
+    Interrupting!
 
 
 
