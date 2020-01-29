@@ -1215,51 +1215,76 @@ and the other <a href="https://github.com/scikit-optimize/scikit-optimize/tree/m
 
 <span class="sd">Run the tests by executing `pytest` in the top level directory.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">acquisition</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">benchmarks</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">callbacks</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">learning</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">optimizer</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">space</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
-<span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">Optimizer</span>
-<span class="kn">from</span> <span class="nn">.searchcv</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
-<span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Space</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">dump</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">expected_minimum</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">load</span>
-
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.6&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># This variable is injected in the __builtins__ by the build</span>
+    <span class="c1"># process. It is used to enable importing subpackages of sklearn when</span>
+    <span class="c1"># the binaries are not built</span>
+    <span class="n">__SKOPT_SETUP__</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="n">__SKOPT_SETUP__</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;optimizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plots&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;space&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Optimizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;load&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;expected_minimum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BayesSearchCV&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Space&quot;</span>
-<span class="p">)</span>
+<span class="c1"># PEP0440 compatible formatted version, see:</span>
+<span class="c1"># https://www.python.org/dev/peps/pep-0440/</span>
+<span class="c1">#</span>
+<span class="c1"># Generic release markers:</span>
+<span class="c1">#   X.Y</span>
+<span class="c1">#   X.Y.Z   # For bugfix releases</span>
+<span class="c1">#</span>
+<span class="c1"># Admissible pre-release markers:</span>
+<span class="c1">#   X.YaN   # Alpha release</span>
+<span class="c1">#   X.YbN   # Beta release</span>
+<span class="c1">#   X.YrcN  # Release Candidate</span>
+<span class="c1">#   X.Y     # Final release</span>
+<span class="c1">#</span>
+<span class="c1"># Dev branch marker is: &#39;X.Y.dev&#39; or &#39;X.Y.devN&#39; where N is an integer.</span>
+<span class="c1"># &#39;X.Y.dev0&#39; is the canonical version of &#39;X.Y.dev&#39;</span>
+<span class="c1">#</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.7.rc2&quot;</span>
 
-<span class="kn">from</span> <span class="nn">._version</span> <span class="kn">import</span> <span class="n">get_versions</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="n">get_versions</span><span class="p">()[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
-<span class="k">del</span> <span class="n">get_versions</span>
+
+<span class="k">if</span> <span class="n">__SKOPT_SETUP__</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Partial import of skopt during the build process.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># We are not importing the rest of scikit-optimize during the build</span>
+    <span class="c1"># process, as it may not be compiled yet</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">acquisition</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">benchmarks</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">callbacks</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">learning</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">optimizer</span>
+
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">space</span>
+    <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">dummy_minimize</span>
+    <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">forest_minimize</span>
+    <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gbrt_minimize</span>
+    <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
+    <span class="kn">from</span> <span class="nn">.optimizer</span> <span class="kn">import</span> <span class="n">Optimizer</span>
+    <span class="kn">from</span> <span class="nn">.searchcv</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
+    <span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Space</span>
+    <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">dump</span>
+    <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">expected_minimum</span>
+    <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">load</span>
+    <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;benchmarks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;callbacks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;learning&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;optimizer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;plots&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;space&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;forest_minimize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gbrt_minimize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Optimizer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;expected_minimum&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;BayesSearchCV&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Space&quot;</span>
+    <span class="p">)</span>
 </pre></div>
 
   </div>

@@ -117,7 +117,7 @@ plot_convergence(res_gp)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fd50bf68610>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f139d41fc90>
 
 
 
