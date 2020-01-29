@@ -37,7 +37,7 @@ that can be inspected. Both `plot_evaluations` and `plot_objective` are helpers 
 do just that.
 
 
-# Toy models
+## Toy models
 
 We will use two different toy models to demonstrate how `plot_evaluations()` works.
 
@@ -56,7 +56,7 @@ def hart6(x):
     return hart6_(x[:6])
 ```
 
-# Starting with `branin`
+## Starting with `branin`
 
 To start let's take advantage of the fact that `branin` is a simple
 function which can be visualised in two dimensions.
@@ -98,7 +98,7 @@ plot_branin()
 ![png](visualizing-results_files/visualizing-results_5_0.png)
 
 
-# Evaluating the objective function
+## Evaluating the objective function
 
 Next we use an extra trees based minimizer to find one of the minima of the
 `branin` function. Then we visualize at which points the objective is being
@@ -186,7 +186,7 @@ _ = plot_evaluations(dummy_res, bins=10)
 ![png](visualizing-results_files/visualizing-results_12_0.png)
 
 
-# Working in six dimensions
+## Working in six dimensions
 
 Visualising what happens in two dimensions is easy, where `plot_evaluations()` and
 `plot_objective()` start to be useful is when the number of dimensions grows.
@@ -217,7 +217,7 @@ _ = plot_objective(forest_res)
 ![png](visualizing-results_files/visualizing-results_15_1.png)
 
 
-## Going from 6 to 6+2 dimensions
+### Going from 6 to 6+2 dimensions
 
 To make things more interesting let's add two dimension to the problem. As `hart6`
 only depends on six dimensions we know that for this problem the new dimensions will

@@ -21,10 +21,10 @@ that are not a simple (expensive) function call.
 
 They often follow a pattern a bit like this:
 1. ask for a new set of parameters
-1. walk to the experiment and program in the new parameters
-1. observe the outcome of running the experiment
-1. walk back to your laptop and tell the optimizer about the outcome
-1. go to step 1
+2. walk to the experiment and program in the new parameters
+3. observe the outcome of running the experiment
+4. walk back to your laptop and tell the optimizer about the outcome
+5. go to step 1
 
 A setup like this is difficult to implement with the `*_minimize()` function interface.
 This is why `scikit-optimize` has a ask-and-tell interface that you can use when you want
@@ -111,7 +111,7 @@ opt.tell(next_x, f_val)
               fun: -0.032758350111535384
         func_vals: array([-0.03275835])
            models: []
-     random_state: RandomState(MT19937) at 0x7F1D41865380
+     random_state: RandomState(MT19937) at 0x7F03B4033380
             space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='identity')])
             specs: None
                 x: [-1.7121321838148869]

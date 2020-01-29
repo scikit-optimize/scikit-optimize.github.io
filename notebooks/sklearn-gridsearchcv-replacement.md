@@ -46,8 +46,8 @@ print("val. score: %s" % opt.best_score_)
 print("test score: %s" % opt.score(X_test, y_test))
 ```
 
-    val. score: 0.9903489235337788
-    test score: 0.9933333333333333
+    val. score: 0.985894580549369
+    test score: 0.9822222222222222
 
 
 ## Advanced example 
@@ -153,9 +153,21 @@ print("test score: %s" % opt.score(X_test, y_test))
       "the number of iterations.", ConvergenceWarning)
     /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
+      warnings.warn("The objective has been evaluated "
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
+    /opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/svm/_base.py:947: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      "the number of iterations.", ConvergenceWarning)
 
 
-    val. score: 0.985894580549369
+    val. score: 0.9836674090571641
     test score: 0.9822222222222222
 
 
@@ -196,8 +208,16 @@ def on_step(optim_result):
 searchcv.fit(X, y, callback=on_step)
 ```
 
-    best score: 0.98
-    Interrupting!
+    best score: 0.96
+    best score: 0.9666666666666667
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
+    best score: 0.9733333333333334
 
 
 

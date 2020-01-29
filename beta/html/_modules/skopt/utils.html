@@ -1,0 +1,917 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.utils &mdash; scikit-optimize v0.7999999999999999 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/utils.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize v0.7999999999999999</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">OptimizeResult</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span> <span class="k">as</span> <span class="n">sp_minimize</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">is_regressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">dump</span> <span class="k">as</span> <span class="n">dump_</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">load_</span>
+
+<span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
+<span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">GradientBoostingQuantileRegressor</span>
+<span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span> <span class="nn">.learning.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span>
+<span class="kn">from</span> <span class="nn">.learning.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">HammingKernel</span>
+<span class="kn">from</span> <span class="nn">.learning.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Matern</span>
+
+<span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Space</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Dimension</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;load&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">create_result</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">specs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize an `OptimizeResult` object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `Xi` [list of lists, shape=(n_iters, n_features)]:</span>
+<span class="sd">        Location of the minimum at every iteration.</span>
+
+<span class="sd">    * `yi` [array-like, shape=(n_iters,)]:</span>
+<span class="sd">        Minimum value obtained at every iteration.</span>
+
+<span class="sd">    * `space` [Space instance, optional]:</span>
+<span class="sd">        Search space.</span>
+
+<span class="sd">    * `rng` [RandomState instance, optional]:</span>
+<span class="sd">        State of the random state.</span>
+
+<span class="sd">    * `specs` [dict, optional]:</span>
+<span class="sd">        Call specifications.</span>
+
+<span class="sd">    * `models` [list, optional]:</span>
+<span class="sd">        List of fit surrogate models.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        OptimizeResult instance with the required information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">OptimizeResult</span><span class="p">()</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">log_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">yi</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">yi</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Xi</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">=</span> <span class="n">yi</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span> <span class="o">=</span> <span class="n">yi</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span> <span class="o">=</span> <span class="n">Xi</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">space</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">rng</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">specs</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+
+<span class="k">def</span> <span class="nf">eval_callbacks</span><span class="p">(</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Evaluate list of callbacks on result.</span>
+
+<span class="sd">    The return values of the `callbacks` are ORed together to give the</span>
+<span class="sd">    overall decision on whether or not the optimization procedure should</span>
+<span class="sd">    continue.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `callbacks` [list of callables]:</span>
+<span class="sd">        Callbacks to evaluate.</span>
+
+<span class="sd">    * `result` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        Optimization result object to be stored.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `decision` [bool]:</span>
+<span class="sd">        Decision of the callbacks whether or not to keep optimizing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stop</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">decision</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">decision</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">stop</span> <span class="o">=</span> <span class="n">stop</span> <span class="ow">or</span> <span class="n">decision</span>
+
+    <span class="k">return</span> <span class="n">stop</span>
+
+
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../modules/utils.html#skopt.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Store an skopt optimization result into a file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        Optimization result object to be stored.</span>
+
+<span class="sd">    * `filename` [string or `pathlib.Path`]:</span>
+<span class="sd">        The path of the file in which it is to be stored. The compression</span>
+<span class="sd">        method corresponding to one of the supported filename extensions (&#39;.z&#39;,</span>
+<span class="sd">        &#39;.gz&#39;, &#39;.bz2&#39;, &#39;.xz&#39; or &#39;.lzma&#39;) will be used automatically.</span>
+
+<span class="sd">    * `store_objective` [boolean, default=True]:</span>
+<span class="sd">        Whether the objective function should be stored. Set `store_objective`</span>
+<span class="sd">        to `False` if your objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) is</span>
+<span class="sd">        unserializable (i.e. if an exception is raised when trying to serialize</span>
+<span class="sd">        the optimization result).</span>
+
+<span class="sd">        Notice that if `store_objective` is set to `False`, a deep copy of the</span>
+<span class="sd">        optimization result is created, potentially leading to performance</span>
+<span class="sd">        problems if `res` is very large. If the objective function is not</span>
+<span class="sd">        critical, one can delete it before calling `skopt.dump()` and thus</span>
+<span class="sd">        avoid deep copying of `res`.</span>
+
+<span class="sd">    * `**kwargs` [other keyword arguments]:</span>
+<span class="sd">        All other keyword arguments will be passed to `joblib.dump`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">store_objective</span><span class="p">:</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s1">&#39;func&#39;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]:</span>
+        <span class="c1"># If the user does not want to store the objective and it is indeed</span>
+        <span class="c1"># present in the provided object, then create a deep copy of it and</span>
+        <span class="c1"># remove the objective function before dumping it with joblib.dump.</span>
+        <span class="n">res_without_func</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">res_without_func</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res_without_func</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the user does not want to store the objective and it is already</span>
+        <span class="c1"># missing in the provided object, dump it without copying.</span>
+        <span class="n">dump_</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../modules/utils.html#skopt.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reconstruct a skopt optimization result from a file</span>
+<span class="sd">    persisted with skopt.dump.</span>
+
+<span class="sd">    Notice that the loaded optimization result can be missing</span>
+<span class="sd">    the objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) if `skopt.dump`</span>
+<span class="sd">    was called with `store_objective=False`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `filename` [string or `pathlib.Path`]:</span>
+<span class="sd">        The path of the file from which to load the optimization result.</span>
+
+<span class="sd">    * `**kwargs` [other keyword arguments]:</span>
+<span class="sd">        All other keyword arguments will be passed to `joblib.load`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `res` [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        Reconstructed OptimizeResult instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">load_</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">is_listlike</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">is_2Dlistlike</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">is_listlike</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="check_x_in_space"><a class="viewcode-back" href="../../modules/utils.html#skopt.check_x_in_space">[docs]</a><span class="k">def</span> <span class="nf">check_x_in_space</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_2Dlistlike</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="n">p</span> <span class="ow">in</span> <span class="n">space</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all points are within the bounds of&quot;</span>
+                             <span class="s2">&quot; the space.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all points have the same dimensions as&quot;</span>
+                             <span class="s2">&quot; the space.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_listlike</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">space</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Point (</span><span class="si">%s</span><span class="s2">) is not within the bounds of&quot;</span>
+                             <span class="s2">&quot; the space (</span><span class="si">%s</span><span class="s2">).&quot;</span>
+                             <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimensions of point (</span><span class="si">%s</span><span class="s2">) and space (</span><span class="si">%s</span><span class="s2">) do not match&quot;</span>
+                             <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="expected_minimum"><a class="viewcode-back" href="../../modules/utils.html#skopt.expected_minimum">[docs]</a><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the minimum over the predictions of the last surrogate model.</span>
+
+<span class="sd">    Note that the returned minimum may not necessarily be an accurate</span>
+<span class="sd">    prediction of the minimum of the true objective function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `res`  [`OptimizeResult`, scipy object]:</span>
+<span class="sd">        The optimization result returned by a `skopt` minimizer.</span>
+
+<span class="sd">    * `n_random_starts` [int, default=20]:</span>
+<span class="sd">        The number of random starts for the minimization of the surrogate</span>
+<span class="sd">        model.</span>
+
+<span class="sd">    * `random_state` [int, RandomState instance, or None (default)]:</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `x` [list]: location of the minimum.</span>
+
+<span class="sd">    * `fun` [float]: the surrogate function value at the minimum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_random_starts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">xs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">))</span>
+
+    <span class="n">best_x</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_fun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+    <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">sp_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">fun</span> <span class="o">&lt;</span> <span class="n">best_fun</span><span class="p">:</span>
+            <span class="n">best_x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">best_fun</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">fun</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">best_x</span><span class="p">],</span> <span class="n">best_fun</span></div>
+
+
+<span class="k">def</span> <span class="nf">has_gradients</span><span class="p">(</span><span class="n">estimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if an estimator&#39;s ``predict`` method provides gradients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimator: sklearn BaseEstimator instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tree_estimators</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="n">RandomForestRegressor</span><span class="p">,</span>
+            <span class="n">GradientBoostingQuantileRegressor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># cook_estimator() returns None for &quot;dummy minimize&quot; aka random values only</span>
+    <span class="k">if</span> <span class="n">estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">tree_estimators</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">categorical_gp</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="s2">&quot;kernel&quot;</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="n">categorical_gp</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">HammingKernel</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">])</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">categorical_gp</span>
+
+
+<div class="viewcode-block" id="cook_estimator"><a class="viewcode-back" href="../../modules/utils.html#skopt.cook_estimator">[docs]</a><span class="k">def</span> <span class="nf">cook_estimator</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cook a default estimator.</span>
+
+<span class="sd">    For the special base_estimator called &quot;DUMMY&quot; the return value is None.</span>
+<span class="sd">    This corresponds to sampling points at random, hence there is no need</span>
+<span class="sd">    for an estimator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `base_estimator` [&quot;GP&quot;, &quot;RF&quot;, &quot;ET&quot;, &quot;GBRT&quot;, &quot;DUMMY&quot;</span>
+<span class="sd">                        or sklearn regressor, default=&quot;GP&quot;]:</span>
+<span class="sd">        Should inherit from `sklearn.base.RegressorMixin`.</span>
+<span class="sd">        In addition the `predict` method should have an optional `return_std`</span>
+<span class="sd">        argument, which returns `std(Y | x)`` along with `E[Y | x]`.</span>
+<span class="sd">        If base_estimator is one of [&quot;GP&quot;, &quot;RF&quot;, &quot;ET&quot;, &quot;GBRT&quot;, &quot;DUMMY&quot;], a</span>
+<span class="sd">        surrogate model corresponding to the relevant `X_minimize` function</span>
+<span class="sd">        is created.</span>
+
+<span class="sd">    * `space` [Space instance]:</span>
+<span class="sd">        Has to be provided if the base_estimator is a gaussian process.</span>
+<span class="sd">        Ignored otherwise.</span>
+
+<span class="sd">    * `kwargs` [dict]:</span>
+<span class="sd">        Extra parameters provided to the base_estimator at init time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">base_estimator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="s2">&quot;ET&quot;</span><span class="p">,</span> <span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;GBRT&quot;</span><span class="p">,</span> <span class="s2">&quot;DUMMY&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid strings for the base_estimator parameter &quot;</span>
+                             <span class="s2">&quot; are: &#39;RF&#39;, &#39;ET&#39;, &#39;GP&#39;, &#39;GBRT&#39; or &#39;DUMMY&#39; not &quot;</span>
+                             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">base_estimator</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;base_estimator has to be a regressor.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">space</span><span class="p">)</span>
+            <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">))</span>
+            <span class="n">n_dims</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span>
+            <span class="n">is_cat</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected a Space instance, not None.&quot;</span><span class="p">)</span>
+
+        <span class="n">cov_amplitude</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+        <span class="c1"># only special if *all* dimensions are categorical</span>
+        <span class="k">if</span> <span class="n">is_cat</span><span class="p">:</span>
+            <span class="n">other_kernel</span> <span class="o">=</span> <span class="n">HammingKernel</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_dims</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_kernel</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
+                <span class="n">length_scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_dims</span><span class="p">),</span>
+                <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n_dims</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="n">cov_amplitude</span> <span class="o">*</span> <span class="n">other_kernel</span><span class="p">,</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;RF&quot;</span><span class="p">:</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                               <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;ET&quot;</span><span class="p">:</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">ExtraTreesRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                             <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;GBRT&quot;</span><span class="p">:</span>
+        <span class="n">gbrt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">)</span>
+        <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingQuantileRegressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">gbrt</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">base_estimator</span> <span class="o">==</span> <span class="s2">&quot;DUMMY&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">base_estimator</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">base_estimator</span></div>
+
+
+<div class="viewcode-block" id="dimensions_aslist"><a class="viewcode-back" href="../../modules/utils.html#skopt.dimensions_aslist">[docs]</a><span class="k">def</span> <span class="nf">dimensions_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a dict representation of a search space into a list of</span>
+<span class="sd">    dimensions, ordered by sorted(search_space.keys()).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    search_space : dict</span>
+<span class="sd">        Represents search space. The keys are dimension names (strings)</span>
+<span class="sd">        and values are instances of classes that inherit from the class</span>
+<span class="sd">        skopt.space.Dimension (Real, Integer or Categorical)</span>
+<span class="sd">        Example:</span>
+<span class="sd">            {&#39;name1&#39;: Real(0,1), &#39;name2&#39;: Integer(2,4), &#39;name3&#39;: Real(-1,1)}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    params_space_list: list of skopt.space.Dimension instances.</span>
+<span class="sd">        Example output with example inputs:</span>
+<span class="sd">            [Real(0,1), Integer(2,4), Real(-1,1)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params_space_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">search_space</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">params_space_list</span></div>
+
+
+<div class="viewcode-block" id="point_asdict"><a class="viewcode-back" href="../../modules/utils.html#skopt.point_asdict">[docs]</a><span class="k">def</span> <span class="nf">point_asdict</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">point_as_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert the list representation of a point from a search space</span>
+<span class="sd">    to the dictionary representation, where keys are dimension names</span>
+<span class="sd">    and values are corresponding to the values of dimensions in the list.</span>
+
+<span class="sd">    Counterpart to parameters_aslist.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    search_space : dict</span>
+<span class="sd">        Represents search space. The keys are dimension names (strings)</span>
+<span class="sd">        and values are instances of classes that inherit from the class</span>
+<span class="sd">        skopt.space.Dimension (Real, Integer or Categorical)</span>
+<span class="sd">        Example:</span>
+<span class="sd">            {&#39;name1&#39;: Real(0,1), &#39;name2&#39;: Integer(2,4), &#39;name3&#39;: Real(-1,1)}</span>
+
+<span class="sd">    point_as_list : list</span>
+<span class="sd">        list with parameter values.The order of parameters in the list</span>
+<span class="sd">        is given by sorted(params_space.keys()).</span>
+<span class="sd">        Example:</span>
+<span class="sd">            [0.66, 3, -0.15]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    params_dict: dictionary with parameter names as keys to which</span>
+<span class="sd">        corresponding parameter values are assigned.</span>
+<span class="sd">        Example output with inputs:</span>
+<span class="sd">            {&#39;name1&#39;: 0.66, &#39;name2&#39;: 3, &#39;name3&#39;: -0.15}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">point_as_list</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">params_dict</span></div>
+
+
+<div class="viewcode-block" id="point_aslist"><a class="viewcode-back" href="../../modules/utils.html#skopt.point_aslist">[docs]</a><span class="k">def</span> <span class="nf">point_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">point_as_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a dictionary representation of a point from a search space to</span>
+<span class="sd">    the list representation. The list of values is created from the values of</span>
+<span class="sd">    the dictionary, sorted by the names of dimensions used as keys.</span>
+
+<span class="sd">    Counterpart to parameters_asdict.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    search_space : dict</span>
+<span class="sd">        Represents search space. The keys are dimension names (strings)</span>
+<span class="sd">        and values are instances of classes that inherit from the class</span>
+<span class="sd">        skopt.space.Dimension (Real, Integer or Categorical)</span>
+<span class="sd">        Example:</span>
+<span class="sd">            {&#39;name1&#39;: Real(0,1), &#39;name2&#39;: Integer(2,4), &#39;name3&#39;: Real(-1,1)}</span>
+
+<span class="sd">    point_as_dict : dict</span>
+<span class="sd">        dict with parameter names as keys to which corresponding</span>
+<span class="sd">        parameter values are assigned.</span>
+<span class="sd">        Example:</span>
+<span class="sd">            {&#39;name1&#39;: 0.66, &#39;name2&#39;: 3, &#39;name3&#39;: -0.15}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    point_as_list: list with point values.The order of</span>
+<span class="sd">        parameters in the list is given by sorted(params_space.keys()).</span>
+<span class="sd">        Example output with example inputs:</span>
+<span class="sd">            [0.66, 3, -0.15]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">point_as_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">point_as_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">point_as_list</span></div>
+
+
+<span class="k">def</span> <span class="nf">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a ``Space`` where all dimensions are normalized to unit range.</span>
+
+<span class="sd">    This is particularly useful for Gaussian process based regressors and is</span>
+<span class="sd">    used internally by ``gp_minimize``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `dimensions` [list, shape=(n_dims,)]:</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(lower_bound, upper_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(lower_bound, upper_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
+
+<span class="sd">         NOTE: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">         dimensions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="n">transformed_dimensions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
+        <span class="c1"># recreate the space and explicitly set transform to &quot;identity&quot;</span>
+        <span class="c1"># this is a special case for GP based regressors</span>
+        <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="p">:</span>
+            <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span>
+                                                      <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
+                                                      <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
+                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+            <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Real</span><span class="p">):</span>
+                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Real</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Integer</span><span class="p">):</span>
+                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Integer</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown dimension type &quot;</span>
+                                   <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dimensions</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">use_named_args</span><span class="p">(</span><span class="n">dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper / decorator for an objective function that uses named arguments</span>
+<span class="sd">    to make it compatible with optimizers that use a single list of parameters.</span>
+
+<span class="sd">    Your objective function can be defined as being callable using named</span>
+<span class="sd">    arguments: `func(foo=123, bar=3.0, baz=&#39;hello&#39;)` for a search-space</span>
+<span class="sd">    with dimensions named `[&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]`. But the optimizer</span>
+<span class="sd">    will only pass a single list `x` of unnamed arguments when calling</span>
+<span class="sd">    the objective function: `func(x=[123, 3.0, &#39;hello&#39;])`. This wrapper</span>
+<span class="sd">    converts your objective function with named arguments into one that</span>
+<span class="sd">    accepts a list as argument, while doing the conversion automatically.</span>
+
+<span class="sd">    The advantage of this is that you don&#39;t have to unpack the list of</span>
+<span class="sd">    arguments `x` yourself, which makes the code easier to read and</span>
+<span class="sd">    also reduces the risk of bugs if you change the number of dimensions</span>
+<span class="sd">    or their order in the search-space.</span>
+
+<span class="sd">    Example Usage</span>
+<span class="sd">    -------------</span>
+<span class="sd">    # Define the search-space dimensions. They must all have names!</span>
+<span class="sd">    dim1 = Real(name=&#39;foo&#39;, low=0.0, high=1.0)</span>
+<span class="sd">    dim2 = Real(name=&#39;bar&#39;, low=0.0, high=1.0)</span>
+<span class="sd">    dim3 = Real(name=&#39;baz&#39;, low=0.0, high=1.0)</span>
+
+<span class="sd">    # Gather the search-space dimensions in a list.</span>
+<span class="sd">    dimensions = [dim1, dim2, dim3]</span>
+
+<span class="sd">    # Define the objective function with named arguments</span>
+<span class="sd">    # and use this function-decorator to specify the search-space dimensions.</span>
+<span class="sd">    @use_named_args(dimensions=dimensions)</span>
+<span class="sd">    def my_objective_function(foo, bar, baz):</span>
+<span class="sd">        return foo ** 2 + bar ** 4 + baz ** 8</span>
+
+<span class="sd">    # Now the function is callable from the outside as</span>
+<span class="sd">    # `my_objective_function(x)` where `x` is a list of unnamed arguments,</span>
+<span class="sd">    # which then wraps your objective function that is callable as</span>
+<span class="sd">    # `my_objective_function(foo, bar, baz)`.</span>
+<span class="sd">    # The conversion from a list `x` to named parameters `foo`, `bar`, `baz`</span>
+<span class="sd">    # is done automatically.</span>
+
+<span class="sd">    # Run the optimizer on the wrapped objective function which is called as</span>
+<span class="sd">    # `my_objective_function(x)` as expected by `forest_minimize()`.</span>
+<span class="sd">    result = forest_minimize(func=my_objective_function, dimensions=dimensions,</span>
+<span class="sd">                             n_calls=20, base_estimator=&quot;ET&quot;, random_state=4)</span>
+
+<span class="sd">    # Print the best-found results.</span>
+<span class="sd">    print(&quot;Best fitness:&quot;, result.fun)</span>
+<span class="sd">    print(&quot;Best parameters:&quot;, result.x)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `dimensions` [list(Dimension)]:</span>
+<span class="sd">        List of `Dimension`-objects for the search-space dimensions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `wrapped_func` [callable]</span>
+<span class="sd">        Wrapped objective function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This uses more advanced Python features to wrap `func` using a</span>
+<span class="sd">        function-decorator, which are not explained so well in the</span>
+<span class="sd">        official Python documentation.</span>
+
+<span class="sd">        A good video tutorial explaining how this works is found here:</span>
+<span class="sd">        https://www.youtube.com/watch?v=KlBPCzcQNU8</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `func` [callable]:</span>
+<span class="sd">            Function to minimize. Should take *named arguments*</span>
+<span class="sd">            and return the objective value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure all dimensions are correctly typed.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">):</span>
+            <span class="c1"># List of the dimensions that are incorrectly typed.</span>
+            <span class="n">err_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">dim</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">),</span>
+                                   <span class="n">dimensions</span><span class="p">))</span>
+
+            <span class="c1"># Error message.</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All dimensions must be instances of the Dimension-class, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Ensure all dimensions have names.</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">):</span>
+            <span class="c1"># List of the dimensions that have no names.</span>
+            <span class="n">err_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">dim</span><span class="p">:</span> <span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">))</span>
+
+            <span class="c1"># Error message.</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All dimensions must have names, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This is the code that will be executed every time the</span>
+<span class="sd">            wrapped / decorated `func` is being called.</span>
+<span class="sd">            It takes `x` as a single list of parameters and</span>
+<span class="sd">            converts them to named arguments and calls `func` with them.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            * `x` [list]:</span>
+<span class="sd">                A single list of parameters e.g. `[123, 3.0, &#39;linear&#39;]`</span>
+<span class="sd">                which will be converted to named arguments and passed</span>
+<span class="sd">                to `func`.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            * `objective_value`</span>
+<span class="sd">                The objective value returned by `func`.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="c1"># Ensure the number of dimensions match</span>
+            <span class="c1"># the number of parameters in the list x.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Mismatch in number of search-space dimensions. &quot;</span> \
+                      <span class="s2">&quot;len(dimensions)==</span><span class="si">{}</span><span class="s2"> and len(x)==</span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># Create a dict where the keys are the names of the dimensions</span>
+            <span class="c1"># and the values are taken from the list of parameters x.</span>
+            <span class="n">arg_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">x</span><span class="p">)}</span>
+
+            <span class="c1"># Call the wrapped objective function with the named arguments.</span>
+            <span class="n">objective_value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">arg_dict</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">objective_value</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code samples to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+</body>
+</html>

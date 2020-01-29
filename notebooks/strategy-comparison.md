@@ -27,7 +27,7 @@ for what kind of surrogate model to use. This notebook compares the performance 
 as surrogate models. A purely random optimization strategy is also used as a baseline.
 
 
-# Toy model
+## Toy model
 
 We will use the `branin` function as toy model for the expensive function. In
 a real world application this function would be unknown and expensive to evaluate.
@@ -80,7 +80,7 @@ plot_branin()
 This shows the value of the two-dimensional branin function and the three minima.
 
 
-# Objective
+## Objective
 
 The objective of this example is to find one of these minima in as few iterations
 as possible. One iteration is defined as one call to the `branin` function.
