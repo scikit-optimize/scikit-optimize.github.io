@@ -132,16 +132,16 @@
 </div>
 <div class="sphx-glr-example-title section" id="parallel-optimization">
 <span id="sphx-glr-auto-examples-parallel-optimization-py"></span><h1>Parallel optimization<a class="headerlink" href="#parallel-optimization" title="Permalink to this headline">¶</a></h1>
-<p>Iaroslav Shcherbatyi, May 2017.</p>
-<p>Reviewed by Manoj Kumar and Tim Head.</p>
-<p>Reformatted by Holger Nahrstaedt 2020</p>
+<p>Iaroslav Shcherbatyi, May 2017.
+Reviewed by Manoj Kumar and Tim Head.
+Reformatted by Holger Nahrstaedt 2020</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>For many practical black box optimization problems expensive objective can be
 evaluated in parallel at multiple points. This allows to get more objective
 evaluations per unit of time, which reduces the time necessary to reach good
 objective values when appropriate optimization algorithms are used, see for
-example results in [1] and the references therein.</p>
+example results in <a class="footnote-reference brackets" href="#id3" id="id1">1</a> and the references therein.</p>
 <p>One such example task is a selection of number and activation function of a
 neural network which results in highest accuracy for some machine learning
 problem. For such task, multiple neural networks with different combinations
@@ -152,17 +152,9 @@ obtain multiple points for evaluation in parallel. Intended usage of this
 interface is as follows:</p>
 <ol class="arabic simple">
 <li><p>Initialize instance of the <code class="docutils literal notranslate"><span class="pre">Optimizer</span></code> class from skopt</p></li>
-<li><dl class="simple">
-<dt>Obtain n points for evaluation in parallel by calling the <code class="docutils literal notranslate"><span class="pre">ask</span></code> method of</dt><dd><p>an optimizer instance with the <code class="docutils literal notranslate"><span class="pre">n_points</span></code> argument set to n &gt; 0</p>
-</dd>
-</dl>
-</li>
+<li><p>Obtain n points for evaluation in parallel by calling the <code class="docutils literal notranslate"><span class="pre">ask</span></code> method of an optimizer instance with the <code class="docutils literal notranslate"><span class="pre">n_points</span></code> argument set to n &gt; 0</p></li>
 <li><p>Evaluate points</p></li>
-<li><dl class="simple">
-<dt>Provide points and corresponding objectives using the <code class="docutils literal notranslate"><span class="pre">tell</span></code> method of</dt><dd><p>an optimizer instance</p>
-</dd>
-</dl>
-</li>
+<li><p>Provide points and corresponding objectives using the <code class="docutils literal notranslate"><span class="pre">tell</span></code> method of an optimizer instance</p></li>
 <li><p>Continue from step 2 until eg maximum number of evaluations reached</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
@@ -200,17 +192,21 @@ objective function is given below.</p>
 </pre></div>
 </div>
 <p>Note that if <code class="docutils literal notranslate"><span class="pre">n_points</span></code> is set to some integer &gt; 0 for the <code class="docutils literal notranslate"><span class="pre">ask</span></code> method, the
-result will be a list of points, even for <code class="docutils literal notranslate"><span class="pre">n_points`=1.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">argument</span> <span class="pre">is</span>
-<span class="pre">set</span> <span class="pre">to</span> <span class="pre">`None</span></code> (default value) then a single point (but not a list of points)
+result will be a list of points, even for <code class="docutils literal notranslate"><span class="pre">n_points</span></code> = 1. If the argument is
+set to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default value) then a single point (but not a list of points)
 will be returned.</p>
-<p>The default “minimum constant liar” [1] parallelization strategy is used in
+<p>The default “minimum constant liar” <a class="footnote-reference brackets" href="#id3" id="id2">1</a> parallelization strategy is used in
 the example, which allows to obtain multiple points for evaluation with a
 single call to the <code class="docutils literal notranslate"><span class="pre">ask</span></code> method with any surrogate or acquisition function.
-Paralellization strategy can be set using the “strategy” argument of <code class="docutils literal notranslate"><span class="pre">ask</span></code>.
+Parallelization strategy can be set using the “strategy” argument of <code class="docutils literal notranslate"><span class="pre">ask</span></code>.
 For supported parallelization strategies see the documentation of
 scikit-optimize.</p>
-<p>[1] [<a class="reference external" href="https://hal.archives-ouvertes.fr/hal-00732512/document](https://hal.archives-ouvertes.fr/hal-00732512/document">https://hal.archives-ouvertes.fr/hal-00732512/document](https://hal.archives-ouvertes.fr/hal-00732512/document</a>) .</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  25.645 seconds)</p>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p><a class="reference external" href="https://hal.archives-ouvertes.fr/hal-00732512/document">https://hal.archives-ouvertes.fr/hal-00732512/document</a></p>
+</dd>
+</dl>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  19.502 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-parallel-optimization-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/parallel-optimization.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>

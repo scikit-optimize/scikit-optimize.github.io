@@ -3003,6 +3003,9 @@ given by n_iter.</p>
     If <code>'True'</code>, the <code>cv_results_</code> attribute will include training
     scores.</p>
 <h2>Examples</h2>
+<blockquote>
+<blockquote>
+<blockquote>
 <p>from skopt import BayesSearchCV</p>
 <h1>parameter ranges are specified by one of below</h1>
 <p>from skopt.space import Real, Categorical, Integer</p>
@@ -3010,23 +3013,28 @@ given by n_iter.</p>
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split</p>
 <p>X, y = load_iris(True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,
-                                                    random_state=0)</p>
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+...                                                     train_size=0.75,
+...                                                     random_state=0)</p>
 <h1>log-uniform: understand as search over p = exp(x) by varying x</h1>
 <p>opt = BayesSearchCV(
-    SVC(),
-    {
-        'C': Real(1e-6, 1e+6, prior='log-uniform'),
-        'gamma': Real(1e-6, 1e+1, prior='log-uniform'),
-        'degree': Integer(1,8),
-        'kernel': Categorical(['linear', 'poly', 'rbf']),
-    },
-    n_iter=32
-)</p>
+...     SVC(),
+...     {
+...         'C': Real(1e-6, 1e+6, prior='log-uniform'),
+...         'gamma': Real(1e-6, 1e+1, prior='log-uniform'),
+...         'degree': Integer(1,8),
+...         'kernel': Categorical(['linear', 'poly', 'rbf']),
+...     },
+...     n_iter=32
+... )</p>
 <h1>executes bayesian optimization</h1>
-<p>opt.fit(X_train, y_train)</p>
+<p>_ = opt.fit(X_train, y_train)</p>
 <h1>model can be saved, used for predictions or scoring</h1>
-<p>print(opt.score(X_test, y_test))</p>
+<p>print(opt.score(X_test, y_test))
+0.973...</p>
+</blockquote>
+</blockquote>
+</blockquote>
 <h2>Attributes</h2>
 <p>cv_results_ : dict of numpy (masked) ndarrays
     A dict with keys as column headers and values as columns, that can be
@@ -3244,35 +3252,37 @@ n_jobs</code>.</p>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    from skopt import BayesSearchCV</span>
-<span class="sd">    # parameter ranges are specified by one of below</span>
-<span class="sd">    from skopt.space import Real, Categorical, Integer</span>
-
-<span class="sd">    from sklearn.datasets import load_iris</span>
-<span class="sd">    from sklearn.svm import SVC</span>
-<span class="sd">    from sklearn.model_selection import train_test_split</span>
-
-<span class="sd">    X, y = load_iris(True)</span>
-<span class="sd">    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,</span>
-<span class="sd">                                                        random_state=0)</span>
-
-<span class="sd">    # log-uniform: understand as search over p = exp(x) by varying x</span>
-<span class="sd">    opt = BayesSearchCV(</span>
-<span class="sd">        SVC(),</span>
-<span class="sd">        {</span>
-<span class="sd">            &#39;C&#39;: Real(1e-6, 1e+6, prior=&#39;log-uniform&#39;),</span>
-<span class="sd">            &#39;gamma&#39;: Real(1e-6, 1e+1, prior=&#39;log-uniform&#39;),</span>
-<span class="sd">            &#39;degree&#39;: Integer(1,8),</span>
-<span class="sd">            &#39;kernel&#39;: Categorical([&#39;linear&#39;, &#39;poly&#39;, &#39;rbf&#39;]),</span>
-<span class="sd">        },</span>
-<span class="sd">        n_iter=32</span>
-<span class="sd">    )</span>
-
-<span class="sd">    # executes bayesian optimization</span>
-<span class="sd">    opt.fit(X_train, y_train)</span>
-
-<span class="sd">    # model can be saved, used for predictions or scoring</span>
-<span class="sd">    print(opt.score(X_test, y_test))</span>
+<span class="sd">    &gt;&gt;&gt; from skopt import BayesSearchCV</span>
+<span class="sd">    &gt;&gt;&gt; # parameter ranges are specified by one of below</span>
+<span class="sd">    &gt;&gt;&gt; from skopt.space import Real, Categorical, Integer</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.datasets import load_iris</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.svm import SVC</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import train_test_split</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; X, y = load_iris(True)</span>
+<span class="sd">    &gt;&gt;&gt; X_train, X_test, y_train, y_test = train_test_split(X, y,</span>
+<span class="sd">    ...                                                     train_size=0.75,</span>
+<span class="sd">    ...                                                     random_state=0)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # log-uniform: understand as search over p = exp(x) by varying x</span>
+<span class="sd">    &gt;&gt;&gt; opt = BayesSearchCV(</span>
+<span class="sd">    ...     SVC(),</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;C&#39;: Real(1e-6, 1e+6, prior=&#39;log-uniform&#39;),</span>
+<span class="sd">    ...         &#39;gamma&#39;: Real(1e-6, 1e+1, prior=&#39;log-uniform&#39;),</span>
+<span class="sd">    ...         &#39;degree&#39;: Integer(1,8),</span>
+<span class="sd">    ...         &#39;kernel&#39;: Categorical([&#39;linear&#39;, &#39;poly&#39;, &#39;rbf&#39;]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     n_iter=32</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # executes bayesian optimization</span>
+<span class="sd">    &gt;&gt;&gt; _ = opt.fit(X_train, y_train)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # model can be saved, used for predictions or scoring</span>
+<span class="sd">    &gt;&gt;&gt; print(opt.score(X_test, y_test))</span>
+<span class="sd">    0.973...</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>

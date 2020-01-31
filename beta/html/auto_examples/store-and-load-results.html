@@ -146,11 +146,7 @@ for example,</p>
 <ul class="simple">
 <li><p>if you want to share your results with colleagues;</p></li>
 <li><p>if you want to archive and/or document your work;</p></li>
-<li><dl class="simple">
-<dt>or if you want to postprocess your results in a different Python instance</dt><dd><p>or on an another computer.</p>
-</dd>
-</dl>
-</li>
+<li><p>or if you want to postprocess your results in a different Python instance or on an another computer.</p></li>
 </ul>
 <p>The process of converting an object into a byte stream that can be stored in
 a file is called _serialization_.
@@ -173,7 +169,7 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
 <h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
 <p>We will use the same optimization problem as in the
 <a class="reference internal" href="bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a> notebook:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
 <span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
 
 <span class="k">if</span> <span class="n">IS_RUN_WITH_SPHINX_GALLERY</span><span class="p">:</span>
@@ -185,7 +181,7 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
     <span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
         <span class="k">return</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.tanh.html#numpy.tanh" title="View documentation for numpy.tanh"><span class="n">np</span><span class="o">.</span><span class="n">tanh</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
 
-<span class="n">res</span> <span class="o">=</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+<span class="n">res</span> <span class="o">=</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
                   <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
                   <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>            <span class="c1"># the starting point</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
@@ -201,46 +197,41 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
   warnings.warn(&quot;The objective has been evaluated &quot;
 /root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
   warnings.warn(&quot;The objective has been evaluated &quot;
-/root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/root/project/skopt/optimizer/optimizer.py:407: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
 </pre></div>
 </div>
 <p>As long as your Python session is active, you can access all the
 optimization results via the <code class="docutils literal notranslate"><span class="pre">res</span></code> object.</p>
 <p>So how can you store this data in a file? <code class="docutils literal notranslate"><span class="pre">skopt</span></code> conveniently provides
-functions <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code> that handle this for you.
+functions <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> that handle this for you.
 These functions are essentially thin wrappers around the
-[<code class="docutils literal notranslate"><span class="pre">joblib</span></code>](<a class="reference external" href="http://pythonhosted.org/joblib">http://pythonhosted.org/joblib</a>) module’s <code class="docutils literal notranslate"><span class="pre">dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">load()</span></code>.</p>
-<p>We will now show how to use <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code> for storing
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
+<p>We will now show how to use <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> for storing
 and loading results.</p>
 </div>
 <div class="section" id="using-skopt-dump-and-skopt-load">
 <h2>Using <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code><a class="headerlink" href="#using-skopt-dump-and-skopt-load" title="Permalink to this headline">¶</a></h2>
-<p>For storing optimization results into a file, call the <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code>
+<p>For storing optimization results into a file, call the <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>
 function:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">,</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a>
 
 <a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>And load from file using <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code>:</p>
+<p>And load from file using <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
 
 <span class="n">res_loaded</span><span class="o">.</span><span class="n">fun</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.2719773850248942
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.24494002444495272
 </pre></div>
 </div>
 <p>You can fine-tune the serialization and deserialization process by calling
-<code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code> with additional keyword arguments. See the
-<code class="docutils literal notranslate"><span class="pre">joblib</span></code> documentation
-([dump](<a class="reference external" href="https://pythonhosted.org/joblib/generated/joblib.dump.html">https://pythonhosted.org/joblib/generated/joblib.dump.html</a>) and
-[load](<a class="reference external" href="https://pythonhosted.org/joblib/generated/joblib.load.html">https://pythonhosted.org/joblib/generated/joblib.load.html</a>)) for
-the additional parameters.</p>
+<a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> with additional keyword arguments. See the
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> documentation
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
 <p>For instance, you can specify the compression algorithm and compression
 level (highest in this case):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
@@ -252,16 +243,16 @@ level (highest in this case):</p>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Without compression: 84267 bytes
-Compressed with gz:  26544 bytes
+Compressed with gz:  26977 bytes
 </pre></div>
 </div>
 <div class="section" id="unserializable-objective-functions">
 <h3>Unserializable objective functions<a class="headerlink" href="#unserializable-objective-functions" title="Permalink to this headline">¶</a></h3>
 <p>Notice that if your objective function is non-trivial (e.g. it calls MATLAB
-engine from Python), it might be not serializable and <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> will
+engine from Python), it might be not serializable and <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> will
 raise an exception when you try to store the optimization results.
 In this case you should disable storing the objective function by calling
-<code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> with the keyword argument <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code>:</p>
+<a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> with the keyword argument <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -289,17 +280,17 @@ Python 2 cannot be deserialized in Python 3 and vice versa.</p></li>
 sources.</p></li>
 <li><p><strong>Extremely large results objects:</strong> If your optimization results object</p></li>
 </ul>
-<p>is extremely large, calling <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> with <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code> might
+<p>is extremely large, calling <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> with <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code> might
 cause performance issues. This is due to creation of a deep copy without the
 objective function. If the objective function it is not critical to you, you
-can simply delete it before calling <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code>. In this case, no deep
+can simply delete it before calling <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>. In this case, no deep
 copy is created:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
 
 <a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.868 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.859 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-store-and-load-results-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>

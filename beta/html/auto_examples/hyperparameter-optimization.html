@@ -137,21 +137,21 @@
 <p>Gilles Louppe, July 2016
 Katie Malone, August 2016
 Reformatted by Holger Nahrstaedt 2020</p>
-<p>If you are looking for a <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> replacement checkout
+<p>If you are looking for a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> replacement checkout
 <a class="reference internal" href="sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a> instead.</p>
 <div class="section" id="problem-statement">
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
 <p>Tuning the hyper-parameters of a machine learning model is often carried out
 using an exhaustive exploration of (a subset of) the space all hyper-parameter
-configurations (e.g., using <code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code>), which
+configurations (e.g., using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>), which
 often results in a very time consuming operation.</p>
-<p>In this notebook, we illustrate how to couple <code class="docutils literal notranslate"><span class="pre">gp_minimize</span></code> with sklearn’s
+<p>In this notebook, we illustrate how to couple <a class="reference internal" href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">gp_minimize</span></code></a> with sklearn’s
 estimators to tune hyper-parameters using sequential model-based optimisation,
 hopefully resulting in equivalent or better solutions, but within less
 evaluations.</p>
 <p>Note: scikit-optimize provides a dedicated interface for estimator tuning via
-<code class="docutils literal notranslate"><span class="pre">BayesSearchCV</span></code> class which has a similar interface to those of
-<code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>. This class uses functions of skopt to perform hyperparameter
+<a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.BayesSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">BayesSearchCV</span></code></a> class which has a similar interface to those of
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>. This class uses functions of skopt to perform hyperparameter
 search efficiently. For example usage of this class, see
 <a class="reference internal" href="sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a>
 example notebook.</p>
@@ -165,16 +165,16 @@ example notebook.</p>
 <p>To tune the hyper-parameters of our model we need to define a model,
 decide which parameters to optimize, and define the objective function
 we want to minimize.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html#sklearn.datasets.load_boston" title="View documentation for sklearn.datasets.load_boston"><span class="n">load_boston</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor" title="View documentation for sklearn.ensemble.GradientBoostingRegressor"><span class="n">GradientBoostingRegressor</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="View documentation for sklearn.model_selection.cross_val_score"><span class="n">cross_val_score</span></a>
 
-<span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+<span class="n">boston</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html#sklearn.datasets.load_boston" title="View documentation for sklearn.datasets.load_boston"><span class="n">load_boston</span></a><span class="p">()</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">boston</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">boston</span><span class="o">.</span><span class="n">target</span>
 <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c1"># gradient boosted trees tend to do well on problems like this</span>
-<span class="n">reg</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">reg</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor" title="View documentation for sklearn.ensemble.GradientBoostingRegressor"><span class="n">GradientBoostingRegressor</span></a><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Next, we need to define the bounds of the dimensions of the search space
@@ -201,7 +201,7 @@ dataset, as a function of its hyper-parameters.</p>
 <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">):</span>
     <span class="n">reg</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="o">-</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="k">return</span> <span class="o">-</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="View documentation for sklearn.model_selection.cross_val_score"><span class="n">cross_val_score</span></a><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
                                     <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_absolute_error&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -210,8 +210,8 @@ dataset, as a function of its hyper-parameters.</p>
 <h2>Optimize all the things!<a class="headerlink" href="#optimize-all-the-things" title="Permalink to this headline">¶</a></h2>
 <p>With these two pieces, we are now ready for sequential model-based
 optimisation. Here we use gaussian process-based optimisation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
-<span class="n">res_gp</span> <span class="o">=</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<span class="n">res_gp</span> <span class="o">=</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="s2">&quot;Best score=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">res_gp</span><span class="o">.</span><span class="n">fun</span>
 </pre></div>
@@ -242,17 +242,17 @@ optimisation. Here we use gaussian process-based optimisation.</p>
 </div>
 <div class="section" id="convergence-plot">
 <h2>Convergence plot<a class="headerlink" href="#convergence-plot" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../modules/plots.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a>
 
-<a href="../modules/plots.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a><span class="p">(</span><span class="n">res_gp</span><span class="p">)</span>
+<a href="../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a><span class="p">(</span><span class="n">res_gp</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_hyperparameter-optimization_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_hyperparameter-optimization_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot object at 0x7ff5f8344690&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot object at 0x7f7b08fecd50&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  24.011 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  59.213 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-hyperparameter-optimization-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/hyperparameter-optimization.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>

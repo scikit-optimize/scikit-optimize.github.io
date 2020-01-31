@@ -114,7 +114,12 @@
         </div>
           <div class="sk-sidebar-toc">
             <ul>
-<li><a class="reference internal" href="#">3. Callbacks</a></li>
+<li><a class="reference internal" href="#">3. Callbacks</a><ul>
+<li><a class="reference internal" href="#monitoring-callbacks">3.1. Monitoring callbacks</a></li>
+<li><a class="reference internal" href="#early-stopping-callbacks">3.2. Early stopping callbacks</a></li>
+<li><a class="reference internal" href="#other-callbacks">3.3. Other callbacks</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -125,110 +130,33 @@
         
   <div class="section" id="callbacks">
 <span id="id1"></span><h1><span class="section-number">3. </span>Callbacks<a class="headerlink" href="#callbacks" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="skopt.callbacks.CheckpointSaver">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">CheckpointSaver</code><span class="sig-paren">(</span><em class="sig-param">checkpoint_path</em>, <em class="sig-param">**dump_options</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L262"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#CheckpointSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save current state after each iteration with <code class="docutils literal notranslate"><span class="pre">skopt.dump</span></code>.</p>
-<dl>
-<dt>Example usage:</dt><dd><p>import skopt</p>
-<p>checkpoint_callback = skopt.callbacks.CheckpointSaver(“./result.pkl”)
-skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>* `checkpoint_path`: location where checkpoint will be saved to;</strong></dt><dd></dd>
-<dt><strong>* `dump_options`: options to pass on to `skopt.dump`, like `compress=9`</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.DeadlineStopper">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeadlineStopper</code><span class="sig-paren">(</span><em class="sig-param">total_time</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L230"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#DeadlineStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeadlineStopper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the optimization before running out of a fixed budget of time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>* `total_time`: fixed budget of time (seconds) that the optimization must</strong></dt><dd><p>finish within.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>* `iter_time`: [list, shape=(n_iter,)]:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">iter_time[i-1]</span></code> gives the time taken to complete iteration <code class="docutils literal notranslate"><span class="pre">i</span></code></p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.DeltaXStopper">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeltaXStopper</code><span class="sig-paren">(</span><em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L187"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#DeltaXStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeltaXStopper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the optimization when <code class="docutils literal notranslate"><span class="pre">|x1</span> <span class="pre">-</span> <span class="pre">x2|</span> <span class="pre">&lt;</span> <span class="pre">delta</span></code></p>
-<p>If the last two positions at which the objective has been evaluated
-are less than <code class="docutils literal notranslate"><span class="pre">delta</span></code> apart stop the optimization procedure.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.DeltaYStopper">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">DeltaYStopper</code><span class="sig-paren">(</span><em class="sig-param">delta</em>, <em class="sig-param">n_best=5</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L206"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#DeltaYStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.DeltaYStopper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the optimization if the <code class="docutils literal notranslate"><span class="pre">n_best</span></code> minima are within <code class="docutils literal notranslate"><span class="pre">delta</span></code></p>
-<p>Stop the optimizer if the absolute difference between the <code class="docutils literal notranslate"><span class="pre">n_best</span></code>
-objective values is less than <code class="docutils literal notranslate"><span class="pre">delta</span></code>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.EarlyStopper">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">EarlyStopper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L152"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#EarlyStopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.EarlyStopper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decide to continue or not given the results so far.</p>
-<p>The optimization procedure will be stopped if the callback returns True.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.TimerCallback">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">TimerCallback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L124"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#TimerCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.TimerCallback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log the elapsed time between each iteration of the minimization loop.</p>
-<p>The time for each iteration is stored in the <code class="docutils literal notranslate"><span class="pre">iter_time</span></code> attribute which
-you can inspect after the minimization has completed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>* `iter_time`: [list, shape=(n_iter,)]:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">iter_time[i-1]</span></code> gives the time taken to complete iteration <code class="docutils literal notranslate"><span class="pre">i</span></code></p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="skopt.callbacks.VerboseCallback">
-<code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">VerboseCallback</code><span class="sig-paren">(</span><em class="sig-param">n_total</em>, <em class="sig-param">n_init=0</em>, <em class="sig-param">n_random=0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/callbacks.py#L46"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/skopt/callbacks.html#VerboseCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.VerboseCallback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Callback to control the verbosity.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>* `n_init` [int, optional]:</strong></dt><dd><p>Number of points provided by the user which are yet to be
-evaluated. This is equal to <code class="docutils literal notranslate"><span class="pre">len(x0)</span></code> when <code class="docutils literal notranslate"><span class="pre">y0</span></code> is None</p>
-</dd>
-<dt><strong>* `n_random` [int, optional]:</strong></dt><dd><p>Number of points randomly chosen.</p>
-</dd>
-<dt><strong>* `n_total` [int]:</strong></dt><dd><p>Total number of func calls.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>* `iter_no`: [int]:</strong></dt><dd><p>Number of iterations of the optimization routine.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
+<p>Monitor and influence the optimization procedure via callbacks.</p>
+<p>Callbacks are callables which are invoked after each iteration of the optimizer
+and are passed the results “so far”. Callbacks can monitor progress, or stop
+the optimization early by returning <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="section" id="monitoring-callbacks">
+<h2><span class="section-number">3.1. </span>Monitoring callbacks<a class="headerlink" href="#monitoring-callbacks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/skopt.callbacks.VerboseCallback.html#skopt.callbacks.VerboseCallback" title="skopt.callbacks.VerboseCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">VerboseCallback</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/skopt.callbacks.TimerCallback.html#skopt.callbacks.TimerCallback" title="skopt.callbacks.TimerCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimerCallback</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="early-stopping-callbacks">
+<h2><span class="section-number">3.2. </span>Early stopping callbacks<a class="headerlink" href="#early-stopping-callbacks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/skopt.callbacks.DeltaXStopper.html#skopt.callbacks.DeltaXStopper" title="skopt.callbacks.DeltaXStopper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaXStopper</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/skopt.callbacks.DeadlineStopper.html#skopt.callbacks.DeadlineStopper" title="skopt.callbacks.DeadlineStopper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeadlineStopper</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/skopt.callbacks.DeltaXStopper.html#skopt.callbacks.DeltaXStopper" title="skopt.callbacks.DeltaXStopper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaXStopper</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/skopt.callbacks.DeltaYStopper.html#skopt.callbacks.DeltaYStopper" title="skopt.callbacks.DeltaYStopper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaYStopper</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/skopt.callbacks.EarlyStopper.html#skopt.callbacks.EarlyStopper" title="skopt.callbacks.EarlyStopper"><code class="xref py py-class docutils literal notranslate"><span class="pre">EarlyStopper</span></code></a></p></li>
+</ul>
+</div>
+<div class="section" id="other-callbacks">
+<h2><span class="section-number">3.3. </span>Other callbacks<a class="headerlink" href="#other-callbacks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckpointSaver</span></code></a></p></li>
+</ul>
+</div>
 </div>
 
 

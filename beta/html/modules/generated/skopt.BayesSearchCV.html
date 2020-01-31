@@ -129,7 +129,7 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt</span></code>.BayesSearchCV<a class="headerlink" href="#skopt-bayessearchcv" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.BayesSearchCV">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">BayesSearchCV</code><span class="sig-paren">(</span><em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/searchcv.py#L29"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">BayesSearchCV</code><span class="sig-paren">(</span><em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/searchcv.py#L29"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bayesian optimization over hyper parameters.</p>
 <p>BayesSearchCV implements a “fit” and a “score” method.
 It also implements “predict”, “predict_proba”, “decision_function”,
@@ -354,36 +354,39 @@ this case is to set <code class="docutils literal notranslate"><span class="pre"
 <code class="docutils literal notranslate"><span class="pre">pre_dispatch</span></code> many times. A reasonable value for <code class="docutils literal notranslate"><span class="pre">pre_dispatch</span></code> is <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span>
 <span class="pre">n_jobs</span></code>.</p>
 <p class="rubric">Examples</p>
-<p>from skopt import BayesSearchCV
-# parameter ranges are specified by one of below
-from skopt.space import Real, Categorical, Integer</p>
-<p>from sklearn.datasets import load_iris
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split</p>
-<p>X, y = load_iris(True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75,</p>
-<blockquote>
-<div><p>random_state=0)</p>
-</div></blockquote>
-<p># log-uniform: understand as search over p = exp(x) by varying x
-opt = BayesSearchCV(</p>
-<blockquote>
-<div><p>SVC(),
-{</p>
-<blockquote>
-<div><p>‘C’: Real(1e-6, 1e+6, prior=’log-uniform’),
-‘gamma’: Real(1e-6, 1e+1, prior=’log-uniform’),
-‘degree’: Integer(1,8),
-‘kernel’: Categorical([‘linear’, ‘poly’, ‘rbf’]),</p>
-</div></blockquote>
-<p>},
-n_iter=32</p>
-</div></blockquote>
-<p>)</p>
-<p># executes bayesian optimization
-opt.fit(X_train, y_train)</p>
-<p># model can be saved, used for predictions or scoring
-print(opt.score(X_test, y_test))</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># parameter ranges are specified by one of below</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>                                                    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+<span class="gp">... </span>                                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># log-uniform: understand as search over p = exp(x) by varying x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">SVC</span><span class="p">(),</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+1</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;degree&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">([</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">n_iter</span><span class="o">=</span><span class="mi">32</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># executes bayesian optimization</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model can be saved, used for predictions or scoring</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="go">0.973...</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -425,13 +428,13 @@ print(opt.score(X_test, y_test))</p>
 </table>
 <dl class="method">
 <dt id="skopt.BayesSearchCV.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/searchcv.py#L284"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/searchcv.py#L286"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.decision_function">
-<code class="sig-name descname">decision_function</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L513"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.decision_function" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">decision_function</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L513"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.decision_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call decision_function on the estimator with the best found parameters.</p>
 <p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
 <code class="docutils literal notranslate"><span class="pre">decision_function</span></code>.</p>
@@ -448,7 +451,7 @@ underlying estimator.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/searchcv.py#L606"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/searchcv.py#L608"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run fit on the estimator with randomly drawn parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -472,7 +475,7 @@ the list is called.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.get_params">
-<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/base.py#L173"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/base.py#L173"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -493,7 +496,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.inverse_transform">
-<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L547"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L547"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call inverse_transform on the estimator with the best found params.</p>
 <p>Only available if the underlying estimator implements
 <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> and <code class="docutils literal notranslate"><span class="pre">refit=True</span></code>.</p>
@@ -510,7 +513,7 @@ underlying estimator.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L462"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L462"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call predict on the estimator with the best found parameters.</p>
 <p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
 <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p>
@@ -527,7 +530,7 @@ underlying estimator.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.predict_log_proba">
-<code class="sig-name descname">predict_log_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L496"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_log_proba" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_log_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L496"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_log_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call predict_log_proba on the estimator with the best found parameters.</p>
 <p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
 <code class="docutils literal notranslate"><span class="pre">predict_log_proba</span></code>.</p>
@@ -544,7 +547,7 @@ underlying estimator.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.predict_proba">
-<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L479"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_proba" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L479"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call predict_proba on the estimator with the best found parameters.</p>
 <p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
 <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>.</p>
@@ -561,7 +564,7 @@ underlying estimator.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_search.py#L422"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/model_selection/_search.py#L422"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the score on the given data, if the estimator has been refit.</p>
 <p>This uses the score defined by <code class="docutils literal notranslate"><span class="pre">scoring</span></code> where provided, and the
 <code class="docutils literal notranslate"><span class="pre">best_estimator_.score</span></code> method otherwise.</p>
@@ -586,7 +589,7 @@ None for unsupervised learning.</p>
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/base.py#L205"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/base.py#L205"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
@@ -624,7 +627,7 @@ all subspaces with <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="method">
 <dt id="skopt.BayesSearchCV.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/bfbad53/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L530"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/39d7053/skopt/../../../opt/conda/envs/testenv/lib/python3.7/site-packages/sklearn/utils/metaestimators.py#L530"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call transform on the estimator with the best found parameters.</p>
 <p>Only available if the underlying estimator supports <code class="docutils literal notranslate"><span class="pre">transform</span></code> and
 <code class="docutils literal notranslate"><span class="pre">refit=True</span></code>.</p>

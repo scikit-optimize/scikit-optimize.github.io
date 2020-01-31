@@ -103,8 +103,8 @@
           </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="visualizing-results.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Visualizing optimization results">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
-            <a href="ask-and-tell.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Async optimization Loop">Next</a>
+            <a href="strategy-comparison.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparing surrogate models">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="visualizing-results.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Visualizing optimization results">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -142,26 +142,14 @@ Reformatted by Holger Nahrstaedt 2020</p>
 <p>Optimization runs can take a very long time and even run for multiple days.
 If for some reason the process has to be interrupted results are irreversibly
 lost, and the routine has to start over from the beginning.</p>
-<p>With the help of the <code class="docutils literal notranslate"><span class="pre">CheckpointSaver</span></code> callback the optimizer’s current state
+<p>With the help of the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a> callback the optimizer’s current state
 can be saved after each iteration, allowing to restart from that point at any
 time.</p>
 <p>This is useful, for example,</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>if you don’t know how long the process will take and cannot hog</dt><dd><p>computational resources forever</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>if there might be system failures due to shaky infrastructure</dt><dd><p>(or colleagues…)</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>if you want to adjust some parameters and continue with the already obtained</dt><dd><p>results</p>
-</dd>
-</dl>
-</li>
+<li><p>if you don’t know how long the process will take and cannot hog computational resources forever</p></li>
+<li><p>if there might be system failures due to shaky infrastructure (or colleagues…)</p></li>
+<li><p>if you want to adjust some parameters and continue with the already obtained results</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -180,9 +168,9 @@ time.</p>
 <h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
 <p>We will use pretty much the same optimization problem as in the
 <a class="reference internal" href="bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a>
-notebook. Additionaly we will instantiate the <code class="docutils literal notranslate"><span class="pre">CheckpointSaver</span></code>
+notebook. Additionally we will instantiate the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a>
 and pass it to the minimizer:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
 <span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">callbacks</span>
 <span class="kn">from</span> <span class="nn">skopt.callbacks</span> <span class="kn">import</span> <a href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="View documentation for skopt.callbacks.CheckpointSaver"><span class="n">CheckpointSaver</span></a>
 
@@ -199,7 +187,7 @@ and pass it to the minimizer:</p>
 
 <span class="n">checkpoint_saver</span> <span class="o">=</span> <a href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="View documentation for skopt.callbacks.CheckpointSaver"><span class="n">CheckpointSaver</span></a><span class="p">(</span><span class="s2">&quot;./checkpoint.pkl&quot;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># keyword arguments will be passed to `skopt.dump`</span>
 
-<a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>                       <span class="c1"># the function to minimize</span>
+<a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>                       <span class="c1"># the function to minimize</span>
               <span class="p">[(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)],</span>             <span class="c1"># the bounds on each dimension of x</span>
               <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">20.</span><span class="p">],</span>                     <span class="c1"># the starting point</span>
               <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>              <span class="c1"># the acquisition function (optional)</span>
@@ -271,13 +259,13 @@ and pass it to the minimizer:</p>
                          n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
                          normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
                          random_state=655685735)]
- random_state: RandomState(MT19937) at 0x7FF5E98E1D10
+ random_state: RandomState(MT19937) at 0x7F7B06A14E20
         space: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
-        specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7ff5f6021170&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+        specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7f7b08f89cb0&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                          kernel=1**2 * Matern(length_scale=1, nu=2.5),
                          n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
                          normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                         random_state=655685735), &#39;n_calls&#39;: 10, &#39;n_random_starts&#39;: 0, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [-20.0], &#39;y0&#39;: None, &#39;random_state&#39;: RandomState(MT19937) at 0x7FF5E98E1D10, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7ff571ba1750&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
+                         random_state=655685735), &#39;n_calls&#39;: 10, &#39;n_random_starts&#39;: 0, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [-20.0], &#39;y0&#39;: None, &#39;random_state&#39;: RandomState(MT19937) at 0x7F7B06A14E20, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7f7a837f43d0&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
             x: [20.0]
       x_iters: [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0]]
 </pre></div>
@@ -288,13 +276,13 @@ morning, you’re eager to see the results. However, instead of the
 notebook server you only see a blank page and your colleague Garry
 tells you that he had had an update scheduled for Sunday noon – who
 doesn’t like updates?</p>
-<p><code class="docutils literal notranslate"><span class="pre">gp_minimize</span></code> did not finish, and there is no <code class="docutils literal notranslate"><span class="pre">res</span></code> variable with the
+<p><a class="reference internal" href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">gp_minimize</span></code></a> did not finish, and there is no <code class="docutils literal notranslate"><span class="pre">res</span></code> variable with the
 actual results!</p>
 </div>
 <div class="section" id="restoring-the-last-checkpoint">
 <h2>Restoring the last checkpoint<a class="headerlink" href="#restoring-the-last-checkpoint" title="Permalink to this headline">¶</a></h2>
-<p>Luckily we employed the <code class="docutils literal notranslate"><span class="pre">CheckpointSaver</span></code> and can now restore the latest
-result with <code class="docutils literal notranslate"><span class="pre">skopt.load</span></code>
+<p>Luckily we employed the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a> and can now restore the latest
+result with <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a>
 (see <a class="reference internal" href="store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a> for more
 information on that)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a>
@@ -315,7 +303,7 @@ information on that)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span>
 <span class="n">y0</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span>
 
-<a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+<a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
               <span class="p">[(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)],</span>    <span class="c1"># the bounds on each dimension of x</span>
               <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>              <span class="c1"># already examined values for x</span>
               <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>              <span class="c1"># observed values for x0</span>
@@ -398,14 +386,14 @@ information on that)</p>
                          n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
                          normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
                          random_state=655685735)]
- random_state: RandomState(MT19937) at 0x7FF5E98E1D10
+ random_state: RandomState(MT19937) at 0x7F7B06A14E20
         space: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
-        specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7ff5f6021170&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+        specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7f7b08f89cb0&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                          kernel=1**2 * Matern(length_scale=1, nu=2.5),
                          n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
                          normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
                          random_state=655685735), &#39;n_calls&#39;: 10, &#39;n_random_starts&#39;: 0, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0]], &#39;y0&#39;: array([-0.04682088, -0.08228249, -0.00653801, -0.07133619,  0.09063509,
-        0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491]), &#39;random_state&#39;: RandomState(MT19937) at 0x7FF5E98E1D10, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7ff571ba1750&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
+        0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491]), &#39;random_state&#39;: RandomState(MT19937) at 0x7F7B06A14E20, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7f7a837f43d0&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
             x: [20.0]
       x_iters: [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0], [20.0], [20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0]]
 </pre></div>
@@ -414,16 +402,16 @@ information on that)</p>
 <div class="section" id="possible-problems">
 <h2>Possible problems<a class="headerlink" href="#possible-problems" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><strong>changes in search space:</strong> You can use this technique to interrupt</p></li>
-</ul>
-<p>the search, tune the search space and continue the optimization. Note
+<li><p><strong>changes in search space:</strong> You can use this technique to interrupt
+the search, tune the search space and continue the optimization. Note
 that the optimizers will complain if <code class="docutils literal notranslate"><span class="pre">x0</span></code> contains parameter values not
 covered by the dimension definitions, so in many cases shrinking the
 search space will not work without deleting the offending runs from
-<code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">y0</span></code>.
-* see <a class="reference internal" href="store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a>
-for more information on how the results get saved and possible caveats</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.320 seconds)</p>
+<code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">y0</span></code>.</p></li>
+<li><p>see <a class="reference internal" href="store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a></p></li>
+</ul>
+<p>for more information on how the results get saved and possible caveats</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.249 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-interruptible-optimization-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/interruptible-optimization.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>

@@ -10,7 +10,7 @@
   <meta name="Description" content="scikit-optimize: machine learning in Python">
 
   
-  <title>Quickstart &mdash; scikit-optimize 0.7 documentation</title>
+  <title>Getting started &mdash; scikit-optimize 0.7 documentation</title>
   
   <link rel="canonical" href="https://scikit-optimize.github.io/getting_started.html" />
 
@@ -114,8 +114,8 @@
         </div>
           <div class="sk-sidebar-toc">
             <ul>
-<li><a class="reference internal" href="#">Quickstart</a><ul>
-<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#">Getting started</a><ul>
+<li><a class="reference internal" href="#finding-a-minimum">Finding a minimum</a></li>
 </ul>
 </li>
 </ul>
@@ -126,10 +126,26 @@
     <div id="sk-page-content-wrapper">
       <div class="sk-page-content container-fluid body px-md-3" role="main">
         
-  <div class="section" id="quickstart">
-<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Scikit-Optimize, or <code class="docutils literal notranslate"><span class="pre">skopt</span></code>, is a simple and efficient library to
+minimize (very) expensive and noisy black-box functions. It implements
+several methods for sequential model-based optimization. <code class="docutils literal notranslate"><span class="pre">skopt</span></code> aims
+to be accessible and easy to use in many contexts.</p>
+<p>The library is built on top of NumPy, SciPy and Scikit-Learn.</p>
+<p>We do not perform gradient-based optimization. For gradient-based
+optimization algorithms look at
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize</span></code>
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">here</a>.</p>
+<div class="figure align-default">
+<img alt="Approximated objective" src="https://rawgit.com/scikit-optimize/scikit-optimize/master/media/bo-objective.png" />
+</div>
+<p>Approximated objective function after 50 iterations of <a class="reference internal" href="modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">gp_minimize</span></code></a>.
+Plot made using <a class="reference internal" href="modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="skopt.plots.plot_objective"><code class="xref py py-class docutils literal notranslate"><span class="pre">plots.plot_objective</span></code></a>.</p>
+<div class="section" id="finding-a-minimum">
+<h2>Finding a minimum<a class="headerlink" href="#finding-a-minimum" title="Permalink to this headline">¶</a></h2>
 <p>Find the minimum of the noisy function <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> over the range <code class="docutils literal notranslate"><span class="pre">-2</span> <span class="pre">&lt;</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">2</span></code>
-with <code class="docutils literal notranslate"><span class="pre">skopt</span></code>:</p>
+with <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">gp_minimize</span>
 
@@ -140,7 +156,7 @@ with <code class="docutils literal notranslate"><span class="pre">skopt</span></
 <span class="n">res</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)])</span>
 </pre></div>
 </div>
-<p>For more control over the optimization loop you can use the <code class="docutils literal notranslate"><span class="pre">skopt.Optimizer</span></code>
+<p>For more control over the optimization loop you can use the <a class="reference internal" href="modules/generated/skopt.Optimizer.html#skopt.Optimizer" title="skopt.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.Optimizer</span></code></a>
 class:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">Optimizer</span>
 
@@ -154,19 +170,7 @@ class:</p>
 </pre></div>
 </div>
 <p>For more read our <a class="reference internal" href="auto_examples/bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a> and the other
-<a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/tree/master/examples">examples</a>.</p>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="auto_examples/ask-and-tell.html#sphx-glr-auto-examples-ask-and-tell-py"><span class="std std-ref">Async optimization Loop</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/hyperparameter-optimization.html#sphx-glr-auto-examples-hyperparameter-optimization-py"><span class="std std-ref">Tuning a scikit-learn estimator with skopt</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/parallel-optimization.html#sphx-glr-auto-examples-parallel-optimization-py"><span class="std std-ref">Parallel optimization</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/strategy-comparison.html#sphx-glr-auto-examples-strategy-comparison-py"><span class="std std-ref">Comparing surrogate models</span></a></p></li>
-<li><p><a class="reference internal" href="auto_examples/visualizing-results.html#sphx-glr-auto-examples-visualizing-results-py"><span class="std std-ref">Visualizing optimization results</span></a></p></li>
-</ul>
+<a class="reference external" href="auto_examples/index.html">examples</a>.</p>
 </div>
 </div>
 

@@ -22,18 +22,15 @@ Optimization runs can take a very long time and even run for multiple days.
 If for some reason the process has to be interrupted results are irreversibly
 lost, and the routine has to start over from the beginning.
 
-With the help of the `CheckpointSaver` callback the optimizer's current state
+With the help of the :class:`callbacks.CheckpointSaver` callback the optimizer's current state
 can be saved after each iteration, allowing to restart from that point at any
 time.
 
 This is useful, for example,
 
-* if you don't know how long the process will take and cannot hog
-    computational resources forever
-* if there might be system failures due to shaky infrastructure
-    (or colleagues...)
-* if you want to adjust some parameters and continue with the already obtained
-    results
+* if you don't know how long the process will take and cannot hog computational resources forever
+* if there might be system failures due to shaky infrastructure (or colleagues...)
+* if you want to adjust some parameters and continue with the already obtained results
 
 
 .. code-block:: default
@@ -61,7 +58,7 @@ Simple example
 
 We will use pretty much the same optimization problem as in the
 :ref:`sphx_glr_auto_examples_bayesian-optimization.py`
-notebook. Additionaly we will instantiate the `CheckpointSaver`
+notebook. Additionally we will instantiate the :class:`callbacks.CheckpointSaver`
 and pass it to the minimizer:
 
 
@@ -165,13 +162,13 @@ and pass it to the minimizer:
                              n_restarts_optimizer=2, noise='gaussian',
                              normalize_y=True, optimizer='fmin_l_bfgs_b',
                              random_state=655685735)]
-     random_state: RandomState(MT19937) at 0x7FF5E98E1D10
+     random_state: RandomState(MT19937) at 0x7F7B06A14E20
             space: Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')])
-            specs: {'args': {'func': <function obj_fun at 0x7ff5f6021170>, 'dimensions': Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+            specs: {'args': {'func': <function obj_fun at 0x7f7b08f89cb0>, 'dimensions': Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                              kernel=1**2 * Matern(length_scale=1, nu=2.5),
                              n_restarts_optimizer=2, noise='gaussian',
                              normalize_y=True, optimizer='fmin_l_bfgs_b',
-                             random_state=655685735), 'n_calls': 10, 'n_random_starts': 0, 'acq_func': 'LCB', 'acq_optimizer': 'auto', 'x0': [-20.0], 'y0': None, 'random_state': RandomState(MT19937) at 0x7FF5E98E1D10, 'verbose': False, 'callback': [<skopt.callbacks.CheckpointSaver object at 0x7ff571ba1750>], 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1, 'model_queue_size': None}, 'function': 'base_minimize'}
+                             random_state=655685735), 'n_calls': 10, 'n_random_starts': 0, 'acq_func': 'LCB', 'acq_optimizer': 'auto', 'x0': [-20.0], 'y0': None, 'random_state': RandomState(MT19937) at 0x7F7B06A14E20, 'verbose': False, 'callback': [<skopt.callbacks.CheckpointSaver object at 0x7f7a837f43d0>], 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1, 'model_queue_size': None}, 'function': 'base_minimize'}
                 x: [20.0]
           x_iters: [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0]]
 
@@ -184,14 +181,14 @@ notebook server you only see a blank page and your colleague Garry
 tells you that he had had an update scheduled for Sunday noon – who
 doesn't like updates?
 
-`gp_minimize` did not finish, and there is no `res` variable with the
+:class:`gp_minimize` did not finish, and there is no `res` variable with the
 actual results!
 
 Restoring the last checkpoint
 =============================
 
-Luckily we employed the `CheckpointSaver` and can now restore the latest
-result with `skopt.load`
+Luckily we employed the :class:`callbacks.CheckpointSaver` and can now restore the latest
+result with :class:`skopt.load`
 (see :ref:`sphx_glr_auto_examples_store-and-load-results.py` for more
 information on that)
 
@@ -323,14 +320,14 @@ The previous results can then be used to continue the optimization process:
                              n_restarts_optimizer=2, noise='gaussian',
                              normalize_y=True, optimizer='fmin_l_bfgs_b',
                              random_state=655685735)]
-     random_state: RandomState(MT19937) at 0x7FF5E98E1D10
+     random_state: RandomState(MT19937) at 0x7F7B06A14E20
             space: Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')])
-            specs: {'args': {'func': <function obj_fun at 0x7ff5f6021170>, 'dimensions': Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+            specs: {'args': {'func': <function obj_fun at 0x7f7b08f89cb0>, 'dimensions': Space([Real(low=-20.0, high=20.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                              kernel=1**2 * Matern(length_scale=1, nu=2.5),
                              n_restarts_optimizer=2, noise='gaussian',
                              normalize_y=True, optimizer='fmin_l_bfgs_b',
                              random_state=655685735), 'n_calls': 10, 'n_random_starts': 0, 'acq_func': 'LCB', 'acq_optimizer': 'auto', 'x0': [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0]], 'y0': array([-0.04682088, -0.08228249, -0.00653801, -0.07133619,  0.09063509,
-            0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491]), 'random_state': RandomState(MT19937) at 0x7FF5E98E1D10, 'verbose': False, 'callback': [<skopt.callbacks.CheckpointSaver object at 0x7ff571ba1750>], 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1, 'model_queue_size': None}, 'function': 'base_minimize'}
+            0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491]), 'random_state': RandomState(MT19937) at 0x7F7B06A14E20, 'verbose': False, 'callback': [<skopt.callbacks.CheckpointSaver object at 0x7f7a837f43d0>], 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1, 'model_queue_size': None}, 'function': 'base_minimize'}
                 x: [20.0]
           x_iters: [[-20.0], [20.0], [20.0], [-20.0], [-20.0], [20.0], [-20.0], [20.0], [20.0], [20.0], [20.0], [20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0], [-20.0]]
 
@@ -340,18 +337,19 @@ Possible problems
 =================
 
 * **changes in search space:** You can use this technique to interrupt
-the search, tune the search space and continue the optimization. Note
-that the optimizers will complain if `x0` contains parameter values not
-covered by the dimension definitions, so in many cases shrinking the
-search space will not work without deleting the offending runs from
-`x0` and `y0`.
+  the search, tune the search space and continue the optimization. Note
+  that the optimizers will complain if `x0` contains parameter values not
+  covered by the dimension definitions, so in many cases shrinking the
+  search space will not work without deleting the offending runs from
+  `x0` and `y0`.
 * see :ref:`sphx_glr_auto_examples_store-and-load-results.py`
+
 for more information on how the results get saved and possible caveats
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.320 seconds)
+   **Total running time of the script:** ( 0 minutes  4.249 seconds)
 
 
 .. _sphx_glr_download_auto_examples_interruptible-optimization.py:

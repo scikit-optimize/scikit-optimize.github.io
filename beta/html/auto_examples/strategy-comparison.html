@@ -104,7 +104,7 @@
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="store-and-load-results.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Store and load skopt optimization results">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
-            <a href="visualizing-results.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Visualizing optimization results">Next</a>
+            <a href="interruptible-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Interruptible optimization runs with checkpoints">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -153,7 +153,7 @@ a baseline.</p>
 </div>
 <div class="section" id="toy-model">
 <h2>Toy model<a class="headerlink" href="#toy-model" title="Permalink to this headline">¶</a></h2>
-<p>We will use the <code class="docutils literal notranslate"><span class="pre">branin</span></code> function as toy model for the expensive function.
+<p>We will use the <a class="reference internal" href="../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> function as toy model for the expensive function.
 In a real world application this function would be unknown and expensive
 to evaluate.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <a href="../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="View documentation for skopt.benchmarks.branin"><span class="n">_branin</span></a>
@@ -204,13 +204,13 @@ the three minima.</p>
 <h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
 <p>The objective of this example is to find one of these minima in as
 few iterations as possible. One iteration is defined as one call
-to the <code class="docutils literal notranslate"><span class="pre">branin</span></code> function.</p>
+to the <a class="reference internal" href="../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> function.</p>
 <p>We will evaluate each model several times using a different seed for the
 random number generator. Then compare the average performance of these
 models. This makes the comparison more robust against models that get
 “lucky”.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a>
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <a href="../modules/minimize_functions.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <a href="../modules/minimize_functions.html#skopt.dummy_minimize" title="View documentation for skopt.dummy_minimize"><span class="n">dummy_minimize</span></a>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <a href="../modules/generated/skopt.forest_minimize.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <a href="../modules/generated/skopt.dummy_minimize.html#skopt.dummy_minimize" title="View documentation for skopt.dummy_minimize"><span class="n">dummy_minimize</span></a>
 
 <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
@@ -222,22 +222,22 @@ models. This makes the comparison more robust against models that get
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">)]</span>
 
 <span class="c1"># Random search</span>
-<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../modules/minimize_functions.html#skopt.dummy_minimize" title="View documentation for skopt.dummy_minimize"><span class="n">dummy_minimize</span></a><span class="p">)</span>
+<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../modules/generated/skopt.dummy_minimize.html#skopt.dummy_minimize" title="View documentation for skopt.dummy_minimize"><span class="n">dummy_minimize</span></a><span class="p">)</span>
 
 <span class="c1"># Gaussian processes</span>
-<span class="n">gp_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../modules/minimize_functions.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">)</span>
+<span class="n">gp_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">)</span>
 
 <span class="c1"># Random forest</span>
-<span class="n">rf_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><a href="../modules/minimize_functions.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;RF&quot;</span><span class="p">))</span>
+<span class="n">rf_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><a href="../modules/generated/skopt.forest_minimize.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;RF&quot;</span><span class="p">))</span>
 
 <span class="c1"># Extra trees</span>
-<span class="n">et_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><a href="../modules/minimize_functions.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">))</span>
+<span class="n">et_res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><a href="../modules/generated/skopt.forest_minimize.html#skopt.forest_minimize" title="View documentation for skopt.forest_minimize"><span class="n">forest_minimize</span></a><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;ET&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Note that this can take a few minutes.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../modules/plots.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a>
 
-<span class="n">plot</span> <span class="o">=</span> <a href="../modules/plots.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
+<span class="n">plot</span> <span class="o">=</span> <a href="../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="View documentation for skopt.plots.plot_convergence"><span class="n">plot_convergence</span></a><span class="p">((</span><span class="s2">&quot;dummy_minimize&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
                         <span class="p">(</span><span class="s2">&quot;gp_minimize&quot;</span><span class="p">,</span> <span class="n">gp_res</span><span class="p">),</span>
                         <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;rf&#39;)&quot;</span><span class="p">,</span> <span class="n">rf_res</span><span class="p">),</span>
                         <span class="p">(</span><span class="s2">&quot;forest_minimize(&#39;et)&quot;</span><span class="p">,</span> <span class="n">et_res</span><span class="p">),</span>
@@ -248,21 +248,21 @@ models. This makes the comparison more robust against models that get
 </div>
 <img alt="../_images/sphx_glr_strategy-comparison_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_strategy-comparison_002.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7ff574ae4790&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7f7a838a2e50&gt;
 </pre></div>
 </div>
 <p>This plot shows the value of the minimum found (y axis) as a function
 of the number of iterations performed so far (x axis). The dashed red line
-indicates the true value of the minimum of the branin function.</p>
+indicates the true value of the minimum of the <a class="reference internal" href="../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> function.</p>
 <p>For the first ten iterations all methods perform equally well as they all
 start by creating ten random samples before fitting their respective model
 for the first time. After iteration ten the next point at which
-to evaluate <code class="docutils literal notranslate"><span class="pre">branin</span></code> is guided by the model, which is where differences
+to evaluate <a class="reference internal" href="../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> is guided by the model, which is where differences
 start to appear.</p>
 <p>Each minimizer only has access to noisy observations of the objective
 function, so as time passes (more iterations) it will start observing
 values that are below the true value simply because they are fluctuations.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 10 minutes  45.527 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 9 minutes  5.923 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-strategy-comparison-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/strategy-comparison.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
