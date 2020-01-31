@@ -1071,6 +1071,9 @@ table {
         <span class="class_name"><a href="#skopt.space.transformers.Pipeline">Pipeline</a></span>
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#skopt.space.transformers.StringEncoder">StringEncoder</a></span>
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#skopt.space.transformers.Transformer">Transformer</a></span>
         </li>
       </ul>
@@ -1137,22 +1140,66 @@ table {
 
 <span class="k">class</span> <span class="nc">Identity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Identity transform.</span>
-<span class="sd">    If dtype is different from None the transform will cast everything to a</span>
-<span class="sd">    string and the inverse transform will cast to the type defined in dtype.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Identity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">X</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
-
+        <span class="k">return</span> <span class="n">X</span>
 
     <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Xt</span>
+        <span class="k">return</span> <span class="n">Xt</span>
+
+
+<span class="k">class</span> <span class="nc">StringEncoder</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;StringEncoder transform.</span>
+<span class="sd">       The transform will cast everything to a</span>
+<span class="sd">       string and the inverse transform will cast to the type defined in dtype.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StringEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit a list or array of categories. All elements must be from the</span>
+<span class="sd">        same type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `X` [array-like, shape=(n_categories,)]:</span>
+<span class="sd">            List of categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform an array of categories to a string encoded representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            List of categories.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            The string encoded categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inverse transform string encoded categories back to their original</span>
+<span class="sd">           representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            String encoded categories.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            The original categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xt</span><span class="p">]</span>
 
 
@@ -1545,31 +1592,19 @@ table {
       <p id="skopt.space.transformers.Identity" class="name">class <span class="ident">Identity</span></p>
       
   
-    <div class="desc"><p>Identity transform.
-If dtype is different from None the transform will cast everything to a
-string and the inverse transform will cast to the type defined in dtype.</p></div>
+    <div class="desc"><p>Identity transform.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.Identity', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.transformers.Identity" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Identity</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Identity transform.</span>
-<span class="sd">    If dtype is different from None the transform will cast everything to a</span>
-<span class="sd">    string and the inverse transform will cast to the type defined in dtype.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Identity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">X</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
-
+        <span class="k">return</span> <span class="n">X</span>
 
     <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Xt</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xt</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Xt</span>
 </pre></div>
 
   </div>
@@ -1586,33 +1621,14 @@ string and the inverse transform will cast to the type defined in dtype.</p></di
           <h3>Static methods</h3>
             
   <div class="item">
-    <div class="name def" id="skopt.space.transformers.Identity.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, dtype=None)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.Identity.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-skopt.space.transformers.Identity.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="nb">super</span><span class="p">(</span><span class="n">Identity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
     <div class="name def" id="skopt.space.transformers.Identity.fit">
     <p>def <span class="ident">fit</span>(</p><p>self, X)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#skopt.space.transformers.Transformer">Transformer</a></code>.<code><a href="#skopt.space.transformers.Transformer.fit">fit</a></code>
+    </p>
 
     
   
@@ -1641,9 +1657,7 @@ string and the inverse transform will cast to the type defined in dtype.</p></di
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.Identity.inverse_transform', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.transformers.Identity.inverse_transform" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Xt</span>
-    <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xt</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Xt</span>
 </pre></div>
 
   </div>
@@ -1664,9 +1678,7 @@ string and the inverse transform will cast to the type defined in dtype.</p></di
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.Identity.transform', this);">Show source &equiv;</a></p>
   <div id="source-skopt.space.transformers.Identity.transform" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">X</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X</span>
 </pre></div>
 
   </div>
@@ -1674,17 +1686,6 @@ string and the inverse transform will cast to the type defined in dtype.</p></di
 
   </div>
   
-          <h3>Instance variables</h3>
-            <div class="item">
-            <p id="skopt.space.transformers.Identity.dtype" class="name">var <span class="ident">dtype</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
       </div>
       </div>
       
@@ -2179,6 +2180,241 @@ string and the inverse transform will cast to the type defined in dtype.</p></di
           <h3>Instance variables</h3>
             <div class="item">
             <p id="skopt.space.transformers.Pipeline.transformers" class="name">var <span class="ident">transformers</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="skopt.space.transformers.StringEncoder" class="name">class <span class="ident">StringEncoder</span></p>
+      
+  
+    <div class="desc"><p>StringEncoder transform.
+The transform will cast everything to a
+string and the inverse transform will cast to the type defined in dtype.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.StringEncoder', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.transformers.StringEncoder" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">StringEncoder</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;StringEncoder transform.</span>
+<span class="sd">       The transform will cast everything to a</span>
+<span class="sd">       string and the inverse transform will cast to the type defined in dtype.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StringEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit a list or array of categories. All elements must be from the</span>
+<span class="sd">        same type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `X` [array-like, shape=(n_categories,)]:</span>
+<span class="sd">            List of categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform an array of categories to a string encoded representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            List of categories.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            The string encoded categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inverse transform string encoded categories back to their original</span>
+<span class="sd">           representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            String encoded categories.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">            The original categories.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xt</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#skopt.space.transformers.StringEncoder">StringEncoder</a></li>
+          <li><a href="#skopt.space.transformers.Transformer">Transformer</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="skopt.space.transformers.StringEncoder.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, dtype=&lt;class &#39;str&#39;&gt;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.StringEncoder.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.transformers.StringEncoder.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">StringEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.space.transformers.StringEncoder.fit">
+    <p>def <span class="ident">fit</span>(</p><p>self, X)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Fit a list or array of categories. All elements must be from the
+same type.</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>X</code> [array-like, shape=(n_categories,)]:
+    List of categories.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.StringEncoder.fit', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.transformers.StringEncoder.fit" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fit a list or array of categories. All elements must be from the</span>
+<span class="sd">    same type.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `X` [array-like, shape=(n_categories,)]:</span>
+<span class="sd">        List of categories.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.space.transformers.StringEncoder.inverse_transform">
+    <p>def <span class="ident">inverse_transform</span>(</p><p>self, Xt)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Inverse transform string encoded categories back to their original
+   representation.</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>Xt</code> [array-like, shape=(n_samples,)]:
+    String encoded categories.</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>X</code> [array-like, shape=(n_samples,)]:
+    The original categories.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.StringEncoder.inverse_transform', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.transformers.StringEncoder.inverse_transform" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Inverse transform string encoded categories back to their original</span>
+<span class="sd">       representation.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">        String encoded categories.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">        The original categories.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xt</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="skopt.space.transformers.StringEncoder.transform">
+    <p>def <span class="ident">transform</span>(</p><p>self, X)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Transform an array of categories to a string encoded representation.</p>
+<h2>Parameters</h2>
+<ul>
+<li><code>X</code> [array-like, shape=(n_samples,)]:
+    List of categories.</li>
+</ul>
+<h2>Returns</h2>
+<ul>
+<li><code>Xt</code> [array-like, shape=(n_samples,)]:
+    The string encoded categories.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-skopt.space.transformers.StringEncoder.transform', this);">Show source &equiv;</a></p>
+  <div id="source-skopt.space.transformers.StringEncoder.transform" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Transform an array of categories to a string encoded representation.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * `X` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">        List of categories.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    * `Xt` [array-like, shape=(n_samples,)]:</span>
+<span class="sd">        The string encoded categories.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="skopt.space.transformers.StringEncoder.dtype" class="name">var <span class="ident">dtype</span></p>
             
 
             

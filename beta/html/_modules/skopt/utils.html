@@ -595,13 +595,13 @@
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="n">transformed_dimensions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
-        <span class="c1"># recreate the space and explicitly set transform to &quot;identity&quot;</span>
+        <span class="c1"># recreate the space and explicitly set transform to &quot;string&quot;</span>
         <span class="c1"># this is a special case for GP based regressors</span>
         <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="p">:</span>
             <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span>
                                                       <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
                                                       <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">))</span>
+                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>

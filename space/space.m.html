@@ -1141,6 +1141,7 @@ table {
 <span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">sp_version</span>
 
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">CategoricalEncoder</span>
+<span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">StringEncoder</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Normalize</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Identity</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">LogN</span>
@@ -1176,11 +1177,12 @@ table {
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, &quot;onehot&quot; optional]:</span>
+<span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, &quot;string&quot;, &quot;onehot&quot; optional]:</span>
 <span class="sd">        - For `Categorical` dimensions, the following transformations are</span>
 <span class="sd">          supported.</span>
 
 <span class="sd">          - &quot;onehot&quot; (default) one-hot transformation of the original space.</span>
+<span class="sd">          - &quot;string&quot; string transformation of the original space.</span>
 <span class="sd">          - &quot;identity&quot; same as the original space.</span>
 
 <span class="sd">        - For `Real` and `Integer` dimensions, the following transformations</span>
@@ -1590,33 +1592,36 @@ table {
 <span class="sd">            Prior probabilities for each category. By default all categories</span>
 <span class="sd">            are equally likely.</span>
 
-<span class="sd">        * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
+<span class="sd">        * `transform` [&quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
 <span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">              space.</span>
+<span class="sd">            -  &quot;string&quot;,  the transformed space is a string encoded</span>
+<span class="sd">              representation of the original space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
 
 <span class="sd">        * `name` [str or None]:</span>
 <span class="sd">            Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s1">&#39;identity&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
-                             <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39;, &#39;string&#39; or&quot;</span>
+                             <span class="s2">&quot;&#39;onehot&#39; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">CategoricalEncoder</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">StringEncoder</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
 
@@ -2042,7 +2047,7 @@ the documentation of <code>dimension</code> below.</p>
 </ul>
 </li>
 <li>
-<p><code>transform</code> ["identity", "normalize", "onehot" optional]:</p>
+<p><code>transform</code> ["identity", "normalize", "string", "onehot" optional]:</p>
 <ul>
 <li>
 <p>For <code>Categorical</code> dimensions, the following transformations are
@@ -2051,6 +2056,7 @@ the documentation of <code>dimension</code> below.</p>
 <li>
 <p>"onehot" (default) one-hot transformation of the original space.</p>
 </li>
+<li>"string" string transformation of the original space.</li>
 <li>
 <p>"identity" same as the original space.</p>
 </li>
@@ -2097,11 +2103,12 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, &quot;onehot&quot; optional]:</span>
+<span class="sd">    * `transform` [&quot;identity&quot;, &quot;normalize&quot;, &quot;string&quot;, &quot;onehot&quot; optional]:</span>
 <span class="sd">        - For `Categorical` dimensions, the following transformations are</span>
 <span class="sd">          supported.</span>
 
 <span class="sd">          - &quot;onehot&quot; (default) one-hot transformation of the original space.</span>
+<span class="sd">          - &quot;string&quot; string transformation of the original space.</span>
 <span class="sd">          - &quot;identity&quot; same as the original space.</span>
 
 <span class="sd">        - For `Real` and `Integer` dimensions, the following transformations</span>
@@ -2197,33 +2204,36 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">            Prior probabilities for each category. By default all categories</span>
 <span class="sd">            are equally likely.</span>
 
-<span class="sd">        * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
+<span class="sd">        * `transform` [&quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
 <span class="sd">            - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">              space.</span>
+<span class="sd">            -  &quot;string&quot;,  the transformed space is a string encoded</span>
+<span class="sd">              representation of the original space.</span>
 <span class="sd">            - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">              representation of the original space.</span>
 
 <span class="sd">        * `name` [str or None]:</span>
 <span class="sd">            Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s1">&#39;identity&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
-                             <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39;, &#39;string&#39; or&quot;</span>
+                             <span class="s2">&quot;&#39;onehot&#39; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">CategoricalEncoder</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">StringEncoder</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
 
@@ -2341,10 +2351,12 @@ the documentation of <code>dimension</code> below.</p>
     are equally likely.</p>
 </li>
 <li>
-<p><code>transform</code> ["onehot", "identity", default="onehot"] :</p>
+<p><code>transform</code> ["onehot", "string", "identity", default="onehot"] :</p>
 <ul>
 <li>"identity", the transformed space is the same as the original
   space.</li>
+<li>"string",  the transformed space is a string encoded
+  representation of the original space.</li>
 <li>"onehot", the transformed space is a one-hot encoded
   representation of the original space.</li>
 </ul>
@@ -2366,30 +2378,33 @@ the documentation of <code>dimension</code> below.</p>
 <span class="sd">    * `prior` [list, shape=(categories,), default=None]:</span>
 <span class="sd">        Prior probabilities for each category. By default all categories</span>
 <span class="sd">        are equally likely.</span>
-<span class="sd">    * `transform` [&quot;onehot&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
+<span class="sd">    * `transform` [&quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, default=&quot;onehot&quot;] :</span>
 <span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">          space.</span>
+<span class="sd">        -  &quot;string&quot;,  the transformed space is a string encoded</span>
+<span class="sd">          representation of the original space.</span>
 <span class="sd">        - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">          representation of the original space.</span>
 <span class="sd">    * `name` [str or None]:</span>
 <span class="sd">        Name associated with dimension, e.g., &quot;colors&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s1">&#39;identity&#39;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
-    <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39; or &#39;onehot&#39; &quot;</span>
-                         <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39;, &#39;string&#39; or&quot;</span>
+                         <span class="s2">&quot;&#39;onehot&#39; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">CategoricalEncoder</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">StringEncoder</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
     <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">),</span>
@@ -2554,12 +2569,18 @@ original space.</p></div>
 
             </div>
             <div class="item">
+            <p id="skopt.space.space.Categorical.categories" class="name">var <span class="ident">categories</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="skopt.space.space.Categorical.name" class="name">var <span class="ident">name</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#skopt.space.space.Dimension">Dimension</a></code>.<code><a href="#skopt.space.space.Dimension.name">name</a></code>
-    </p>
 
             
   
