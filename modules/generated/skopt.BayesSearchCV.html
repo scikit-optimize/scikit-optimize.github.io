@@ -1,0 +1,804 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.BayesSearchCV &mdash; scikit-optimize 0.7 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/modules/generated/skopt.BayesSearchCV.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
+            <a href="skopt.Optimizer.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.Optimizer">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.7</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt</span></code>.BayesSearchCV</a><ul>
+<li><a class="reference internal" href="#examples-using-skopt-bayessearchcv">Examples using <code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <div class="section" id="skopt-bayessearchcv">
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt</span></code>.BayesSearchCV<a class="headerlink" href="#skopt-bayessearchcv" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="skopt.BayesSearchCV">
+<em class="property">class </em><code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">BayesSearchCV</code><span class="sig-paren">(</span><em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/searchcv.py#L29"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bayesian optimization over hyper parameters.</p>
+<p>BayesSearchCV implements a “fit” and a “score” method.
+It also implements “predict”, “predict_proba”, “decision_function”,
+“transform” and “inverse_transform” if they are implemented in the
+estimator used.</p>
+<p>The parameters of the estimator used to apply these methods are optimized
+by cross-validated search over parameter settings.</p>
+<p>In contrast to GridSearchCV, not all parameter values are tried out, but
+rather a fixed number of parameter settings is sampled from the specified
+distributions. The number of parameter settings that are tried is
+given by n_iter.</p>
+<p>Parameters are presented as a list of skopt.space.Dimension objects.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>estimator</strong><span class="classifier">estimator object.</span></dt><dd><p>A object of that type is instantiated for each search point.
+This object is assumed to implement the scikit-learn estimator api.
+Either estimator needs to provide a <code class="docutils literal notranslate"><span class="pre">score</span></code> function,
+or <code class="docutils literal notranslate"><span class="pre">scoring</span></code> must be passed.</p>
+</dd>
+<dt><strong>search_spaces</strong><span class="classifier">dict, list of dict or list of tuple containing</span></dt><dd><p>(dict, int).
+One of these cases:
+1. dictionary, where keys are parameter names (strings)
+and values are skopt.space.Dimension instances (Real, Integer
+or Categorical) or any other valid value that defines skopt
+dimension (see skopt.Optimizer docs). Represents search space
+over parameters of the provided estimator.
+2. list of dictionaries: a list of dictionaries, where every
+dictionary fits the description given in case 1 above.
+If a list of dictionary objects is given, then the search is
+performed sequentially for every parameter space with maximum
+number of evaluations set to self.n_iter.
+3. list of (dict, int &gt; 0): an extension of case 2 above,
+where first element of every tuple is a dictionary representing
+some search subspace, similarly as in case 2, and second element
+is a number of iterations that will be spent optimizing over
+this subspace.</p>
+</dd>
+<dt><strong>n_iter</strong><span class="classifier">int, default=50</span></dt><dd><p>Number of parameter settings that are sampled. n_iter trades
+off runtime vs quality of the solution. Consider increasing
+<code class="docutils literal notranslate"><span class="pre">n_points</span></code> if you want to try more parameter settings in
+parallel.</p>
+</dd>
+<dt><strong>optimizer_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Dict of arguments passed to <a class="reference internal" href="skopt.Optimizer.html#skopt.Optimizer" title="skopt.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a>.  For example,
+<code class="docutils literal notranslate"><span class="pre">{'base_estimator':</span> <span class="pre">'RF'}</span></code> would use a Random Forest surrogate
+instead of the default Gaussian Process.</p>
+</dd>
+<dt><strong>scoring</strong><span class="classifier">string, callable or None, default=None</span></dt><dd><p>A string (see model evaluation documentation) or
+a scorer callable object / function with signature
+<code class="docutils literal notranslate"><span class="pre">scorer(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">score</span></code> method of the estimator is used.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">dict, optional</span></dt><dd><p>Parameters to pass to the fit method.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int, default=1</span></dt><dd><p>Number of jobs to run in parallel. At maximum there are
+<code class="docutils literal notranslate"><span class="pre">n_points</span></code> times <code class="docutils literal notranslate"><span class="pre">cv</span></code> jobs available during each iteration.</p>
+</dd>
+<dt><strong>n_points</strong><span class="classifier">int, default=1</span></dt><dd><p>Number of parameter settings to sample in parallel. If this does
+not align with <code class="docutils literal notranslate"><span class="pre">n_iter</span></code>, the last iteration will sample less
+points. See also <a class="reference internal" href="skopt.Optimizer.html#skopt.Optimizer.ask" title="skopt.Optimizer.ask"><code class="xref py py-func docutils literal notranslate"><span class="pre">ask()</span></code></a></p>
+</dd>
+<dt><strong>pre_dispatch</strong><span class="classifier">int, or string, optional</span></dt><dd><p>Controls the number of jobs that get dispatched during parallel
+execution. Reducing this number can be useful to avoid an
+explosion of memory consumption when more jobs get dispatched
+than CPUs can process. This parameter can be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>None, in which case all the jobs are immediately
+created and spawned. Use this for lightweight and
+fast-running jobs, to avoid delays due to on-demand
+spawning of the jobs</p></li>
+<li><p>An int, giving the exact number of total jobs that are
+spawned</p></li>
+<li><p>A string, giving an expression as a function of n_jobs,
+as in ‘2*n_jobs’</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>iid</strong><span class="classifier">boolean, default=True</span></dt><dd><p>If True, the data is assumed to be identically distributed across
+the folds, and the loss minimized is the total loss per sample,
+and not the mean loss across the folds.</p>
+</dd>
+<dt><strong>cv</strong><span class="classifier">int, cross-validation generator or an iterable, optional</span></dt><dd><p>Determines the cross-validation splitting strategy.
+Possible inputs for cv are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>None, to use the default 3-fold cross validation,</p></li>
+<li><p>integer, to specify the number of folds in a <code class="docutils literal notranslate"><span class="pre">(Stratified)KFold</span></code>,</p></li>
+<li><p>An object to be used as a cross-validation generator.</p></li>
+<li><p>An iterable yielding train, test splits.</p></li>
+</ul>
+</div></blockquote>
+<p>For integer/None inputs, if the estimator is a classifier and <code class="docutils literal notranslate"><span class="pre">y</span></code> is
+either binary or multiclass, <code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> is used. In all
+other cases, <code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code> is used.</p>
+</dd>
+<dt><strong>refit</strong><span class="classifier">boolean, default=True</span></dt><dd><p>Refit the best estimator with the entire dataset.
+If “False”, it is impossible to make predictions using
+this RandomizedSearchCV instance after fitting.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">integer</span></dt><dd><p>Controls the verbosity: the higher, the more messages.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int or RandomState</span></dt><dd><p>Pseudo random number generator state used for random uniform sampling
+from lists of possible values instead of scipy.stats distributions.</p>
+</dd>
+<dt><strong>error_score</strong><span class="classifier">‘raise’ (default) or numeric</span></dt><dd><p>Value to assign to the score if an error occurs in estimator fitting.
+If set to ‘raise’, the error is raised. If a numeric value is given,
+FitFailedWarning is raised. This parameter does not affect the refit
+step, which will always raise the error.</p>
+</dd>
+<dt><strong>return_train_score</strong><span class="classifier">boolean, default=False</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">'True'</span></code>, the <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code> attribute will include training
+scores.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl>
+<dt><strong>cv_results_</strong><span class="classifier">dict of numpy (masked) ndarrays</span></dt><dd><p>A dict with keys as column headers and values as columns, that can be
+imported into a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>.</p>
+<p>For instance the below given table</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 30%" />
+<col style="width: 5%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>param_kernel</p></th>
+<th class="head"><p>param_gamma</p></th>
+<th class="head"><p>split0_test_score</p></th>
+<th class="head"><p>…</p></th>
+<th class="head"><p>rank_test_score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘rbf’</p></td>
+<td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>…</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘rbf’</p></td>
+<td><p>0.2</p></td>
+<td><p>0.9</p></td>
+<td><p>…</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>‘rbf’</p></td>
+<td><p>0.3</p></td>
+<td><p>0.7</p></td>
+<td><p>…</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>will be represented by a <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code> dict of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s1">&#39;param_kernel&#39;</span> <span class="p">:</span> <span class="n">masked_array</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">],</span>
+                              <span class="n">mask</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span>
+<span class="s1">&#39;param_gamma&#39;</span>  <span class="p">:</span> <span class="n">masked_array</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span> <span class="mf">0.2</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">mask</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span>
+<span class="s1">&#39;split0_test_score&#39;</span>  <span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;split1_test_score&#39;</span>  <span class="p">:</span> <span class="p">[</span><span class="mf">0.82</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;mean_test_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mf">0.81</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;std_test_score&#39;</span>     <span class="p">:</span> <span class="p">[</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+<span class="s1">&#39;rank_test_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="s1">&#39;split0_train_score&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;split1_train_score&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.82</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;mean_train_score&#39;</span>   <span class="p">:</span> <span class="p">[</span><span class="mf">0.81</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="s1">&#39;std_train_score&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">],</span>
+<span class="s1">&#39;mean_fit_time&#39;</span>      <span class="p">:</span> <span class="p">[</span><span class="mf">0.73</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.43</span><span class="p">,</span> <span class="mf">0.49</span><span class="p">],</span>
+<span class="s1">&#39;std_fit_time&#39;</span>       <span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+<span class="s1">&#39;mean_score_time&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">],</span>
+<span class="s1">&#39;std_score_time&#39;</span>     <span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">],</span>
+<span class="s1">&#39;params&#39;</span> <span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;kernel&#39;</span> <span class="p">:</span> <span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">},</span> <span class="o">...</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>NOTE that the key <code class="docutils literal notranslate"><span class="pre">'params'</span></code> is used to store a list of parameter
+settings dict for all the parameter candidates.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mean_fit_time</span></code>, <code class="docutils literal notranslate"><span class="pre">std_fit_time</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_score_time</span></code> and
+<code class="docutils literal notranslate"><span class="pre">std_score_time</span></code> are all in seconds.</p>
+</dd>
+<dt><strong>best_estimator_</strong><span class="classifier">estimator</span></dt><dd><p>Estimator that was chosen by the search, i.e. estimator
+which gave highest score (or smallest loss if specified)
+on the left out data. Not available if refit=False.</p>
+</dd>
+<dt><strong>best_score_</strong><span class="classifier">float</span></dt><dd><p>Score of best_estimator on the left out data.</p>
+</dd>
+<dt><strong>best_params_</strong><span class="classifier">dict</span></dt><dd><p>Parameter setting that gave the best results on the hold out data.</p>
+</dd>
+<dt><strong>best_index_</strong><span class="classifier">int</span></dt><dd><p>The index (of the <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code> arrays) which corresponds to the best
+candidate parameter setting.</p>
+<p>The dict at <code class="docutils literal notranslate"><span class="pre">search.cv_results_['params'][search.best_index_]</span></code> gives
+the parameter setting for the best model, that gives the highest
+mean score (<code class="docutils literal notranslate"><span class="pre">search.best_score_</span></code>).</p>
+</dd>
+<dt><strong>scorer_</strong><span class="classifier">function</span></dt><dd><p>Scorer function used on the held out data to choose the best
+parameters for the model.</p>
+</dd>
+<dt><strong>n_splits_</strong><span class="classifier">int</span></dt><dd><p>The number of cross-validation splits (folds/iterations).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></dt><dd><p>Does exhaustive search over a grid of parameters.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The parameters selected are those that maximize the score of the held-out
+data, according to the scoring parameter.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> was set to a value higher than one, the data is copied for each
+parameter setting(and not <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> times). This is done for efficiency
+reasons if individual jobs take very little time, but may raise errors if
+the dataset is large and not enough memory is available.  A workaround in
+this case is to set <code class="docutils literal notranslate"><span class="pre">pre_dispatch</span></code>. Then, the memory is copied only
+<code class="docutils literal notranslate"><span class="pre">pre_dispatch</span></code> many times. A reasonable value for <code class="docutils literal notranslate"><span class="pre">pre_dispatch</span></code> is <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span>
+<span class="pre">n_jobs</span></code>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">BayesSearchCV</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># parameter ranges are specified by one of below</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>                                                    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+<span class="gp">... </span>                                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># log-uniform: understand as search over p = exp(x) by varying x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span> <span class="o">=</span> <span class="n">BayesSearchCV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">SVC</span><span class="p">(),</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+6</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e+1</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s1">&#39;log-uniform&#39;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;degree&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">([</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="s1">&#39;rbf&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">n_iter</span><span class="o">=</span><span class="mi">32</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># executes bayesian optimization</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model can be saved, used for predictions or scoring</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="go">0.973...</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.decision_function" title="skopt.BayesSearchCV.decision_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decision_function</span></code></a>(self, X)</p></td>
+<td><p>Call decision_function on the estimator with the best found parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.fit" title="skopt.BayesSearchCV.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, X[, y, groups, callback])</p></td>
+<td><p>Run fit on the estimator with randomly drawn parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.get_params" title="skopt.BayesSearchCV.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>(self[, deep])</p></td>
+<td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.inverse_transform" title="skopt.BayesSearchCV.inverse_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_transform</span></code></a>(self, Xt)</p></td>
+<td><p>Call inverse_transform on the estimator with the best found params.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.predict" title="skopt.BayesSearchCV.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, X)</p></td>
+<td><p>Call predict on the estimator with the best found parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.predict_log_proba" title="skopt.BayesSearchCV.predict_log_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_log_proba</span></code></a>(self, X)</p></td>
+<td><p>Call predict_log_proba on the estimator with the best found parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.predict_proba" title="skopt.BayesSearchCV.predict_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code></a>(self, X)</p></td>
+<td><p>Call predict_proba on the estimator with the best found parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.score" title="skopt.BayesSearchCV.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(self, X[, y])</p></td>
+<td><p>Returns the score on the given data, if the estimator has been refit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.set_params" title="skopt.BayesSearchCV.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(self, \*\*params)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.BayesSearchCV.transform" title="skopt.BayesSearchCV.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(self, X)</p></td>
+<td><p>Call transform on the estimator with the best found parameters.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="skopt.BayesSearchCV.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">estimator</em>, <em class="sig-param">search_spaces</em>, <em class="sig-param">optimizer_kwargs=None</em>, <em class="sig-param">n_iter=50</em>, <em class="sig-param">scoring=None</em>, <em class="sig-param">fit_params=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">n_points=1</em>, <em class="sig-param">iid=True</em>, <em class="sig-param">refit=True</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">pre_dispatch='2*n_jobs'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">error_score='raise'</em>, <em class="sig-param">return_train_score=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/searchcv.py#L286"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.decision_function">
+<code class="sig-name descname">decision_function</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L513"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.decision_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call decision_function on the estimator with the best found parameters.</p>
+<p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
+<code class="docutils literal notranslate"><span class="pre">decision_function</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">callback=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/searchcv.py#L608"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/searchcv.html#BayesSearchCV.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run fit on the estimator with randomly drawn parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like or sparse matrix, shape = [n_samples, n_features]</span></dt><dd><p>The training input samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like, shape = [n_samples] or [n_samples, n_output]</span></dt><dd><p>Target relative to X for classification or regression (class
+labels should be integers or strings).</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">array-like, with shape (n_samples,), optional</span></dt><dd><p>Group labels for the samples used while splitting the dataset into
+train/test set.</p>
+</dd>
+<dt><strong>callback: [callable, list of callables, optional]</strong></dt><dd><p>If callable then <code class="docutils literal notranslate"><span class="pre">callback(res)</span></code> is called after each parameter
+combination tested. If list of callables, then each callable in
+the list is called.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.get_params">
+<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/base.py#L173"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">mapping of string to any</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.inverse_transform">
+<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L547"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call inverse_transform on the estimator with the best found params.</p>
+<p>Only available if the underlying estimator implements
+<code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> and <code class="docutils literal notranslate"><span class="pre">refit=True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xt</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L462"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call predict on the estimator with the best found parameters.</p>
+<p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
+<code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.predict_log_proba">
+<code class="sig-name descname">predict_log_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L496"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_log_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call predict_log_proba on the estimator with the best found parameters.</p>
+<p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
+<code class="docutils literal notranslate"><span class="pre">predict_log_proba</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.predict_proba">
+<code class="sig-name descname">predict_proba</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L479"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call predict_proba on the estimator with the best found parameters.</p>
+<p>Only available if <code class="docutils literal notranslate"><span class="pre">refit=True</span></code> and the underlying estimator supports
+<code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/model_selection/_search.py#L422"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the score on the given data, if the estimator has been refit.</p>
+<p>This uses the score defined by <code class="docutils literal notranslate"><span class="pre">scoring</span></code> where provided, and the
+<code class="docutils literal notranslate"><span class="pre">best_estimator_.score</span></code> method otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Input data, where n_samples is the number of samples and
+n_features is the number of features.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples, n_output) or (n_samples,), optional</span></dt><dd><p>Target relative to X for classification or regression;
+None for unsupervised learning.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.set_params">
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/base.py#L205"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as pipelines). The latter have parameters of the form
+<code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s possible to update each
+component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.total_iterations">
+<em class="property">property </em><code class="sig-name descname">total_iterations</code><a class="headerlink" href="#skopt.BayesSearchCV.total_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count total iterations that will be taken to explore
+all subspaces with <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>max_iter: int, total number of iterations to explore</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="skopt.BayesSearchCV.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/89b4f90/skopt/../../../opt/conda/envs/testenv/lib/python3.8/site-packages/sklearn/utils/metaestimators.py#L530"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.BayesSearchCV.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call transform on the estimator with the best found parameters.</p>
+<p>Only available if the underlying estimator supports <code class="docutils literal notranslate"><span class="pre">transform</span></code> and
+<code class="docutils literal notranslate"><span class="pre">refit=True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">indexable, length n_samples</span></dt><dd><p>Must fulfill the input assumptions of the
+underlying estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="examples-using-skopt-bayessearchcv">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">skopt.BayesSearchCV</span></code><a class="headerlink" href="#examples-using-skopt-bayessearchcv" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Iaroslav Shcherbatyi, Tim Head and Gilles Louppe. June 2017. Reformatted by Holger Nahrstaedt 2..."><div class="figure align-default" id="id1">
+<img alt="../../_images/sphx_glr_sklearn-gridsearchcv-replacement_thumb.png" src="../../_images/sphx_glr_sklearn-gridsearchcv-replacement_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+          <a href="../../_sources/modules/generated/skopt.BayesSearchCV.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code samples to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+</body>
+</html>

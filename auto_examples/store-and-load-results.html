@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>Store and load skopt optimization results &mdash; scikit-optimize 0.7 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/auto_examples/store-and-load-results.html" />
+
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../index.html">
+        <img
+          class="sk-brand-img"
+          src="../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../index.html">
+            <img
+              class="sk-brand-img"
+              src="../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="hyperparameter-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Tuning a scikit-learn estimator with skopt">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="strategy-comparison.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparing surrogate models">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.7</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#">Store and load <code class="docutils literal notranslate"><span class="pre">skopt</span></code> optimization results</a><ul>
+<li><a class="reference internal" href="#problem-statement">Problem statement</a></li>
+<li><a class="reference internal" href="#simple-example">Simple example</a></li>
+<li><a class="reference internal" href="#using-skopt-dump-and-skopt-load">Using <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code></a><ul>
+<li><a class="reference internal" href="#unserializable-objective-functions">Unserializable objective functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#possible-problems">Possible problems</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-store-and-load-results-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<div class="sphx-glr-example-title section" id="store-and-load-skopt-optimization-results">
+<span id="sphx-glr-auto-examples-store-and-load-results-py"></span><h1>Store and load <code class="docutils literal notranslate"><span class="pre">skopt</span></code> optimization results<a class="headerlink" href="#store-and-load-skopt-optimization-results" title="Permalink to this headline">¶</a></h1>
+<p>Mikhail Pak, October 2016.
+Reformatted by Holger Nahrstaedt 2020</p>
+<div class="section" id="problem-statement">
+<h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
+<p>We often want to store optimization results in a file. This can be useful,
+for example,</p>
+<ul class="simple">
+<li><p>if you want to share your results with colleagues;</p></li>
+<li><p>if you want to archive and/or document your work;</p></li>
+<li><p>or if you want to postprocess your results in a different Python instance or on an another computer.</p></li>
+</ul>
+<p>The process of converting an object into a byte stream that can be stored in
+a file is called _serialization_.
+Conversely, _deserialization_ means loading an object from a byte stream.</p>
+<p><strong>Warning:</strong> Deserialization is not secure against malicious or erroneous
+code. Never load serialized data from untrusted or unauthenticated sources!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># The followings are hacks to allow sphinx-gallery to run the example.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <a href="https://docs.python.org/3/library/os.html#os.getcwd" title="View documentation for os.getcwd"><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span></a><span class="p">())</span>
+<span class="n">main_dir</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.basename" title="View documentation for os.path.basename"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/sys.html#sys.modules" title="View documentation for sys.modules"><span class="n">sys</span><span class="o">.</span><span class="n">modules</span></a><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">IS_RUN_WITH_SPHINX_GALLERY</span> <span class="o">=</span> <span class="n">main_dir</span> <span class="o">!=</span> <a href="https://docs.python.org/3/library/os.html#os.getcwd" title="View documentation for os.getcwd"><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span></a><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simple-example">
+<h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
+<p>We will use the same optimization problem as in the
+<a class="reference internal" href="bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a> notebook:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="k">if</span> <span class="n">IS_RUN_WITH_SPHINX_GALLERY</span><span class="p">:</span>
+    <span class="c1"># When this example is run with sphinx gallery, it breaks the pickling</span>
+    <span class="c1"># capacity for multiprocessing backend so we have to modify the way we</span>
+    <span class="c1"># define our functions. This has nothing to do with the example.</span>
+    <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">obj_fun</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
+        <span class="k">return</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.tanh.html#numpy.tanh" title="View documentation for numpy.tanh"><span class="n">np</span><span class="o">.</span><span class="n">tanh</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
+
+<span class="n">res</span> <span class="o">=</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+                  <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
+                  <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>            <span class="c1"># the starting point</span>
+                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
+                  <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f including at x0</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+/root/project/skopt/optimizer/optimizer.py:409: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+</pre></div>
+</div>
+<p>As long as your Python session is active, you can access all the
+optimization results via the <code class="docutils literal notranslate"><span class="pre">res</span></code> object.</p>
+<p>So how can you store this data in a file? <code class="docutils literal notranslate"><span class="pre">skopt</span></code> conveniently provides
+functions <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> that handle this for you.
+These functions are essentially thin wrappers around the
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
+<p>We will now show how to use <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> for storing
+and loading results.</p>
+</div>
+<div class="section" id="using-skopt-dump-and-skopt-load">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code><a class="headerlink" href="#using-skopt-dump-and-skopt-load" title="Permalink to this headline">¶</a></h2>
+<p>For storing optimization results into a file, call the <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>
+function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">,</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a>
+
+<a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And load from file using <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
+
+<span class="n">res_loaded</span><span class="o">.</span><span class="n">fun</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.20989221173875044
+</pre></div>
+</div>
+<p>You can fine-tune the serialization and deserialization process by calling
+<a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> with additional keyword arguments. See the
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> documentation
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
+<p>For instance, you can specify the compression algorithm and compression
+level (highest in this case):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Without compression: </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Compressed with gz:  </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.gz&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Without compression: 80120 bytes
+Compressed with gz:  19386 bytes
+</pre></div>
+</div>
+<div class="section" id="unserializable-objective-functions">
+<h3>Unserializable objective functions<a class="headerlink" href="#unserializable-objective-functions" title="Permalink to this headline">¶</a></h3>
+<p>Notice that if your objective function is non-trivial (e.g. it calls MATLAB
+engine from Python), it might be not serializable and <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> will
+raise an exception when you try to store the optimization results.
+In this case you should disable storing the objective function by calling
+<a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> with the keyword argument <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice that the entry <code class="docutils literal notranslate"><span class="pre">'func'</span></code> is absent in the loaded object but is still
+present in the local variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded_without_objective</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loaded object: &#39;</span><span class="p">,</span> <span class="n">res_loaded_without_objective</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Local variable:&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Loaded object:  dict_keys([&#39;dimensions&#39;, &#39;base_estimator&#39;, &#39;n_calls&#39;, &#39;n_random_starts&#39;, &#39;acq_func&#39;, &#39;acq_optimizer&#39;, &#39;x0&#39;, &#39;y0&#39;, &#39;random_state&#39;, &#39;verbose&#39;, &#39;callback&#39;, &#39;n_points&#39;, &#39;n_restarts_optimizer&#39;, &#39;xi&#39;, &#39;kappa&#39;, &#39;n_jobs&#39;, &#39;model_queue_size&#39;])
+Local variable: dict_keys([&#39;func&#39;, &#39;dimensions&#39;, &#39;base_estimator&#39;, &#39;n_calls&#39;, &#39;n_random_starts&#39;, &#39;acq_func&#39;, &#39;acq_optimizer&#39;, &#39;x0&#39;, &#39;y0&#39;, &#39;random_state&#39;, &#39;verbose&#39;, &#39;callback&#39;, &#39;n_points&#39;, &#39;n_restarts_optimizer&#39;, &#39;xi&#39;, &#39;kappa&#39;, &#39;n_jobs&#39;, &#39;model_queue_size&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="possible-problems">
+<h2>Possible problems<a class="headerlink" href="#possible-problems" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Python versions incompatibility:</strong> In general, objects serialized in
+Python 2 cannot be deserialized in Python 3 and vice versa.</p></li>
+<li><p><strong>Security issues:</strong> Once again, do not load any files from untrusted
+sources.</p></li>
+<li><p><strong>Extremely large results objects:</strong> If your optimization results object</p></li>
+</ul>
+<p>is extremely large, calling <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> with <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code> might
+cause performance issues. This is due to creation of a deep copy without the
+objective function. If the objective function it is not critical to you, you
+can simply delete it before calling <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>. In this case, no deep
+copy is created:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
+
+<a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.694 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-store-and-load-results-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d20503d0380fb778ad8116a8530b7f12/store-and-load-results.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">store-and-load-results.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/d8462e2b1ab6e751b35fc1ea1dead5e6/store-and-load-results.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">store-and-load-results.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+          <a href="../_sources/auto_examples/store-and-load-results.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code samples to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+</body>
+</html>
