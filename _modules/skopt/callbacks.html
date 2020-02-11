@@ -382,9 +382,11 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import skopt</span>
-<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; def obj_fun(x):</span>
+<span class="sd">    ...     return x[0]**2</span>
 <span class="sd">    &gt;&gt;&gt; checkpoint_callback = skopt.callbacks.CheckpointSaver(&quot;./result.pkl&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; skopt.gp_minimize(obj_fun, dims, callback=[checkpoint_callback])</span>
+<span class="sd">    &gt;&gt;&gt; skopt.gp_minimize(obj_fun, [(-2, 2)], n_calls=10,</span>
+<span class="sd">    ...                   callback=[checkpoint_callback]) # doctest: +SKIP</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

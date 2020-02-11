@@ -130,7 +130,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">dump</span> <span class="k">as</span> <span class="n">dump_</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">load_</span>
-
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span>
 <span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
 <span class="kn">from</span> <span class="nn">.learning</span> <span class="kn">import</span> <span class="n">GradientBoostingQuantileRegressor</span>
@@ -140,6 +140,7 @@
 <span class="kn">from</span> <span class="nn">.learning.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Matern</span>
 
 <span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Space</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Dimension</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;load&quot;</span><span class="p">,</span>
@@ -549,8 +550,13 @@
 <span class="sd">    &gt;&gt;&gt; from skopt.utils import dimensions_aslist</span>
 <span class="sd">    &gt;&gt;&gt; search_space = {&#39;name1&#39;: Real(0,1),</span>
 <span class="sd">    ...                 &#39;name2&#39;: Integer(2,4), &#39;name3&#39;: Real(-1,1)}</span>
-<span class="sd">    &gt;&gt;&gt; dimensions_aslist(search_space)</span>
-<span class="sd">    [Real(0,1), Integer(2,4), Real(-1,1)]</span>
+<span class="sd">    &gt;&gt;&gt; dimensions_aslist(search_space)[0]</span>
+<span class="sd">    Real(low=0, high=1, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; dimensions_aslist(search_space)[1]</span>
+<span class="sd">    Integer(low=2, high=4, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; dimensions_aslist(search_space)[2]</span>
+<span class="sd">    Real(low=-1, high=1, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params_space_list</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">search_space</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -578,7 +584,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    params_dict : dict</span>
+<span class="sd">    params_dict : OrderedDict</span>
 <span class="sd">        dictionary with parameter names as keys to which</span>
 <span class="sd">        corresponding parameter values are assigned.</span>
 
@@ -590,11 +596,11 @@
 <span class="sd">    ...                 &#39;name2&#39;: Integer(2,4), &#39;name3&#39;: Real(-1,1)}</span>
 <span class="sd">    &gt;&gt;&gt; point_as_list = [0.66, 3, -0.15]</span>
 <span class="sd">    &gt;&gt;&gt; point_asdict(search_space, point_as_list)</span>
-<span class="sd">    {&#39;name1&#39;: 0.66, &#39;name2&#39;: 3, &#39;name3&#39;: -0.15}</span>
+<span class="sd">    OrderedDict([(&#39;name1&#39;, 0.66), (&#39;name2&#39;, 3), (&#39;name3&#39;, -0.15)])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">point_as_list</span><span class="p">)</span>
-    <span class="p">}</span>
+    <span class="n">params_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">search_space</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">point_as_list</span><span class="p">):</span>
+        <span class="n">params_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
     <span class="k">return</span> <span class="n">params_dict</span></div>
 
 
@@ -786,8 +792,8 @@
 <span class="sd">    &gt;&gt;&gt; # and use this function-decorator to specify the</span>
 <span class="sd">    &gt;&gt;&gt; # search-space dimensions.</span>
 <span class="sd">    &gt;&gt;&gt; @use_named_args(dimensions=dimensions)</span>
-<span class="sd">    &gt;&gt;&gt; def my_objective_function(foo, bar, baz):</span>
-<span class="sd">    &gt;&gt;&gt;     return foo ** 2 + bar ** 4 + baz ** 8</span>
+<span class="sd">    ... def my_objective_function(foo, bar, baz):</span>
+<span class="sd">    ...     return foo ** 2 + bar ** 4 + baz ** 8</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; # Not the function is callable from the outside as</span>
 <span class="sd">    &gt;&gt;&gt; # `my_objective_function(x)` where `x` is a list of unnamed arguments,</span>
@@ -806,7 +812,9 @@
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; # Print the best-found results.</span>
 <span class="sd">    &gt;&gt;&gt; print(&quot;Best fitness:&quot;, result.fun)</span>
+<span class="sd">    Best fitness: 0.1948080835239698</span>
 <span class="sd">    &gt;&gt;&gt; print(&quot;Best parameters:&quot;, result.x)</span>
+<span class="sd">    Best parameters: [0.44134853091052617, 0.06570954323368307, 0.17586123323419825]</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

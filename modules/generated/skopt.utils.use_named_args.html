@@ -129,7 +129,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.utils" title="skopt.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.utils</span></code></a>.use_named_args<a class="headerlink" href="#skopt-utils-use-named-args" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.utils.use_named_args">
-<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">use_named_args</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/2df7746/skopt/utils.py#L632"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/utils.html#use_named_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.use_named_args" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">use_named_args</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/c06822c/skopt/utils.py#L638"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/utils.html#use_named_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.use_named_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper / decorator for an objective function that uses named arguments
 to make it compatible with optimizers that use a single list of parameters.</p>
 <p>Your objective function can be defined as being callable using named
@@ -173,8 +173,8 @@ or their order in the search-space.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># and use this function-decorator to specify the</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># search-space dimensions.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@use_named_args</span><span class="p">(</span><span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_objective_function</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">baz</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">foo</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">bar</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">baz</span> <span class="o">**</span> <span class="mi">8</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">my_objective_function</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">baz</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">foo</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">bar</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">baz</span> <span class="o">**</span> <span class="mi">8</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Not the function is callable from the outside as</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># `my_objective_function(x)` where `x` is a list of unnamed arguments,</span>
@@ -193,7 +193,9 @@ or their order in the search-space.</p>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Print the best-found results.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best fitness:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
+<span class="go">Best fitness: 0.1948080835239698</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best parameters:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+<span class="go">Best parameters: [0.44134853091052617, 0.06570954323368307, 0.17586123323419825]</span>
 </pre></div>
 </div>
 </dd></dl>

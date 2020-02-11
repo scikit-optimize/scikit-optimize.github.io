@@ -126,7 +126,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.utils" title="skopt.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.utils</span></code></a>.dimensions_aslist<a class="headerlink" href="#skopt-utils-dimensions-aslist" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.utils.dimensions_aslist">
-<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">dimensions_aslist</code><span class="sig-paren">(</span><em class="sig-param">search_space</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/2df7746/skopt/utils.py#L408"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/utils.html#dimensions_aslist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.dimensions_aslist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.utils.</code><code class="sig-name descname">dimensions_aslist</code><span class="sig-paren">(</span><em class="sig-param">search_space</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/c06822c/skopt/utils.py#L409"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/utils.html#dimensions_aslist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.utils.dimensions_aslist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a dict representation of a search space into a list of
 dimensions, ordered by sorted(search_space.keys()).</p>
 <dl class="field-list simple">
@@ -150,8 +150,12 @@ and values are instances of classes that inherit from the class
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <span class="n">dimensions_aslist</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name1&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
 <span class="gp">... </span>                <span class="s1">&#39;name2&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;name3&#39;</span><span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">)</span>
-<span class="go">[Real(0,1), Integer(2,4), Real(-1,1)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">Real(low=0, high=1, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">Integer(low=2, high=4, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">search_space</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">Real(low=-1, high=1, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)</span>
 </pre></div>
 </div>
 </dd></dl>

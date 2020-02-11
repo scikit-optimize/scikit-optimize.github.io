@@ -627,6 +627,9 @@
     <span class="c1"># calculating dependence. (Unless partial</span>
     <span class="c1"># dependence is to be used instead).</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;plot_objective needs at least two&quot;</span>
+                         <span class="s2">&quot;variables. Found only one.&quot;</span><span class="p">)</span>
     <span class="n">x_vals</span> <span class="o">=</span> <span class="n">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sample_source</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
         <span class="n">x_eval</span> <span class="o">=</span> <span class="kc">None</span>
