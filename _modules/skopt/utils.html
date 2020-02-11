@@ -698,6 +698,59 @@
     <span class="k">return</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dimensions</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">check_list_types</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">types</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check whether all elements of a list `x` are of the correct type(s)</span>
+<span class="sd">    and raise a ValueError if they are not.</span>
+
+<span class="sd">    Note that `types` can be either a single object-type or a tuple</span>
+<span class="sd">    of object-types.</span>
+
+<span class="sd">    Raises `ValueError`, If one or more element in the list `x` is</span>
+<span class="sd">    not of the correct type(s).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : list</span>
+<span class="sd">        List of objects.</span>
+
+<span class="sd">    types : object or list(object)</span>
+<span class="sd">        Either a single object-type or a tuple of object-types.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># List of the elements in the list that are incorrectly typed.</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">types</span><span class="p">),</span> <span class="n">x</span><span class="p">))</span>
+
+    <span class="c1"># If the list is non-empty then raise an exception.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All elements in list must be instances of </span><span class="si">{}</span><span class="s2">, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_dimension_names</span><span class="p">(</span><span class="n">dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check whether all dimensions have names. Raises `ValueError`,</span>
+<span class="sd">    if one or more dimensions are unnamed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dimensions : list(Dimension)</span>
+<span class="sd">        List of Dimension-objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># List of the dimensions that have no names.</span>
+    <span class="n">err_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">dim</span><span class="p">:</span> <span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">))</span>
+
+    <span class="c1"># If the list is non-empty then raise an exception.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All dimensions must have names, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="use_named_args"><a class="viewcode-back" href="../../modules/generated/skopt.utils.use_named_args.html#skopt.use_named_args">[docs]</a><span class="k">def</span> <span class="nf">use_named_args</span><span class="p">(</span><span class="n">dimensions</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper / decorator for an objective function that uses named arguments</span>
@@ -783,25 +836,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Ensure all dimensions are correctly typed.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">):</span>
-            <span class="c1"># List of the dimensions that are incorrectly typed.</span>
-            <span class="n">err_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">dim</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">),</span>
-                                   <span class="n">dimensions</span><span class="p">))</span>
-
-            <span class="c1"># Error message.</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All dimensions must be instances of the Dimension-class, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">check_list_types</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">)</span>
 
         <span class="c1"># Ensure all dimensions have names.</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">):</span>
-            <span class="c1"># List of the dimensions that have no names.</span>
-            <span class="n">err_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">dim</span><span class="p">:</span> <span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">))</span>
-
-            <span class="c1"># Error message.</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All dimensions must have names, but found: </span><span class="si">{}</span><span class="s2">&quot;</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_dims</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">check_dimension_names</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
