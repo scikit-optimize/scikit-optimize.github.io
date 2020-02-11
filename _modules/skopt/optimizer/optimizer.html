@@ -725,6 +725,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                             <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Optimizer.update_next"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.update_next">[docs]</a>    <span class="k">def</span> <span class="nf">update_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Updates the value returned by opt.ask(). Useful if a parameter</span>
+<span class="sd">        was updated after ask was called.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Ask for a new next_x.</span>
+        <span class="c1"># We only need to overwrite _next_x if it exists.</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_next_x&#39;</span><span class="p">):</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_x</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">_next_x</span></div>
+
+<div class="viewcode-block" id="Optimizer.get_result"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.get_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the same result that would be returned by opt.tell()</span>
+<span class="sd">        but without calling tell</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        res : `OptimizeResult`, scipy object</span>
+<span class="sd">            OptimizeResult instance with the required information.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
                              <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span></div></div>
 </pre></div>
 

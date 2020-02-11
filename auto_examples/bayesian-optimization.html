@@ -103,8 +103,8 @@
           </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="sklearn-gridsearchcv-replacement.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Scikit-learn hyperparameter search wrapper">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
-            <a href="plots/partial-dependence-plot.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Partial Dependence Plots">Next</a>
+            <a href="exploration-vs-exploitation.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Exploration vs exploitation">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="optimizer-with-different-base-estimator.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Use different base estimators for optimization">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -196,7 +196,7 @@ controlling the exploration-exploitation trade-off.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">237</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
@@ -238,7 +238,7 @@ vector <span class="math notranslate nohighlight">\(x\)</span>: represented as a
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f</span>
                   <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
                   <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>       <span class="c1"># the noise level (optional)</span>
-                  <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>   <span class="c1"># the random seed</span>
+                  <span class="n">random_state</span><span class="o">=</span><span class="mi">1234</span><span class="p">)</span>   <span class="c1"># the random seed</span>
 </pre></div>
 </div>
 <p>Accordingly, the approximated minimum is found to be:</p>
@@ -246,7 +246,7 @@ vector <span class="math notranslate nohighlight">\(x\)</span>: represented as a
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;x^*=-0.2861, f(x^*)=-1.0017&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;x^*=-0.3508, f(x^*)=-1.0147&#39;
 </pre></div>
 </div>
 <p>For further inspection of the results, attributes of the <code class="docutils literal notranslate"><span class="pre">res</span></code> named tuple
@@ -268,64 +268,64 @@ provide the following information:</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: -1.0016905174286688
-   func_vals: array([-0.36395988, -1.00169052, -0.26175371, -0.46196146, -0.1960131 ,
-      -0.92074983, -0.80071207, -0.43597181, -0.79302677,  0.06928917,
-      -0.09579533,  0.1427899 ,  0.04992768,  0.75395296, -0.07932982])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: -1.0146594077693436
+   func_vals: array([ 0.03716044,  0.00673852,  0.63515442, -0.16042062,  0.10695907,
+      -0.23193728, -0.60259431, -0.04943778, -1.01465941, -0.98480886,
+      -0.87449015,  0.18102445, -0.10782771,  0.01197229, -0.80618925])
       models: [GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+                        random_state=822569775), GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734)]
-random_state: RandomState(MT19937) at 0x7FC9E861DC40
+                        random_state=822569775)]
+random_state: RandomState(MT19937) at 0x7FE8779C3A40
        space: Space([Real(low=-2.0, high=2.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
-       specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function f at 0x7fc9d6f68820&gt;, &#39;dimensions&#39;: Space([Real(low=-2.0, high=2.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
+       specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function f at 0x7fe877a6cc10&gt;, &#39;dimensions&#39;: Space([Real(low=-2.0, high=2.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(alpha=1e-10, copy_X_train=True,
                         kernel=1**2 * Matern(length_scale=1, nu=2.5),
                         n_restarts_optimizer=2, noise=0.010000000000000002,
                         normalize_y=True, optimizer=&#39;fmin_l_bfgs_b&#39;,
-                        random_state=843828734), &#39;n_calls&#39;: 15, &#39;n_random_starts&#39;: 5, &#39;acq_func&#39;: &#39;EI&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: None, &#39;y0&#39;: None, &#39;random_state&#39;: RandomState(MT19937) at 0x7FC9E861DC40, &#39;verbose&#39;: False, &#39;callback&#39;: None, &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
-           x: [-0.2861162952526968]
-     x_iters: [[0.8518212820929092], [-0.2861162952526968], [0.7635394201074472], [0.8766012406190926], [-0.03552426626961047], [-0.34247541478780397], [-0.26155519596964205], [-0.4646415758058908], [-0.31387649972906195], [1.38961533306915], [-1.9998214636995275], [-1.218993447030592], [2.0], [0.37684326379289823], [-1.6363051829417985]]
+                        random_state=822569775), &#39;n_calls&#39;: 15, &#39;n_random_starts&#39;: 5, &#39;acq_func&#39;: &#39;EI&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: None, &#39;y0&#39;: None, &#39;random_state&#39;: RandomState(MT19937) at 0x7FE8779C3A40, &#39;verbose&#39;: False, &#39;callback&#39;: None, &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
+           x: [-0.35076964213550554]
+     x_iters: [[-0.009345334109402526], [1.2713537644662787], [0.4484475787090836], [1.0854396754496047], [1.4426790855107496], [0.9698921802985794], [-0.4464493263345515], [-0.6474638307563569], [-0.35076964213550554], [-0.28714768066245777], [-0.2968537677230516], [-2.0], [2.0], [-1.3149517821938494], [-0.3218160845454081]]
 </pre></div>
 </div>
 <p>Together these attributes can be used to visually inspect the results of the
@@ -337,7 +337,7 @@ the last iteration:</p>
 </div>
 <img alt="../_images/sphx_glr_bayesian-optimization_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_bayesian-optimization_002.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot object at 0x7fc95748ca30&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot object at 0x7fe87cadea60&gt;
 </pre></div>
 </div>
 <p>Let us now visually examine</p>
@@ -467,7 +467,7 @@ because the GP does not gain anything more by further exploration:</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_bayesian-optimization_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_bayesian-optimization_004.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.998 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.256 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-bayesian-optimization-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/bayesian-optimization.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
