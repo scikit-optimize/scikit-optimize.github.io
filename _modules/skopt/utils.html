@@ -274,9 +274,10 @@
 <span class="sd">    Reconstruct a skopt optimization result from a file</span>
 <span class="sd">    persisted with skopt.dump.</span>
 
-<span class="sd">    Notice that the loaded optimization result can be missing</span>
-<span class="sd">    the objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) if `skopt.dump`</span>
-<span class="sd">    was called with `store_objective=False`.</span>
+<span class="sd">    .. note::</span>
+<span class="sd">        Notice that the loaded optimization result can be missing</span>
+<span class="sd">        the objective function (`.specs[&#39;args&#39;][&#39;func&#39;]`) if `skopt.dump`</span>
+<span class="sd">        was called with `store_objective=False`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -323,9 +324,12 @@
 <div class="viewcode-block" id="expected_minimum"><a class="viewcode-back" href="../../modules/generated/skopt.utils.expected_minimum.html#skopt.expected_minimum">[docs]</a><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the minimum over the predictions of the last surrogate model.</span>
+<span class="sd">    Uses `expected_minimum_random_sampling` with `n_random_starts`=100000,</span>
+<span class="sd">    when the space contains any categorical values.</span>
 
-<span class="sd">    Note that the returned minimum may not necessarily be an accurate</span>
-<span class="sd">    prediction of the minimum of the true objective function.</span>
+<span class="sd">    .. note::</span>
+<span class="sd">        The returned minimum may not necessarily be an accurate</span>
+<span class="sd">        prediction of the minimum of the true objective function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -342,11 +346,15 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    x : list]</span>
+<span class="sd">    x : list</span>
 <span class="sd">        location of the minimum.</span>
 <span class="sd">    fun : float</span>
 <span class="sd">        the surrogate function value at the minimum.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_partly_categorical</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">expected_minimum_random_sampling</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+                                                <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">reg</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
@@ -367,6 +375,49 @@
             <span class="n">best_fun</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">fun</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">best_x</span><span class="p">],</span> <span class="n">best_fun</span></div>
+
+
+<div class="viewcode-block" id="expected_minimum_random_sampling"><a class="viewcode-back" href="../../modules/generated/skopt.utils.expected_minimum_random_sampling.html#skopt.expected_minimum_random_sampling">[docs]</a><span class="k">def</span> <span class="nf">expected_minimum_random_sampling</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+                                     <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Minimum search by doing naive random sampling, Returns the parameters</span>
+<span class="sd">    that gave the minimum function value. Can be used when the space</span>
+<span class="sd">    contains any categorical values.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        The returned minimum may not necessarily be an accurate</span>
+<span class="sd">        prediction of the minimum of the true objective function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res : `OptimizeResult`, scipy object</span>
+<span class="sd">        The optimization result returned by a `skopt` minimizer.</span>
+
+<span class="sd">    n_random_starts : int, default=100000</span>
+<span class="sd">        The number of random starts for the minimization of the surrogate</span>
+<span class="sd">        model.</span>
+
+<span class="sd">    random_state : int, RandomState instance, or None (default)</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : list</span>
+<span class="sd">        location of the minimum.</span>
+<span class="sd">    fun : float</span>
+<span class="sd">        the surrogate function value at the minimum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># sample points from search space</span>
+    <span class="n">random_samples</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_random_starts</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># make estimations with surrogate</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_random</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">random_samples</span><span class="p">))</span>
+    <span class="n">index_best_objective</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">y_random</span><span class="p">)</span>
+    <span class="n">min_x</span> <span class="o">=</span> <span class="n">random_samples</span><span class="p">[</span><span class="n">index_best_objective</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">min_x</span><span class="p">,</span> <span class="n">y_random</span><span class="p">[</span><span class="n">index_best_objective</span><span class="p">]</span></div>
 
 
 <span class="k">def</span> <span class="nf">has_gradients</span><span class="p">(</span><span class="n">estimator</span><span class="p">):</span>
@@ -668,7 +719,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; # Define the search-space dimensions. They must all have names!</span>
-<span class="sd">    &gt;&gt;&gt; from skopt.space.Space import Real</span>
+<span class="sd">    &gt;&gt;&gt; from skopt.space import Real</span>
 <span class="sd">    &gt;&gt;&gt; from skopt import forest_minimize</span>
 <span class="sd">    &gt;&gt;&gt; from skopt.utils import use_named_args</span>
 <span class="sd">    &gt;&gt;&gt; dim1 = Real(name=&#39;foo&#39;, low=0.0, high=1.0)</span>
