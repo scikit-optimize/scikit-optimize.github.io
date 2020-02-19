@@ -126,7 +126,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.optimizer" title="skopt.optimizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.optimizer</span></code></a>.base_minimize<a class="headerlink" href="#skopt-optimizer-base-minimize" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.optimizer.base_minimize">
-<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">base_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=10</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='lbfgs'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">n_restarts_optimizer=5</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/base.py#L23"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/base.html#base_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.base_minimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">base_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='lbfgs'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">n_restarts_optimizer=5</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/base.py#L23"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/base.html#base_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.base_minimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base optimizer class
 :param func: Function to minimize. Should take a single list of parameters</p>
 <blockquote>
@@ -163,6 +163,16 @@ always be evaluated this number of times; Various options to
 supply initialization points do not affect this value.</p></li>
 <li><p><strong>n_random_starts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>default=10</em>) – Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
 approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.</p></li>
+<li><p><strong>initial_point_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>InitialPointGenerator instance</em><em>,</em>) – </p></li>
+<li><p><strong>default='random'</strong> – <p>Sets a initial points generator. Can be either</p>
+<ul>
+<li><p>”random” for uniform random numbers,</p></li>
+<li><p>”sobol” for a Sobol sequence,</p></li>
+<li><p>”halton” for a Halton sequence,</p></li>
+<li><p>”hammersly” for a Hammersly sequence,</p></li>
+<li><p>”lhs” for a latin hypercube sequence,</p></li>
+</ul>
+</p></li>
 <li><p><strong>acq_func</strong> (<em>string</em><em>, </em><em>default=`&quot;EI&quot;`</em>) – <p>Function to minimize over the posterior distribution. Can be either</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code> for lower confidence bound,</p></li>
@@ -246,6 +256,7 @@ Defaults to 1 core. If <code class="docutils literal notranslate"><span class="p
 to number of cores.</p></li>
 <li><p><strong>model_queue_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>, </em><em>default=None</em>) – Keeps list of models only as long as the argument given. In the
 case of None, the list has no capped length.</p></li>
+<li><p><strong>init_point_gen_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Additional arguments to be passed to the initial_point_generator</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -295,7 +306,7 @@ Important attributes are:</p>
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +

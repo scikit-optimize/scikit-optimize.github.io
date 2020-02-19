@@ -138,6 +138,7 @@
 <span class="kn">from</span> <span class="nn">..acquisition</span> <span class="kn">import</span> <span class="n">_gaussian_acquisition</span>
 <span class="kn">from</span> <span class="nn">..acquisition</span> <span class="kn">import</span> <span class="n">gaussian_acquisition_1D</span>
 <span class="kn">from</span> <span class="nn">..learning</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">..sampler</span> <span class="kn">import</span> <span class="n">Sobol</span><span class="p">,</span> <span class="n">Lhs</span><span class="p">,</span> <span class="n">Hammersly</span><span class="p">,</span> <span class="n">Halton</span>
 <span class="kn">from</span> <span class="nn">..space</span> <span class="kn">import</span> <span class="n">Categorical</span>
 <span class="kn">from</span> <span class="nn">..space</span> <span class="kn">import</span> <span class="n">Space</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_x_in_space</span>
@@ -188,9 +189,18 @@
 
 <span class="sd">    n_initial_points : int, default=10</span>
 <span class="sd">        Number of evaluations of `func` with initialization points</span>
-<span class="sd">        before approximating it with `base_estimator`. Points provided as</span>
-<span class="sd">        `x0` count as initialization points. If len(x0) &lt; n_initial_points</span>
-<span class="sd">        additional points are sampled at random.</span>
+<span class="sd">        before approximating it with `base_estimator`. Initial point</span>
+<span class="sd">        generator can be changed by setting `initial_point_generator`.</span>
+
+<span class="sd">    initial_point_generator : str, InitialPointGenerator instance,</span>
+<span class="sd">    default=&#39;random&#39;</span>
+<span class="sd">        Sets a initial points generator. Can be either</span>
+
+<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
+<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
+<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
+<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
+<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence</span>
 
 <span class="sd">    acq_func : string, default=`&quot;gp_hedge&quot;`</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
@@ -243,6 +253,9 @@
 <span class="sd">    acq_optimizer_kwargs : dict</span>
 <span class="sd">        Additional arguments to be passed to the acquistion optimizer.</span>
 
+<span class="sd">    init_point_gen_kwargs : dict</span>
+<span class="sd">        Additional arguments to be passed to the initial_point_generator</span>
+
 <span class="sd">    model_queue_size : int or None, default=None</span>
 <span class="sd">        Keeps list of models only as long as the argument given. In the</span>
 <span class="sd">        case of None, the list has no capped length.</span>
@@ -261,14 +274,17 @@
 <span class="sd">        space used to sample points, bounds, and type of parameters.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Optimizer.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span>
                  <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">initial_point_generator</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
                  <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">init_point_gen_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
@@ -343,7 +359,7 @@
                              <span class="s2">&quot;&#39;sampling&#39;, got </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acq_optimizer</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">has_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
+                <span class="n">acq_optimizer</span> <span class="o">!=</span> <span class="s2">&quot;sampling&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The regressor </span><span class="si">{0}</span><span class="s2"> should run with &quot;</span>
                              <span class="s2">&quot;acq_optimizer&quot;</span>
                              <span class="s2">&quot;=&#39;sampling&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)))</span>
@@ -366,6 +382,36 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">,</span> <span class="n">GaussianProcessRegressor</span><span class="p">):</span>
             <span class="n">dimensions</span> <span class="o">=</span> <span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span> <span class="o">=</span> <span class="n">initial_point_generator</span>
+        <span class="k">if</span> <span class="n">init_point_gen_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">init_point_gen_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span> <span class="o">=</span> <span class="n">init_point_gen_kwargs</span>
+        <span class="k">if</span> <span class="n">initial_point_generator</span> <span class="o">!=</span> <span class="s2">&quot;random&quot;</span> <span class="ow">and</span> \
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">initial_point_generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">initial_point_generator</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span> <span class="o">=</span> <span class="n">Sobol</span><span class="p">(</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">initial_point_generator</span> <span class="o">==</span> <span class="s2">&quot;halton&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span> <span class="o">=</span> <span class="n">Halton</span><span class="p">(</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">initial_point_generator</span> <span class="o">==</span> <span class="s2">&quot;hammersly&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span> <span class="o">=</span> <span class="n">Hammersly</span><span class="p">(</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">initial_point_generator</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span> <span class="o">=</span> <span class="n">Lhs</span><span class="p">(</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Unkown initial_point_generator: &quot;</span> <span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">initial_point_generator</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">transformer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">get_transformer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
 
         <span class="c1"># record categorical and non-categorical indices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cat_inds</span> <span class="o">=</span> <span class="p">[]</span>
@@ -404,13 +450,15 @@
             <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
             <span class="n">base_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">,</span>
             <span class="n">n_initial_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_initial_points_</span><span class="p">,</span>
+            <span class="n">initial_point_generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_point_generator</span><span class="p">,</span>
             <span class="n">acq_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func</span><span class="p">,</span>
             <span class="n">acq_optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="p">,</span>
             <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
             <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
+            <span class="n">init_point_gen_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_point_gen_kwargs</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
         <span class="p">)</span>
-
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">_initial_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gains_&quot;</span><span class="p">):</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
 
@@ -517,7 +565,12 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># this will not make a copy of `self.rng` and hence keep advancing</span>
             <span class="c1"># our random state.</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># The samples are evaluated starting form initial_samples[0]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span><span class="p">[</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span><span class="p">]</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
@@ -537,8 +590,8 @@
 <div class="viewcode-block" id="Optimizer.tell"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.tell">[docs]</a>    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Record an observation (or several) of the objective function.</span>
 
-<span class="sd">        Provide values of the objective function at points suggested by `ask()`</span>
-<span class="sd">        or other points. By default a new model will be fit to all</span>
+<span class="sd">        Provide values of the objective function at points suggested by</span>
+<span class="sd">        `ask()` or other points. By default a new model will be fit to all</span>
 <span class="sd">        observations. The new model is used to suggest the next point at</span>
 <span class="sd">        which to evaluate the objective. This point can be retrieved by calling</span>
 <span class="sd">        `ask()`.</span>
@@ -609,7 +662,7 @@
         <span class="c1"># after being &quot;told&quot; n_initial_points we switch from sampling</span>
         <span class="c1"># random points to using a surrogate model</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">fit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_initial_points</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">transformed_bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">transformed_bounds</span><span class="p">)</span>
             <span class="n">est</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator_</span><span class="p">)</span>
 
@@ -764,7 +817,7 @@
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +

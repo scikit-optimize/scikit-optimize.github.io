@@ -129,7 +129,7 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt</span></code>.Optimizer<a class="headerlink" href="#skopt-optimizer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.Optimizer">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">Optimizer</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator='gp'</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">acq_func='gp_hedge'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">acq_func_kwargs=None</em>, <em class="sig-param">acq_optimizer_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L30"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">Optimizer</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator='gp'</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='gp_hedge'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">acq_func_kwargs=None</em>, <em class="sig-param">acq_optimizer_kwargs=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L31"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run bayesian optimisation loop.</p>
 <p>An <code class="docutils literal notranslate"><span class="pre">Optimizer</span></code> represents the steps of a bayesian optimisation loop. To
 use it you need to provide your own loop mechanism. The various
@@ -164,9 +164,18 @@ is used in the minimize functions.</p>
 </div>
 </dd>
 <dt><strong>n_initial_points</strong><span class="classifier">int, default=10</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with initialization points
-before approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>. Points provided as
-<code class="docutils literal notranslate"><span class="pre">x0</span></code> count as initialization points. If len(x0) &lt; n_initial_points
-additional points are sampled at random.</p>
+before approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>. Initial point
+generator can be changed by setting <code class="docutils literal notranslate"><span class="pre">initial_point_generator</span></code>.</p>
+</dd>
+<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,</span></dt><dd></dd>
+<dt><strong>default=’random’</strong></dt><dd><p>Sets a initial points generator. Can be either</p>
+<ul class="simple">
+<li><p>“random” for uniform random numbers,</p></li>
+<li><p>“sobol” for a Sobol sequence,</p></li>
+<li><p>“halton” for a Halton sequence,</p></li>
+<li><p>“hammersly” for a Hammersly sequence,</p></li>
+<li><p>“lhs” for a latin hypercube sequence</p></li>
+</ul>
 </dd>
 <dt><strong>acq_func</strong><span class="classifier">string, default=`”gp_hedge”`</span></dt><dd><p>Function to minimize over the posterior distribution. Can be either</p>
 <ul>
@@ -231,6 +240,8 @@ results.</p>
 </dd>
 <dt><strong>acq_optimizer_kwargs</strong><span class="classifier">dict</span></dt><dd><p>Additional arguments to be passed to the acquistion optimizer.</p>
 </dd>
+<dt><strong>init_point_gen_kwargs</strong><span class="classifier">dict</span></dt><dd><p>Additional arguments to be passed to the initial_point_generator</p>
+</dd>
 <dt><strong>model_queue_size</strong><span class="classifier">int or None, default=None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
 case of None, the list has no capped length.</p>
 </dd>
@@ -280,13 +291,13 @@ space used to sample points, bounds, and type of parameters.</p>
 </table>
 <dl class="method">
 <dt id="skopt.Optimizer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator='gp'</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">acq_func='gp_hedge'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">acq_func_kwargs=None</em>, <em class="sig-param">acq_optimizer_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L142"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator='gp'</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='gp_hedge'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">acq_func_kwargs=None</em>, <em class="sig-param">acq_optimizer_kwargs=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L156"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.Optimizer.ask">
-<code class="sig-name descname">ask</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_points=None</em>, <em class="sig-param">strategy='cl_min'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L300"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.ask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ask</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_points=None</em>, <em class="sig-param">strategy='cl_min'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L348"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query point or multiple points at which objective should be evaluated.</p>
 <dl>
 <dt>n_points<span class="classifier">int or None, default=None</span></dt><dd><p>Number of points returned by the ask method.
@@ -321,7 +332,7 @@ flavours of <code class="docutils literal notranslate"><span class="pre">cl_x</s
 
 <dl class="method">
 <dt id="skopt.Optimizer.copy">
-<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L272"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L318"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a shallow copy of an instance of the optimizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -335,7 +346,7 @@ flavours of <code class="docutils literal notranslate"><span class="pre">cl_x</s
 
 <dl class="method">
 <dt id="skopt.Optimizer.get_result">
-<code class="sig-name descname">get_result</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L618"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.get_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.get_result" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_result</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L671"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.get_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.get_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the same result that would be returned by opt.tell()
 but without calling tell</p>
 <dl class="field-list">
@@ -350,16 +361,16 @@ but without calling tell</p>
 
 <dl class="method">
 <dt id="skopt.Optimizer.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">func</em>, <em class="sig-param">n_iter=1</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L599"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">func</em>, <em class="sig-param">n_iter=1</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L652"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute ask() + tell() <code class="docutils literal notranslate"><span class="pre">n_iter</span></code> times</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.Optimizer.tell">
-<code class="sig-name descname">tell</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">fit=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L415"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.tell" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tell</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">fit=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L468"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.tell" title="Permalink to this definition">¶</a></dt>
 <dd><p>Record an observation (or several) of the objective function.</p>
-<p>Provide values of the objective function at points suggested by <code class="docutils literal notranslate"><span class="pre">ask()</span></code>
-or other points. By default a new model will be fit to all
+<p>Provide values of the objective function at points suggested by
+<code class="docutils literal notranslate"><span class="pre">ask()</span></code> or other points. By default a new model will be fit to all
 observations. The new model is used to suggest the next point at
 which to evaluate the objective. This point can be retrieved by calling
 <code class="docutils literal notranslate"><span class="pre">ask()</span></code>.</p>
@@ -384,7 +395,7 @@ the optimizer irrespective of the value of <code class="docutils literal notrans
 
 <dl class="method">
 <dt id="skopt.Optimizer.update_next">
-<code class="sig-name descname">update_next</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/optimizer/optimizer.py#L608"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.update_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.update_next" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_next</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/optimizer.py#L661"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/optimizer.html#Optimizer.update_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.Optimizer.update_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the value returned by opt.ask(). Useful if a parameter
 was updated after ask was called.</p>
 </dd></dl>
@@ -427,7 +438,7 @@ was updated after ask was called.</p>
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +

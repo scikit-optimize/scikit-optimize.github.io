@@ -133,6 +133,7 @@
 
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">CategoricalEncoder</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">StringEncoder</span>
+<span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Normalize</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">Identity</span>
 <span class="kn">from</span> <span class="nn">.transformers</span> <span class="kn">import</span> <span class="n">LogN</span>
@@ -168,11 +169,12 @@
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    transform : &quot;identity&quot;, &quot;normalize&quot;, &quot;string&quot;, &quot;onehot&quot; optional</span>
+<span class="sd">    transform : &quot;identity&quot;, &quot;normalize&quot;, &quot;string&quot;, &quot;label&quot;, &quot;onehot&quot; optional</span>
 <span class="sd">        - For `Categorical` dimensions, the following transformations are</span>
 <span class="sd">          supported.</span>
 
 <span class="sd">          - &quot;onehot&quot; (default) one-hot transformation of the original space.</span>
+<span class="sd">          - &quot;label&quot; integer transformation of the original space</span>
 <span class="sd">          - &quot;string&quot; string transformation of the original space.</span>
 <span class="sd">          - &quot;identity&quot; same as the original space.</span>
 
@@ -271,6 +273,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="mi">1</span>
@@ -356,6 +361,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>\
                 <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;float16&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="s1">&#39;float64&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dtype must be &#39;float&#39;, &#39;float16&#39;, &#39;float32&#39;&quot;</span>
@@ -368,14 +376,23 @@
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Real.set_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Real.html#skopt.Real.set_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identitiy&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define rvs and transformer spaces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : str</span>
+<span class="sd">           Can be &#39;normalize&#39; or &#39;identity&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transform should be &#39;normalize&#39; or &#39;identity&#39;&quot;</span>
                              <span class="s2">&quot; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_</span><span class="p">))</span>
 
-        <span class="c1"># Define _rvs and transformer spaces.</span>
         <span class="c1"># XXX: The _rvs is for sampling in the transformed space.</span>
         <span class="c1"># The rvs on Dimension calls inverse_transform on the points sampled</span>
         <span class="c1"># using _rvs</span>
@@ -385,12 +402,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)])</span>
+                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
-                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
-                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
@@ -519,6 +536,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>\
             <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;int8&#39;</span><span class="p">,</span> <span class="s1">&#39;int16&#39;</span><span class="p">,</span> <span class="s1">&#39;int32&#39;</span><span class="p">,</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;uint8&#39;</span><span class="p">,</span> <span class="s1">&#39;uint16&#39;</span><span class="p">,</span> <span class="s1">&#39;uint32&#39;</span><span class="p">,</span> <span class="s1">&#39;uint64&#39;</span><span class="p">]:</span>
@@ -536,7 +557,17 @@
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;identity&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Integer.set_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Integer.html#skopt.Integer.set_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;identitiy&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define _rvs and transformer spaces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : str</span>
+<span class="sd">           Can be &#39;normalize&#39; or &#39;identity&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
 
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">]:</span>
@@ -547,13 +578,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+                    <span class="p">[</span><span class="n">Identity</span><span class="p">(),</span> <span class="n">Normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
             <span class="k">else</span><span class="p">:</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">LogN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span>
-                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
-                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
+                     <span class="n">Normalize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_base</span><span class="p">)]</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
@@ -636,11 +667,13 @@
 <span class="sd">        Prior probabilities for each category. By default all categories</span>
 <span class="sd">        are equally likely.</span>
 
-<span class="sd">    transform : &quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, default=&quot;onehot&quot;</span>
+<span class="sd">    transform : &quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, &quot;label&quot;, default=&quot;onehot&quot;</span>
 <span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">          space.</span>
 <span class="sd">        -  &quot;string&quot;,  the transformed space is a string encoded</span>
 <span class="sd">          representation of the original space.</span>
+<span class="sd">        - &quot;label&quot;, the transformed space is a label encoded</span>
+<span class="sd">          representation (integer) of the original space.</span>
 <span class="sd">        - &quot;onehot&quot;, the transformed space is a one-hot encoded</span>
 <span class="sd">          representation of the original space.</span>
 
@@ -655,19 +688,8 @@
         <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="s2">&quot;onehot&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39;, &#39;string&#39; or&quot;</span>
-                             <span class="s2">&quot;&#39;onehot&#39; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">CategoricalEncoder</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">StringEncoder</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
 
         <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -675,11 +697,45 @@
                                   <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span></div>
 
-        <span class="c1"># XXX check that sum(prior) == 1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span>
-            <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span><span class="p">)</span>
-        <span class="p">)</span></div>
+<div class="viewcode-block" id="Categorical.set_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Categorical.html#skopt.Categorical.set_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;onehot&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define _rvs and transformer spaces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : str</span>
+<span class="sd">           Can be &#39;normalize&#39;, &#39;onehot&#39;, &#39;string&#39;, &#39;label&#39;, or &#39;identity&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">=</span> <span class="n">transform</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="s2">&quot;onehot&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;label&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected transform to be &#39;identity&#39;, &#39;string&#39;,&quot;</span>
+                             <span class="s2">&quot;&#39;label&#39; or &#39;onehot&#39; got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transform</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;onehot&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">CategoricalEncoder</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">StringEncoder</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">LabelEncoder</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span>
+                 <span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">_uniform_inclusive</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># XXX check that sum(prior) == 1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span> <span class="o">=</span> <span class="n">rv_discrete</span><span class="p">(</span>
+                <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior_</span><span class="p">)</span>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span>
@@ -699,11 +755,26 @@
 
         <span class="k">return</span> <span class="s2">&quot;Categorical(categories=</span><span class="si">{}</span><span class="s2">, prior=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cats</span><span class="p">,</span> <span class="n">prior</span><span class="p">)</span>
 
+<div class="viewcode-block" id="Categorical.inverse_transform"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Categorical.html#skopt.Categorical.inverse_transform">[docs]</a>    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Xt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inverse transform samples from the warped space back into the</span>
+<span class="sd">           original space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The concatenation of all transformed dimensions makes Xt to be</span>
+        <span class="c1"># of type float, hence the required cast back to int.</span>
+        <span class="n">inv_transform</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Categorical</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">inv_transform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inv_transform</span></div>
+
 <div class="viewcode-block" id="Categorical.rvs"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Categorical.html#skopt.Categorical.rvs">[docs]</a>    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">choices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvs</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="n">choices</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">([(</span><span class="n">choices</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">choices</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">]</span></div>
 
@@ -900,6 +971,46 @@
 
         <span class="k">return</span> <span class="n">rows</span></div>
 
+<div class="viewcode-block" id="Space.set_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.set_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the transformer of all dimension objects to `transform`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : str or list of str</span>
+<span class="sd">           Sets all transformer,, when `transform`  is a string.</span>
+<span class="sd">           Otherwise, transform must be a list with strings with</span>
+<span class="sd">           the same length as `dimensions`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Transform</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Space.set_transformer_by_type"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.set_transformer_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">dim_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the transformer of `dim_type` objects to `transform`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform : str</span>
+<span class="sd">           Sets all transformer of type `dim_type` to `transform`</span>
+<span class="sd">        dim_type : type</span>
+<span class="sd">            Can be `skopt.space.Real`, `skopt.space.Integer` or</span>
+<span class="sd">             `skopt.space.Categorical`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Transform</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">dim_type</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Space.get_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.get_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">get_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns all transformers as list&quot;&quot;&quot;</span>
+        <span class="n">transformer</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="n">transformer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transform_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transformer</span></div>
+
 <div class="viewcode-block" id="Space.transform"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Transform samples from the original space into a warped space.</span>
 
@@ -1060,7 +1171,7 @@
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +

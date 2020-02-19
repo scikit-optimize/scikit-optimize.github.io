@@ -103,7 +103,7 @@
           </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="skopt.utils.use_named_args.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.utils.use_named_args">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
+            <a href="skopt.sampler.Hammersly.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.sampler.Hammersly">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
             <a href="skopt.space.space.Dimension.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.space.space.Dimension">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
@@ -126,7 +126,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.space.space" title="skopt.space.space"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.space.space</span></code></a>.Categorical<a class="headerlink" href="#skopt-space-space-categorical" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.space.space.Categorical">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.space.space.</code><code class="sig-name descname">Categorical</code><span class="sig-paren">(</span><em class="sig-param">categories</em>, <em class="sig-param">prior=None</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L505"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.space.space.</code><code class="sig-name descname">Categorical</code><span class="sig-paren">(</span><em class="sig-param">categories</em>, <em class="sig-param">prior=None</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L536"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search space dimension that can take on categorical values.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -136,7 +136,7 @@
 <dt><strong>prior</strong><span class="classifier">list, shape=(categories,), default=None</span></dt><dd><p>Prior probabilities for each category. By default all categories
 are equally likely.</p>
 </dd>
-<dt><strong>transform</strong><span class="classifier">“onehot”, “string”, “identity”, default=”onehot”</span></dt><dd><ul class="simple">
+<dt><strong>transform</strong><span class="classifier">“onehot”, “string”, “identity”, “label”, default=”onehot”</span></dt><dd><ul class="simple">
 <li><p>“identity”, the transformed space is the same as the original
 space.</p></li>
 <li><p>“string”,  the transformed space is a string encoded</p></li>
@@ -145,6 +145,8 @@ space.</p></li>
 <div><p>representation of the original space.</p>
 </div></blockquote>
 <ul class="simple">
+<li><p>“label”, the transformed space is a label encoded
+representation (integer) of the original space.</p></li>
 <li><p>“onehot”, the transformed space is a one-hot encoded
 representation of the original space.</p></li>
 </ul>
@@ -180,20 +182,23 @@ representation of the original space.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skopt.space.space.Categorical.rvs" title="skopt.space.space.Categorical.rvs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rvs</span></code></a>(self[, n_samples, random_state])</p></td>
 <td><p>Draw random samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skopt.space.space.Categorical.transform" title="skopt.space.space.Categorical.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(self, X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.space.space.Categorical.set_transformer" title="skopt.space.space.Categorical.set_transformer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_transformer</span></code></a>(self[, transform])</p></td>
+<td><p>Define _rvs and transformer spaces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.space.space.Categorical.transform" title="skopt.space.space.Categorical.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(self, X)</p></td>
 <td><p>Transform samples form the original space to a warped space.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="skopt.space.space.Categorical.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">categories</em>, <em class="sig-param">prior=None</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L528"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">categories</em>, <em class="sig-param">prior=None</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L561"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.space.space.Categorical.distance">
-<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L611"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L682"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute distance between category <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
 <p>As categories have no order the distance between two points is one
 if a != b and zero otherwise.</p>
@@ -211,14 +216,14 @@ if a != b and zero otherwise.</p>
 
 <dl class="method">
 <dt id="skopt.space.space.Categorical.inverse_transform">
-<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L146"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L636"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse transform samples from the warped space back into the
 original space.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.space.space.Categorical.rvs">
-<code class="sig-name descname">rvs</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_samples=None</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L580"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.rvs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.rvs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rvs</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_samples=None</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L647"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.rvs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.rvs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw random samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -234,8 +239,22 @@ results.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="skopt.space.space.Categorical.set_transformer">
+<code class="sig-name descname">set_transformer</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">transform='onehot'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L580"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Categorical.set_transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.set_transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define _rvs and transformer spaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>transform</strong><span class="classifier">str</span></dt><dd><p>Can be ‘normalize’, ‘onehot’, ‘string’, ‘label’, or ‘identity’</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="skopt.space.space.Categorical.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe13709/skopt/space/space.py#L142"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/space/space.py#L144"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Categorical.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform samples form the original space to a warped space.</p>
 </dd></dl>
 
@@ -258,7 +277,7 @@ results.</p>
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +

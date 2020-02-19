@@ -144,10 +144,12 @@
 
 <div class="viewcode-block" id="base_minimize"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.base_minimize.html#skopt.optimizer.base_minimize">[docs]</a><span class="k">def</span> <span class="nf">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                  <span class="n">initial_point_generator</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
                   <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                  <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">1.96</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">init_point_gen_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base optimizer class</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -188,6 +190,16 @@
 <span class="sd">    n_random_starts : int, default=10</span>
 <span class="sd">        Number of evaluations of `func` with random points before</span>
 <span class="sd">        approximating it with `base_estimator`.</span>
+
+<span class="sd">    initial_point_generator : str, InitialPointGenerator instance,</span>
+<span class="sd">    default=&#39;random&#39;</span>
+<span class="sd">        Sets a initial points generator. Can be either</span>
+
+<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
+<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
+<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
+<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
+<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence,</span>
 
 <span class="sd">    acq_func : string, default=`&quot;EI&quot;`</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
@@ -285,6 +297,9 @@
 <span class="sd">        Keeps list of models only as long as the argument given. In the</span>
 <span class="sd">        case of None, the list has no capped length.</span>
 
+<span class="sd">    init_point_gen_kwargs : dict</span>
+<span class="sd">        Additional arguments to be passed to the initial_point_generator</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    res : `OptimizeResult`, scipy object</span>
@@ -350,11 +365,13 @@
     <span class="c1"># create optimizer class</span>
     <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
+                          <span class="n">initial_point_generator</span><span class="o">=</span><span class="n">initial_point_generator</span><span class="p">,</span>
                           <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span>
                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                           <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">,</span>
                           <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="n">acq_optimizer_kwargs</span><span class="p">,</span>
-                          <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+                          <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">,</span>
+                          <span class="n">init_point_gen_kwargs</span><span class="o">=</span><span class="n">init_point_gen_kwargs</span><span class="p">)</span>
     <span class="c1"># check x0: element-wise data type, dimensionality</span>
     <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x0</span><span class="p">):</span>
@@ -413,7 +430,7 @@
 
 <script>
 $(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
      * the >>> and ... prompts and the output and thus make the code
      * copyable. */
     var div = $('.highlight-python .highlight,' +
