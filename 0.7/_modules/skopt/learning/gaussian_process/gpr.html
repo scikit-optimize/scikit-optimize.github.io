@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.learning.gaussian_process.gpr &mdash; scikit-optimize 0.7.3 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/learning/gaussian_process/gpr.html" />
+
+  
+  <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+<script src="../../../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../../../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.7.3</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.learning.gaussian_process.gpr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">cho_solve</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve_triangular</span>
+
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span> <span class="k">as</span> <span class="n">sk_GaussianProcessRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_array</span>
+
+<span class="kn">from</span> <span class="nn">.kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span>
+<span class="kn">from</span> <span class="nn">.kernels</span> <span class="kn">import</span> <span class="n">Sum</span>
+<span class="kn">from</span> <span class="nn">.kernels</span> <span class="kn">import</span> <span class="n">RBF</span>
+<span class="kn">from</span> <span class="nn">.kernels</span> <span class="kn">import</span> <span class="n">WhiteKernel</span>
+
+
+<span class="k">def</span> <span class="nf">_param_for_white_kernel_in_Sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">kernel_str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a WhiteKernel exists in a Sum Kernel</span>
+<span class="sd">    and if it does return the corresponding key in</span>
+<span class="sd">    `kernel.get_params()`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">kernel_str</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">kernel_str</span> <span class="o">=</span> <span class="n">kernel_str</span> <span class="o">+</span> <span class="s2">&quot;__&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">Sum</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">kernel</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">kernel_str</span> <span class="o">+</span> <span class="n">param</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">present</span><span class="p">,</span> <span class="n">child_str</span> <span class="o">=</span> <span class="n">_param_for_white_kernel_in_Sum</span><span class="p">(</span>
+                    <span class="n">child</span><span class="p">,</span> <span class="n">kernel_str</span> <span class="o">+</span> <span class="n">param</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">present</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">child_str</span>
+
+    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span>
+
+
+<div class="viewcode-block" id="GaussianProcessRegressor"><a class="viewcode-back" href="../../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor">[docs]</a><span class="k">class</span> <span class="nc">GaussianProcessRegressor</span><span class="p">(</span><span class="n">sk_GaussianProcessRegressor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    GaussianProcessRegressor that allows noise tunability.</span>
+
+<span class="sd">    The implementation is based on Algorithm 2.1 of Gaussian Processes</span>
+<span class="sd">    for Machine Learning (GPML) by Rasmussen and Williams.</span>
+
+<span class="sd">    In addition to standard scikit-learn estimator API,</span>
+<span class="sd">    GaussianProcessRegressor:</span>
+
+<span class="sd">       * allows prediction without prior fitting (based on the GP prior);</span>
+<span class="sd">       * provides an additional method sample_y(X), which evaluates samples</span>
+<span class="sd">         drawn from the GPR (prior or posterior) at given inputs;</span>
+<span class="sd">       * exposes a method log_marginal_likelihood(theta), which can be used</span>
+<span class="sd">         externally for other ways of selecting hyperparameters, e.g., via</span>
+<span class="sd">         Markov chain Monte Carlo.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kernel : kernel object</span>
+<span class="sd">        The kernel specifying the covariance function of the GP. If None is</span>
+<span class="sd">        passed, the kernel &quot;1.0 * RBF(1.0)&quot; is used as default. Note that</span>
+<span class="sd">        the kernel&#39;s hyperparameters are optimized during fitting.</span>
+
+<span class="sd">    alpha : float or array-like, optional (default: 1e-10)</span>
+<span class="sd">        Value added to the diagonal of the kernel matrix during fitting.</span>
+<span class="sd">        Larger values correspond to increased noise level in the observations</span>
+<span class="sd">        and reduce potential numerical issue during fitting. If an array is</span>
+<span class="sd">        passed, it must have the same number of entries as the data used for</span>
+<span class="sd">        fitting and is used as datapoint-dependent noise level. Note that this</span>
+<span class="sd">        is equivalent to adding a WhiteKernel with c=alpha. Allowing to specify</span>
+<span class="sd">        the noise level directly as a parameter is mainly for convenience and</span>
+<span class="sd">        for consistency with Ridge.</span>
+
+<span class="sd">    optimizer : string or callable, optional (default: &quot;fmin_l_bfgs_b&quot;)</span>
+<span class="sd">        Can either be one of the internally supported optimizers for optimizing</span>
+<span class="sd">        the kernel&#39;s parameters, specified by a string, or an externally</span>
+<span class="sd">        defined optimizer passed as a callable. If a callable is passed, it</span>
+<span class="sd">        must have the signature::</span>
+
+<span class="sd">            def optimizer(obj_func, initial_theta, bounds):</span>
+<span class="sd">                # * &#39;obj_func&#39; is the objective function to be maximized, which</span>
+<span class="sd">                #   takes the hyperparameters theta as parameter and an</span>
+<span class="sd">                #   optional flag eval_gradient, which determines if the</span>
+<span class="sd">                #   gradient is returned additionally to the function value</span>
+<span class="sd">                # * &#39;initial_theta&#39;: the initial value for theta, which can be</span>
+<span class="sd">                #   used by local optimizers</span>
+<span class="sd">                # * &#39;bounds&#39;: the bounds on the values of theta</span>
+<span class="sd">                ....</span>
+<span class="sd">                # Returned are the best found hyperparameters theta and</span>
+<span class="sd">                # the corresponding value of the target function.</span>
+<span class="sd">                return theta_opt, func_min</span>
+
+<span class="sd">        Per default, the &#39;fmin_l_bfgs_b&#39; algorithm from scipy.optimize</span>
+<span class="sd">        is used. If None is passed, the kernel&#39;s parameters are kept fixed.</span>
+<span class="sd">        Available internal optimizers are::</span>
+
+<span class="sd">            &#39;fmin_l_bfgs_b&#39;</span>
+
+<span class="sd">    n_restarts_optimizer : int, optional (default: 0)</span>
+<span class="sd">        The number of restarts of the optimizer for finding the kernel&#39;s</span>
+<span class="sd">        parameters which maximize the log-marginal likelihood. The first run</span>
+<span class="sd">        of the optimizer is performed from the kernel&#39;s initial parameters,</span>
+<span class="sd">        the remaining ones (if any) from thetas sampled log-uniform randomly</span>
+<span class="sd">        from the space of allowed theta-values. If greater than 0, all bounds</span>
+<span class="sd">        must be finite. Note that n_restarts_optimizer == 0 implies that one</span>
+<span class="sd">        run is performed.</span>
+
+<span class="sd">    normalize_y : boolean, optional (default: False)</span>
+<span class="sd">        Whether the target values y are normalized, i.e., the mean of the</span>
+<span class="sd">        observed target values become zero. This parameter should be set to</span>
+<span class="sd">        True if the target values&#39; mean is expected to differ considerable from</span>
+<span class="sd">        zero. When enabled, the normalization effectively modifies the GP&#39;s</span>
+<span class="sd">        prior based on the data, which contradicts the likelihood principle;</span>
+<span class="sd">        normalization is thus disabled per default.</span>
+
+<span class="sd">    copy_X_train : bool, optional (default: True)</span>
+<span class="sd">        If True, a persistent copy of the training data is stored in the</span>
+<span class="sd">        object. Otherwise, just a reference to the training data is stored,</span>
+<span class="sd">        which might cause predictions to change if the data is modified</span>
+<span class="sd">        externally.</span>
+
+<span class="sd">    random_state : integer or numpy.RandomState, optional</span>
+<span class="sd">        The generator used to initialize the centers. If an integer is</span>
+<span class="sd">        given, it fixes the seed. Defaults to the global numpy random</span>
+<span class="sd">        number generator.</span>
+
+<span class="sd">    noise : string, &quot;gaussian&quot;, optional</span>
+<span class="sd">        If set to &quot;gaussian&quot;, then it is assumed that `y` is a noisy</span>
+<span class="sd">        estimate of `f(x)` where the noise is gaussian.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train_ : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">        Feature values in training data (also required for prediction)</span>
+
+<span class="sd">    y_train_ : array-like, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">        Target values in training data (also required for prediction)</span>
+
+<span class="sd">    kernel_ kernel object</span>
+<span class="sd">        The kernel used for prediction. The structure of the kernel is the</span>
+<span class="sd">        same as the one passed as parameter but with optimized hyperparameters</span>
+
+<span class="sd">    L_ : array-like, shape = (n_samples, n_samples)</span>
+<span class="sd">        Lower-triangular Cholesky decomposition of the kernel in ``X_train_``</span>
+
+<span class="sd">    alpha_ : array-like, shape = (n_samples,)</span>
+<span class="sd">        Dual coefficients of training data points in kernel space</span>
+
+<span class="sd">    log_marginal_likelihood_value_ : float</span>
+<span class="sd">        The log-marginal-likelihood of ``self.kernel_.theta``</span>
+
+<span class="sd">    noise_ : float</span>
+<span class="sd">        Estimate of the gaussian noise. Useful only when noise is set to</span>
+<span class="sd">        &quot;gaussian&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GaussianProcessRegressor.__init__"><a class="viewcode-back" href="../../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+                 <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="n">n_restarts_optimizer</span><span class="p">,</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="n">normalize_y</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="n">copy_X_train</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GaussianProcessRegressor.fit"><a class="viewcode-back" href="../../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit Gaussian process regression model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">            Training data</span>
+
+<span class="sd">        y : array-like, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">            Target values</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns an instance of self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">!=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected noise to be &#39;gaussian&#39;, got </span><span class="si">%s</span><span class="s2">&quot;</span>
+                             <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> \
+                          <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">+</span> <span class="n">WhiteKernel</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">+</span> <span class="n">WhiteKernel</span><span class="p">(</span>
+                <span class="n">noise_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span> <span class="n">noise_level_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span>
+            <span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GaussianProcessRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">:</span>
+            <span class="c1"># The noise component of this kernel should be set to zero</span>
+            <span class="c1"># while estimating K(X_test, X_test)</span>
+            <span class="c1"># Note that the term K(X, X) should include the noise but</span>
+            <span class="c1"># this (K(X, X))^-1y is precomputed as the attribute `alpha_`.</span>
+            <span class="c1"># (Notice the underscore).</span>
+            <span class="c1"># This has been described in Eq 2.24 of</span>
+            <span class="c1"># http://www.gaussianprocess.org/gpml/chapters/RW2.pdf</span>
+            <span class="c1"># Hence this hack</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">white_present</span><span class="p">,</span> <span class="n">white_param</span> <span class="o">=</span> <span class="n">_param_for_white_kernel_in_Sum</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">)</span>
+
+                <span class="c1"># This should always be true. Just in case.</span>
+                <span class="k">if</span> <span class="n">white_present</span><span class="p">:</span>
+                    <span class="n">noise_kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="n">white_param</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">noise_</span> <span class="o">=</span> <span class="n">noise_kernel</span><span class="o">.</span><span class="n">noise_level</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span>
+                        <span class="o">**</span><span class="p">{</span><span class="n">white_param</span><span class="p">:</span> <span class="n">WhiteKernel</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)})</span>
+
+        <span class="c1"># Precompute arrays needed at prediction</span>
+        <span class="n">L_inv</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K_inv_</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="c1"># Fix deprecation warning #462</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">19</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="GaussianProcessRegressor.predict"><a class="viewcode-back" href="../../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_mean_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_std_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict output for X.</span>
+
+<span class="sd">        In addition to the mean of the predictive distribution, also its</span>
+<span class="sd">        standard deviation (return_std=True) or covariance (return_cov=True),</span>
+<span class="sd">        the gradient of the mean and the standard-deviation with respect to X</span>
+<span class="sd">        can be optionally provided.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape = (n_samples, n_features)</span>
+<span class="sd">            Query points where the GP is evaluated.</span>
+
+<span class="sd">        return_std : bool, default: False</span>
+<span class="sd">            If True, the standard-deviation of the predictive distribution at</span>
+<span class="sd">            the query points is returned along with the mean.</span>
+
+<span class="sd">        return_cov : bool, default: False</span>
+<span class="sd">            If True, the covariance of the joint predictive distribution at</span>
+<span class="sd">            the query points is returned along with the mean.</span>
+
+<span class="sd">        return_mean_grad : bool, default: False</span>
+<span class="sd">            Whether or not to return the gradient of the mean.</span>
+<span class="sd">            Only valid when X is a single point.</span>
+
+<span class="sd">        return_std_grad : bool, default: False</span>
+<span class="sd">            Whether or not to return the gradient of the std.</span>
+<span class="sd">            Only valid when X is a single point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y_mean : array, shape = (n_samples, [n_output_dims])</span>
+<span class="sd">            Mean of predictive distribution a query points</span>
+
+<span class="sd">        y_std : array, shape = (n_samples,), optional</span>
+<span class="sd">            Standard deviation of predictive distribution at query points.</span>
+<span class="sd">            Only returned when return_std is True.</span>
+
+<span class="sd">        y_cov : array, shape = (n_samples, n_samples), optional</span>
+<span class="sd">            Covariance of joint predictive distribution a query points.</span>
+<span class="sd">            Only returned when return_cov is True.</span>
+
+<span class="sd">        y_mean_grad : shape = (n_samples, n_features)</span>
+<span class="sd">            The gradient of the predicted mean</span>
+
+<span class="sd">        y_std_grad : shape = (n_samples, n_features)</span>
+<span class="sd">            The gradient of the predicted std.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">return_std</span> <span class="ow">and</span> <span class="n">return_cov</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Not returning standard deviation of predictions when &quot;</span>
+                <span class="s2">&quot;returning full covariance.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_std_grad</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Not returning std_gradient without returning &quot;</span>
+                <span class="s2">&quot;the std.&quot;</span><span class="p">)</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">return_mean_grad</span> <span class="ow">or</span> <span class="n">return_std_grad</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not implemented for n_samples &gt; 1&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;X_train_&quot;</span><span class="p">):</span>  <span class="c1"># Not fit; predict based on GP prior</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+            <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">y_mean</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
+            <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>    <span class="c1"># Line 4 (y_mean = f_star)</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+
+            <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># Line 6</span>
+                <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
+
+            <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
+                <span class="n">K_inv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_inv_</span>
+
+                <span class="c1"># Compute variance of predictive distribution</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="n">y_var</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ki,kj,ij-&gt;k&quot;</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">K_inv</span><span class="p">)</span>
+
+                <span class="c1"># Check if any of the variances is negative because of</span>
+                <span class="c1"># numerical issues. If yes: set the variance to 0.</span>
+                <span class="n">y_var_negative</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">&lt;</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y_var_negative</span><span class="p">):</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
+                                  <span class="s2">&quot;Setting those variances to 0.&quot;</span><span class="p">)</span>
+                    <span class="n">y_var</span><span class="p">[</span><span class="n">y_var_negative</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">y_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">return_mean_grad</span><span class="p">:</span>
+                <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">gradient_x</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
+                <span class="n">grad_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">return_std_grad</span><span class="p">:</span>
+                    <span class="n">grad_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y_std</span><span class="p">,</span> <span class="n">grad_std</span><span class="p">):</span>
+                        <span class="n">grad_std</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_trans</span><span class="p">,</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_inv</span><span class="p">,</span> <span class="n">grad</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">y_std</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span><span class="p">,</span> <span class="n">grad_std</span>
+
+                <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">grad_mean</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">y_mean</span></div></div>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code samples to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>
