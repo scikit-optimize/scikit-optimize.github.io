@@ -123,6 +123,7 @@
 <li><a class="reference internal" href="#ratio-optimized-hypercube-sampling">Ratio optimized hypercube sampling</a></li>
 <li><a class="reference internal" href="#halton-sampling">Halton sampling</a></li>
 <li><a class="reference internal" href="#hammersly-sampling">Hammersly sampling</a></li>
+<li><a class="reference internal" href="#grid-sampling">Grid sampling</a></li>
 <li><a class="reference internal" href="#pdist-boxplot-of-all-methods">Pdist boxplot of all methods</a></li>
 </ul>
 </li>
@@ -161,6 +162,7 @@ such a way that each dimension is explored.</p>
 <span class="kn">from</span> <span class="nn">skopt.sampler</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="View documentation for skopt.sampler.Lhs"><span class="n">Lhs</span></a>
 <span class="kn">from</span> <span class="nn">skopt.sampler</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.sampler.Halton.html#skopt.sampler.Halton" title="View documentation for skopt.sampler.Halton"><span class="n">Halton</span></a>
 <span class="kn">from</span> <span class="nn">skopt.sampler</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.sampler.Hammersly.html#skopt.sampler.Hammersly" title="View documentation for skopt.sampler.Hammersly"><span class="n">Hammersly</span></a>
+<span class="kn">from</span> <span class="nn">skopt.sampler</span> <span class="kn">import</span> <span class="n">Grid</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html#scipy.spatial.distance.pdist" title="View documentation for scipy.spatial.distance.pdist"><span class="n">pdist</span></a>
 </pre></div>
 </div>
@@ -178,7 +180,7 @@ such a way that each dimension is explored.</p>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="n">space</span> <span class="o">=</span> <a href="../../modules/generated/skopt.Space.html#skopt.Space" title="View documentation for skopt.Space"><span class="n">Space</span></a><span class="p">([(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">)])</span>
-<span class="n">space</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
+<span class="c1"># space.set_transformer(&quot;normalize&quot;)</span>
 </pre></div>
 </div>
 <div class="section" id="random-sampling">
@@ -281,6 +283,17 @@ such a way that each dimension is explored.</p>
 </div>
 <img alt="../../_images/sphx_glr_initial-sampling-method_009.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method_009.png" />
 </div>
+<div class="section" id="grid-sampling">
+<h2>Grid sampling<a class="headerlink" href="#grid-sampling" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">border</span><span class="o">=</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="n">use_full_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">plot_searchspace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Grid&#39;</span><span class="p">)</span>
+<span class="n">pdist_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html#scipy.spatial.distance.pdist" title="View documentation for scipy.spatial.distance.pdist"><span class="n">pdist</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">x_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_initial-sampling-method_010.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method_010.png" />
+</div>
 <div class="section" id="pdist-boxplot-of-all-methods">
 <h2>Pdist boxplot of all methods<a class="headerlink" href="#pdist-boxplot-of-all-methods" title="Permalink to this headline">¶</a></h2>
 <p>This boxplot shows the distance between all generated points using
@@ -294,8 +307,8 @@ It can be seen that random has the worst performance</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_initial-sampling-method_010.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method_010.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.553 seconds)</p>
+<img alt="../../_images/sphx_glr_initial-sampling-method_011.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method_011.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.663 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sampler-initial-sampling-method-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/initial-sampling-method.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>

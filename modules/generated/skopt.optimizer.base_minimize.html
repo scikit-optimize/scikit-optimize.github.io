@@ -126,13 +126,13 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.optimizer" title="skopt.optimizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.optimizer</span></code></a>.base_minimize<a class="headerlink" href="#skopt-optimizer-base-minimize" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.optimizer.base_minimize">
-<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">base_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='lbfgs'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">n_restarts_optimizer=5</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/887818e/skopt/optimizer/base.py#L23"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/base.html#base_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.base_minimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">base_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='lbfgs'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">n_restarts_optimizer=5</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/4d6d749/skopt/optimizer/base.py#L24"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/base.html#base_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.base_minimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base optimizer class
 :param func: Function to minimize. Should take a single list of parameters</p>
 <blockquote>
 <div><p>and return the objective value.</p>
 <p>If you have a search-space where all dimensions have names,
-then you can use <code class="docutils literal notranslate"><span class="pre">skopt.utils.use_named_args</span></code> as a decorator
+then you can use <a class="reference internal" href="skopt.utils.use_named_args.html#skopt.utils.use_named_args" title="skopt.utils.use_named_args"><code class="xref py py-func docutils literal notranslate"><span class="pre">skopt.utils.use_named_args()</span></code></a> as a decorator
 on your objective function, in order to call it directly
 with the named arguments. See <code class="docutils literal notranslate"><span class="pre">use_named_args</span></code> for an example.</p>
 </div></blockquote>
@@ -161,16 +161,24 @@ which returns <code class="docutils literal notranslate"><span class="pre">std(Y
 <li><p><strong>n_calls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>default=100</em>) – Maximum number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code>. An objective fucntion will
 always be evaluated this number of times; Various options to
 supply initialization points do not affect this value.</p></li>
-<li><p><strong>n_random_starts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>default=10</em>) – Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
-approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.</p></li>
-<li><p><strong>initial_point_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>InitialPointGenerator instance</em><em>,</em>) – </p></li>
-<li><p><strong>default='random'</strong> – <p>Sets a initial points generator. Can be either</p>
+<li><p><strong>n_random_starts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>default=10</em>) – <p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
+approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.
+.. deprecated:: 0.9</p>
+<blockquote>
+<div><p>use <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> instead.</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>n_initial_points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>default=10</em>) – Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with initialization points
+before approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>. Initial point
+generator can be changed by setting <code class="docutils literal notranslate"><span class="pre">initial_point_generator</span></code>.</p></li>
+<li><p><strong>initial_point_generator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>InitialPointGenerator instance</em><em>,             </em><em>default='random'</em>) – <p>Sets a initial points generator. Can be either</p>
 <ul>
 <li><p>”random” for uniform random numbers,</p></li>
 <li><p>”sobol” for a Sobol sequence,</p></li>
 <li><p>”halton” for a Halton sequence,</p></li>
 <li><p>”hammersly” for a Hammersly sequence,</p></li>
 <li><p>”lhs” for a latin hypercube sequence,</p></li>
+<li><p>”grid” for a uniform grid sequence</p></li>
 </ul>
 </p></li>
 <li><p><strong>acq_func</strong> (<em>string</em><em>, </em><em>default=`&quot;EI&quot;`</em>) – <p>Function to minimize over the posterior distribution. Can be either</p>
@@ -256,7 +264,6 @@ Defaults to 1 core. If <code class="docutils literal notranslate"><span class="p
 to number of cores.</p></li>
 <li><p><strong>model_queue_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>, </em><em>default=None</em>) – Keeps list of models only as long as the argument given. In the
 case of None, the list has no capped length.</p></li>
-<li><p><strong>init_point_gen_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Additional arguments to be passed to the initial_point_generator</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

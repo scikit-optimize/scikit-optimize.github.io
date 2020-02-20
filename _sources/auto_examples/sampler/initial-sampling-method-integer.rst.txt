@@ -42,6 +42,7 @@ See also the example on a real space
     from skopt.sampler import Lhs
     from skopt.sampler import Halton
     from skopt.sampler import Hammersly
+    from skopt.sampler import Grid
     from scipy.spatial.distance import pdist
 
 
@@ -70,7 +71,6 @@ See also the example on a real space
 
     n_samples = 10
     space = Space([(0, 5), (0, 5)])
-    space.set_transformer("normalize")
 
 
 
@@ -106,7 +106,7 @@ Random sampling
 
  .. code-block:: none
 
-    empty fields: 28
+    empty fields: 27
 
 
 
@@ -170,7 +170,7 @@ Classic latin hypercube sampling
 
  .. code-block:: none
 
-    empty fields: 26
+    empty fields: 27
 
 
 
@@ -202,7 +202,7 @@ Centered latin hypercube sampling
 
  .. code-block:: none
 
-    empty fields: 27
+    empty fields: 26
 
 
 
@@ -367,6 +367,38 @@ Hammersly sampling
 
 
 
+Grid sampling
+-------------
+
+
+.. code-block:: default
+
+
+    grid = Grid(border="include", use_full_layout=False)
+    x = grid.generate(space.dimensions, n_samples)
+    plot_searchspace(x, 'Grid')
+    print("empty fields: %d" % (36 - np.size(np.unique(x, axis=0), 0)))
+    pdist_data.append(pdist(x).flatten())
+    x_label.append("grid")
+
+
+
+
+.. image:: /auto_examples/sampler/images/sphx_glr_initial-sampling-method-integer_010.png
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    empty fields: 26
+
+
+
+
 Pdist boxplot of all methods
 ----------------------------
 
@@ -387,7 +419,7 @@ It can be seen that random has the worst performance
 
 
 
-.. image:: /auto_examples/sampler/images/sphx_glr_initial-sampling-method-integer_010.png
+.. image:: /auto_examples/sampler/images/sphx_glr_initial-sampling-method-integer_011.png
     :class: sphx-glr-single-img
 
 
@@ -397,7 +429,7 @@ It can be seen that random has the worst performance
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.322 seconds)
+   **Total running time of the script:** ( 0 minutes  6.313 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sampler_initial-sampling-method-integer.py:
