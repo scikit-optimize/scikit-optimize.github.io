@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.optimizer.dummy &mdash; scikit-optimize 0.8.dev0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/optimizer/dummy.html" />
+
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+<script src="../../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.8.dev0</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.optimizer.dummy</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Random search.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">base_minimize</span>
+
+
+<div class="viewcode-block" id="dummy_minimize"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.dummy_minimize.html#skopt.dummy_minimize">[docs]</a><span class="k">def</span> <span class="nf">dummy_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                   <span class="n">initial_point_generator</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_point_gen_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Random search by uniform sampling within the given bounds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : callable</span>
+<span class="sd">        Function to minimize. Should take a single list of parameters</span>
+<span class="sd">        and return the objective value.</span>
+<span class="sd">    </span>
+<span class="sd">        If you have a search-space where all dimensions have names,</span>
+<span class="sd">        then you can use :func:`skopt.utils.use_named_args` as a decorator</span>
+<span class="sd">        on your objective function, in order to call it directly</span>
+<span class="sd">        with the named arguments. See `use_named_args` for an example.</span>
+
+<span class="sd">    dimensions : list, shape (n_dims,)</span>
+<span class="sd">        List of search space dimensions.</span>
+<span class="sd">        Each search dimension can be defined either as</span>
+
+<span class="sd">        - a `(lower_bound, upper_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - a `(lower_bound, upper_bound, prior)` tuple (for `Real`</span>
+<span class="sd">          dimensions),</span>
+<span class="sd">        - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">          `Categorical`).</span>
+
+<span class="sd">    n_calls : int, default=100</span>
+<span class="sd">        Number of calls to `func` to find the minimum.</span>
+
+<span class="sd">    initial_point_generator : str, InitialPointGenerator instance, \</span>
+<span class="sd">            default=&#39;random&#39;</span>
+<span class="sd">        Sets a initial points generator. Can be either</span>
+
+<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
+<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
+<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
+<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
+<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence,</span>
+<span class="sd">        - &quot;grid&quot; for a uniform grid sequence</span>
+
+<span class="sd">    x0 : list, list of lists or `None`</span>
+<span class="sd">        Initial input points.</span>
+
+<span class="sd">        - If it is a list of lists, use it as a list of input points.</span>
+<span class="sd">        - If it is a list, use it as a single initial input point.</span>
+<span class="sd">        - If it is `None`, no initial input points are used.</span>
+
+<span class="sd">    y0 : list, scalar or `None`</span>
+<span class="sd">        Evaluation of initial input points.</span>
+
+<span class="sd">        - If it is a list, then it corresponds to evaluations of the function</span>
+<span class="sd">          at each element of `x0` : the i-th element of `y0` corresponds</span>
+<span class="sd">          to the function evaluated at the i-th element of `x0`.</span>
+<span class="sd">        - If it is a scalar, then it corresponds to the evaluation of the</span>
+<span class="sd">          function at `x0`.</span>
+<span class="sd">        - If it is None and `x0` is provided, then the function is evaluated</span>
+<span class="sd">          at each element of `x0`.</span>
+
+<span class="sd">    random_state : int, RandomState instance, or None (default)</span>
+<span class="sd">        Set random state to something other than None for reproducible</span>
+<span class="sd">        results.</span>
+
+<span class="sd">    verbose : boolean, default=False</span>
+<span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
+<span class="sd">        for long optimization runs.</span>
+
+<span class="sd">    callback : callable, list of callables, optional</span>
+<span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
+<span class="sd">        If list of callables, then each callable in the list is called.</span>
+
+<span class="sd">    model_queue_size : int or None, default=None</span>
+<span class="sd">        Keeps list of models only as long as the argument given. In the</span>
+<span class="sd">        case of None, the list has no capped length.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    res : `OptimizeResult`, scipy object</span>
+<span class="sd">        The optimization result returned as a OptimizeResult object.</span>
+<span class="sd">        Important attributes are:</span>
+
+<span class="sd">        - `x` [list]: location of the minimum.</span>
+
+<span class="sd">        - `fun` [float]: function value at the minimum.</span>
+
+<span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
+<span class="sd">           iteration.</span>
+
+<span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
+
+<span class="sd">        - `space` [Space]: the optimisation space.</span>
+
+<span class="sd">        - `specs` [dict]: the call specifications.</span>
+
+<span class="sd">        - `rng` [RandomState instance]: State of the random state</span>
+<span class="sd">           at the end of minimization.</span>
+
+<span class="sd">        For more details related to the OptimizeResult object, refer</span>
+<span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># all our calls want random suggestions, except if we need to evaluate</span>
+    <span class="c1"># some initial points</span>
+    <span class="k">if</span> <span class="n">x0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_calls</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_initial_points</span> <span class="o">=</span> <span class="n">n_calls</span>
+
+    <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;dummy&quot;</span><span class="p">,</span>
+                         <span class="c1"># explicitly set optimizer to sampling as &quot;dummy&quot;</span>
+                         <span class="c1"># minimizer does not provide gradients.</span>
+                         <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
+                         <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
+                         <span class="n">initial_point_generator</span><span class="o">=</span><span class="n">initial_point_generator</span><span class="p">,</span>
+                         <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">)</span></div>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.plots.partial_dependence &mdash; scikit-optimize 0.8.dev0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/modules/generated/skopt.plots.partial_dependence.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="skopt.optimizer.gp_minimize.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.optimizer.gp_minimize">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
+            <a href="skopt.plots.plot_convergence.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.plots.plot_convergence">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.8.dev0</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.plots</span></code>.partial_dependence</a></li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <div class="section" id="skopt-plots-partial-dependence">
+<h1><a class="reference internal" href="../classes.html#module-skopt.plots" title="skopt.plots"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.plots</span></code></a>.partial_dependence<a class="headerlink" href="#skopt-plots-partial-dependence" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="skopt.plots.partial_dependence">
+<code class="sig-prename descclassname">skopt.plots.</code><code class="sig-name descname">partial_dependence</code><span class="sig-paren">(</span><em class="sig-param">space</em>, <em class="sig-param">model</em>, <em class="sig-param">i</em>, <em class="sig-param">j=None</em>, <em class="sig-param">sample_points=None</em>, <em class="sig-param">n_samples=250</em>, <em class="sig-param">n_points=40</em>, <em class="sig-param">x_eval=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/dcf95ab/skopt/plots.py#L282"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/plots.html#partial_dependence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.plots.partial_dependence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the partial dependence for dimensions <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> with
+respect to the objective value, as approximated by <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p>
+<p>The partial dependence plot shows how the value of the dimensions
+<code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> influence the <code class="docutils literal notranslate"><span class="pre">model</span></code> predictions after “averaging out”
+the influence of all other dimensions.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">x_eval</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the given values are used instead of
+random samples. In this case, <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> will be ignored.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>space</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">Space</span></code></span></dt><dd><p>The parameter space over which the minimization was performed.</p>
+</dd>
+<dt><strong>model</strong></dt><dd><p>Surrogate model for the objective function.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The first dimension for which to calculate the partial dependence.</p>
+</dd>
+<dt><strong>j</strong><span class="classifier">int, default=None</span></dt><dd><p>The second dimension for which to calculate the partial dependence.
+To calculate the 1D partial dependence on <code class="docutils literal notranslate"><span class="pre">i</span></code> alone set <code class="docutils literal notranslate"><span class="pre">j=None</span></code>.</p>
+</dd>
+<dt><strong>sample_points</strong><span class="classifier">np.array, shape=(n_points, n_dims), default=None</span></dt><dd><p>Only used when <code class="docutils literal notranslate"><span class="pre">x_eval=None</span></code>, i.e in case partial dependence should
+be calculated.
+Randomly sampled and transformed points to use when averaging
+the model function at each of the <code class="docutils literal notranslate"><span class="pre">n_points</span></code> when using partial
+dependence.</p>
+</dd>
+<dt><strong>n_samples</strong><span class="classifier">int, default=100</span></dt><dd><p>Number of random samples to use for averaging the model function
+at each of the <code class="docutils literal notranslate"><span class="pre">n_points</span></code> when using partial dependence. Only used
+when <code class="docutils literal notranslate"><span class="pre">sample_points=None</span></code> and <code class="docutils literal notranslate"><span class="pre">x_eval=None</span></code>.</p>
+</dd>
+<dt><strong>n_points</strong><span class="classifier">int, default=40</span></dt><dd><p>Number of points at which to evaluate the partial dependence
+along each dimension <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>.</p>
+</dd>
+<dt><strong>x_eval</strong><span class="classifier">list, default=None</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">x_eval</span></code> is a list of parameter values or None. In case <code class="docutils literal notranslate"><span class="pre">x_eval</span></code>
+is not None, the parsed dependence will be calculated using these
+values.
+Otherwise, random selected samples will be used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>For 1D partial dependence:</dt><dd></dd>
+<dt><strong>xi</strong><span class="classifier">np.array</span></dt><dd><p>The points at which the partial dependence was evaluated.</p>
+</dd>
+<dt><strong>yi</strong><span class="classifier">np.array</span></dt><dd><p>The value of the model at each point <code class="docutils literal notranslate"><span class="pre">xi</span></code>.</p>
+</dd>
+<dt>For 2D partial dependence:</dt><dd></dd>
+<dt><strong>xi</strong><span class="classifier">np.array, shape=n_points</span></dt><dd><p>The points at which the partial dependence was evaluated.</p>
+</dd>
+<dt><strong>yi</strong><span class="classifier">np.array, shape=n_points</span></dt><dd><p>The points at which the partial dependence was evaluated.</p>
+</dd>
+<dt><strong>zi</strong><span class="classifier">np.array, shape=(n_points, n_points)</span></dt><dd><p>The value of the model at each point <code class="docutils literal notranslate"><span class="pre">(xi,</span> <span class="pre">yi)</span></code>.</p>
+</dd>
+<dt>For Categorical variables, the <code class="docutils literal notranslate"><span class="pre">xi</span></code> (and <code class="docutils literal notranslate"><span class="pre">yi</span></code> for 2D) returned are</dt><dd></dd>
+<dt>the indices of the variable in <code class="docutils literal notranslate"><span class="pre">Dimension.categories</span></code>.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="clearer"></div></div>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+          <a href="../../_sources/modules/generated/skopt.plots.partial_dependence.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

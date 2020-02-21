@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>Comparing initial point generation methods &mdash; scikit-optimize 0.8.dev0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/auto_examples/sampler/sampling_comparison.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="initial-sampling-method-integer.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparing initial sampling methods on integer space">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="../plots/partial-dependence-plot.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Partial Dependence Plots">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.8.dev0</strong><br/>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#">Comparing initial point generation methods</a><ul>
+<li><a class="reference internal" href="#toy-model">Toy model</a></li>
+<li><a class="reference internal" href="#objective">Objective</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sampler-sampling-comparison-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<div class="sphx-glr-example-title section" id="comparing-initial-point-generation-methods">
+<span id="sphx-glr-auto-examples-sampler-sampling-comparison-py"></span><h1>Comparing initial point generation methods<a class="headerlink" href="#comparing-initial-point-generation-methods" title="Permalink to this headline">¶</a></h1>
+<p>Holger Nahrstaedt 2020</p>
+<p>Bayesian optimization or sequential model-based optimization uses a surrogate
+model to model the expensive to evaluate function <code class="docutils literal notranslate"><span class="pre">func</span></code>. There are several
+choices for what kind of surrogate model to use. This notebook compares the
+performance of:</p>
+<ul class="simple">
+<li><p>Halton sequence,</p></li>
+<li><p>Hammersly sequence,</p></li>
+<li><p>Sobol sequence and</p></li>
+<li><p>Latin hypercube sampling</p></li>
+</ul>
+<p>as initial points. The purely random point generation is used as
+a baseline.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<div class="section" id="toy-model">
+<h2>Toy model<a class="headerlink" href="#toy-model" title="Permalink to this headline">¶</a></h2>
+<p>We will use the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code> function as toy model for the expensive function.
+In a real world application this function would be unknown and expensive
+to evaluate.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">hart6</span> <span class="k">as</span> <span class="n">hart6_</span>
+<span class="c1"># redefined `hart6` to allow adding arbitrary &quot;noise&quot; dimensions</span>
+<span class="k">def</span> <span class="nf">hart6</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">hart6_</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="View documentation for skopt.benchmarks.branin"><span class="n">_branin</span></a>
+
+<span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+    <span class="k">return</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="View documentation for skopt.benchmarks.branin"><span class="n">_branin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
+
+<span class="k">def</span> <span class="nf">plot_convergence</span><span class="p">(</span><span class="n">result_list</span><span class="p">,</span> <span class="n">true_minimum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Convergence plot&quot;</span><span class="p">):</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="View documentation for matplotlib.pyplot.gca"><span class="n">plt</span><span class="o">.</span><span class="n">gca</span></a><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\min f(x)$ after $n$ calls&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">hsv</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="View documentation for numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_list</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">result_list</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iterations</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">mins</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1">#ax.errorbar(iterations, np.mean(mins, axis=0),</span>
+        <span class="c1">#             yerr=np.std(mins, axis=0), c=color, label=name)</span>
+    <span class="k">if</span> <span class="n">true_minimum</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">true_minimum</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                   <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True minimum&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">minimizer</span><span class="p">,</span> <span class="n">initial_point_generator</span><span class="p">,</span>
+        <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">minimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
+                      <span class="n">initial_point_generator</span><span class="o">=</span><span class="n">initial_point_generator</span><span class="p">,</span>
+                      <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">run_measure</span><span class="p">(</span><span class="n">initial_point_generator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="View documentation for time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+    <span class="c1"># n_repeats must set to a much higher value to obtain meaningful results.</span>
+    <span class="n">n_repeats</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">initial_point_generator</span><span class="p">,</span>
+              <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="n">n_repeats</span><span class="p">)</span>
+    <span class="n">duration</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="View documentation for time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="c1"># print(&quot;%s %s: %.2f s&quot; % (initial_point_generator,</span>
+    <span class="c1">#                          str(init_point_gen_kwargs),</span>
+    <span class="c1">#                          duration))</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
+<p>The objective of this example is to find one of these minima in as
+few iterations as possible. One iteration is defined as one call
+to the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code> function.</p>
+<p>We will evaluate each model several times using a different seed for the
+random number generator. Then compare the average performance of these
+models. This makes the comparison more robust against models that get
+“lucky”.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a>
+<span class="n">example</span> <span class="o">=</span> <span class="s2">&quot;hart6&quot;</span>
+
+<span class="k">if</span> <span class="n">example</span> <span class="o">==</span> <span class="s2">&quot;hart6&quot;</span><span class="p">:</span>
+    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><span class="n">hart6</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">6</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.32237</span>
+    <span class="n">n_calls</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">n_initial_points</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Convergence plot - hart6&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="mf">0.397887</span>
+    <span class="n">n_calls</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">n_initial_points</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">yscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Convergence plot - branin&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a>
+
+<span class="c1"># Random search</span>
+<span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span>
+    <span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">lhs_type</span><span class="o">=</span><span class="s2">&quot;classic&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">lhs_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
+<span class="n">lhs2_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">sobol</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">min_skip</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_skip</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">sobol_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">sobol</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">halton_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;halton&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">hammersly_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;hammersly&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+<span class="n">grid_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that this can take a few minutes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">plot_convergence</span><span class="p">([(</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">lhs_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs_maximin&quot;</span><span class="p">,</span> <span class="n">lhs2_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="n">sobol_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;halton&quot;</span><span class="p">,</span> <span class="n">halton_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;hammersly&quot;</span><span class="p">,</span> <span class="n">hammersly_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">grid_res</span><span class="p">)],</span>
+                        <span class="n">true_minimum</span><span class="o">=</span><span class="n">true_minimum</span><span class="p">,</span>
+                        <span class="n">yscale</span><span class="o">=</span><span class="n">yscale</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_sampling_comparison_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_001.png" />
+<p>This plot shows the value of the minimum found (y axis) as a function
+of the number of iterations performed so far (x axis). The dashed red line
+indicates the true value of the minimum of the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code>
+function.</p>
+<p>Test with different n_random_starts values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
+<span class="n">lhs2_15_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">lhs2_20_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">lhs2_25_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>n_random_starts = 10 produces the best results</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">plot_convergence</span><span class="p">([(</span><span class="s2">&quot;random - 10&quot;</span><span class="p">,</span> <span class="n">dummy_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs_maximin - 10&quot;</span><span class="p">,</span> <span class="n">lhs2_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs_maximin - 12&quot;</span><span class="p">,</span> <span class="n">lhs2_15_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs_maximin - 14&quot;</span><span class="p">,</span> <span class="n">lhs2_20_res</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s2">&quot;lhs_maximin - 16&quot;</span><span class="p">,</span> <span class="n">lhs2_25_res</span><span class="p">)],</span>
+                        <span class="n">true_minimum</span><span class="o">=</span><span class="n">true_minimum</span><span class="p">,</span>
+                        <span class="n">yscale</span><span class="o">=</span><span class="n">yscale</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_sampling_comparison_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_002.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  54.803 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  8 MB</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sampler-sampling-comparison-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/sampling_comparison.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/f2628aca259d3f320f4c14ddc49a5526/sampling_comparison.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">sampling_comparison.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2836dfc666978d3b8e63b1399cca6c8a/sampling_comparison.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">sampling_comparison.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, The scikit-optimize contributors..
+          <a href="../../_sources/auto_examples/sampler/sampling_comparison.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>
