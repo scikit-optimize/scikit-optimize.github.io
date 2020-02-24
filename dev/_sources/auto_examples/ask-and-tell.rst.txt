@@ -126,7 +126,9 @@ you do not pass the objective function to the optimizer.
 .. code-block:: default
 
 
-    opt = Optimizer([(-2.0, 2.0)], "ET", acq_optimizer="sampling")
+    opt = Optimizer([(-2.0, 2.0)], "GP", acq_func="EI",
+                    acq_optimizer="sampling",
+                    initial_point_generator="lhs")
 
     # To obtain a suggestion for the point at which to evaluate the objective
     # you call the ask() method of opt:
@@ -144,7 +146,7 @@ you do not pass the objective function to the optimizer.
 
  .. code-block:: none
 
-    [-1.7121321838148869]
+    [-0.7315058981975282]
 
 
 
@@ -172,18 +174,19 @@ and report the value back to the optimizer:
  .. code-block:: none
 
 
-              fun: -0.032758350111535384
-        func_vals: array([-0.03275835])
+              fun: 0.2071864923643295
+        func_vals: array([0.20718649])
            models: []
-     random_state: RandomState(MT19937) at 0x7F30E5530D40
-            space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='identity')])
+     random_state: RandomState(MT19937) at 0x7F36CE96AD40
+            space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')])
             specs: None
-                x: [-1.7121321838148869]
-          x_iters: [[-1.7121321838148869]]
+                x: [-0.7315058981975282]
+          x_iters: [[-0.7315058981975282]]
 
 
 
-Like ***_minimize()** the first few points are random suggestions as there
+Like ***_minimize()** the first few points are suggestions from
+the initial point generator as there
 is no data yet with which to fit a surrogate model.
 
 
@@ -312,7 +315,7 @@ meantime:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.606 seconds)
+   **Total running time of the script:** ( 0 minutes  2.974 seconds)
 
 **Estimated memory usage:**  8 MB
 

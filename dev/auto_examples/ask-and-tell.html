@@ -197,7 +197,9 @@ minimize</p>
 <p>Now we setup the <a class="reference internal" href="../modules/generated/skopt.Optimizer.html#skopt.Optimizer" title="skopt.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></a> class. The arguments follow the meaning and
 naming of the <strong>*_minimize()</strong> functions. An important difference is that
 you do not pass the objective function to the optimizer.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">opt</span> <span class="o">=</span> <a href="../modules/generated/skopt.Optimizer.html#skopt.Optimizer" title="View documentation for skopt.Optimizer"><span class="n">Optimizer</span></a><span class="p">([(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span> <span class="s2">&quot;ET&quot;</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">opt</span> <span class="o">=</span> <a href="../modules/generated/skopt.Optimizer.html#skopt.Optimizer" title="View documentation for skopt.Optimizer"><span class="n">Optimizer</span></a><span class="p">([(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span> <span class="s2">&quot;GP&quot;</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span>
+                <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;sampling&quot;</span><span class="p">,</span>
+                <span class="n">initial_point_generator</span><span class="o">=</span><span class="s2">&quot;lhs&quot;</span><span class="p">)</span>
 
 <span class="c1"># To obtain a suggestion for the point at which to evaluate the objective</span>
 <span class="c1"># you call the ask() method of opt:</span>
@@ -207,7 +209,7 @@ you do not pass the objective function to the optimizer.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[-1.7121321838148869]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[-0.7315058981975282]
 </pre></div>
 </div>
 <p>In a real world use case you would probably go away and use this
@@ -219,17 +221,18 @@ and report the value back to the optimizer:</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: -0.032758350111535384
-   func_vals: array([-0.03275835])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: 0.2071864923643295
+   func_vals: array([0.20718649])
       models: []
-random_state: RandomState(MT19937) at 0x7F30E5530D40
-       space: Space([Real(low=-2.0, high=2.0, prior=&#39;uniform&#39;, transform=&#39;identity&#39;)])
+random_state: RandomState(MT19937) at 0x7F36CE96AD40
+       space: Space([Real(low=-2.0, high=2.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
        specs: None
-           x: [-1.7121321838148869]
-     x_iters: [[-1.7121321838148869]]
+           x: [-0.7315058981975282]
+     x_iters: [[-0.7315058981975282]]
 </pre></div>
 </div>
-<p>Like <strong>*_minimize()</strong> the first few points are random suggestions as there
+<p>Like <strong>*_minimize()</strong> the first few points are suggestions from
+the initial point generator as there
 is no data yet with which to fit a surrogate model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
     <span class="n">next_x</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
@@ -305,7 +308,7 @@ meantime:</p>
     <span class="n">opt_restored</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pickle.html#pickle.load" title="View documentation for pickle.load"><span class="n">pickle</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.606 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.974 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-ask-and-tell-py">
 <div class="binder-badge docutils container">
