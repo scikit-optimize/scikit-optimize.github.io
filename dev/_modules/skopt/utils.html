@@ -329,9 +329,8 @@
 
 
 <div class="viewcode-block" id="expected_minimum"><a class="viewcode-back" href="../../modules/generated/skopt.utils.expected_minimum.html#skopt.expected_minimum">[docs]</a><span class="k">def</span> <span class="nf">expected_minimum</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the minimum over the predictions of the last surrogate model.</span>
-<span class="sd">    Uses `expected_minimum_random_sampling` with `n_random_starts`=100000,</span>
+    <span class="sd">&quot;&quot;&quot;Compute the minimum over the predictions of the last surrogate model.</span>
+<span class="sd">    Uses `expected_minimum_random_sampling` with `n_random_starts` = 100000,</span>
 <span class="sd">    when the space contains any categorical values.</span>
 
 <span class="sd">    .. note::</span>
@@ -460,8 +459,7 @@
 
 
 <div class="viewcode-block" id="cook_estimator"><a class="viewcode-back" href="../../modules/generated/skopt.utils.cook_estimator.html#skopt.cook_estimator">[docs]</a><span class="k">def</span> <span class="nf">cook_estimator</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cook a default estimator.</span>
+    <span class="sd">&quot;&quot;&quot;Cook a default estimator.</span>
 
 <span class="sd">    For the special base_estimator called &quot;DUMMY&quot; the return value is None.</span>
 <span class="sd">    This corresponds to sampling points at random, hence there is no need</span>
@@ -469,8 +467,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    base_estimator : &quot;GP&quot;, &quot;RF&quot;, &quot;ET&quot;, &quot;GBRT&quot;, &quot;DUMMY&quot;</span>
-<span class="sd">                        or sklearn regressor</span>
+<span class="sd">    base_estimator : &quot;GP&quot;, &quot;RF&quot;, &quot;ET&quot;, &quot;GBRT&quot;, &quot;DUMMY&quot; or sklearn regressor</span>
 <span class="sd">        Should inherit from `sklearn.base.RegressorMixin`.</span>
 <span class="sd">        In addition the `predict` method should have an optional `return_std`</span>
 <span class="sd">        argument, which returns `std(Y | x)`` along with `E[Y | x]`.</span>
@@ -535,15 +532,14 @@
 
 
 <div class="viewcode-block" id="cook_initial_point_generator"><a class="viewcode-back" href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.cook_initial_point_generator">[docs]</a><span class="k">def</span> <span class="nf">cook_initial_point_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cook a default initial point generator.</span>
+    <span class="sd">&quot;&quot;&quot;Cook a default initial point generator.</span>
 
 <span class="sd">    For the special generator called &quot;random&quot; the return value is None.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    generator : &quot;lhs&quot;, &quot;sobol&quot;, &quot;halton&quot;, &quot;hammersly&quot;, &quot;grid&quot;, &quot;random&quot;</span>
-<span class="sd">                        or InitialPointGenerator instance&quot;</span>
+<span class="sd">    generator : &quot;lhs&quot;, &quot;sobol&quot;, &quot;halton&quot;, &quot;hammersly&quot;, &quot;grid&quot;, &quot;random&quot; \</span>
+<span class="sd">            or InitialPointGenerator instance&quot;</span>
 <span class="sd">        Should inherit from `skopt.sampler.InitialPointGenerator`.</span>
 
 <span class="sd">    kwargs : dict</span>
@@ -721,37 +717,30 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="n">transformed_dimensions</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span><span class="p">:</span>
-        <span class="c1"># recreate the space and explicitly set transform to &quot;string&quot;</span>
-        <span class="c1"># this is a special case for GP based regressors</span>
-        <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
             <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span>
                                                       <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
                                                       <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
-                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-            <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Real</span><span class="p">):</span>
-                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">Real</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                         <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
-                         <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-                    <span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Integer</span><span class="p">):</span>
-                <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">Integer</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
-                            <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                            <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
-                            <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-                    <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown dimension type &quot;</span>
-                                   <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
+                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">))</span>
+        <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Real</span><span class="p">):</span>
+            <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Real</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
+                     <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                     <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
+                     <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Integer</span><span class="p">):</span>
+            <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Integer</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
+                        <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown dimension type &quot;</span>
+                               <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">Space</span><span class="p">(</span><span class="n">transformed_dimensions</span><span class="p">)</span>
 
