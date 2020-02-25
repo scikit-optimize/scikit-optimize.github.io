@@ -131,7 +131,7 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt</span></code>.gbrt_minimize<a class="headerlink" href="#skopt-gbrt-minimize" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.gbrt_minimize">
-<code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">gbrt_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator=None</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/ba8df73/skopt/optimizer/gbrt.py#L8"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/gbrt.html#gbrt_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.gbrt_minimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.</code><code class="sig-name descname">gbrt_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">base_estimator=None</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">n_random_starts=None</em>, <em class="sig-param">n_initial_points=10</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">acq_func='EI'</em>, <em class="sig-param">acq_optimizer='auto'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">n_points=10000</em>, <em class="sig-param">xi=0.01</em>, <em class="sig-param">kappa=1.96</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">model_queue_size=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe46261/skopt/optimizer/gbrt.py#L8"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/gbrt.html#gbrt_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.gbrt_minimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequential optimization using gradient boosted trees.</p>
 <p>Gradient boosted regression trees are used to model the (very)
 expensive to evaluate function <code class="docutils literal notranslate"><span class="pre">func</span></code>. The model is improved
@@ -172,30 +172,29 @@ dimensions),</p></li>
 </dd>
 <dt><strong>base_estimator</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">GradientBoostingQuantileRegressor</span></code></span></dt><dd><p>The regressor to use as surrogate model</p>
 </dd>
-<dt><strong>n_calls</strong><span class="classifier">int, default=100</span></dt><dd><p>Number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p>
+<dt><strong>n_calls</strong><span class="classifier">int, default: 100</span></dt><dd><p>Number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p>
 </dd>
-<dt><strong>n_random_starts</strong><span class="classifier">int, default=10</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
-approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.
-.. deprecated:: 0.9</p>
-<blockquote>
-<div><p>use <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> instead.</p>
-</div></blockquote>
+<dt><strong>n_random_starts</strong><span class="classifier">int, default: None</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
+approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.8: </span>use <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> instead.</p>
+</div>
 </dd>
-<dt><strong>n_initial_points</strong><span class="classifier">int, default=10</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with initialization points
+<dt><strong>n_initial_points</strong><span class="classifier">int, default: 10</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with initialization points
 before approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>. Initial point
 generator can be changed by setting <code class="docutils literal notranslate"><span class="pre">initial_point_generator</span></code>.</p>
 </dd>
-<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,             default=’random’</span></dt><dd><p>Sets a initial points generator. Can be either</p>
+<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,             default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code></span></dt><dd><p>Sets a initial points generator. Can be either</p>
 <ul class="simple">
-<li><p>“random” for uniform random numbers,</p></li>
-<li><p>“sobol” for a Sobol sequence,</p></li>
-<li><p>“halton” for a Halton sequence,</p></li>
-<li><p>“hammersly” for a Hammersly sequence,</p></li>
-<li><p>“lhs” for a latin hypercube sequence,</p></li>
-<li><p>“grid” for a uniform grid sequence</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code> for uniform random numbers,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;sobol&quot;</span></code> for a Sobol sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;halton&quot;</span></code> for a Halton sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;hammersly&quot;</span></code> for a Hammersly sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lhs&quot;</span></code> for a latin hypercube sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;grid&quot;</span></code> for a uniform grid sequence</p></li>
 </ul>
 </dd>
-<dt><strong>acq_func</strong><span class="classifier">string, default=`”LCB”`</span></dt><dd><p>Function to minimize over the forest posterior. Can be either</p>
+<dt><strong>acq_func</strong><span class="classifier">string, default: <code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code></span></dt><dd><p>Function to minimize over the forest posterior. Can be either</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code> for lower confidence bound.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;EI&quot;</span></code> for negative expected improvement.</p></li>
@@ -228,25 +227,25 @@ at each element of <code class="docutils literal notranslate"><span class="pre">
 <dt><strong>random_state</strong><span class="classifier">int, RandomState instance, or None (default)</span></dt><dd><p>Set random state to something other than None for reproducible
 results.</p>
 </dd>
-<dt><strong>verbose</strong><span class="classifier">boolean, default=False</span></dt><dd><p>Control the verbosity. It is advised to set the verbosity to True
+<dt><strong>verbose</strong><span class="classifier">boolean, default: False</span></dt><dd><p>Control the verbosity. It is advised to set the verbosity to True
 for long optimization runs.</p>
 </dd>
 <dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>If provided, then <code class="docutils literal notranslate"><span class="pre">callback(res)</span></code> is called after call to func.</p>
 </dd>
-<dt><strong>n_points</strong><span class="classifier">int, default=10000</span></dt><dd><p>Number of points to sample when minimizing the acquisition function.</p>
+<dt><strong>n_points</strong><span class="classifier">int, default: 10000</span></dt><dd><p>Number of points to sample when minimizing the acquisition function.</p>
 </dd>
-<dt><strong>xi</strong><span class="classifier">float, default=0.01</span></dt><dd><p>Controls how much improvement one wants over the previous best
+<dt><strong>xi</strong><span class="classifier">float, default: 0.01</span></dt><dd><p>Controls how much improvement one wants over the previous best
 values. Used when the acquisition is either <code class="docutils literal notranslate"><span class="pre">&quot;EI&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;PI&quot;</span></code>.</p>
 </dd>
-<dt><strong>kappa</strong><span class="classifier">float, default=1.96</span></dt><dd><p>Controls how much of the variance in the predicted values should be
+<dt><strong>kappa</strong><span class="classifier">float, default: 1.96</span></dt><dd><p>Controls how much of the variance in the predicted values should be
 taken into account. If set to be very high, then we are favouring
 exploration over exploitation and vice versa.
 Used when the acquisition is <code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code>.</p>
 </dd>
-<dt><strong>n_jobs</strong><span class="classifier">int, default=1</span></dt><dd><p>The number of jobs to run in parallel for <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code>.
+<dt><strong>n_jobs</strong><span class="classifier">int, default: 1</span></dt><dd><p>The number of jobs to run in parallel for <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code>.
 If -1, then the number of jobs is set to the number of cores.</p>
 </dd>
-<dt><strong>model_queue_size</strong><span class="classifier">int or None, default=None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
+<dt><strong>model_queue_size</strong><span class="classifier">int or None, default: None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
 case of None, the list has no capped length.</p>
 </dd>
 </dl>
@@ -259,24 +258,23 @@ Important attributes are:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> [list]: location of the minimum.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fun</span></code> [float]: function value at the minimum.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">models</span></code>: surrogate models used for each iteration.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">x_iters</span></code> [list of lists]: location of function evaluation for each</dt><dd><p>iteration.</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_iters</span></code> [list of lists]: location of function evaluation for each
+iteration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">func_vals</span></code> [array]: function value for each iteration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">space</span></code> [Space]: the optimization space.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">specs</span></code> [dict]`: the call specifications.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">rng</span></code> [RandomState instance]: State of the random state</dt><dd><p>at the end of minimization.</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rng</span></code> [RandomState instance]: State of the random state
+at the end of minimization.</p></li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</a></p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>functions <a class="reference internal" href="skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.gp_minimize</span></code></a>,
+<a class="reference internal" href="skopt.dummy_minimize.html#skopt.dummy_minimize" title="skopt.dummy_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dummy_minimize</span></code></a>, <a class="reference internal" href="skopt.forest_minimize.html#skopt.forest_minimize" title="skopt.forest_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.forest_minimize</span></code></a></p>
+</div>
 </dd>
 </dl>
 </dd></dl>

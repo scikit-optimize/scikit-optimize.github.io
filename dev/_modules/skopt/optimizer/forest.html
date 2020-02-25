@@ -169,7 +169,7 @@
 <span class="sd">        then you can use :func:`skopt.utils.use_named_args` as a decorator</span>
 <span class="sd">        on your objective function, in order to call it directly</span>
 <span class="sd">        with the named arguments. See :func:`skopt.utils.use_named_args`</span>
-<span class="sd">         for an example.</span>
+<span class="sd">        for an example.</span>
 
 <span class="sd">    dimensions : list, shape (n_dims,)</span>
 <span class="sd">        List of search space dimensions.</span>
@@ -183,10 +183,10 @@
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">         NOTE: The upper and lower bounds are inclusive for `Integer`</span>
-<span class="sd">         dimensions.</span>
+<span class="sd">         .. note:: The upper and lower bounds are inclusive for `Integer`</span>
+<span class="sd">            dimensions.</span>
 
-<span class="sd">    base_estimator : string or `Regressor`, default=&quot;ET&quot;</span>
+<span class="sd">    base_estimator : string or `Regressor`, default: `&quot;ET&quot;`</span>
 <span class="sd">        The regressor to use as surrogate model. Can be either</span>
 
 <span class="sd">        - `&quot;RF&quot;` for random forest regressor</span>
@@ -199,32 +199,33 @@
 <span class="sd">        a regressor which returns the mean and standard deviation when</span>
 <span class="sd">        making predictions.</span>
 
-<span class="sd">    n_calls : int, default=100</span>
+<span class="sd">    n_calls : int, default: 100</span>
 <span class="sd">        Number of calls to `func`.</span>
 
-<span class="sd">    n_random_starts : int, default=10</span>
+<span class="sd">    n_random_starts : int, default: None</span>
 <span class="sd">        Number of evaluations of `func` with random points before</span>
 <span class="sd">        approximating it with `base_estimator`.</span>
-<span class="sd">        .. deprecated:: 0.9</span>
+
+<span class="sd">        .. deprecated:: 0.8</span>
 <span class="sd">            use `n_initial_points` instead.</span>
 
-<span class="sd">    n_initial_points : int, default=10</span>
+<span class="sd">    n_initial_points : int, default: 10</span>
 <span class="sd">        Number of evaluations of `func` with initialization points</span>
 <span class="sd">        before approximating it with `base_estimator`. Initial point</span>
 <span class="sd">        generator can be changed by setting `initial_point_generator`.</span>
 
 <span class="sd">    initial_point_generator : str, InitialPointGenerator instance, \</span>
-<span class="sd">            default=&#39;random&#39;</span>
+<span class="sd">            default: `&quot;random&quot;`</span>
 <span class="sd">        Sets a initial points generator. Can be either</span>
 
-<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
-<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
-<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
-<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
-<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence,</span>
-<span class="sd">        - &quot;grid&quot; for a uniform grid sequence</span>
+<span class="sd">        - `&quot;random&quot;` for uniform random numbers,</span>
+<span class="sd">        - `&quot;sobol&quot;` for a Sobol sequence,</span>
+<span class="sd">        - `&quot;halton&quot;` for a Halton sequence,</span>
+<span class="sd">        - `&quot;hammersly&quot;` for a Hammersly sequence,</span>
+<span class="sd">        - `&quot;lhs&quot;` for a latin hypercube sequence,</span>
+<span class="sd">        - `&quot;grid&quot;` for a uniform grid sequence</span>
 
-<span class="sd">    acq_func : string, default=&quot;LCB&quot;</span>
+<span class="sd">    acq_func : string, default: `&quot;LCB&quot;`</span>
 <span class="sd">        Function to minimize over the forest posterior. Can be either</span>
 
 <span class="sd">        - `&quot;LCB&quot;` for lower confidence bound.</span>
@@ -260,31 +261,31 @@
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
-<span class="sd">    verbose : boolean, default=False</span>
+<span class="sd">    verbose : boolean, default: False</span>
 <span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
 <span class="sd">        for long optimization runs.</span>
 
 <span class="sd">    callback : callable, optional</span>
 <span class="sd">        If provided, then `callback(res)` is called after call to func.</span>
 
-<span class="sd">    n_points : int, default=10000</span>
+<span class="sd">    n_points : int, default: 10000</span>
 <span class="sd">        Number of points to sample when minimizing the acquisition function.</span>
 
-<span class="sd">    xi : float, default=0.01</span>
+<span class="sd">    xi : float, default: 0.01</span>
 <span class="sd">        Controls how much improvement one wants over the previous best</span>
 <span class="sd">        values. Used when the acquisition is either `&quot;EI&quot;` or `&quot;PI&quot;`.</span>
 
-<span class="sd">    kappa : float, default=1.96</span>
+<span class="sd">    kappa : float, default: 1.96</span>
 <span class="sd">        Controls how much of the variance in the predicted values should be</span>
 <span class="sd">        taken into account. If set to be very high, then we are favouring</span>
 <span class="sd">        exploration over exploitation and vice versa.</span>
 <span class="sd">        Used when the acquisition is `&quot;LCB&quot;`.</span>
 
-<span class="sd">    n_jobs : int, default=1</span>
+<span class="sd">    n_jobs : int, default: 1</span>
 <span class="sd">        The number of jobs to run in parallel for `fit` and `predict`.</span>
 <span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
 
-<span class="sd">    model_queue_size : int or None, default=None</span>
+<span class="sd">    model_queue_size : int or None, default: None</span>
 <span class="sd">        Keeps list of models only as long as the argument given. In the</span>
 <span class="sd">        case of None, the list has no capped length.</span>
 
@@ -295,25 +296,19 @@
 <span class="sd">        Important attributes are:</span>
 
 <span class="sd">        - `x` [list]: location of the minimum.</span>
-
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
-
 <span class="sd">        - `models`: surrogate models used for each iteration.</span>
-
 <span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
-<span class="sd">           iteration.</span>
-
+<span class="sd">          iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
-
 <span class="sd">        - `space` [Space]: the optimization space.</span>
-
 <span class="sd">        - `specs` [dict]`: the call specifications.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
 
 <span class="sd">    .. seealso:: functions :class:`skopt.gp_minimize`,</span>
-<span class="sd">        :class:`skopt.dummy_minimize`</span>
+<span class="sd">        :class:`skopt.dummy_minimize`, :class:`skopt.gbrt_minimize`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">base_minimize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                          <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>

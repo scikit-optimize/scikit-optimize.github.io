@@ -159,19 +159,19 @@
 <span class="sd">        - an instance of a `Dimension` object (`Real`, `Integer` or</span>
 <span class="sd">          `Categorical`).</span>
 
-<span class="sd">    n_calls : int, default=100</span>
+<span class="sd">    n_calls : int, default: 100</span>
 <span class="sd">        Number of calls to `func` to find the minimum.</span>
 
 <span class="sd">    initial_point_generator : str, InitialPointGenerator instance, \</span>
-<span class="sd">            default=&#39;random&#39;</span>
+<span class="sd">            default: `&quot;random&quot;`</span>
 <span class="sd">        Sets a initial points generator. Can be either</span>
 
-<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
-<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
-<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
-<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
-<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence,</span>
-<span class="sd">        - &quot;grid&quot; for a uniform grid sequence</span>
+<span class="sd">        - `&quot;random&quot;` for uniform random numbers,</span>
+<span class="sd">        - `&quot;sobol&quot;` for a Sobol sequence,</span>
+<span class="sd">        - `&quot;halton&quot;` for a Halton sequence,</span>
+<span class="sd">        - `&quot;hammersly&quot;` for a Hammersly sequence,</span>
+<span class="sd">        - `&quot;lhs&quot;` for a latin hypercube sequence,</span>
+<span class="sd">        - `&quot;grid&quot;` for a uniform grid sequence</span>
 
 <span class="sd">    x0 : list, list of lists or `None`</span>
 <span class="sd">        Initial input points.</span>
@@ -195,7 +195,7 @@
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
-<span class="sd">    verbose : boolean, default=False</span>
+<span class="sd">    verbose : boolean, default: False</span>
 <span class="sd">        Control the verbosity. It is advised to set the verbosity to True</span>
 <span class="sd">        for long optimization runs.</span>
 
@@ -203,7 +203,7 @@
 <span class="sd">        If callable then `callback(res)` is called after each call to `func`.</span>
 <span class="sd">        If list of callables, then each callable in the list is called.</span>
 
-<span class="sd">    model_queue_size : int or None, default=None</span>
+<span class="sd">    model_queue_size : int or None, default: None</span>
 <span class="sd">        Keeps list of models only as long as the argument given. In the</span>
 <span class="sd">        case of None, the list has no capped length.</span>
 
@@ -214,23 +214,20 @@
 <span class="sd">        Important attributes are:</span>
 
 <span class="sd">        - `x` [list]: location of the minimum.</span>
-
 <span class="sd">        - `fun` [float]: function value at the minimum.</span>
-
 <span class="sd">        - `x_iters` [list of lists]: location of function evaluation for each</span>
-<span class="sd">           iteration.</span>
-
+<span class="sd">          iteration.</span>
 <span class="sd">        - `func_vals` [array]: function value for each iteration.</span>
-
 <span class="sd">        - `space` [Space]: the optimisation space.</span>
-
 <span class="sd">        - `specs` [dict]: the call specifications.</span>
-
 <span class="sd">        - `rng` [RandomState instance]: State of the random state</span>
-<span class="sd">           at the end of minimization.</span>
+<span class="sd">          at the end of minimization.</span>
 
 <span class="sd">        For more details related to the OptimizeResult object, refer</span>
 <span class="sd">        http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</span>
+
+<span class="sd">    .. seealso:: functions :class:`skopt.gp_minimize`,</span>
+<span class="sd">        :class:`skopt.forest_minimize`, :class:`skopt.gbrt_minimize`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># all our calls want random suggestions, except if we need to evaluate</span>
     <span class="c1"># some initial points</span>

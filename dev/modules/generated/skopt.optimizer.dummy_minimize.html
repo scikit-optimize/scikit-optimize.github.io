@@ -131,7 +131,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.optimizer" title="skopt.optimizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.optimizer</span></code></a>.dummy_minimize<a class="headerlink" href="#skopt-optimizer-dummy-minimize" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.optimizer.dummy_minimize">
-<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">dummy_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/ba8df73/skopt/optimizer/dummy.py#L6"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/dummy.html#dummy_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.dummy_minimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.optimizer.</code><code class="sig-name descname">dummy_minimize</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">n_calls=100</em>, <em class="sig-param">initial_point_generator='random'</em>, <em class="sig-param">x0=None</em>, <em class="sig-param">y0=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">model_queue_size=None</em>, <em class="sig-param">init_point_gen_kwargs=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fe46261/skopt/optimizer/dummy.py#L6"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/optimizer/dummy.html#dummy_minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.optimizer.dummy_minimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random search by uniform sampling within the given bounds.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -155,16 +155,16 @@ dimensions),</p></li>
 <code class="docutils literal notranslate"><span class="pre">Categorical</span></code>).</p></li>
 </ul>
 </dd>
-<dt><strong>n_calls</strong><span class="classifier">int, default=100</span></dt><dd><p>Number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code> to find the minimum.</p>
+<dt><strong>n_calls</strong><span class="classifier">int, default: 100</span></dt><dd><p>Number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code> to find the minimum.</p>
 </dd>
-<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,             default=’random’</span></dt><dd><p>Sets a initial points generator. Can be either</p>
+<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,             default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code></span></dt><dd><p>Sets a initial points generator. Can be either</p>
 <ul class="simple">
-<li><p>“random” for uniform random numbers,</p></li>
-<li><p>“sobol” for a Sobol sequence,</p></li>
-<li><p>“halton” for a Halton sequence,</p></li>
-<li><p>“hammersly” for a Hammersly sequence,</p></li>
-<li><p>“lhs” for a latin hypercube sequence,</p></li>
-<li><p>“grid” for a uniform grid sequence</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code> for uniform random numbers,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;sobol&quot;</span></code> for a Sobol sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;halton&quot;</span></code> for a Halton sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;hammersly&quot;</span></code> for a Hammersly sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lhs&quot;</span></code> for a latin hypercube sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;grid&quot;</span></code> for a uniform grid sequence</p></li>
 </ul>
 </dd>
 <dt><strong>x0</strong><span class="classifier">list, list of lists or <code class="docutils literal notranslate"><span class="pre">None</span></code></span></dt><dd><p>Initial input points.</p>
@@ -188,13 +188,13 @@ at each element of <code class="docutils literal notranslate"><span class="pre">
 <dt><strong>random_state</strong><span class="classifier">int, RandomState instance, or None (default)</span></dt><dd><p>Set random state to something other than None for reproducible
 results.</p>
 </dd>
-<dt><strong>verbose</strong><span class="classifier">boolean, default=False</span></dt><dd><p>Control the verbosity. It is advised to set the verbosity to True
+<dt><strong>verbose</strong><span class="classifier">boolean, default: False</span></dt><dd><p>Control the verbosity. It is advised to set the verbosity to True
 for long optimization runs.</p>
 </dd>
 <dt><strong>callback</strong><span class="classifier">callable, list of callables, optional</span></dt><dd><p>If callable then <code class="docutils literal notranslate"><span class="pre">callback(res)</span></code> is called after each call to <code class="docutils literal notranslate"><span class="pre">func</span></code>.
 If list of callables, then each callable in the list is called.</p>
 </dd>
-<dt><strong>model_queue_size</strong><span class="classifier">int or None, default=None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
+<dt><strong>model_queue_size</strong><span class="classifier">int or None, default: None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
 case of None, the list has no capped length.</p>
 </dd>
 </dl>
@@ -206,24 +206,23 @@ Important attributes are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> [list]: location of the minimum.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fun</span></code> [float]: function value at the minimum.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">x_iters</span></code> [list of lists]: location of function evaluation for each</dt><dd><p>iteration.</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_iters</span></code> [list of lists]: location of function evaluation for each
+iteration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">func_vals</span></code> [array]: function value for each iteration.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">space</span></code> [Space]: the optimisation space.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">specs</span></code> [dict]: the call specifications.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">rng</span></code> [RandomState instance]: State of the random state</dt><dd><p>at the end of minimization.</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rng</span></code> [RandomState instance]: State of the random state
+at the end of minimization.</p></li>
 </ul>
 <p>For more details related to the OptimizeResult object, refer
 <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</a></p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>functions <a class="reference internal" href="skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.gp_minimize</span></code></a>,
+<a class="reference internal" href="skopt.forest_minimize.html#skopt.forest_minimize" title="skopt.forest_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.forest_minimize</span></code></a>, <a class="reference internal" href="skopt.gbrt_minimize.html#skopt.gbrt_minimize" title="skopt.gbrt_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.gbrt_minimize</span></code></a></p>
+</div>
 </dd>
 </dl>
 </dd></dl>

@@ -180,35 +180,35 @@
 <span class="sd">          `Categorical`).</span>
 
 <span class="sd">    base_estimator : `&quot;GP&quot;`, `&quot;RF&quot;`, `&quot;ET&quot;`, `&quot;GBRT&quot;` or sklearn regressor, \</span>
-<span class="sd">            default=`&quot;GP&quot;`</span>
+<span class="sd">            default: `&quot;GP&quot;`</span>
 <span class="sd">        Should inherit from :obj:`sklearn.base.RegressorMixin`.</span>
 <span class="sd">        In addition the `predict` method, should have an optional `return_std`</span>
-<span class="sd">        argument, which returns `std(Y | x)`` along with `E[Y | x]`.</span>
+<span class="sd">        argument, which returns `std(Y | x)` along with `E[Y | x]`.</span>
 <span class="sd">        If base_estimator is one of [&quot;GP&quot;, &quot;RF&quot;, &quot;ET&quot;, &quot;GBRT&quot;], a default</span>
 <span class="sd">        surrogate model of the corresponding type is used corresponding to what</span>
 <span class="sd">        is used in the minimize functions.</span>
 
-<span class="sd">    n_random_starts : int, default=10</span>
-<span class="sd">        .. deprecated:: 0.9</span>
+<span class="sd">    n_random_starts : int, default: 10</span>
+<span class="sd">        .. deprecated:: 0.6</span>
 <span class="sd">            use `n_initial_points` instead.</span>
 
-<span class="sd">    n_initial_points : int, default=10</span>
+<span class="sd">    n_initial_points : int, default: 10</span>
 <span class="sd">        Number of evaluations of `func` with initialization points</span>
 <span class="sd">        before approximating it with `base_estimator`. Initial point</span>
 <span class="sd">        generator can be changed by setting `initial_point_generator`.</span>
 
 <span class="sd">    initial_point_generator : str, InitialPointGenerator instance, \</span>
-<span class="sd">            default=&#39;random&#39;</span>
+<span class="sd">            default: `&quot;random&quot;`</span>
 <span class="sd">        Sets a initial points generator. Can be either</span>
 
-<span class="sd">        - &quot;random&quot; for uniform random numbers,</span>
-<span class="sd">        - &quot;sobol&quot; for a Sobol sequence,</span>
-<span class="sd">        - &quot;halton&quot; for a Halton sequence,</span>
-<span class="sd">        - &quot;hammersly&quot; for a Hammersly sequence,</span>
-<span class="sd">        - &quot;lhs&quot; for a latin hypercube sequence,</span>
-<span class="sd">        - &quot;grid&quot; for a uniform grid sequence</span>
+<span class="sd">        - `&quot;random&quot;` for uniform random numbers,</span>
+<span class="sd">        - `&quot;sobol&quot;` for a Sobol sequence,</span>
+<span class="sd">        - `&quot;halton&quot;` for a Halton sequence,</span>
+<span class="sd">        - `&quot;hammersly&quot;` for a Hammersly sequence,</span>
+<span class="sd">        - `&quot;lhs&quot;` for a latin hypercube sequence,</span>
+<span class="sd">        - `&quot;grid&quot;` for a uniform grid sequence</span>
 
-<span class="sd">    acq_func : string, default=`&quot;gp_hedge&quot;`</span>
+<span class="sd">    acq_func : string, default: `&quot;gp_hedge&quot;`</span>
 <span class="sd">        Function to minimize over the posterior distribution. Can be either</span>
 
 <span class="sd">        - `&quot;LCB&quot;` for lower confidence bound.</span>
@@ -216,50 +216,54 @@
 <span class="sd">        - `&quot;PI&quot;` for negative probability of improvement.</span>
 <span class="sd">        - `&quot;gp_hedge&quot;` Probabilistically choose one of the above three</span>
 <span class="sd">          acquisition functions at every iteration.</span>
-<span class="sd">            - The gains `g_i` are initialized to zero.</span>
-<span class="sd">            - At every iteration,</span>
-<span class="sd">                - Each acquisition function is optimised independently to</span>
-<span class="sd">                  propose an candidate point `X_i`.</span>
-<span class="sd">                - Out of all these candidate points, the next point `X_best` is</span>
-<span class="sd">                  chosen by :math:`softmax(\eta g_i)`</span>
-<span class="sd">                - After fitting the surrogate model with `(X_best, y_best)`,</span>
-<span class="sd">                  the gains are updated such that :math:`g_i -= \mu(X_i)`</span>
-<span class="sd">        - `&quot;EIps&quot; for negated expected improvement per second to take into</span>
+
+<span class="sd">          - The gains `g_i` are initialized to zero.</span>
+<span class="sd">          - At every iteration,</span>
+
+<span class="sd">            - Each acquisition function is optimised independently to</span>
+<span class="sd">              propose an candidate point `X_i`.</span>
+<span class="sd">            - Out of all these candidate points, the next point `X_best` is</span>
+<span class="sd">              chosen by :math:`softmax(\\eta g_i)`</span>
+<span class="sd">            - After fitting the surrogate model with `(X_best, y_best)`,</span>
+<span class="sd">              the gains are updated such that :math:`g_i -= \\mu(X_i)`</span>
+
+<span class="sd">        - `&quot;EIps&quot;` for negated expected improvement per second to take into</span>
 <span class="sd">          account the function compute time. Then, the objective function is</span>
 <span class="sd">          assumed to return two values, the first being the objective value and</span>
 <span class="sd">          the second being the time taken in seconds.</span>
 <span class="sd">        - `&quot;PIps&quot;` for negated probability of improvement per second. The</span>
 <span class="sd">          return type of the objective function is assumed to be similar to</span>
-<span class="sd">          that of `&quot;EIps</span>
+<span class="sd">          that of `&quot;EIps&quot;`</span>
 
-<span class="sd">    acq_optimizer : string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default=`&quot;auto&quot;`</span>
-<span class="sd">        Method to minimize the acquistion function. The fit model</span>
+<span class="sd">    acq_optimizer : string, `&quot;sampling&quot;` or `&quot;lbfgs&quot;`, default: `&quot;auto&quot;`</span>
+<span class="sd">        Method to minimize the acquisition function. The fit model</span>
 <span class="sd">        is updated with the optimal value obtained by optimizing `acq_func`</span>
 <span class="sd">        with `acq_optimizer`.</span>
 
 <span class="sd">        - If set to `&quot;auto&quot;`, then `acq_optimizer` is configured on the</span>
 <span class="sd">          basis of the base_estimator and the space searched over.</span>
 <span class="sd">          If the space is Categorical or if the estimator provided based on</span>
-<span class="sd">          tree-models then this is set to be &quot;sampling&quot;`.</span>
+<span class="sd">          tree-models then this is set to be `&quot;sampling&quot;`.</span>
 <span class="sd">        - If set to `&quot;sampling&quot;`, then `acq_func` is optimized by computing</span>
 <span class="sd">          `acq_func` at `n_points` randomly sampled points.</span>
 <span class="sd">        - If set to `&quot;lbfgs&quot;`, then `acq_func` is optimized by</span>
-<span class="sd">              - Sampling `n_restarts_optimizer` points randomly.</span>
-<span class="sd">              - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
-<span class="sd">                points to find local minima.</span>
-<span class="sd">              - The optimal of these local minima is used to update the prior.</span>
+
+<span class="sd">          - Sampling `n_restarts_optimizer` points randomly.</span>
+<span class="sd">          - `&quot;lbfgs&quot;` is run for 20 iterations with these points as initial</span>
+<span class="sd">            points to find local minima.</span>
+<span class="sd">          - The optimal of these local minima is used to update the prior.</span>
 
 <span class="sd">    random_state : int, RandomState instance, or None (default)</span>
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
 <span class="sd">    acq_func_kwargs : dict</span>
-<span class="sd">        Additional arguments to be passed to the acquistion function.</span>
+<span class="sd">        Additional arguments to be passed to the acquisition function.</span>
 
 <span class="sd">    acq_optimizer_kwargs : dict</span>
-<span class="sd">        Additional arguments to be passed to the acquistion optimizer.</span>
+<span class="sd">        Additional arguments to be passed to the acquisition optimizer.</span>
 
-<span class="sd">    model_queue_size : int or None, default=None</span>
+<span class="sd">    model_queue_size : int or None, default: None</span>
 <span class="sd">        Keeps list of models only as long as the argument given. In the</span>
 <span class="sd">        case of None, the list has no capped length.</span>
 
@@ -452,7 +456,7 @@
 <div class="viewcode-block" id="Optimizer.ask"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;cl_min&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Query point or multiple points at which objective should be evaluated.</span>
 
-<span class="sd">        n_points : int or None, default=None</span>
+<span class="sd">        n_points : int or None, default: None</span>
 <span class="sd">            Number of points returned by the ask method.</span>
 <span class="sd">            If the value is None, a single point to evaluate is returned.</span>
 <span class="sd">            Otherwise a list of points to evaluate is returned of size</span>
@@ -460,7 +464,7 @@
 <span class="sd">            parallel, and thus obtain more objective function evaluations per</span>
 <span class="sd">            unit of time.</span>
 
-<span class="sd">        strategy : string, default=&quot;cl_min&quot;</span>
+<span class="sd">        strategy : string, default: &quot;cl_min&quot;</span>
 <span class="sd">            Method to use to sample multiple points (see also `n_points`</span>
 <span class="sd">            description). This parameter is ignored if n_points = None.</span>
 <span class="sd">            Supported options are `&quot;cl_min&quot;`, `&quot;cl_mean&quot;` or `&quot;cl_max&quot;`.</span>
@@ -591,7 +595,7 @@
 <span class="sd">        y : scalar or list</span>
 <span class="sd">            Value of objective at `x`.</span>
 
-<span class="sd">        fit : bool, default=True</span>
+<span class="sd">        fit : bool, default: True</span>
 <span class="sd">            Fit a model to observed evaluations of the objective. A model will</span>
 <span class="sd">            only be fitted after `n_initial_points` points have been told to</span>
 <span class="sd">            the optimizer irrespective of the value of `fit`.</span>
