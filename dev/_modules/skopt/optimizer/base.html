@@ -305,8 +305,10 @@
 
 <span class="sd">    n_jobs : int, default: 1</span>
 <span class="sd">        Number of cores to run in parallel while running the lbfgs</span>
-<span class="sd">        optimizations over the acquisition function. Valid only when</span>
-<span class="sd">        `acq_optimizer` is set to &quot;lbfgs.&quot;</span>
+<span class="sd">        optimizations over the acquisition function and given to</span>
+<span class="sd">        the base_estimator. Valid only when</span>
+<span class="sd">        `acq_optimizer` is set to &quot;lbfgs&quot;. or when the base_estimator</span>
+<span class="sd">        supports n_jobs as parameter and was given as string.</span>
 <span class="sd">        Defaults to 1 core. If `n_jobs=-1`, then number of jobs is set</span>
 <span class="sd">        to number of cores.</span>
 
@@ -381,6 +383,7 @@
     <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="p">,</span>
                           <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span>
                           <span class="n">initial_point_generator</span><span class="o">=</span><span class="n">initial_point_generator</span><span class="p">,</span>
+                          <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
                           <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span> <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span>
                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                           <span class="n">model_queue_size</span><span class="o">=</span><span class="n">model_queue_size</span><span class="p">,</span>

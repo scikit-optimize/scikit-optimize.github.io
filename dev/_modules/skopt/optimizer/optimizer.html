@@ -257,6 +257,12 @@
 <span class="sd">        Set random state to something other than None for reproducible</span>
 <span class="sd">        results.</span>
 
+<span class="sd">    n_jobs : int, default: 1</span>
+<span class="sd">        The number of jobs to run in parallel in the base_estimator,</span>
+<span class="sd">        if the base_estimator supports n_jobs as parameter and</span>
+<span class="sd">        base_estimator was given as string.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
 <span class="sd">    acq_func_kwargs : dict</span>
 <span class="sd">        Additional arguments to be passed to the acquisition function.</span>
 
@@ -285,7 +291,7 @@
 <div class="viewcode-block" id="Optimizer.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="s2">&quot;gp&quot;</span><span class="p">,</span>
                  <span class="n">n_random_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                  <span class="n">initial_point_generator</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
-                 <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;gp_hedge&quot;</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -337,7 +343,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">cook_estimator</span><span class="p">(</span>
                 <span class="n">base_estimator</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
-                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">))</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">),</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
 
         <span class="c1"># check if regressor</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regressor</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -378,8 +385,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_points</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_points&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;n_restarts_optimizer&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer_kwargs</span> <span class="o">=</span> <span class="n">acq_optimizer_kwargs</span>
 
         <span class="c1"># Configure search space</span>
