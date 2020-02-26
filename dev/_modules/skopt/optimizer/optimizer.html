@@ -129,7 +129,8 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
-
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">fmin_l_bfgs_b</span>
@@ -297,7 +298,8 @@
                  <span class="n">model_queue_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">acq_optimizer_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_locals</span><span class="p">),</span>
+                      <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="s2">&quot;Optimizer&quot;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
         <span class="c1"># Configure acquisition function</span>
@@ -425,7 +427,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Initialize cache for `ask` method responses</span>
-
         <span class="c1"># This ensures that multiple calls to `ask` with n_points set</span>
         <span class="c1"># return same sets of points. Reset to {} at every call to `tell`.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_</span> <span class="o">=</span> <span class="p">{}</span></div>
@@ -453,7 +454,6 @@
         <span class="n">optimizer</span><span class="o">.</span><span class="n">_initial_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_samples</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gains_&quot;</span><span class="p">):</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">gains_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gains_</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">_tell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
 
@@ -735,8 +735,11 @@
                 <span class="n">next_x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Pack results</span>
-        <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-                             <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                               <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span>
+        <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">_check_y_is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check if the shape and types of x and y are consistent.&quot;&quot;&quot;</span>
@@ -769,8 +772,10 @@
             <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-                             <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                               <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="Optimizer.update_next"><a class="viewcode-back" href="../../../modules/generated/skopt.optimizer.Optimizer.html#skopt.Optimizer.update_next">[docs]</a>    <span class="k">def</span> <span class="nf">update_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the value returned by opt.ask(). Useful if a parameter</span>
@@ -792,8 +797,10 @@
 <span class="sd">            OptimizeResult instance with the required information.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-                             <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span></div></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">create_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                               <span class="n">models</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
 </pre></div>
 
       </div>
