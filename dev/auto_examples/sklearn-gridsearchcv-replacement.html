@@ -163,6 +163,8 @@ arrive at good parameter values combination as soon as possible.</p>
 “Hyperparameter Optimization” notebook.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -197,7 +199,7 @@ arrive at good parameter values combination as soon as possible.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>val. score: 0.985894580549369
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>val. score: 0.9851521900519673
 test score: 0.9822222222222222
 </pre></div>
 </div>
@@ -210,6 +212,7 @@ example of such search over parameters of Linear SVM, Kernel SVM, and
 decision trees is given below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="View documentation for skopt.BayesSearchCV"><span class="n">BayesSearchCV</span></a>
 <span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="View documentation for skopt.plots.plot_objective"><span class="n">plot_objective</span></a><span class="p">,</span> <a href="../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="View documentation for skopt.plots.plot_histogram"><span class="n">plot_histogram</span></a>
 
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html#sklearn.datasets.load_digits" title="View documentation for sklearn.datasets.load_digits"><span class="n">load_digits</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="View documentation for sklearn.svm.LinearSVC"><span class="n">LinearSVC</span></a><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="View documentation for sklearn.svm.SVC"><span class="n">SVC</span></a>
@@ -245,7 +248,8 @@ decision trees is given below.</p>
 
 <span class="n">opt</span> <span class="o">=</span> <a href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="View documentation for skopt.BayesSearchCV"><span class="n">BayesSearchCV</span></a><span class="p">(</span>
     <span class="n">pipe</span><span class="p">,</span>
-    <span class="p">[(</span><span class="n">svc_search</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="n">linsvc_search</span><span class="p">,</span> <span class="mi">16</span><span class="p">)],</span> <span class="c1"># (parameter space, # of evaluations)</span>
+    <span class="c1"># (parameter space, # of evaluations)</span>
+    <span class="p">[(</span><span class="n">svc_search</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="n">linsvc_search</span><span class="p">,</span> <span class="mi">16</span><span class="p">)],</span>
     <span class="n">cv</span><span class="o">=</span><span class="mi">3</span>
 <span class="p">)</span>
 
@@ -253,6 +257,7 @@ decision trees is given below.</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;val. score: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">opt</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test score: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">opt</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;best params: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -304,10 +309,34 @@ decision trees is given below.</p>
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
 /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-val. score: 0.9851521900519673
+/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(&quot;Liblinear failed to converge, increase &quot;
+/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(&quot;Liblinear failed to converge, increase &quot;
+/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(&quot;Liblinear failed to converge, increase &quot;
+val. score: 0.985894580549369
 test score: 0.9822222222222222
+best params: OrderedDict([(&#39;model&#39;, SVC(C=0.41571471424085416, break_ties=False, cache_size=200, class_weight=None,
+    coef0=0.0, decision_function_shape=&#39;ovr&#39;, degree=3,
+    gamma=1.0560013164213486, kernel=&#39;poly&#39;, max_iter=-1, probability=False,
+    random_state=None, shrinking=True, tol=0.001, verbose=False)), (&#39;model__C&#39;, 0.41571471424085416), (&#39;model__degree&#39;, 3), (&#39;model__gamma&#39;, 1.0560013164213486), (&#39;model__kernel&#39;, &#39;poly&#39;)])
 </pre></div>
 </div>
+<p>Partial Dependence plot of the objective function for SVC</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="View documentation for skopt.plots.plot_objective"><span class="n">plot_objective</span></a><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">optimizer_results_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                   <span class="n">dimensions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;kernel&quot;</span><span class="p">],</span>
+                   <span class="n">n_minimum_search</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e8</span><span class="p">))</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_sklearn-gridsearchcv-replacement_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_sklearn-gridsearchcv-replacement_001.png" />
+<p>Plot of the histogram for LinearSVC</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="View documentation for skopt.plots.plot_histogram"><span class="n">plot_histogram</span></a><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">optimizer_results_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_sklearn-gridsearchcv-replacement_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_sklearn-gridsearchcv-replacement_002.png" />
 </div>
 <div class="section" id="progress-monitoring-and-control-using-callback-argument-of-fit-method">
 <h2>Progress monitoring and control using <code class="docutils literal notranslate"><span class="pre">callback</span></code> argument of <code class="docutils literal notranslate"><span class="pre">fit</span></code> method<a class="headerlink" href="#progress-monitoring-and-control-using-callback-argument-of-fit-method" title="Permalink to this headline">¶</a></h2>
@@ -334,7 +363,6 @@ accuracy that you get is sufficiently high.</p>
     <span class="n">cv</span><span class="o">=</span><span class="mi">3</span>
 <span class="p">)</span>
 
-
 <span class="c1"># callback handler</span>
 <span class="k">def</span> <span class="nf">on_step</span><span class="p">(</span><span class="n">optim_result</span><span class="p">):</span>
     <span class="n">score</span> <span class="o">=</span> <span class="n">searchcv</span><span class="o">.</span><span class="n">best_score_</span>
@@ -348,16 +376,16 @@ accuracy that you get is sufficiently high.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>best score: 0.32
-best score: 0.96
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>best score: 0.9666666666666667
 best score: 0.9666666666666667
 best score: 0.9666666666666667
 best score: 0.9666666666666667
 best score: 0.9666666666666667
-best score: 0.9733333333333334
-best score: 0.9733333333333334
-best score: 0.98
-Interrupting!
+best score: 0.9666666666666667
+best score: 0.9666666666666667
+best score: 0.9666666666666667
+best score: 0.9666666666666667
+best score: 0.9666666666666667
 
 BayesSearchCV(cv=3, error_score=&#39;raise&#39;,
               estimator=SVC(C=1.0, break_ties=False, cache_size=200,
@@ -403,7 +431,7 @@ calculated with <code class="docutils literal notranslate"><span class="pre">tot
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>42
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  5.402 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  45.143 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  9 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sklearn-gridsearchcv-replacement-py">
 <div class="binder-badge docutils container">

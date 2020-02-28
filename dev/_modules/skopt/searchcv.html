@@ -676,6 +676,11 @@
         <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dimensions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimensions_aslist</span><span class="p">(</span><span class="n">params_space</span><span class="p">)</span>
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">params_space</span><span class="o">.</span><span class="n">keys</span><span class="p">()))[</span><span class="n">i</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">optimizer</span>
 

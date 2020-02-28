@@ -45,6 +45,8 @@ Note: for a manual hyperparameter optimization example, see
 
     print(__doc__)
     import numpy as np
+    np.random.seed(123)
+    import matplotlib.pyplot as plt
 
 
 
@@ -98,7 +100,7 @@ A minimal example of optimizing hyperparameters of SVC (Support Vector machine C
 
  .. code-block:: none
 
-    val. score: 0.985894580549369
+    val. score: 0.9851521900519673
     test score: 0.9822222222222222
 
 
@@ -118,6 +120,7 @@ decision trees is given below.
 
     from skopt import BayesSearchCV
     from skopt.space import Real, Categorical, Integer
+    from skopt.plots import plot_objective, plot_histogram
 
     from sklearn.datasets import load_digits
     from sklearn.svm import LinearSVC, SVC
@@ -153,7 +156,8 @@ decision trees is given below.
 
     opt = BayesSearchCV(
         pipe,
-        [(svc_search, 20), (linsvc_search, 16)], # (parameter space, # of evaluations)
+        # (parameter space, # of evaluations)
+        [(svc_search, 40), (linsvc_search, 16)],
         cv=3
     )
 
@@ -161,6 +165,7 @@ decision trees is given below.
 
     print("val. score: %s" % opt.best_score_)
     print("test score: %s" % opt.score(X_test, y_test))
+    print("best params: %s" % str(opt.best_params_))
 
 
 
@@ -220,8 +225,58 @@ decision trees is given below.
       warnings.warn("Liblinear failed to converge, increase "
     /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    val. score: 0.9851521900519673
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      warnings.warn("Liblinear failed to converge, increase "
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      warnings.warn("Liblinear failed to converge, increase "
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+      warnings.warn("Liblinear failed to converge, increase "
+    val. score: 0.985894580549369
     test score: 0.9822222222222222
+    best params: OrderedDict([('model', SVC(C=0.41571471424085416, break_ties=False, cache_size=200, class_weight=None,
+        coef0=0.0, decision_function_shape='ovr', degree=3,
+        gamma=1.0560013164213486, kernel='poly', max_iter=-1, probability=False,
+        random_state=None, shrinking=True, tol=0.001, verbose=False)), ('model__C', 0.41571471424085416), ('model__degree', 3), ('model__gamma', 1.0560013164213486), ('model__kernel', 'poly')])
+
+
+
+
+Partial Dependence plot of the objective function for SVC
+
+
+
+.. code-block:: default
+
+    _ = plot_objective(opt.optimizer_results_[0],
+                       dimensions=["C", "degree", "gamma", "kernel"],
+                       n_minimum_search=int(1e8))
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_sklearn-gridsearchcv-replacement_001.png
+    :class: sphx-glr-single-img
+
+
+
+
+
+Plot of the histogram for LinearSVC
+
+
+
+.. code-block:: default
+
+    _ = plot_histogram(opt.optimizer_results_[1], 1)
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_sklearn-gridsearchcv-replacement_002.png
+    :class: sphx-glr-single-img
+
 
 
 
@@ -259,7 +314,6 @@ An example usage is shown below.
         cv=3
     )
 
-
     # callback handler
     def on_step(optim_result):
         score = searchcv.best_score_
@@ -281,16 +335,16 @@ An example usage is shown below.
 
  .. code-block:: none
 
-    best score: 0.32
-    best score: 0.96
     best score: 0.9666666666666667
     best score: 0.9666666666666667
     best score: 0.9666666666666667
     best score: 0.9666666666666667
-    best score: 0.9733333333333334
-    best score: 0.9733333333333334
-    best score: 0.98
-    Interrupting!
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
+    best score: 0.9666666666666667
 
     BayesSearchCV(cv=3, error_score='raise',
                   estimator=SVC(C=1.0, break_ties=False, cache_size=200,
@@ -354,7 +408,7 @@ calculated with `total_iterations` property, as in the code below.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  5.402 seconds)
+   **Total running time of the script:** ( 1 minutes  45.143 seconds)
 
 **Estimated memory usage:**  9 MB
 

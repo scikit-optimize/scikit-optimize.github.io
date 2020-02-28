@@ -295,8 +295,10 @@
 
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Space dimension must be 1&quot;</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">x_model</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="n">n_dims</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span>
+    <span class="k">assert</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Space dimension must be 1&quot;</span>
+    <span class="n">dimension</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">x_model</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">x_model</span> <span class="o">=</span> <span class="n">x_model</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;args&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">:</span>
@@ -736,7 +738,8 @@
 <span class="sd">    plot_dims : list of str and int, default=None</span>
 <span class="sd">        List of dimension names or dimension indices from the</span>
 <span class="sd">        search-space dimensions to be included in the plot.</span>
-<span class="sd">        If `None` then use all dimensions from the search-space.</span>
+<span class="sd">        If `None` then use all dimensions except constant ones</span>
+<span class="sd">        from the search-space.</span>
 
 <span class="sd">    sample_source : str or list of floats, default=&#39;random&#39;</span>
 <span class="sd">        Defines to samples generation to use for averaging the model function</span>
@@ -750,31 +753,26 @@
 
 <span class="sd">        Valid strings:</span>
 
-<span class="sd">            - &#39;random&#39; - `n_samples` random samples will used</span>
-
-<span class="sd">            - &#39;result&#39; - Use only the best observed parameters</span>
-
-<span class="sd">            - &#39;expected_minimum&#39; - Parameters that gives the best</span>
-<span class="sd">                  minimum Calculated using scipy&#39;s minimize method.</span>
-<span class="sd">                  This method currently does not work with categorical values.</span>
-
-<span class="sd">            - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
-<span class="sd">                  best minimum when using naive random sampling.</span>
-<span class="sd">                  Works with categorical values.</span>
+<span class="sd">        - &#39;random&#39; - `n_samples` random samples will used</span>
+<span class="sd">        - &#39;result&#39; - Use only the best observed parameters</span>
+<span class="sd">        - &#39;expected_minimum&#39; - Parameters that gives the best</span>
+<span class="sd">          minimum Calculated using scipy&#39;s minimize method.</span>
+<span class="sd">          This method currently does not work with categorical values.</span>
+<span class="sd">        - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
+<span class="sd">          best minimum when using naive random sampling.</span>
+<span class="sd">          Works with categorical values.</span>
 
 <span class="sd">    minimum : str or list of floats, default = &#39;result&#39;</span>
 <span class="sd">        Defines the values for the red points in the plots.</span>
 <span class="sd">        Valid strings:</span>
 
-<span class="sd">            - &#39;result&#39; - Use best observed parameters</span>
-
-<span class="sd">            - &#39;expected_minimum&#39; - Parameters that gives the best</span>
-<span class="sd">                  minimum Calculated using scipy&#39;s minimize method.</span>
-<span class="sd">                  This method currently does not work with categorical values.</span>
-
-<span class="sd">            - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
-<span class="sd">                  best minimum when using naive random sampling.</span>
-<span class="sd">                  Works with categorical values</span>
+<span class="sd">        - &#39;result&#39; - Use best observed parameters</span>
+<span class="sd">        - &#39;expected_minimum&#39; - Parameters that gives the best</span>
+<span class="sd">          minimum Calculated using scipy&#39;s minimize method.</span>
+<span class="sd">          This method currently does not work with categorical values.</span>
+<span class="sd">        - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
+<span class="sd">          best minimum when using naive random sampling.</span>
+<span class="sd">          Works with categorical values</span>
 
 <span class="sd">    n_minimum_search : int, default = None</span>
 <span class="sd">        Determines how many points should be evaluated</span>
@@ -787,6 +785,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    ax : `Matplotlib.Axes`</span>
 <span class="sd">        A 2-d matrix of Axes-objects with the sub-plots.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Here we define the values for which to plot the red dot (2d plot) and</span>
     <span class="c1"># the red dotted line (1d plot).</span>
@@ -799,6 +798,8 @@
         <span class="c1"># Get all dimensions.</span>
         <span class="n">plot_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">is_constant</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">plot_dims</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">plot_dims</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">plot_dims</span><span class="p">]</span>
@@ -898,12 +899,14 @@
 <span class="sd">    plot_dims : list of str and int, default=None</span>
 <span class="sd">        List of dimension names or dimension indices from the</span>
 <span class="sd">        search-space dimensions to be included in the plot.</span>
-<span class="sd">        If `None` then use all dimensions from the search-space.</span>
+<span class="sd">        If `None` then use all dimensions except constant ones</span>
+<span class="sd">        from the search-space.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ax : `Matplotlib.Axes`</span>
 <span class="sd">        A 2-d matrix of Axes-objects with the sub-plots.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
     <span class="c1"># Convert categoricals to integers, so we can ensure consistent ordering.</span>
@@ -917,6 +920,8 @@
         <span class="c1"># Get all dimensions.</span>
         <span class="n">plot_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">is_constant</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">plot_dims</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">plot_dims</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">plot_dims</span><span class="p">]</span>
@@ -979,6 +984,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    ylim_diagonal : tuple(int)</span>
 <span class="sd">        The common min and max ylim for the diagonal plots.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Number of search-space dimensions used in this plot.</span>
@@ -1040,6 +1046,7 @@
 <span class="sd">    yi : np.array</span>
 <span class="sd">        The average value of the modelled objective function at</span>
 <span class="sd">        each point `xi`.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># The idea is to step through one dimension, evaluating the model with</span>
     <span class="c1"># that dimension fixed and averaging either over random values or over</span>
