@@ -294,6 +294,10 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -329,6 +333,7 @@
 
 <span class="sd">    prior : &quot;uniform&quot; or &quot;log-uniform&quot;, default=&quot;uniform&quot;</span>
 <span class="sd">        Distribution to use when sampling random points for this dimension.</span>
+
 <span class="sd">        - If `&quot;uniform&quot;`, points are sampled uniformly between the lower</span>
 <span class="sd">          and upper bounds.</span>
 <span class="sd">        - If `&quot;log-uniform&quot;`, points are sampled uniformly between</span>
@@ -353,6 +358,7 @@
 <span class="sd">    dtype : str or dtype, default=np.float</span>
 <span class="sd">        float type which will be used in inverse_transform,</span>
 <span class="sd">        can be float.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Real.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Real.html#skopt.Real.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">):</span>
@@ -456,6 +462,10 @@
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+
     <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
@@ -502,6 +512,7 @@
 <span class="sd">    prior : &quot;uniform&quot; or &quot;log-uniform&quot;, default=&quot;uniform&quot;</span>
 <span class="sd">        Distribution to use when sampling random integers for</span>
 <span class="sd">        this dimension.</span>
+
 <span class="sd">        - If `&quot;uniform&quot;`, intgers are sampled uniformly between the lower</span>
 <span class="sd">          and upper bounds.</span>
 <span class="sd">        - If `&quot;log-uniform&quot;`, intgers are sampled uniformly between</span>
@@ -510,6 +521,7 @@
 
 <span class="sd">    base : int</span>
 <span class="sd">        The logarithmic base to use for a log-uniform prior.</span>
+
 <span class="sd">        - Default 10, otherwise commonly 2.</span>
 
 <span class="sd">    transform : &quot;identity&quot;, &quot;normalize&quot;, optional</span>
@@ -528,6 +540,7 @@
 <span class="sd">        can be int, np.int16, np.uint32, np.int32, np.int64 (default).</span>
 <span class="sd">        When set to int, `inverse_transform` returns a list instead of</span>
 <span class="sd">        a numpy array</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Integer.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Integer.html#skopt.Integer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">):</span>
@@ -631,6 +644,10 @@
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span>
+
     <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
@@ -675,7 +692,7 @@
 <span class="sd">    transform : &quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, &quot;label&quot;, default=&quot;onehot&quot;</span>
 <span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">          space.</span>
-<span class="sd">        -  &quot;string&quot;,  the transformed space is a string encoded</span>
+<span class="sd">        - &quot;string&quot;,  the transformed space is a string encoded</span>
 <span class="sd">          representation of the original space.</span>
 <span class="sd">        - &quot;label&quot;, the transformed space is a label encoded</span>
 <span class="sd">          representation (integer) of the original space.</span>
@@ -684,6 +701,7 @@
 
 <span class="sd">    name : str or None</span>
 <span class="sd">        Name associated with dimension, e.g., &quot;colors&quot;.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Categorical.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Categorical.html#skopt.Categorical.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
@@ -796,6 +814,10 @@
     <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+
     <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span>
 
@@ -894,25 +916,28 @@
 <span class="sd">        yml_path : str</span>
 <span class="sd">            Full path to yaml configuration file, example YaML below:</span>
 <span class="sd">            Space:</span>
-<span class="sd">              - Integer:</span>
-<span class="sd">                  low: -5</span>
-<span class="sd">                  high: 5</span>
-<span class="sd">              - Categorical:</span>
-<span class="sd">                  categories:</span>
-<span class="sd">                  - a</span>
-<span class="sd">                  - b</span>
-<span class="sd">              - Real:</span>
-<span class="sd">                  low: 1.0</span>
-<span class="sd">                  high: 5.0</span>
-<span class="sd">                  prior: log-uniform</span>
+
+<span class="sd">            - Integer:</span>
+<span class="sd">              low: -5</span>
+<span class="sd">              high: 5</span>
+<span class="sd">            - Categorical:</span>
+<span class="sd">              categories:</span>
+<span class="sd">              - a</span>
+<span class="sd">              - b</span>
+<span class="sd">            - Real:</span>
+<span class="sd">              low: 1.0</span>
+<span class="sd">              high: 5.0</span>
+<span class="sd">              prior: log-uniform</span>
+
 <span class="sd">        namespace : str, default=None</span>
 <span class="sd">           Namespace within configuration file to use, will use first</span>
-<span class="sd">             namespace if not provided</span>
+<span class="sd">           namespace if not provided</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        space : Space</span>
 <span class="sd">           Instantiated Space object</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yml_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -1211,6 +1236,17 @@
     <span class="k">def</span> <span class="nf">is_partly_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Space contains any categorical dimensions&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_constant_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the number of constant dimensions which have zero degree of</span>
+<span class="sd">        freedom, e.g. an Integer dimensions with (0., 0.) as bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dim</span><span class="o">.</span><span class="n">is_constant</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">n</span>
 
 <div class="viewcode-block" id="Space.distance"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.distance">[docs]</a>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_a</span><span class="p">,</span> <span class="n">point_b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute distance between two points in this space.</span>

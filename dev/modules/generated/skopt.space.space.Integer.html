@@ -131,29 +131,29 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.space.space" title="skopt.space.space"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.space.space</span></code></a>.Integer<a class="headerlink" href="#skopt-space-space-integer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.space.space.Integer">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.space.space.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">prior='uniform'</em>, <em class="sig-param">base=10</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">dtype=&lt;class 'numpy.int64'&gt;</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L364"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.space.space.</code><code class="sig-name descname">Integer</code><span class="sig-paren">(</span><em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">prior='uniform'</em>, <em class="sig-param">base=10</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">dtype=&lt;class 'numpy.int64'&gt;</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L374"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search space dimension that can take on integer values.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
+<dd class="field-odd"><dl class="simple">
 <dt><strong>low</strong><span class="classifier">int</span></dt><dd><p>Lower bound (inclusive).</p>
 </dd>
 <dt><strong>high</strong><span class="classifier">int</span></dt><dd><p>Upper bound (inclusive).</p>
 </dd>
 <dt><strong>prior</strong><span class="classifier">“uniform” or “log-uniform”, default=”uniform”</span></dt><dd><p>Distribution to use when sampling random integers for
-this dimension.
-- If <code class="docutils literal notranslate"><span class="pre">&quot;uniform&quot;</span></code>, intgers are sampled uniformly between the lower</p>
-<blockquote>
-<div><p>and upper bounds.</p>
-</div></blockquote>
+this dimension.</p>
 <ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">&quot;uniform&quot;</span></code>, intgers are sampled uniformly between the lower
+and upper bounds.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">&quot;log-uniform&quot;</span></code>, intgers are sampled uniformly between
 <code class="docutils literal notranslate"><span class="pre">log(lower,</span> <span class="pre">base)</span></code> and <code class="docutils literal notranslate"><span class="pre">log(upper,</span> <span class="pre">base)</span></code> where log
 has base <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p></li>
 </ul>
 </dd>
-<dt><strong>base</strong><span class="classifier">int</span></dt><dd><p>The logarithmic base to use for a log-uniform prior.
-- Default 10, otherwise commonly 2.</p>
+<dt><strong>base</strong><span class="classifier">int</span></dt><dd><p>The logarithmic base to use for a log-uniform prior.</p>
+<ul class="simple">
+<li><p>Default 10, otherwise commonly 2.</p></li>
+</ul>
 </dd>
 <dt><strong>transform</strong><span class="classifier">“identity”, “normalize”, optional</span></dt><dd><p>The following transformations are supported.</p>
 <ul class="simple">
@@ -175,6 +175,7 @@ a numpy array</p>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>bounds</strong></dt><dd></dd>
+<dt><strong>is_constant</strong></dt><dd></dd>
 <dt><strong>name</strong></dt><dd></dd>
 <dt><strong>prior</strong></dt><dd></dd>
 <dt><strong>size</strong></dt><dd></dd>
@@ -209,13 +210,13 @@ a numpy array</p>
 </table>
 <dl class="method">
 <dt id="skopt.space.space.Integer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">prior='uniform'</em>, <em class="sig-param">base=10</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">dtype=&lt;class 'numpy.int64'&gt;</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L405"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">low</em>, <em class="sig-param">high</em>, <em class="sig-param">prior='uniform'</em>, <em class="sig-param">base=10</em>, <em class="sig-param">transform=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">dtype=&lt;class 'numpy.int64'&gt;</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L418"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.space.space.Integer.distance">
-<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L519"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">distance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L536"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute distance between point <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -231,14 +232,14 @@ a numpy array</p>
 
 <dl class="method">
 <dt id="skopt.space.space.Integer.inverse_transform">
-<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L487"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">Xt</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L500"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse transform samples from the warped space back into the
 original space.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.space.space.Integer.rvs">
-<code class="sig-name descname">rvs</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_samples=1</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L128"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.rvs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rvs</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_samples=1</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L128"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.rvs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw random samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -255,7 +256,7 @@ results.</p>
 
 <dl class="method">
 <dt id="skopt.space.space.Integer.set_transformer">
-<code class="sig-name descname">set_transformer</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">transform='identitiy'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L440"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.set_transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.set_transformer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_transformer</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">transform='identitiy'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L453"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/space/space.html#Integer.set_transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.set_transformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define _rvs and transformer spaces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -269,7 +270,7 @@ results.</p>
 
 <dl class="method">
 <dt id="skopt.space.space.Integer.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/f647c4e/skopt/space/space.py#L144"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3a54a67/skopt/space/space.py#L144"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.space.space.Integer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform samples form the original space to a warped space.</p>
 </dd></dl>
 
