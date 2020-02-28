@@ -864,6 +864,21 @@
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dimension_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Names of all the dimensions in the search-space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dim</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;X_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">index</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">names</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns true if all dimensions are Real</span>
@@ -1121,6 +1136,58 @@
             <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimension_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookup and return the search-space dimension with the given name.</span>
+
+<span class="sd">        This allows for dict-like lookup of dimensions, for example:</span>
+<span class="sd">        `space[&#39;foo&#39;]` returns the dimension named &#39;foo&#39; if it exists,</span>
+<span class="sd">        otherwise `None` is returned.</span>
+
+<span class="sd">        It also allows for lookup of a list of dimension-names, for example:</span>
+<span class="sd">        `space[[&#39;foo&#39;, &#39;bar&#39;]]` returns the two dimensions named</span>
+<span class="sd">        &#39;foo&#39; and &#39;bar&#39; if they exist.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dimension_names : str or list(str)</span>
+<span class="sd">            Name of a single search-space dimension (str).</span>
+<span class="sd">            List of names for search-space dimensions (list(str)).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dims tuple (index, Dimension), list(tuple(index, Dimension)), \</span>
+<span class="sd">                (None, None)</span>
+<span class="sd">            A single search-space dimension with the given name,</span>
+<span class="sd">            or a list of search-space dimensions with the given names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="n">dimension_name</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Helper-function for getting a single dimension.&quot;&quot;&quot;</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Get the index of the search-space dimension using its name.</span>
+            <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dimension_name</span> <span class="o">==</span> <span class="n">dim</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">dimension_name</span> <span class="o">==</span> <span class="n">index</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension_names</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+            <span class="c1"># Get a single search-space dimension.</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="n">_get</span><span class="p">(</span><span class="n">dimension_name</span><span class="o">=</span><span class="n">dimension_names</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension_names</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="c1"># Get a list of search-space dimensions.</span>
+            <span class="c1"># Note that we do not check whether the names are really strings.</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get</span><span class="p">(</span><span class="n">dimension_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dimension_names</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Dimension name should be either string or&quot;</span> \
+                  <span class="s2">&quot;list of strings, but got </span><span class="si">{}</span><span class="s2">.&quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dimension_names</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">dims</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

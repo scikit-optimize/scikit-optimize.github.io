@@ -108,7 +108,7 @@
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="skopt.plots.plot_gaussian_process.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.plots.plot_gaussian_process">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
-            <a href="skopt.plots.plot_regret.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.plots.plot_regret">Next</a>
+            <a href="skopt.plots.plot_objective_2D.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.plots.plot_objective_2D">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -134,21 +134,47 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.plots" title="skopt.plots"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.plots</span></code></a>.plot_objective<a class="headerlink" href="#skopt-plots-plot-objective" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.plots.plot_objective">
-<code class="sig-prename descclassname">skopt.plots.</code><code class="sig-name descname">plot_objective</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">levels=10</em>, <em class="sig-param">n_points=40</em>, <em class="sig-param">n_samples=250</em>, <em class="sig-param">size=2</em>, <em class="sig-param">zscale='linear'</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">sample_source='random'</em>, <em class="sig-param">minimum='result'</em>, <em class="sig-param">n_minimum_search=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3e23b63/skopt/plots.py#L567"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/plots.html#plot_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.plots.plot_objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pairwise dependence plot of the objective function.</p>
-<p>The diagonal shows the partial dependence for dimension <code class="docutils literal notranslate"><span class="pre">i</span></code> with
-respect to the objective function. The off-diagonal shows the
-partial dependence for dimensions <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> with
-respect to the objective function. The objective function is
-approximated by <code class="docutils literal notranslate"><span class="pre">result.model.</span></code></p>
-<p>Pairwise scatter plots of the points at which the objective
-function was directly evaluated are shown on the off-diagonal.
-A red point indicates per default the best observed minimum, but
+<code class="sig-prename descclassname">skopt.plots.</code><code class="sig-name descname">plot_objective</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">levels=10</em>, <em class="sig-param">n_points=40</em>, <em class="sig-param">n_samples=250</em>, <em class="sig-param">size=2</em>, <em class="sig-param">zscale='linear'</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">sample_source='random'</em>, <em class="sig-param">minimum='result'</em>, <em class="sig-param">n_minimum_search=None</em>, <em class="sig-param">plot_dims=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/025c26d/skopt/plots.py#L536"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/plots.html#plot_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.plots.plot_objective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a 2-d matrix with so-called Partial Dependence plots
+of the objective function. This shows the influence of each
+search-space dimension on the objective function.</p>
+<p>This uses the last fitted model for estimating the objective function.</p>
+<p>The diagonal shows the effect of a single dimension on the
+objective function, while the plots below the diagonal show
+the effect on the objective function when varying two dimensions.</p>
+<p>The Partial Dependence is calculated by averaging the objective value
+for a number of random samples in the search-space,
+while keeping one or two dimensions fixed at regular intervals. This
+averages out the effect of varying the other dimensions and shows
+the influence of one or two dimensions on the objective function.</p>
+<p>Also shown are small black dots for the points that were sampled
+during optimization.</p>
+<p>A red star indicates per default the best observed minimum, but
 this can be changed by changing argument ´minimum´.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Partial Dependence plot is only an estimation of the surrogate
+model which in turn is only an estimation of the true objective
+function that has been optimized. This means the plots show
+an “estimate of an estimate” and may therefore be quite imprecise,
+especially if few samples have been collected during the
+optimization
+(e.g. less than 100-200 samples), and in regions of the search-space
+that have been sparsely sampled (e.g. regions away from the optimum).
+This means that the plots may change each time you run the
+optimization and they should not be considered completely reliable.
+These compromises are necessary because we cannot evaluate the
+expensive objective function in order to plot it, so we have to use
+the cheaper surrogate model to plot its contour. And in order to
+show search-spaces with 3 dimensions or more in a 2-dimensional
+plot,
+we further need to map those dimensions to only 2-dimensions using
+the Partial Dependence, which also causes distortions in the plots.</p>
+</div>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
-<dt><strong>result</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">OptimizeResult</span></code></span></dt><dd><p>The result for which to create the scatter plot matrix.</p>
+<dt><strong>result</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">OptimizeResult</span></code></span></dt><dd><p>The optimization results from calling e.g. <code class="docutils literal notranslate"><span class="pre">gp_minimize()</span></code>.</p>
 </dd>
 <dt><strong>levels</strong><span class="classifier">int, default=10</span></dt><dd><p>Number of levels to draw on the contour plot, passed directly
 to <code class="docutils literal notranslate"><span class="pre">plt.contour()</span></code>.</p>
@@ -167,6 +193,10 @@ or ‘log’.</p>
 <dt><strong>dimensions</strong><span class="classifier">list of str, default=None</span></dt><dd><p>Labels of the dimension
 variables. <code class="docutils literal notranslate"><span class="pre">None</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">space.dimensions[i].name</span></code>, or
 if also <code class="docutils literal notranslate"><span class="pre">None</span></code> to <code class="docutils literal notranslate"><span class="pre">['X_0',</span> <span class="pre">'X_1',</span> <span class="pre">..]</span></code>.</p>
+</dd>
+<dt><strong>plot_dims</strong><span class="classifier">list of str and int, default=None</span></dt><dd><p>List of dimension names or dimension indices from the
+search-space dimensions to be included in the plot.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> then use all dimensions from the search-space.</p>
 </dd>
 <dt><strong>sample_source</strong><span class="classifier">str or list of floats, default=’random’</span></dt><dd><p>Defines to samples generation to use for averaging the model function
 at each of the <code class="docutils literal notranslate"><span class="pre">n_points</span></code>.</p>
@@ -224,7 +254,7 @@ to find the minimum when using ‘expected_minimum’ or
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
-<dt><strong>ax</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">Axes</span></code></span></dt><dd><p>The matplotlib axes.</p>
+<dt><strong>ax</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">Matplotlib.Axes</span></code></span></dt><dd><p>A 2-d matrix of Axes-objects with the sub-plots.</p>
 </dd>
 </dl>
 </dd>
@@ -244,6 +274,10 @@ to find the minimum when using ‘expected_minimum’ or
 </div><div class="sphx-glr-thumbcontainer" tooltip="Tim Head, August 2016. Reformatted by Holger Nahrstaedt 2020"><div class="figure align-default" id="id3">
 <img alt="../../_images/sphx_glr_visualizing-results_thumb.png" src="../../_images/sphx_glr_visualizing-results_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/visualizing-results.html#sphx-glr-auto-examples-plots-visualizing-results-py"><span class="std std-ref">Visualizing optimization results</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Hvass-Labs Dec 2017 Holger Nahrstaedt 2020"><div class="figure align-default" id="id4">
+<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_thumb.png" src="../../_images/sphx_glr_partial-dependence-plot-2D_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/partial-dependence-plot-2D.html#sphx-glr-auto-examples-plots-partial-dependence-plot-2d-py"><span class="std std-ref">Partial Dependence Plots 2D</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="clearer"></div></div>
 </div>
