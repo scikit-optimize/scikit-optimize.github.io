@@ -151,6 +151,22 @@
         <span class="k">return</span> <span class="s1">&#39;...&#39;</span>
 
 
+<span class="k">def</span> <span class="nf">_transpose_list_array</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Transposes a list matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_dims</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_samples</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_dims</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="k">return</span> <span class="n">rows</span>
+
+
 <div class="viewcode-block" id="check_dimension"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.check_dimension.html#skopt.check_dimension">[docs]</a><span class="k">def</span> <span class="nf">check_dimension</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Turn a provided dimension description into a dimension object.</span>
 
@@ -633,6 +649,8 @@
         <span class="n">inv_transform</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">inv_transform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">)</span>
+        <span class="n">inv_transform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;int&#39;</span><span class="p">:</span>
             <span class="c1"># necessary, otherwise the type is converted to a numpy type</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">inv_transform</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
@@ -656,7 +674,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">high</span><span class="p">)</span>
 
@@ -690,6 +708,7 @@
 <span class="sd">        are equally likely.</span>
 
 <span class="sd">    transform : &quot;onehot&quot;, &quot;string&quot;, &quot;identity&quot;, &quot;label&quot;, default=&quot;onehot&quot;</span>
+
 <span class="sd">        - &quot;identity&quot;, the transformed space is the same as the original</span>
 <span class="sd">          space.</span>
 <span class="sd">        - &quot;string&quot;,  the transformed space is a string encoded</span>
@@ -748,7 +767,7 @@
         <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s2">&quot;normalize&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">LabelEncoder</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)),</span>
-                 <span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+                 <span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">is_int</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
@@ -824,7 +843,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">transformed_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformed_size</span><span class="p">)]</span>
 
@@ -999,22 +1018,10 @@
         <span class="n">columns</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">sp_version</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">):</span>
-                <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
+            <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">))</span>
 
         <span class="c1"># Transpose</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
-                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-
-            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">rows</span></div>
+        <span class="k">return</span> <span class="n">_transpose_list_array</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Space.set_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.set_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">set_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sets the transformer of all dimension objects to `transform`</span>
@@ -1051,10 +1058,7 @@
 
 <div class="viewcode-block" id="Space.get_transformer"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.get_transformer">[docs]</a>    <span class="k">def</span> <span class="nf">get_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns all transformers as list&quot;&quot;&quot;</span>
-        <span class="n">transformer</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
-            <span class="n">transformer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transform_</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">transformer</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transform_</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="Space.transform"><a class="viewcode-back" href="../../../modules/generated/skopt.space.space.Space.html#skopt.Space.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Transform samples from the original space into a warped space.</span>
@@ -1107,7 +1111,7 @@
         <span class="c1"># Inverse transform</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-
+        <span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
             <span class="n">dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
             <span class="n">offset</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">transformed_size</span>
@@ -1121,16 +1125,7 @@
             <span class="n">start</span> <span class="o">+=</span> <span class="n">offset</span>
 
         <span class="c1"># Transpose</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xt</span><span class="p">)):</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
-                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-
-            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">rows</span></div>
+        <span class="k">return</span> <span class="n">_transpose_list_array</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
