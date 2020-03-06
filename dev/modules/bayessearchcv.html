@@ -130,6 +130,17 @@
   <div class="section" id="bayessearchcv-a-gridsearchcv-compatible-estimator">
 <span id="bayessearchcv"></span><h1>2. BayesSearchCV, a GridSearchCV compatible estimator<a class="headerlink" href="#bayessearchcv-a-gridsearchcv-compatible-estimator" title="Permalink to this headline">¶</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">BayesSearchCV</span></code> as a replacement for scikit-learn’s GridSearchCV.</p>
+<p>BayesSearchCV implements a “fit” and a “score” method.
+It also implements “predict”, “predict_proba”, “decision_function”,
+“transform” and “inverse_transform” if they are implemented in the
+estimator used.</p>
+<p>The parameters of the estimator used to apply these methods are optimized
+by cross-validated search over parameter settings.</p>
+<p>In contrast to GridSearchCV, not all parameter values are tried out, but
+rather a fixed number of parameter settings is sampled from the specified
+distributions. The number of parameter settings that are tried is
+given by n_iter.</p>
+<p>Parameters are presented as a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.space.Dimension</span></code> objects.</p>
 </div>
 
 
