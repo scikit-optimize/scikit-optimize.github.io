@@ -149,7 +149,6 @@
 <span class="kn">from</span> <span class="nn">.sampler</span> <span class="kn">import</span> <span class="n">InitialPointGenerator</span>
 <span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Space</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Dimension</span>
 
-
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;load&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dump&quot;</span><span class="p">,</span>
@@ -499,7 +498,6 @@
             <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">normalize_dimensions</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">))</span>
             <span class="n">n_dims</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transformed_n_dims</span>
             <span class="n">is_cat</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">is_categorical</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected a Space instance, not None.&quot;</span><span class="p">)</span>
 
@@ -723,26 +721,14 @@
     <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
     <span class="n">transformed_dimensions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
-            <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span>
-                                                      <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
-                                                      <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                      <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">))</span>
-        <span class="c1"># To make sure that GP operates in the [0, 1] space</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Real</span><span class="p">):</span>
+        <span class="c1"># check if dimension is of a Dimension instance</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Dimension</span><span class="p">):</span>
+            <span class="c1"># Change the transformer to normalize</span>
+            <span class="c1"># and add it to the new transformed dimensions</span>
+            <span class="n">dimension</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
             <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">Real</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span>
-                     <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                     <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
-                     <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-                <span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Integer</span><span class="p">):</span>
-            <span class="n">transformed_dimensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">Integer</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">dimension</span><span class="o">.</span><span class="n">high</span><span class="p">,</span>
-                        <span class="n">name</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                        <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span>
-                        <span class="n">dtype</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="n">dimension</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown dimension type &quot;</span>
                                <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">dimension</span><span class="p">))</span>
@@ -856,10 +842,10 @@
 <span class="sd">    ...                          n_calls=20, base_estimator=&quot;ET&quot;,</span>
 <span class="sd">    ...                          random_state=4)</span>
 <span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; # Print the best-found results.</span>
-<span class="sd">    &gt;&gt;&gt; print(&quot;Best fitness:&quot;, result.fun)</span>
+<span class="sd">    &gt;&gt;&gt; # Print the best-found results in same format as the expected result.</span>
+<span class="sd">    &gt;&gt;&gt; print(&quot;Best fitness: &quot; + str(result.fun))</span>
 <span class="sd">    Best fitness: 0.1948080835239698</span>
-<span class="sd">    &gt;&gt;&gt; print(&quot;Best parameters:&quot;, result.x)</span>
+<span class="sd">    &gt;&gt;&gt; print(&quot;Best parameters: {}&quot;.format(result.x))</span>
 <span class="sd">    Best parameters: [0.44134853091052617, 0.06570954323368307, 0.17586123323419825]</span>
 
 <span class="sd">    Parameters</span>
