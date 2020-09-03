@@ -1,0 +1,324 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_plots_partial-dependence-plot-2D.py>`     to download the full example code or to run this example in your browser via Binder
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_plots_partial-dependence-plot-2D.py:
+
+
+===========================
+Partial Dependence Plots 2D
+===========================
+
+Hvass-Labs Dec 2017
+Holger Nahrstaedt 2020
+
+.. currentmodule:: skopt
+
+Simple example to show the new 2D plots.
+
+
+.. code-block:: default
+
+    print(__doc__)
+    import numpy as np
+    from math import exp
+
+    from skopt import gp_minimize
+    from skopt.space import Real, Categorical, Integer
+    from skopt.plots import plot_histogram, plot_objective_2D, plot_objective
+    from skopt.utils import point_asdict
+    np.random.seed(123)
+    import matplotlib.pyplot as plt
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+
+    dim_learning_rate = Real(name='learning_rate', low=1e-6, high=1e-2, prior='log-uniform')
+    dim_num_dense_layers = Integer(name='num_dense_layers', low=1, high=5)
+    dim_num_dense_nodes = Integer(name='num_dense_nodes', low=5, high=512)
+    dim_activation = Categorical(name='activation', categories=['relu', 'sigmoid'])
+
+    dimensions = [dim_learning_rate,
+                  dim_num_dense_layers,
+                  dim_num_dense_nodes,
+                  dim_activation]
+
+    default_parameters = [1e-4, 1, 64, 'relu']
+
+    def model_fitness(x):
+        learning_rate, num_dense_layers, num_dense_nodes, activation = x
+
+        fitness = ((exp(learning_rate) - 1.0) * 1000) ** 2 + \
+                   (num_dense_layers) ** 2 + \
+                   (num_dense_nodes/100) ** 2
+
+        fitness *= 1.0 + 0.1 * np.random.rand()
+
+        if activation == 'sigmoid':
+            fitness += 10
+
+        return fitness
+
+    print(model_fitness(x=default_parameters))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    1.518471835296799
+
+
+
+
+
+.. code-block:: default
+
+
+    search_result = gp_minimize(func=model_fitness,
+                                dimensions=dimensions,
+                                n_calls=30,
+                                x0=default_parameters,
+                                random_state=123
+                                )
+
+    print(search_result.x)
+    print(search_result.fun)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [2.6679970228263975e-05, 1, 5, 'relu']
+    1.0208133677111686
+
+
+
+
+
+.. code-block:: default
+
+
+    for fitness, x in sorted(zip(search_result.func_vals, search_result.x_iters)):
+        print(fitness, x)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    1.0208133677111686 [2.6679970228263975e-05, 1, 5, 'relu']
+    1.0348776634107046 [1e-06, 1, 5, 'relu']
+    1.0558012123017941 [3.5385658376936073e-06, 1, 5, 'relu']
+    1.0599072431183545 [6.23271592771488e-05, 1, 5, 'relu']
+    1.065758323114701 [1.6705126027774294e-06, 1, 5, 'relu']
+    1.066159709359935 [7.5745000598879366e-06, 1, 5, 'relu']
+    1.0865989427408291 [0.0002446114745330679, 1, 5, 'relu']
+    1.371838093575787 [0.0005243194903048878, 1, 5, 'relu']
+    1.397381958747002 [1.5127446618337171e-05, 1, 62, 'relu']
+    1.4602213686635033 [0.0001, 1, 64, 'relu']
+    2.2021191754789426 [0.0003989008284362775, 1, 99, 'relu']
+    3.461403804526842 [1e-06, 1, 148, 'relu']
+    4.557996664570765 [9.807267757898137e-06, 2, 50, 'relu']
+    6.9997193368210775 [1e-06, 2, 159, 'relu']
+    10.625393902733753 [1.138768777022257e-06, 3, 112, 'relu']
+    14.337540595777632 [4.961649309025573e-06, 2, 44, 'sigmoid']
+    15.811122459303194 [5.768045960755954e-05, 1, 366, 'relu']
+    20.75714626376416 [4.6648726500116405e-05, 4, 195, 'relu']
+    20.83105097254721 [3.629134387669892e-06, 3, 323, 'relu']
+    25.045498550233685 [1.5528231282886148e-05, 3, 380, 'relu']
+    25.725698564025883 [0.0010034940899532338, 4, 264, 'relu']
+    25.99771118919538 [1e-06, 5, 5, 'relu']
+    31.67808942295837 [9.214584006695478e-05, 4, 213, 'sigmoid']
+    32.60979725349034 [0.0007109209001237586, 3, 355, 'sigmoid']
+    35.517727998585926 [1.7218635640208468e-05, 4, 301, 'sigmoid']
+    36.436844941374716 [9.52877578124997e-06, 4, 306, 'sigmoid']
+    36.96220069557755 [3.683322660225289e-06, 5, 64, 'sigmoid']
+    36.96637598001273 [1.0085504162525438e-06, 1, 508, 'sigmoid']
+    40.913706315351426 [0.00018781175513912324, 5, 214, 'sigmoid']
+    117.22558971730295 [0.008953258961145084, 4, 399, 'relu']
+
+
+
+
+
+.. code-block:: default
+
+
+    space = search_result.space
+
+    print(search_result.x_iters)
+
+    search_space = {name: space[name][1] for name in space.dimension_names}
+
+    print(point_asdict(search_space, default_parameters))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [[0.0001, 1, 64, 'relu'], [0.0007109209001237586, 3, 355, 'sigmoid'], [9.214584006695478e-05, 4, 213, 'sigmoid'], [3.629134387669892e-06, 3, 323, 'relu'], [9.52877578124997e-06, 4, 306, 'sigmoid'], [5.768045960755954e-05, 1, 366, 'relu'], [1.5528231282886148e-05, 3, 380, 'relu'], [4.6648726500116405e-05, 4, 195, 'relu'], [0.008953258961145084, 4, 399, 'relu'], [4.961649309025573e-06, 2, 44, 'sigmoid'], [0.0010034940899532338, 4, 264, 'relu'], [0.00018781175513912324, 5, 214, 'sigmoid'], [1.0085504162525438e-06, 1, 508, 'sigmoid'], [1e-06, 5, 5, 'relu'], [0.0005243194903048878, 1, 5, 'relu'], [1.7218635640208468e-05, 4, 301, 'sigmoid'], [2.6679970228263975e-05, 1, 5, 'relu'], [3.5385658376936073e-06, 1, 5, 'relu'], [6.23271592771488e-05, 1, 5, 'relu'], [7.5745000598879366e-06, 1, 5, 'relu'], [1e-06, 1, 148, 'relu'], [9.807267757898137e-06, 2, 50, 'relu'], [3.683322660225289e-06, 5, 64, 'sigmoid'], [1e-06, 2, 159, 'relu'], [1e-06, 1, 5, 'relu'], [1.138768777022257e-06, 3, 112, 'relu'], [0.0002446114745330679, 1, 5, 'relu'], [0.0003989008284362775, 1, 99, 'relu'], [1.6705126027774294e-06, 1, 5, 'relu'], [1.5127446618337171e-05, 1, 62, 'relu']]
+    OrderedDict([('activation', 0.0001), ('learning_rate', 1), ('num_dense_layers', 64), ('num_dense_nodes', 'relu')])
+
+
+
+
+
+.. code-block:: default
+
+    print("Plotting now ...")
+
+    _ = plot_histogram(result=search_result, dimension_identifier='learning_rate',
+                       bins=20)
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-2D_001.png
+    :alt: partial dependence plot 2D
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Plotting now ...
+
+
+
+
+
+.. code-block:: default
+
+    _ = plot_objective_2D(result=search_result,
+                          dimension_identifier1='learning_rate',
+                          dimension_identifier2='num_dense_nodes')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-2D_002.png
+    :alt: partial dependence plot 2D
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+
+    _ = plot_objective_2D(result=search_result,
+                          dimension_identifier1='num_dense_layers',
+                          dimension_identifier2='num_dense_nodes')
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-2D_003.png
+    :alt: partial dependence plot 2D
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+
+    _ = plot_objective(result=search_result,
+                       plot_dims=['num_dense_layers',
+                                  'num_dense_nodes'])
+    plt.show()
+
+
+
+.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-2D_004.png
+    :alt: partial dependence plot 2D
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  12.132 seconds)
+
+**Estimated memory usage:**  8 MB
+
+
+.. _sphx_glr_download_auto_examples_plots_partial-dependence-plot-2D.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+  .. container:: binder-badge
+
+    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
+      :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/plots/partial-dependence-plot-2D.ipynb
+      :width: 150 px
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: partial-dependence-plot-2D.py <partial-dependence-plot-2D.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: partial-dependence-plot-2D.ipynb <partial-dependence-plot-2D.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

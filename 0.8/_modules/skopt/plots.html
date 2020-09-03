@@ -1,0 +1,1675 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.plots &mdash; scikit-optimize 0.8.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/plots.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.8.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.plots</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Plotting functions.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">OptimizeResult</span>
+
+<span class="kn">from</span> <span class="nn">.acquisition</span> <span class="kn">import</span> <span class="n">_gaussian_acquisition</span>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">expected_minimum</span><span class="p">,</span> <span class="n">expected_minimum_random_sampling</span>
+<span class="kn">from</span> <span class="nn">.space</span> <span class="kn">import</span> <span class="n">Categorical</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="c1"># For plot tests, matplotlib must be set to headless mode early</span>
+<span class="k">if</span> <span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">LogLocator</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">MaxNLocator</span><span class="p">,</span> <span class="n">FuncFormatter</span>  <span class="c1"># noqa: E402</span>
+
+
+<div class="viewcode-block" id="plot_convergence"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence">[docs]</a><span class="k">def</span> <span class="nf">plot_convergence</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot one or several convergence traces.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args[i] :  `OptimizeResult`, list of `OptimizeResult`, or tuple</span>
+<span class="sd">        The result(s) for which to plot the convergence trace.</span>
+
+<span class="sd">        - if `OptimizeResult`, then draw the corresponding single trace;</span>
+<span class="sd">        - if list of `OptimizeResult`, then draw the corresponding convergence</span>
+<span class="sd">          traces in transparency, along with the average convergence trace;</span>
+<span class="sd">        - if tuple, then `args[i][0]` should be a string label and `args[i][1]`</span>
+<span class="sd">          an `OptimizeResult` or a list of `OptimizeResult`.</span>
+
+<span class="sd">    ax : `Axes`, optional</span>
+<span class="sd">        The matplotlib axes on which to draw the plot, or `None` to create</span>
+<span class="sd">        a new one.</span>
+
+<span class="sd">    true_minimum : float, optional</span>
+<span class="sd">        The true minimum value of the function, if known.</span>
+
+<span class="sd">    yscale : None or string, optional</span>
+<span class="sd">        The scale for the y-axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Axes`</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># &lt;3 legacy python</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Convergence plot&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\min f(x)$ after $n$ calls&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">mins</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mins</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">mins</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iterations</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mins</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mins</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">true_minimum</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">true_minimum</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                   <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True minimum&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">or</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_gaussian_process"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_gaussian_process.html#skopt.plots.plot_gaussian_process">[docs]</a><span class="k">def</span> <span class="nf">plot_gaussian_process</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots the optimization results and the gaussian process</span>
+<span class="sd">    for 1-D objective functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res :  `OptimizeResult`</span>
+<span class="sd">        The result for which to plot the gaussian process.</span>
+
+<span class="sd">    ax : `Axes`, optional</span>
+<span class="sd">        The matplotlib axes on which to draw the plot, or `None` to create</span>
+<span class="sd">        a new one.</span>
+
+<span class="sd">    n_calls : int, default: -1</span>
+<span class="sd">        Can be used to evaluate the model at call `n_calls`.</span>
+
+<span class="sd">    objective : func, default: None</span>
+<span class="sd">        Defines the true objective function. Must have one input parameter.</span>
+
+<span class="sd">    n_points : int, default: 1000</span>
+<span class="sd">        Number of data points used to create the plots</span>
+
+<span class="sd">    noise_level : float, default: 0</span>
+<span class="sd">        Sets the estimated noise level</span>
+
+<span class="sd">    show_legend : boolean, default: True</span>
+<span class="sd">        When True, a legend is plotted.</span>
+
+<span class="sd">    show_title : boolean, default: True</span>
+<span class="sd">        When True, a title containing the found minimum value</span>
+<span class="sd">        is shown</span>
+
+<span class="sd">    show_acq_func : boolean, default: False</span>
+<span class="sd">        When True, the acquisition function is plotted</span>
+
+<span class="sd">    show_next_point : boolean, default: False</span>
+<span class="sd">        When True, the next evaluated point is plotted</span>
+
+<span class="sd">    show_observations : boolean, default: True</span>
+<span class="sd">        When True, observations are plotted as dots.</span>
+
+<span class="sd">    show_mu : boolean, default: True</span>
+<span class="sd">        When True, the predicted model is shown.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Axes`</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">n_calls</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_calls&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">objective</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;objective&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">noise_level</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;noise_level&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">show_legend</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_legend&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">show_title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_title&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">show_acq_func</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_acq_func&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">show_next_point</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_next_point&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">show_observations</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_observations&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">show_mu</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_mu&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_points</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_points&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">n_dims</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span>
+    <span class="k">assert</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Space dimension must be 1&quot;</span>
+    <span class="n">dimension</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">x_model</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">x_model</span> <span class="o">=</span> <span class="n">x_model</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;args&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">:</span>
+        <span class="n">n_random</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_random_starts&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">acq_func</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;acq_func&quot;</span><span class="p">,</span> <span class="s2">&quot;EI&quot;</span><span class="p">)</span>
+        <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;acq_func_kwargs&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="k">if</span> <span class="n">acq_func_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">acq_func_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">acq_func</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">acq_func</span> <span class="o">==</span> <span class="s2">&quot;gp_hedge&quot;</span><span class="p">:</span>
+        <span class="n">acq_func</span> <span class="o">=</span> <span class="s2">&quot;EI&quot;</span>
+    <span class="k">if</span> <span class="n">n_random</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_random</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">objective</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">objective</span><span class="p">(</span><span class="n">x_i</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">n_calls</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">curr_x_iters</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span>
+        <span class="n">curr_func_vals</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">n_calls</span><span class="p">]</span>
+
+        <span class="n">curr_x_iters</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span><span class="p">[:</span><span class="n">n_random</span> <span class="o">+</span> <span class="n">n_calls</span><span class="p">]</span>
+        <span class="n">curr_func_vals</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">n_random</span> <span class="o">+</span> <span class="n">n_calls</span><span class="p">]</span>
+
+    <span class="c1"># Plot true function.</span>
+    <span class="k">if</span> <span class="n">objective</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s2">&quot;r--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True (unknown)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">fx_i</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span>
+                             <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">],</span>
+                            <span class="p">[</span><span class="n">fx_i</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">noise_level</span>
+                             <span class="k">for</span> <span class="n">fx_i</span> <span class="ow">in</span> <span class="n">fx</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])),</span>
+            <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Plot GP(x) + contours</span>
+    <span class="k">if</span> <span class="n">show_mu</span><span class="p">:</span>
+        <span class="n">y_pred</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_model</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mu_</span><span class="si">{GP}</span><span class="s2">(x)$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">y_pred</span> <span class="o">-</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span>
+                                <span class="p">(</span><span class="n">y_pred</span> <span class="o">+</span> <span class="mf">1.9600</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+                <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Plot sampled points</span>
+    <span class="k">if</span> <span class="n">show_observations</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">curr_x_iters</span><span class="p">,</span> <span class="n">curr_func_vals</span><span class="p">,</span>
+                <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">show_mu</span> <span class="ow">or</span> <span class="n">show_observations</span> <span class="ow">or</span> <span class="n">objective</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>\
+            <span class="ow">and</span> <span class="n">show_acq_func</span><span class="p">:</span>
+        <span class="n">ax_ei</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+        <span class="n">ax_ei</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">acq_func</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(x)&quot;</span><span class="p">)</span>
+        <span class="n">plot_both</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_ei</span> <span class="o">=</span> <span class="n">ax</span>
+        <span class="n">plot_both</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">show_acq_func</span><span class="p">:</span>
+        <span class="n">acq</span> <span class="o">=</span> <span class="n">_gaussian_acquisition</span><span class="p">(</span><span class="n">x_model</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
+                                    <span class="n">y_opt</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">curr_func_vals</span><span class="p">),</span>
+                                    <span class="n">acq_func</span><span class="o">=</span><span class="n">acq_func</span><span class="p">,</span>
+                                    <span class="n">acq_func_kwargs</span><span class="o">=</span><span class="n">acq_func_kwargs</span><span class="p">)</span>
+        <span class="n">next_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)]</span>
+        <span class="n">next_acq</span> <span class="o">=</span> <span class="n">acq</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">acq</span><span class="p">)]</span>
+        <span class="n">acq</span> <span class="o">=</span> <span class="o">-</span> <span class="n">acq</span>
+        <span class="n">next_acq</span> <span class="o">=</span> <span class="o">-</span><span class="n">next_acq</span>
+        <span class="n">ax_ei</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">acq_func</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(x)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">plot_both</span><span class="p">:</span>
+            <span class="n">ax_ei</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">acq</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                               <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_next_point</span> <span class="ow">and</span> <span class="n">next_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax_ei</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">next_x</span><span class="p">,</span> <span class="n">next_acq</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                       <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Next query point&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_title</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;x* = </span><span class="si">%.4f</span><span class="s2">, f(x*) = </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+    <span class="c1"># Adjust plot layout</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;f(x)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_legend</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plot_both</span><span class="p">:</span>
+            <span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+            <span class="n">lines2</span><span class="p">,</span> <span class="n">labels2</span> <span class="o">=</span> <span class="n">ax_ei</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+            <span class="n">ax_ei</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span> <span class="o">+</span> <span class="n">lines2</span><span class="p">,</span> <span class="n">labels</span> <span class="o">+</span> <span class="n">labels2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span>
+                         <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_regret"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_regret.html#skopt.plots.plot_regret">[docs]</a><span class="k">def</span> <span class="nf">plot_regret</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot one or several cumulative regret traces.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args[i] : `OptimizeResult`, list of `OptimizeResult`, or tuple</span>
+<span class="sd">        The result(s) for which to plot the cumulative regret trace.</span>
+
+<span class="sd">        - if `OptimizeResult`, then draw the corresponding single trace;</span>
+<span class="sd">        - if list of `OptimizeResult`, then draw the corresponding cumulative</span>
+<span class="sd">            regret traces in transparency, along with the average cumulative</span>
+<span class="sd">            regret trace;</span>
+<span class="sd">        - if tuple, then `args[i][0]` should be a string label and `args[i][1]`</span>
+<span class="sd">          an `OptimizeResult` or a list of `OptimizeResult`.</span>
+
+<span class="sd">    ax : Axes`, optional</span>
+<span class="sd">        The matplotlib axes on which to draw the plot, or `None` to create</span>
+<span class="sd">        a new one.</span>
+
+<span class="sd">    true_minimum : float, optional</span>
+<span class="sd">        The true minimum value of the function, if known.</span>
+
+<span class="sd">    yscale : None or string, optional</span>
+<span class="sd">        The scale for the y-axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Axes`</span>
+<span class="sd">        The matplotlib axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># &lt;3 legacy python</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;true_minimum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">yscale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yscale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cumulative regret plot&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\sum_{i=0}^n(f(x_i) - optimum)$ after $n$ calls&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">true_minimum</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">true_minimum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">regrets</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">n_calls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)</span>
+            <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">regrets</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">true_minimum</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                        <span class="n">iterations</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">cr</span> <span class="ow">in</span> <span class="n">regrets</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">regrets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<span class="k">def</span> <span class="nf">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">plot_dims</span><span class="p">,</span>
+                              <span class="n">dim_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Work out min, max of y axis for the diagonal so we can adjust</span>
+    <span class="c1"># them all to the same value</span>
+    <span class="n">diagonal_ylim</span> <span class="o">=</span> <span class="n">_get_ylim_diagonal</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="c1"># Number of search-space dimensions we are using.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plot_dims</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_dims</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">dim_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dim_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;$X_{</span><span class="si">%i</span><span class="s2">}$&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span>
+                      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">plot_dims</span><span class="p">]</span>
+    <span class="c1"># Axes for categorical dimensions are really integers; we have to</span>
+    <span class="c1"># label them with the category names</span>
+    <span class="n">iscat</span> <span class="o">=</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Categorical</span><span class="p">)</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">plot_dims</span><span class="p">]</span>
+
+    <span class="c1"># Deal with formatting of the axes</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>  <span class="c1"># rows</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>  <span class="c1"># columns</span>
+            <span class="k">if</span> <span class="n">n_dims</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span>
+            <span class="n">index_i</span><span class="p">,</span> <span class="n">dim_i</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">index_j</span><span class="p">,</span> <span class="n">dim_j</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>  <span class="c1"># off-diagonal plots</span>
+                <span class="c1"># plots on the diagonal are special, like Texas. They have</span>
+                <span class="c1"># their own range so do not mess with them.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>  <span class="c1"># bounds not meaningful for categoricals</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">dim_i</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">iscat</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                    <span class="c1"># partial() avoids creating closures in a loop</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span>
+                        <span class="n">partial</span><span class="p">(</span><span class="n">_cat_format</span><span class="p">,</span> <span class="n">dim_j</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">dim_j</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># only leftmost column (0) gets y labels</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>  <span class="c1"># Set category labels for left column</span>
+                        <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span>
+                            <span class="n">partial</span><span class="p">(</span><span class="n">_cat_format</span><span class="p">,</span> <span class="n">dim_i</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+
+                <span class="c1"># for all rows except ...</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n_dims</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+                <span class="c1"># ... the bottom row</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax_</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="c1"># configure plot for linear vs log-scale</span>
+                <span class="k">if</span> <span class="n">dim_j</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                                                            <span class="n">integer</span><span class="o">=</span><span class="n">iscat</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+                <span class="k">if</span> <span class="n">dim_i</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                                                            <span class="n">integer</span><span class="o">=</span><span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># diagonal plots</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">diagonal_ylim</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">dim_i</span><span class="o">.</span><span class="n">bounds</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+
+                <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dim_labels</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">dim_i</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                                                            <span class="n">integer</span><span class="o">=</span><span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="n">ax_</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span>
+                            <span class="n">partial</span><span class="p">(</span><span class="n">_cat_format</span><span class="p">,</span> <span class="n">dim_i</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="partial_dependence"><a class="viewcode-back" href="../../modules/generated/skopt.plots.partial_dependence.html#skopt.plots.partial_dependence">[docs]</a><span class="k">def</span> <span class="nf">partial_dependence</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">x_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the partial dependence for dimensions `i` and `j` with</span>
+<span class="sd">    respect to the objective value, as approximated by `model`.</span>
+
+<span class="sd">    The partial dependence plot shows how the value of the dimensions</span>
+<span class="sd">    `i` and `j` influence the `model` predictions after &quot;averaging out&quot;</span>
+<span class="sd">    the influence of all other dimensions.</span>
+
+<span class="sd">    When `x_eval` is not `None`, the given values are used instead of</span>
+<span class="sd">    random samples. In this case, `n_samples` will be ignored.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    space : `Space`</span>
+<span class="sd">        The parameter space over which the minimization was performed.</span>
+
+<span class="sd">    model</span>
+<span class="sd">        Surrogate model for the objective function.</span>
+
+<span class="sd">    i : int</span>
+<span class="sd">        The first dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    j : int, default=None</span>
+<span class="sd">        The second dimension for which to calculate the partial dependence.</span>
+<span class="sd">        To calculate the 1D partial dependence on `i` alone set `j=None`.</span>
+
+<span class="sd">    sample_points : np.array, shape=(n_points, n_dims), default=None</span>
+<span class="sd">        Only used when `x_eval=None`, i.e in case partial dependence should</span>
+<span class="sd">        be calculated.</span>
+<span class="sd">        Randomly sampled and transformed points to use when averaging</span>
+<span class="sd">        the model function at each of the `n_points` when using partial</span>
+<span class="sd">        dependence.</span>
+
+<span class="sd">    n_samples : int, default=100</span>
+<span class="sd">        Number of random samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points` when using partial dependence. Only used</span>
+<span class="sd">        when `sample_points=None` and `x_eval=None`.</span>
+
+<span class="sd">    n_points : int, default=40</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension `i` and `j`.</span>
+
+<span class="sd">    x_eval : list, default=None</span>
+<span class="sd">        `x_eval` is a list of parameter values or None. In case `x_eval`</span>
+<span class="sd">        is not None, the parsed dependence will be calculated using these</span>
+<span class="sd">        values.</span>
+<span class="sd">        Otherwise, random selected samples will be used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    For 1D partial dependence:</span>
+
+<span class="sd">    xi : np.array</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    yi : np.array</span>
+<span class="sd">        The value of the model at each point `xi`.</span>
+
+<span class="sd">    For 2D partial dependence:</span>
+
+<span class="sd">    xi : np.array, shape=n_points</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    yi : np.array, shape=n_points</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+<span class="sd">    zi : np.array, shape=(n_points, n_points)</span>
+<span class="sd">        The value of the model at each point `(xi, yi)`.</span>
+
+<span class="sd">    For Categorical variables, the `xi` (and `yi` for 2D) returned are</span>
+<span class="sd">    the indices of the variable in `Dimension.categories`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If we haven&#39;t parsed an x_eval list we use random sampled values instead</span>
+    <span class="k">if</span> <span class="n">x_eval</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">sample_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sample_points</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">x_eval</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">partial_dependence_1D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span>
+                                     <span class="n">sample_points</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">partial_dependence_2D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
+                                     <span class="n">sample_points</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_objective"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective">[docs]</a><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                   <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_source</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+                   <span class="n">minimum</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">show_points</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a 2-d matrix with so-called Partial Dependence plots</span>
+<span class="sd">    of the objective function. This shows the influence of each</span>
+<span class="sd">    search-space dimension on the objective function.</span>
+
+<span class="sd">    This uses the last fitted model for estimating the objective function.</span>
+
+<span class="sd">    The diagonal shows the effect of a single dimension on the</span>
+<span class="sd">    objective function, while the plots below the diagonal show</span>
+<span class="sd">    the effect on the objective function when varying two dimensions.</span>
+
+<span class="sd">    The Partial Dependence is calculated by averaging the objective value</span>
+<span class="sd">    for a number of random samples in the search-space,</span>
+<span class="sd">    while keeping one or two dimensions fixed at regular intervals. This</span>
+<span class="sd">    averages out the effect of varying the other dimensions and shows</span>
+<span class="sd">    the influence of one or two dimensions on the objective function.</span>
+
+<span class="sd">    Also shown are small black dots for the points that were sampled</span>
+<span class="sd">    during optimization.</span>
+
+<span class="sd">    A red star indicates per default the best observed minimum, but</span>
+<span class="sd">    this can be changed by changing argument ´minimum´.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">          The Partial Dependence plot is only an estimation of the surrogate</span>
+<span class="sd">          model which in turn is only an estimation of the true objective</span>
+<span class="sd">          function that has been optimized. This means the plots show</span>
+<span class="sd">          an &quot;estimate of an estimate&quot; and may therefore be quite imprecise,</span>
+<span class="sd">          especially if few samples have been collected during the</span>
+<span class="sd">          optimization</span>
+<span class="sd">          (e.g. less than 100-200 samples), and in regions of the search-space</span>
+<span class="sd">          that have been sparsely sampled (e.g. regions away from the optimum).</span>
+<span class="sd">          This means that the plots may change each time you run the</span>
+<span class="sd">          optimization and they should not be considered completely reliable.</span>
+<span class="sd">          These compromises are necessary because we cannot evaluate the</span>
+<span class="sd">          expensive objective function in order to plot it, so we have to use</span>
+<span class="sd">          the cheaper surrogate model to plot its contour. And in order to</span>
+<span class="sd">          show search-spaces with 3 dimensions or more in a 2-dimensional</span>
+<span class="sd">          plot,</span>
+<span class="sd">          we further need to map those dimensions to only 2-dimensions using</span>
+<span class="sd">          the Partial Dependence, which also causes distortions in the plots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : `OptimizeResult`</span>
+<span class="sd">        The optimization results from calling e.g. `gp_minimize()`.</span>
+
+<span class="sd">    levels : int, default=10</span>
+<span class="sd">        Number of levels to draw on the contour plot, passed directly</span>
+<span class="sd">        to `plt.contourf()`.</span>
+
+<span class="sd">    n_points : int, default=40</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension.</span>
+
+<span class="sd">    n_samples : int, default=250</span>
+<span class="sd">        Number of samples to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points` when `sample_method` is set to &#39;random&#39;.</span>
+
+<span class="sd">    size : float, default=2</span>
+<span class="sd">        Height (in inches) of each facet.</span>
+
+<span class="sd">    zscale : str, default=&#39;linear&#39;</span>
+<span class="sd">        Scale to use for the z axis of the contour plots. Either &#39;linear&#39;</span>
+<span class="sd">        or &#39;log&#39;.</span>
+
+<span class="sd">    dimensions : list of str, default=None</span>
+<span class="sd">        Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
+
+<span class="sd">    plot_dims : list of str and int, default=None</span>
+<span class="sd">        List of dimension names or dimension indices from the</span>
+<span class="sd">        search-space dimensions to be included in the plot.</span>
+<span class="sd">        If `None` then use all dimensions except constant ones</span>
+<span class="sd">        from the search-space.</span>
+
+<span class="sd">    sample_source : str or list of floats, default=&#39;random&#39;</span>
+<span class="sd">        Defines to samples generation to use for averaging the model function</span>
+<span class="sd">        at each of the `n_points`.</span>
+
+<span class="sd">        A partial dependence plot is only generated, when `sample_source`</span>
+<span class="sd">        is set to &#39;random&#39; and `n_samples` is sufficient.</span>
+
+<span class="sd">        `sample_source` can also be a list of</span>
+<span class="sd">        floats, which is then used for averaging.</span>
+
+<span class="sd">        Valid strings:</span>
+
+<span class="sd">        - &#39;random&#39; - `n_samples` random samples will used</span>
+<span class="sd">        - &#39;result&#39; - Use only the best observed parameters</span>
+<span class="sd">        - &#39;expected_minimum&#39; - Parameters that gives the best</span>
+<span class="sd">          minimum Calculated using scipy&#39;s minimize method.</span>
+<span class="sd">          This method currently does not work with categorical values.</span>
+<span class="sd">        - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
+<span class="sd">          best minimum when using naive random sampling.</span>
+<span class="sd">          Works with categorical values.</span>
+
+<span class="sd">    minimum : str or list of floats, default = &#39;result&#39;</span>
+<span class="sd">        Defines the values for the red points in the plots.</span>
+<span class="sd">        Valid strings:</span>
+
+<span class="sd">        - &#39;result&#39; - Use best observed parameters</span>
+<span class="sd">        - &#39;expected_minimum&#39; - Parameters that gives the best</span>
+<span class="sd">          minimum Calculated using scipy&#39;s minimize method.</span>
+<span class="sd">          This method currently does not work with categorical values.</span>
+<span class="sd">        - &#39;expected_minimum_random&#39; - Parameters that gives the</span>
+<span class="sd">          best minimum when using naive random sampling.</span>
+<span class="sd">          Works with categorical values</span>
+
+<span class="sd">    n_minimum_search : int, default = None</span>
+<span class="sd">        Determines how many points should be evaluated</span>
+<span class="sd">        to find the minimum when using &#39;expected_minimum&#39; or</span>
+<span class="sd">        &#39;expected_minimum_random&#39;. Parameter is used when</span>
+<span class="sd">        `sample_source` and/or `minimum` is set to</span>
+<span class="sd">        &#39;expected_minimum&#39; or &#39;expected_minimum_random&#39;.</span>
+
+<span class="sd">    show_points: bool, default = True</span>
+<span class="sd">        Choose whether to show evaluated points in the</span>
+<span class="sd">        contour plots.</span>
+
+<span class="sd">    cmap: str or Colormap, default = &#39;viridis_r&#39;</span>
+<span class="sd">        Color map for contour plots. Passed directly to</span>
+<span class="sd">        `plt.contourf()`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Matplotlib.Axes`</span>
+<span class="sd">        A 2-d matrix of Axes-objects with the sub-plots.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Here we define the values for which to plot the red dot (2d plot) and</span>
+    <span class="c1"># the red dotted line (1d plot).</span>
+    <span class="c1"># These same values will be used for evaluating the plots when</span>
+    <span class="c1"># calculating dependence. (Unless partial</span>
+    <span class="c1"># dependence is to be used instead).</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="c1"># Get the relevant search-space dimensions.</span>
+    <span class="k">if</span> <span class="n">plot_dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Get all dimensions.</span>
+        <span class="n">plot_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">is_constant</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">plot_dims</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plot_dims</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">plot_dims</span><span class="p">]</span>
+    <span class="c1"># Number of search-space dimensions we are using.</span>
+    <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plot_dims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimensions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_dims</span>
+    <span class="n">x_vals</span> <span class="o">=</span> <span class="n">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sample_source</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+        <span class="n">x_eval</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_eval</span> <span class="o">=</span> <span class="n">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">sample_source</span><span class="p">,</span>
+                                      <span class="n">n_minimum_search</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">x_eval</span><span class="p">])</span>
+    <span class="n">x_samples</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_map_categories</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+        <span class="n">locator</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Valid values for zscale are &#39;linear&#39; and &#39;log&#39;,&quot;</span>
+                         <span class="s2">&quot; not &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">zscale</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">n_dims</span><span class="p">,</span>
+                           <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">n_dims</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="n">n_dims</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">index</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">partial_dependence_1D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                               <span class="n">index</span><span class="p">,</span>
+                                               <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span>
+                                               <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">n_dims</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">index1</span><span class="p">,</span> <span class="n">dim1</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">index2</span><span class="p">,</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span> <span class="o">=</span> <span class="n">partial_dependence_2D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                   <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span>
+                                                   <span class="n">samples</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                             <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">show_points</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index2</span><span class="p">],</span> <span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index1</span><span class="p">],</span>
+                                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">index2</span><span class="p">],</span> <span class="n">minimum</span><span class="p">[</span><span class="n">index1</span><span class="p">],</span>
+                            <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Partial dependence&quot;</span>
+
+    <span class="c1"># Make various adjustments to the plots.</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+                                     <span class="n">plot_dims</span><span class="o">=</span><span class="n">plot_dims</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_evaluations"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_evaluations.html#skopt.plots.plot_evaluations">[docs]</a><span class="k">def</span> <span class="nf">plot_evaluations</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">plot_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Visualize the order in which points were sampled during optimization.</span>
+
+<span class="sd">    This creates a 2-d matrix plot where the diagonal plots are histograms</span>
+<span class="sd">    that show the distribution of samples for each search-space dimension.</span>
+
+<span class="sd">    The plots below the diagonal are scatter-plots of the samples for</span>
+<span class="sd">    all combinations of search-space dimensions.</span>
+
+<span class="sd">    The order in which samples</span>
+<span class="sd">    were evaluated is encoded in each point&#39;s color.</span>
+
+<span class="sd">    A red star shows the best found parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : `OptimizeResult`</span>
+<span class="sd">        The optimization results from calling e.g. `gp_minimize()`.</span>
+
+<span class="sd">    bins : int, bins=20</span>
+<span class="sd">        Number of bins to use for histograms on the diagonal.</span>
+
+<span class="sd">    dimensions : list of str, default=None</span>
+<span class="sd">        Labels of the dimension</span>
+<span class="sd">        variables. `None` defaults to `space.dimensions[i].name`, or</span>
+<span class="sd">        if also `None` to `[&#39;X_0&#39;, &#39;X_1&#39;, ..]`.</span>
+
+<span class="sd">    plot_dims : list of str and int, default=None</span>
+<span class="sd">        List of dimension names or dimension indices from the</span>
+<span class="sd">        search-space dimensions to be included in the plot.</span>
+<span class="sd">        If `None` then use all dimensions except constant ones</span>
+<span class="sd">        from the search-space.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Matplotlib.Axes`</span>
+<span class="sd">        A 2-d matrix of Axes-objects with the sub-plots.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="c1"># Convert categoricals to integers, so we can ensure consistent ordering.</span>
+    <span class="c1"># Assign indices to categories in the order they appear in the Dimension.</span>
+    <span class="c1"># Matplotlib&#39;s categorical plotting functions are only present in v 2.1+,</span>
+    <span class="c1"># and may order categoricals differently in different plots anyway.</span>
+    <span class="n">samples</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">iscat</span> <span class="o">=</span> <span class="n">_map_categories</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">plot_dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Get all dimensions.</span>
+        <span class="n">plot_dims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">is_constant</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">plot_dims</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plot_dims</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">plot_dims</span><span class="p">]</span>
+    <span class="c1"># Number of search-space dimensions we are using.</span>
+    <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plot_dims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dimensions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_dims</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_dims</span><span class="p">,</span> <span class="n">n_dims</span><span class="p">,</span>
+                           <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_dims</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_dims</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+                        <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">index</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">iscat</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">dim</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">low</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">high</span><span class="p">),</span> <span class="n">bins</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bins_</span> <span class="o">=</span> <span class="n">bins</span>
+                <span class="k">if</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">index</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_</span><span class="p">,</span>
+                         <span class="nb">range</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">iscat</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">else</span> <span class="n">dim</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+            <span class="c1"># lower triangle</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">index_i</span><span class="p">,</span> <span class="n">dim_i</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">index_j</span><span class="p">,</span> <span class="n">dim_j</span> <span class="o">=</span> <span class="n">plot_dims</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="n">index_j</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="n">index_i</span><span class="p">],</span>
+                            <span class="n">c</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">index_j</span><span class="p">],</span> <span class="n">minimum</span><span class="p">[</span><span class="n">index_i</span><span class="p">],</span>
+                            <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Make various adjustments to the plots.</span>
+    <span class="k">return</span> <span class="n">_format_scatter_plot_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Number of samples&quot;</span><span class="p">,</span>
+                                     <span class="n">plot_dims</span><span class="o">=</span><span class="n">plot_dims</span><span class="p">,</span>
+                                     <span class="n">dim_labels</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_ylim_diagonal</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the min / max of the ylim for all diagonal plots.</span>
+<span class="sd">    This is used in _adjust_fig() so the ylim is the same</span>
+<span class="sd">    for all diagonal plots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax : `Matplotlib.Axes`</span>
+<span class="sd">        2-dimensional matrix with Matplotlib Axes objects.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ylim_diagonal : tuple(int)</span>
+<span class="sd">        The common min and max ylim for the diagonal plots.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Number of search-space dimensions used in this plot.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="c1"># Get ylim for all diagonal plots.</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dims</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()]</span>
+
+    <span class="c1"># Separate into two lists with low and high ylim.</span>
+    <span class="n">ylim_lo</span><span class="p">,</span> <span class="n">ylim_hi</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">ylim</span><span class="p">)</span>
+
+    <span class="c1"># Min and max ylim for all diagonal plots.</span>
+    <span class="n">ylim_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ylim_lo</span><span class="p">)</span>
+    <span class="n">ylim_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ylim_hi</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ylim_min</span><span class="p">,</span> <span class="n">ylim_max</span>
+
+
+<div class="viewcode-block" id="partial_dependence_1D"><a class="viewcode-back" href="../../modules/generated/skopt.plots.partial_dependence_1D.html#skopt.plots.partial_dependence_1D">[docs]</a><span class="k">def</span> <span class="nf">partial_dependence_1D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the partial dependence for a single dimension.</span>
+
+<span class="sd">    This uses the given model to calculate the average objective value</span>
+<span class="sd">    for all the samples, where the given dimension is fixed at</span>
+<span class="sd">    regular intervals between its bounds.</span>
+
+<span class="sd">    This shows how the given dimension affects the objective value</span>
+<span class="sd">    when the influence of all other dimensions are averaged out.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    space : `Space`</span>
+<span class="sd">        The parameter space over which the minimization was performed.</span>
+
+<span class="sd">    model</span>
+<span class="sd">        Surrogate model for the objective function.</span>
+
+<span class="sd">    i : int</span>
+<span class="sd">        The dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    samples : np.array, shape=(n_points, n_dims)</span>
+<span class="sd">        Randomly sampled and transformed points to use when averaging</span>
+<span class="sd">        the model function at each of the `n_points` when using partial</span>
+<span class="sd">        dependence.</span>
+
+<span class="sd">    n_points : int, default=40</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension `i`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xi : np.array</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    yi : np.array</span>
+<span class="sd">        The average value of the modelled objective function at</span>
+<span class="sd">        each point `xi`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># The idea is to step through one dimension, evaluating the model with</span>
+    <span class="c1"># that dimension fixed and averaging either over random values or over</span>
+    <span class="c1"># the given ones in x_val in all other dimensions.</span>
+    <span class="c1"># (Or step through 2 dimensions when i and j are given.)</span>
+    <span class="c1"># Categorical dimensions make this interesting, because they are one-</span>
+    <span class="c1"># hot-encoded, so there is a one-to-many mapping of input dimensions</span>
+    <span class="c1"># to transformed (model) dimensions.</span>
+
+    <span class="c1"># dim_locs[i] is the (column index of the) start of dim i in</span>
+    <span class="c1"># sample_points.</span>
+    <span class="c1"># This is usefull when we are using one hot encoding, i.e using</span>
+    <span class="c1"># categorical values</span>
+    <span class="n">dim_locs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">transformed_size</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_calc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper-function to calculate the average predicted</span>
+<span class="sd">        objective value for the given model, when setting</span>
+<span class="sd">        the index&#39;th dimension of the search-space to the value x,</span>
+<span class="sd">        and then averaging over all samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>  <span class="c1"># copy</span>
+        <span class="c1"># We replace the values in the dimension that we want to keep</span>
+        <span class="c1"># fixed</span>
+        <span class="n">rvs_</span><span class="p">[:,</span> <span class="n">dim_locs</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">dim_locs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="c1"># In case of `x_eval=None` rvs conists of random samples.</span>
+        <span class="c1"># Calculating the mean of these samples is how partial dependence</span>
+        <span class="c1"># is implemented.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">))</span>
+    <span class="n">xi</span><span class="p">,</span> <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="c1"># Calculate the partial dependence for all the points.</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="p">[</span><span class="n">_calc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span></div>
+
+
+<div class="viewcode-block" id="partial_dependence_2D"><a class="viewcode-back" href="../../modules/generated/skopt.plots.partial_dependence_2D.html#skopt.plots.partial_dependence_2D">[docs]</a><span class="k">def</span> <span class="nf">partial_dependence_2D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
+                          <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the partial dependence for two dimensions in the search-space.</span>
+
+<span class="sd">    This uses the given model to calculate the average objective value</span>
+<span class="sd">    for all the samples, where the given dimensions are fixed at</span>
+<span class="sd">    regular intervals between their bounds.</span>
+
+<span class="sd">    This shows how the given dimensions affect the objective value</span>
+<span class="sd">    when the influence of all other dimensions are averaged out.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    space : `Space`</span>
+<span class="sd">        The parameter space over which the minimization was performed.</span>
+
+<span class="sd">    model</span>
+<span class="sd">        Surrogate model for the objective function.</span>
+
+<span class="sd">    i : int</span>
+<span class="sd">        The first dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    j : int</span>
+<span class="sd">        The second dimension for which to calculate the partial dependence.</span>
+
+<span class="sd">    samples : np.array, shape=(n_points, n_dims)</span>
+<span class="sd">        Randomly sampled and transformed points to use when averaging</span>
+<span class="sd">        the model function at each of the `n_points` when using partial</span>
+<span class="sd">        dependence.</span>
+
+<span class="sd">    n_points : int, default=40</span>
+<span class="sd">        Number of points at which to evaluate the partial dependence</span>
+<span class="sd">        along each dimension `i` and `j`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xi : np.array, shape=n_points</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    yi : np.array, shape=n_points</span>
+<span class="sd">        The points at which the partial dependence was evaluated.</span>
+
+<span class="sd">    zi : np.array, shape=(n_points, n_points)</span>
+<span class="sd">        The average value of the objective function at each point `(xi, yi)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># The idea is to step through one dimension, evaluating the model with</span>
+    <span class="c1"># that dimension fixed and averaging either over random values or over</span>
+    <span class="c1"># the given ones in x_val in all other dimensions.</span>
+    <span class="c1"># (Or step through 2 dimensions when i and j are given.)</span>
+    <span class="c1"># Categorical dimensions make this interesting, because they are one-</span>
+    <span class="c1"># hot-encoded, so there is a one-to-many mapping of input dimensions</span>
+    <span class="c1"># to transformed (model) dimensions.</span>
+
+    <span class="c1"># dim_locs[i] is the (column index of the) start of dim i in</span>
+    <span class="c1"># sample_points.</span>
+    <span class="c1"># This is usefull when we are using one hot encoding, i.e using</span>
+    <span class="c1"># categorical values</span>
+    <span class="n">dim_locs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">transformed_size</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper-function to calculate the average predicted</span>
+<span class="sd">        objective value for the given model, when setting</span>
+<span class="sd">        the index1&#39;th dimension of the search-space to the value x</span>
+<span class="sd">        and setting the index2&#39;th dimension to the value y,</span>
+<span class="sd">        and then averaging over all samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rvs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>  <span class="c1"># copy</span>
+        <span class="n">rvs_</span><span class="p">[:,</span> <span class="n">dim_locs</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span><span class="n">dim_locs</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">rvs_</span><span class="p">[:,</span> <span class="n">dim_locs</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">dim_locs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">rvs_</span><span class="p">))</span>
+
+    <span class="n">xi</span><span class="p">,</span> <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="n">yi</span><span class="p">,</span> <span class="n">yi_transformed</span> <span class="o">=</span> <span class="n">_evenly_sample</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+    <span class="c1"># Calculate the partial dependence for all combinations of these points.</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="p">[[</span><span class="n">_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xi_transformed</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">yi_transformed</span><span class="p">]</span>
+
+    <span class="c1"># Convert list-of-list to a numpy array.</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zi</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span></div>
+
+
+<div class="viewcode-block" id="plot_objective_2D"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D">[docs]</a><span class="k">def</span> <span class="nf">plot_objective_2D</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dimension_identifier1</span><span class="p">,</span> <span class="n">dimension_identifier2</span><span class="p">,</span>
+                      <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">sample_source</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+                      <span class="n">minimum</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create and return a Matplotlib figure and axes with a landscape</span>
+<span class="sd">    contour-plot of the last fitted model of the search-space,</span>
+<span class="sd">    overlaid with all the samples from the optimization results,</span>
+<span class="sd">    for the two given dimensions of the search-space.</span>
+
+<span class="sd">    This is similar to `plot_objective()` but only for 2 dimensions</span>
+<span class="sd">    whose doc-string also has a more extensive explanation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : `OptimizeResult`</span>
+<span class="sd">        The optimization results e.g. from calling `gp_minimize()`.</span>
+
+<span class="sd">    dimension_identifier1 : str or int</span>
+<span class="sd">        Name or index of a dimension in the search-space.</span>
+
+<span class="sd">    dimension_identifier2 : str or int</span>
+<span class="sd">        Name or index of a dimension in the search-space.</span>
+
+<span class="sd">    n_samples : int, default=250</span>
+<span class="sd">        Number of random samples used for estimating the contour-plot</span>
+<span class="sd">        of the objective function.</span>
+
+<span class="sd">    n_points : int, default=40</span>
+<span class="sd">        Number of points along each dimension where the partial dependence</span>
+<span class="sd">        is evaluated when generating the contour-plots.</span>
+
+<span class="sd">    levels : int, default=10</span>
+<span class="sd">        Number of levels to draw on the contour plot.</span>
+
+<span class="sd">    zscale : str, default=&#39;linear&#39;</span>
+<span class="sd">        Scale to use for the z axis of the contour plots.</span>
+<span class="sd">        Either &#39;log&#39; or linear for all other choices.</span>
+
+<span class="sd">    ax : `Matplotlib.Axes`, default: None</span>
+<span class="sd">        When set, everything is plotted inside this axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Matplotlib.Axes`</span>
+<span class="sd">        The Matplotlib Figure-object.</span>
+<span class="sd">        For example, you can save the plot by calling</span>
+<span class="sd">        `fig.savefig(&#39;file.png&#39;)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the search-space instance from the optimization results.</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="n">x_vals</span> <span class="o">=</span> <span class="n">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">minimum</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sample_source</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+        <span class="n">x_eval</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_eval</span> <span class="o">=</span> <span class="n">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">sample_source</span><span class="p">,</span>
+                                      <span class="n">n_minimum_search</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">x_eval</span><span class="p">])</span>
+    <span class="n">x_samples</span><span class="p">,</span> <span class="n">x_minimum</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_map_categories</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">)</span>
+    <span class="c1"># Get the dimension-object, its index in the search-space, and its name.</span>
+    <span class="n">index1</span><span class="p">,</span> <span class="n">dimension1</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">dimension_identifier1</span><span class="p">]</span>
+    <span class="n">index2</span><span class="p">,</span> <span class="n">dimension2</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">dimension_identifier2</span><span class="p">]</span>
+
+    <span class="c1"># Get the samples from the optimization-log for the relevant dimensions.</span>
+    <span class="c1"># samples1 = get_samples_dimension(result=result, index=index1)</span>
+    <span class="n">samples1</span> <span class="o">=</span> <span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index1</span><span class="p">]</span>
+    <span class="n">samples2</span> <span class="o">=</span> <span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index2</span><span class="p">]</span>
+    <span class="c1"># samples2 = get_samples_dimension(result=result, index=index2)</span>
+
+    <span class="c1"># Get the best-found samples for the relevant dimensions.</span>
+    <span class="n">best_sample1</span> <span class="o">=</span> <span class="n">x_minimum</span><span class="p">[</span><span class="n">index1</span><span class="p">]</span>
+    <span class="n">best_sample2</span> <span class="o">=</span> <span class="n">x_minimum</span><span class="p">[</span><span class="n">index2</span><span class="p">]</span>
+
+    <span class="c1"># Get the last fitted model for the search-space.</span>
+    <span class="n">last_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Estimate the objective function for these sampled points</span>
+    <span class="c1"># using the last fitted model for the search-space.</span>
+    <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span> <span class="o">=</span> <span class="n">partial_dependence_2D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">last_model</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span>
+                                       <span class="n">samples</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="c1"># Scale for the z-axis of the contour-plot. Either Log or Linear (None).</span>
+    <span class="n">locator</span> <span class="o">=</span> <span class="n">LogLocator</span><span class="p">()</span> <span class="k">if</span> <span class="n">zscale</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="c1"># Plot the contour-landscape for the objective function.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Plot all the parameters that were sampled during optimization.</span>
+    <span class="c1"># These are plotted as small black dots.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">samples1</span><span class="p">,</span> <span class="n">samples2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Plot the best parameters that were sampled during optimization.</span>
+    <span class="c1"># These are plotted as a big red star.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">best_sample1</span><span class="p">,</span> <span class="n">best_sample2</span><span class="p">,</span>
+               <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Use the dimension-names as the labels for the plot-axes.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dimension1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">dimension2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Use log-scale on the x-axis?</span>
+    <span class="k">if</span> <span class="n">dimension1</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Use log-scale on the y-axis?</span>
+    <span class="k">if</span> <span class="n">dimension2</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_histogram"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram">[docs]</a><span class="k">def</span> <span class="nf">plot_histogram</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dimension_identifier</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">rotate_labels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                   <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create and return a Matplotlib figure with a histogram</span>
+<span class="sd">    of the samples from the optimization results,</span>
+<span class="sd">    for a given dimension of the search-space.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    result : `OptimizeResult`</span>
+<span class="sd">        The optimization results e.g. from calling `gp_minimize()`.</span>
+
+<span class="sd">    dimension_identifier : str or int</span>
+<span class="sd">        Name or index of a dimension in the search-space.</span>
+
+<span class="sd">    bins : int, bins=20</span>
+<span class="sd">        Number of bins in the histogram.</span>
+
+<span class="sd">    rotate_labels : int, rotate_labels=0</span>
+<span class="sd">        Degree to rotate category-names on the x-axis.</span>
+<span class="sd">        Only used for Categorical dimensions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : `Matplotlib.Axes`</span>
+<span class="sd">        The Matplotlib Axes-object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the search-space instance from the optimization results.</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+
+    <span class="c1"># Get the dimension-object.</span>
+    <span class="n">index</span><span class="p">,</span> <span class="n">dimension</span> <span class="o">=</span> <span class="n">space</span><span class="p">[</span><span class="n">dimension_identifier</span><span class="p">]</span>
+
+    <span class="c1"># Get the samples from the optimization-log for that particular dimension.</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
+        <span class="c1"># When the search-space dimension is Categorical, it means</span>
+        <span class="c1"># that the possible values are strings. Matplotlib&#39;s histogram</span>
+        <span class="c1"># does not support this, so we have to make a bar-plot instead.</span>
+
+        <span class="c1"># NOTE: This only shows the categories that are in the samples.</span>
+        <span class="c1"># So if a category was not sampled, it will not be shown here.</span>
+
+        <span class="c1"># Count the number of occurrences of the string-categories.</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+
+        <span class="c1"># The counter returns a dict where the keys are the category-names</span>
+        <span class="c1"># and the values are the number of occurrences for each category.</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Although Matplotlib&#39;s docs indicate that the bar() function</span>
+        <span class="c1"># can take a list of strings for the x-axis, it doesn&#39;t appear to work.</span>
+        <span class="c1"># So we hack it by creating a list of integers and setting the</span>
+        <span class="c1"># tick-labels with the category-names instead.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">counts</span><span class="p">))</span>
+
+        <span class="c1"># Plot using bars.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">tick_label</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+        <span class="c1"># Adjust the rotation of the category-names on the x-axis.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotate_labels</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Otherwise the search-space Dimension is either integer or float,</span>
+        <span class="c1"># in which case the histogram can be plotted more easily.</span>
+        <span class="k">if</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+            <span class="c1"># Map the number of bins to a log-space for the dimension bounds.</span>
+            <span class="n">bins_mapped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">bounds</span><span class="p">),</span> <span class="n">bins</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Use the original number of bins.</span>
+            <span class="n">bins_mapped</span> <span class="o">=</span> <span class="n">bins</span>
+        <span class="c1"># Plot the histogram.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins_mapped</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">dimension</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+        <span class="c1"># Use log-scale on the x-axis?</span>
+        <span class="k">if</span> <span class="n">dimension</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set the labels.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Sample Count&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<span class="k">def</span> <span class="nf">_map_categories</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">minimum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Map categorical values to integers in a set of points.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mapped_points : np.array, shape=points.shape</span>
+<span class="sd">        A copy of `points` with categoricals replaced with their indices in</span>
+<span class="sd">        the corresponding `Dimension`.</span>
+
+<span class="sd">    mapped_minimum : np.array, shape (space.n_dims,)</span>
+<span class="sd">        A copy of `minimum` with categoricals replaced with their indices in</span>
+<span class="sd">        the corresponding `Dimension`.</span>
+
+<span class="sd">    iscat : np.array, shape (space.n_dims,)</span>
+<span class="sd">       Boolean array indicating whether dimension `i` in the `space` is</span>
+<span class="sd">       categorical.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>  <span class="c1"># Allow slicing, preserve cats</span>
+    <span class="n">iscat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)</span>
+    <span class="n">min_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">n_dims</span><span class="p">)</span>
+    <span class="n">pts_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">):</span>
+            <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">catmap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dim</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span> <span class="n">count</span><span class="p">()))</span>
+            <span class="n">pts_</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">catmap</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">points</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]]</span>
+            <span class="n">min_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">catmap</span><span class="p">[</span><span class="n">minimum</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pts_</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">min_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">minimum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pts_</span><span class="p">,</span> <span class="n">min_</span><span class="p">,</span> <span class="n">iscat</span>
+
+
+<span class="k">def</span> <span class="nf">_evenly_sample</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return `n_points` evenly spaced points from a Dimension.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : `Dimension`</span>
+<span class="sd">        The Dimension to sample from.  Can be categorical; evenly-spaced</span>
+<span class="sd">        category indices are chosen in order without replacement (result</span>
+<span class="sd">        may be smaller than `n_points`).</span>
+
+<span class="sd">    n_points : int</span>
+<span class="sd">        The number of points to sample from `dim`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xi : np.array</span>
+<span class="sd">        The sampled points in the Dimension.  For Categorical</span>
+<span class="sd">        dimensions, returns the index of the value in</span>
+<span class="sd">        `dim.categories`.</span>
+
+<span class="sd">    xi_transformed : np.array</span>
+<span class="sd">        The transformed values of `xi`, for feeding to a model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="s1">&#39;categories&#39;</span><span class="p">,</span> <span class="p">[]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cats</span><span class="p">):</span>  <span class="c1"># Sample categoricals while maintaining order</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cats</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cats</span><span class="p">),</span> <span class="n">n_points</span><span class="p">),</span>
+                         <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">cats</span><span class="p">[</span><span class="n">xi</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="c1"># XXX use linspace(*bounds, n_points) after python2 support ends</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_points</span><span class="p">)</span>
+        <span class="n">xi_transformed</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xi</span><span class="p">,</span> <span class="n">xi_transformed</span>
+
+
+<span class="k">def</span> <span class="nf">_cat_format</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Categorical axis tick formatter function.  Returns the name of category</span>
+<span class="sd">    `x` in `dimension`.  Used with `matplotlib.ticker.FuncFormatter`.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">dimension</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+
+
+<span class="k">def</span> <span class="nf">_evaluate_min_params</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="p">,</span>
+                         <span class="n">n_minimum_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the minimum based on `params`&quot;&quot;&quot;</span>
+    <span class="n">x_vals</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">space</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span>
+            <span class="c1"># Using the best observed result</span>
+            <span class="n">x_vals</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">elif</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;expected_minimum&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">space</span><span class="o">.</span><span class="n">is_partly_categorical</span><span class="p">:</span>
+                <span class="c1"># space is also categorical</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;expected_minimum does not support any&#39;</span>
+                                 <span class="s1">&#39;categorical values&#39;</span><span class="p">)</span>
+            <span class="c1"># Do a gradient based minimum search using scipys own minimizer</span>
+            <span class="k">if</span> <span class="n">n_minimum_search</span><span class="p">:</span>
+                <span class="c1"># If a value for</span>
+                <span class="c1"># expected_minimum_samples has been parsed</span>
+                <span class="n">x_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">expected_minimum</span><span class="p">(</span>
+                    <span class="n">result</span><span class="p">,</span>
+                    <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_minimum_search</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Use standard of 20 random starting points</span>
+                <span class="n">x_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">expected_minimum</span><span class="p">(</span><span class="n">result</span><span class="p">,</span>
+                                             <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                                             <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">params</span> <span class="o">==</span> <span class="s1">&#39;expected_minimum_random&#39;</span><span class="p">:</span>
+            <span class="c1"># Do a minimum search by evaluating the function with</span>
+            <span class="c1"># n_samples sample values</span>
+            <span class="k">if</span> <span class="n">n_minimum_search</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># If a value for</span>
+                <span class="c1"># n_minimum_samples has been parsed</span>
+                <span class="n">x_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">expected_minimum_random_sampling</span><span class="p">(</span>
+                    <span class="n">result</span><span class="p">,</span>
+                    <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_minimum_search</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Use standard of 10^n_parameters. Note this</span>
+                <span class="c1"># becomes very slow for many parameters</span>
+                <span class="n">n_minimum_search</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">x_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">expected_minimum_random_sampling</span><span class="p">(</span>
+                    <span class="n">result</span><span class="p">,</span>
+                    <span class="n">n_random_starts</span><span class="o">=</span><span class="n">n_minimum_search</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Argument ´eval_min_params´ must be a valid&#39;</span>
+                             <span class="s1">&#39;string (´result´)&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;Argument&#39;</span> \
+            <span class="s1">&#39;´eval_min_params´ of type list must have same length as&#39;</span> \
+            <span class="s1">&#39;number of features&#39;</span>
+        <span class="c1"># Using defined x_values</span>
+        <span class="n">x_vals</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Argument ´eval_min_params´ must&#39;</span>
+                         <span class="s1">&#39;be a string or a list&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x_vals</span>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

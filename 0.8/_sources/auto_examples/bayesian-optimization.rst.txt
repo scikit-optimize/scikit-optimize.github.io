@@ -1,0 +1,436 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_bayesian-optimization.py>`     to download the full example code or to run this example in your browser via Binder
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_bayesian-optimization.py:
+
+
+==================================
+Bayesian optimization with `skopt`
+==================================
+
+Gilles Louppe, Manoj Kumar July 2016.
+Reformatted by Holger Nahrstaedt 2020
+
+.. currentmodule:: skopt
+
+Problem statement
+-----------------
+
+We are interested in solving
+
+.. math::
+    x^* = arg \min_x f(x)
+
+under the constraints that
+
+- :math:`f` is a black box for which no closed form is known
+  (nor its gradients);
+- :math:`f` is expensive to evaluate;
+- and evaluations of :math:`y = f(x)` may be noisy.
+
+**Disclaimer.** If you do not have these constraints, then there
+is certainly a better optimization algorithm than Bayesian optimization.
+
+This example uses :class:`plots.plot_gaussian_process` which is available
+since version 0.8.
+
+Bayesian optimization loop
+--------------------------
+
+For :math:`t=1:T`:
+
+1. Given observations :math:`(x_i, y_i=f(x_i))` for :math:`i=1:t`, build a
+   probabilistic model for the objective :math:`f`. Integrate out all
+   possible true functions, using Gaussian process regression.
+
+2. optimize a cheap acquisition/utility function :math:`u` based on the
+   posterior distribution for sampling the next point.
+   :math:`x_{t+1} = arg \min_x u(x)`
+   Exploit uncertainty to balance exploration against exploitation.
+
+3. Sample the next observation :math:`y_{t+1}` at :math:`x_{t+1}`.
+
+
+Acquisition functions
+---------------------
+
+Acquisition functions :math:`u(x)` specify which sample :math:`x`: should be
+tried next:
+
+- Expected improvement (default):
+  :math:`-EI(x) = -\mathbb{E} [f(x) - f(x_t^+)]`
+- Lower confidence bound: :math:`LCB(x) = \mu_{GP}(x) + \kappa \sigma_{GP}(x)`
+- Probability of improvement: :math:`-PI(x) = -P(f(x) \geq f(x_t^+) + \kappa)`
+
+where :math:`x_t^+` is the best point observed so far.
+
+In most cases, acquisition functions provide knobs (e.g., :math:`\kappa`) for
+controlling the exploration-exploitation trade-off.
+- Search in regions where :math:`\mu_{GP}(x)` is high (exploitation)
+- Probe regions where uncertainty :math:`\sigma_{GP}(x)` is high (exploration)
+
+
+.. code-block:: default
+
+    print(__doc__)
+
+    import numpy as np
+    np.random.seed(237)
+    import matplotlib.pyplot as plt
+    from skopt.plots import plot_gaussian_process
+
+
+
+
+
+
+
+
+Toy example
+-----------
+
+Let assume the following noisy function :math:`f`:
+
+
+.. code-block:: default
+
+
+    noise_level = 0.1
+
+    def f(x, noise_level=noise_level):
+        return np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2))\
+               + np.random.randn() * noise_level
+
+
+
+
+
+
+
+
+**Note.** In `skopt`, functions :math:`f` are assumed to take as input a 1D
+vector :math:`x`: represented as an array-like and to return a scalar
+:math:`f(x)`:.
+
+
+.. code-block:: default
+
+
+    # Plot f(x) + contours
+    x = np.linspace(-2, 2, 400).reshape(-1, 1)
+    fx = [f(x_i, noise_level=0.0) for x_i in x]
+    plt.plot(x, fx, "r--", label="True (unknown)")
+    plt.fill(np.concatenate([x, x[::-1]]),
+             np.concatenate(([fx_i - 1.9600 * noise_level for fx_i in fx],
+                             [fx_i + 1.9600 * noise_level for fx_i in fx[::-1]])),
+             alpha=.2, fc="r", ec="None")
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_bayesian-optimization_001.png
+    :alt: bayesian optimization
+    :class: sphx-glr-single-img
+
+
+
+
+
+Bayesian optimization based on gaussian process regression is implemented in
+:class:`gp_minimize` and can be carried out as follows:
+
+
+.. code-block:: default
+
+
+    from skopt import gp_minimize
+
+    res = gp_minimize(f,                  # the function to minimize
+                      [(-2.0, 2.0)],      # the bounds on each dimension of x
+                      acq_func="EI",      # the acquisition function
+                      n_calls=15,         # the number of evaluations of f
+                      n_random_starts=5,  # the number of random initialization points
+                      noise=0.1**2,       # the noise level (optional)
+                      random_state=1234)   # the random seed
+
+
+
+
+
+
+
+
+Accordingly, the approximated minimum is found to be:
+
+
+.. code-block:: default
+
+
+    "x^*=%.4f, f(x^*)=%.4f" % (res.x[0], res.fun)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    'x^*=0.9016, f(x^*)=-0.4295'
+
+
+
+For further inspection of the results, attributes of the `res` named tuple
+provide the following information:
+
+- `x` [float]: location of the minimum.
+- `fun` [float]: function value at the minimum.
+- `models`: surrogate models used for each iteration.
+- `x_iters` [array]:
+  location of function evaluation for each iteration.
+- `func_vals` [array]: function value for each iteration.
+- `space` [Space]: the optimization space.
+- `specs` [dict]: parameters passed to the function.
+
+
+.. code-block:: default
+
+
+    print(res)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+              fun: -0.429455567287718
+        func_vals: array([ 0.03716044,  0.00673852,  0.63515442, -0.16042062,  0.10695907,
+           -0.11519569, -0.07975109, -0.29717518, -0.4276329 , -0.37296442,
+           -0.23640414, -0.1050865 , -0.42945557, -0.280409  , -0.25062723])
+           models: [GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=0.01),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775)]
+     random_state: RandomState(MT19937) at 0x7F3D3F3BAC40
+            space: Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')])
+            specs: {'args': {'func': <function f at 0x7f3d45540940>, 'dimensions': Space([Real(low=-2.0, high=2.0, prior='uniform', transform='normalize')]), 'base_estimator': GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5),
+                             n_restarts_optimizer=2, noise=0.010000000000000002,
+                             normalize_y=True, random_state=822569775), 'n_calls': 15, 'n_random_starts': 5, 'n_initial_points': 10, 'initial_point_generator': 'random', 'acq_func': 'EI', 'acq_optimizer': 'auto', 'x0': None, 'y0': None, 'random_state': RandomState(MT19937) at 0x7F3D3F3BAC40, 'verbose': False, 'callback': None, 'n_points': 10000, 'n_restarts_optimizer': 5, 'xi': 0.01, 'kappa': 1.96, 'n_jobs': 1, 'model_queue_size': None}, 'function': 'base_minimize'}
+                x: [0.9015772757452813]
+          x_iters: [[-0.009345334109402526], [1.2713537644662787], [0.4484475787090836], [1.0854396754496047], [1.4426790855107496], [1.0722894741900921], [1.1040477623455258], [1.0332536348062722], [0.9564594121745684], [0.9335831126057479], [0.9616485252899714], [0.9464152293452086], [0.9015772757452813], [0.9186215428762252], [0.8568591231716587]]
+
+
+
+
+Together these attributes can be used to visually inspect the results of the
+minimization, such as the convergence trace or the acquisition function at
+the last iteration:
+
+
+.. code-block:: default
+
+
+    from skopt.plots import plot_convergence
+    plot_convergence(res);
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_bayesian-optimization_002.png
+    :alt: Convergence plot
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <AxesSubplot:title={'center':'Convergence plot'}, xlabel='Number of calls $n$', ylabel='$\\min f(x)$ after $n$ calls'>
+
+
+
+Let us now visually examine
+
+1. The approximation of the fit gp model to the original function.
+2. The acquisition values that determine the next point to be queried.
+
+
+.. code-block:: default
+
+
+    plt.rcParams["figure.figsize"] = (8, 14)
+
+
+    def f_wo_noise(x):
+        return f(x, noise_level=0)
+
+
+
+
+
+
+
+
+Plot the 5 iterations following the 5 random points
+
+
+.. code-block:: default
+
+
+    for n_iter in range(5):
+        # Plot true function.
+        plt.subplot(5, 2, 2*n_iter+1)
+
+        if n_iter == 0:
+            show_legend = True
+        else:
+            show_legend = False
+
+        ax = plot_gaussian_process(res, n_calls=n_iter,
+                                   objective=f_wo_noise,
+                                   noise_level=noise_level,
+                                   show_legend=show_legend, show_title=False,
+                                   show_next_point=False, show_acq_func=False)
+        ax.set_ylabel("")
+        ax.set_xlabel("")
+        # Plot EI(x)
+        plt.subplot(5, 2, 2*n_iter+2)
+        ax = plot_gaussian_process(res, n_calls=n_iter,
+                                   show_legend=show_legend, show_title=False,
+                                   show_mu=False, show_acq_func=True,
+                                   show_observations=False,
+                                   show_next_point=True)
+        ax.set_ylabel("")
+        ax.set_xlabel("")
+
+    plt.show()
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_bayesian-optimization_003.png
+    :alt: bayesian optimization
+    :class: sphx-glr-single-img
+
+
+
+
+
+The first column shows the following:
+
+1. The true function.
+2. The approximation to the original function by the gaussian process model
+3. How sure the GP is about the function.
+
+The second column shows the acquisition function values after every
+surrogate model is fit. It is possible that we do not choose the global
+minimum but a local minimum depending on the minimizer used to minimize
+the acquisition function.
+
+At the points closer to the points previously evaluated at, the variance
+dips to zero.
+
+Finally, as we increase the number of points, the GP model approaches
+the actual function. The final few points are clustered around the minimum
+because the GP does not gain anything more by further exploration:
+
+
+.. code-block:: default
+
+
+    plt.rcParams["figure.figsize"] = (6, 4)
+
+    # Plot f(x) + contours
+    _ = plot_gaussian_process(res, objective=f_wo_noise,
+                              noise_level=noise_level)
+
+    plt.show()
+
+
+
+.. image:: /auto_examples/images/sphx_glr_bayesian-optimization_004.png
+    :alt: x* = 0.9016, f(x*) = -0.4295
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  3.524 seconds)
+
+**Estimated memory usage:**  8 MB
+
+
+.. _sphx_glr_download_auto_examples_bayesian-optimization.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+  .. container:: binder-badge
+
+    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
+      :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/bayesian-optimization.ipynb
+      :width: 150 px
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: bayesian-optimization.py <bayesian-optimization.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: bayesian-optimization.ipynb <bayesian-optimization.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
