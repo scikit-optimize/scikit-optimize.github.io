@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 <script src="../../../_static/jquery.js"></script> 
@@ -148,6 +150,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.ma</span> <span class="kn">import</span> <span class="n">MaskedArray</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rankdata</span>
 
 <span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">is_classifier</span><span class="p">,</span> <span class="n">clone</span>
@@ -158,13 +161,13 @@
 <span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">..utils.fixes</span> <span class="kn">import</span> <span class="n">MaskedArray</span>
 <span class="kn">from</span> <span class="nn">..utils.random</span> <span class="kn">import</span> <span class="n">sample_without_replacement</span>
 <span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">indexable</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">_check_fit_params</span>
+<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">_deprecate_positional_args</span>
 <span class="kn">from</span> <span class="nn">..utils.metaestimators</span> <span class="kn">import</span> <span class="n">if_delegate_has_method</span>
 <span class="kn">from</span> <span class="nn">..metrics._scorer</span> <span class="kn">import</span> <span class="n">_check_multimetric_scoring</span>
 <span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">check_scoring</span>
-
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GridSearchCV&#39;</span><span class="p">,</span> <span class="s1">&#39;ParameterGrid&#39;</span><span class="p">,</span> <span class="s1">&#39;fit_grid_point&#39;</span><span class="p">,</span>
            <span class="s1">&#39;ParameterSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;RandomizedSearchCV&#39;</span><span class="p">]</span>
@@ -180,7 +183,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    param_grid : dict of string to sequence, or sequence of such</span>
+<span class="sd">    param_grid : dict of str to sequence, or sequence of such</span>
 <span class="sd">        The parameter grid to explore, as a dictionary mapping estimator</span>
 <span class="sd">        parameters to sequences of allowed values.</span>
 
@@ -242,7 +245,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        params : iterator over dict of string to any</span>
+<span class="sd">        params : iterator over dict of str to any</span>
 <span class="sd">            Yields dictionaries mapping each estimator parameter to one of its</span>
 <span class="sd">            allowed values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -274,7 +277,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        params : dict of string to any</span>
+<span class="sd">        params : dict of str to any</span>
 <span class="sd">            Equal to list(self)[ind]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># This is used to make discrete sampling without replacement memory</span>
@@ -316,12 +319,12 @@
 <span class="sd">    It is highly recommended to use continuous distributions for continuous</span>
 <span class="sd">    parameters.</span>
 
-<span class="sd">    Read more in the :ref:`User Guide &lt;search&gt;`.</span>
+<span class="sd">    Read more in the :ref:`User Guide &lt;grid_search&gt;`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    param_distributions : dict</span>
-<span class="sd">        Dictionary with parameters names (string) as keys and distributions</span>
+<span class="sd">        Dictionary with parameters names (`str`) as keys and distributions</span>
 <span class="sd">        or lists of parameters to try. Distributions must provide a ``rvs``</span>
 <span class="sd">        method for sampling (such as those from scipy.stats.distributions).</span>
 <span class="sd">        If a list is given, it is sampled uniformly.</span>
@@ -331,17 +334,16 @@
 <span class="sd">    n_iter : integer</span>
 <span class="sd">        Number of parameter settings that are produced.</span>
 
-<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">    random_state : int or RandomState instance, default=None</span>
 <span class="sd">        Pseudo random number generator state used for random uniform sampling</span>
 <span class="sd">        from lists of possible values instead of scipy.stats distributions.</span>
-<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
-<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
-<span class="sd">        If None, the random number generator is the RandomState instance used</span>
-<span class="sd">        by `np.random`.</span>
+<span class="sd">        Pass an int for reproducible output across multiple</span>
+<span class="sd">        function calls.</span>
+<span class="sd">        See :term:`Glossary &lt;random_state&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    params : dict of string to any</span>
+<span class="sd">    params : dict of str to any</span>
 <span class="sd">        **Yields** dictionaries mapping each estimator parameter to</span>
 <span class="sd">        as sampled value.</span>
 
@@ -362,7 +364,8 @@
 <span class="sd">    ...                  {&#39;b&#39;: 1.038159, &#39;a&#39;: 2}]</span>
 <span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_distributions</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="nd">@_deprecate_positional_args</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_distributions</span><span class="p">,</span> <span class="n">n_iter</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param_distributions</span><span class="p">,</span> <span class="p">(</span><span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter distribution is not a dict or &#39;</span>
                             <span class="s1">&#39;a list (</span><span class="si">{!r}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param_distributions</span><span class="p">))</span>
@@ -429,6 +432,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
 
 
+<span class="c1"># FIXME Remove fit_grid_point in 0.25</span>
+<span class="nd">@deprecated</span><span class="p">(</span>
+    <span class="s2">&quot;fit_grid_point is deprecated in version 0.23 &quot;</span>
+    <span class="s2">&quot;and will be removed in version 0.25&quot;</span>
+<span class="p">)</span>
 <span class="k">def</span> <span class="nf">fit_grid_point</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">scorer</span><span class="p">,</span>
                    <span class="n">verbose</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run fit on one set of parameters.</span>
@@ -468,11 +476,11 @@
 <span class="sd">    **fit_params : kwargs</span>
 <span class="sd">        Additional parameter passed to the fit function of the estimator.</span>
 
-<span class="sd">    error_score : &#39;raise&#39; or numeric</span>
+<span class="sd">    error_score : &#39;raise&#39; or numeric, default=np.nan</span>
 <span class="sd">        Value to assign to the score if an error occurs in estimator fitting.</span>
 <span class="sd">        If set to &#39;raise&#39;, the error is raised. If a numeric value is given,</span>
 <span class="sd">        FitFailedWarning is raised. This parameter does not affect the refit</span>
-<span class="sd">        step, which will always raise the error. Default is ``np.nan``.</span>
+<span class="sd">        step, which will always raise the error.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -508,9 +516,10 @@
 
             <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span>
                     <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter values for parameter (</span><span class="si">{0}</span><span class="s2">) need &quot;</span>
-                                 <span class="s2">&quot;to be a sequence(but not a string) or&quot;</span>
-                                 <span class="s2">&quot; np.ndarray.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter grid for parameter (</span><span class="si">{0}</span><span class="s2">) needs to&quot;</span>
+                                 <span class="s2">&quot; be a list or numpy array, but got (</span><span class="si">{1}</span><span class="s2">).&quot;</span>
+                                 <span class="s2">&quot; Single values need to be wrapped in a list&quot;</span>
+                                 <span class="s2">&quot; with one element.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)))</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter values for parameter (</span><span class="si">{0}</span><span class="s2">) need &quot;</span>
@@ -522,9 +531,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="s1">&#39;deprecated&#39;</span><span class="p">,</span>
-                 <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span>
-                 <span class="n">error_score</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nd">@_deprecate_positional_args</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">iid</span><span class="o">=</span><span class="s1">&#39;deprecated&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                 <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">scoring</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
@@ -558,7 +569,8 @@
 <span class="sd">            Input data, where n_samples is the number of samples and</span>
 <span class="sd">            n_features is the number of features.</span>
 
-<span class="sd">        y : array-like of shape (n_samples, n_output) or (n_samples,), optional</span>
+<span class="sd">        y : array-like of shape (n_samples, n_output) \</span>
+<span class="sd">            or (n_samples,), default=None</span>
 <span class="sd">            Target relative to X for classification or regression;</span>
 <span class="sd">            None for unsupervised learning.</span>
 
@@ -689,6 +701,20 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_features_in_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># For consistency with other estimators we raise a AttributeError so</span>
+        <span class="c1"># that hasattr() fails if the search estimator isn&#39;t fitted.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NotFittedError</span> <span class="k">as</span> <span class="n">nfe</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> object has no n_features_in_ attribute.&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">nfe</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">n_features_in_</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">classes_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_is_fitted</span><span class="p">(</span><span class="s2">&quot;classes_&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">classes_</span>
@@ -727,7 +753,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;_run_search not implemented.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+    <span class="nd">@_deprecate_positional_args</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run fit with all sets of parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -737,16 +764,17 @@
 <span class="sd">            Training vector, where n_samples is the number of samples and</span>
 <span class="sd">            n_features is the number of features.</span>
 
-<span class="sd">        y : array-like of shape (n_samples, n_output) or (n_samples,), optional</span>
+<span class="sd">        y : array-like of shape (n_samples, n_output) \</span>
+<span class="sd">            or (n_samples,), default=None</span>
 <span class="sd">            Target relative to X for classification or regression;</span>
 <span class="sd">            None for unsupervised learning.</span>
 
-<span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
+<span class="sd">        groups : array-like of shape (n_samples,), default=None</span>
 <span class="sd">            Group labels for the samples used while splitting the dataset into</span>
 <span class="sd">            train/test set. Only used in conjunction with a &quot;Group&quot; :term:`cv`</span>
 <span class="sd">            instance (e.g., :class:`~sklearn.model_selection.GroupKFold`).</span>
 
-<span class="sd">        **fit_params : dict of string -&gt; object</span>
+<span class="sd">        **fit_params : dict of str -&gt; object</span>
 <span class="sd">            Parameters passed to the ``fit`` method of the estimator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span>
@@ -988,14 +1016,14 @@
 <span class="sd">        or ``scoring`` must be passed.</span>
 
 <span class="sd">    param_grid : dict or list of dictionaries</span>
-<span class="sd">        Dictionary with parameters names (string) as keys and lists of</span>
+<span class="sd">        Dictionary with parameters names (`str`) as keys and lists of</span>
 <span class="sd">        parameter settings to try as values, or a list of such</span>
 <span class="sd">        dictionaries, in which case the grids spanned by each dictionary</span>
 <span class="sd">        in the list are explored. This enables searching over any sequence</span>
 <span class="sd">        of parameter settings.</span>
 
-<span class="sd">    scoring : string, callable, list/tuple, dict or None, default: None</span>
-<span class="sd">        A single string (see :ref:`scoring_parameter`) or a callable</span>
+<span class="sd">    scoring : str, callable, list/tuple or dict, default=None</span>
+<span class="sd">        A single str (see :ref:`scoring_parameter`) or a callable</span>
 <span class="sd">        (see :ref:`scoring`) to evaluate the predictions on the test set.</span>
 
 <span class="sd">        For evaluating multiple metrics, either give a list of (unique) strings</span>
@@ -1009,13 +1037,16 @@
 
 <span class="sd">        If None, the estimator&#39;s score method is used.</span>
 
-<span class="sd">    n_jobs : int or None, optional (default=None)</span>
+<span class="sd">    n_jobs : int, default=None</span>
 <span class="sd">        Number of jobs to run in parallel.</span>
 <span class="sd">        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
 <span class="sd">        ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
 <span class="sd">        for more details.</span>
 
-<span class="sd">    pre_dispatch : int, or string, optional</span>
+<span class="sd">        .. versionchanged:: v0.20</span>
+<span class="sd">           `n_jobs` default changed from 1 to None</span>
+
+<span class="sd">    pre_dispatch : int, or str, default=n_jobs</span>
 <span class="sd">        Controls the number of jobs that get dispatched during parallel</span>
 <span class="sd">        execution. Reducing this number can be useful to avoid an</span>
 <span class="sd">        explosion of memory consumption when more jobs get dispatched</span>
@@ -1029,10 +1060,10 @@
 <span class="sd">            - An int, giving the exact number of total jobs that are</span>
 <span class="sd">              spawned</span>
 
-<span class="sd">            - A string, giving an expression as a function of n_jobs,</span>
+<span class="sd">            - A str, giving an expression as a function of n_jobs,</span>
 <span class="sd">              as in &#39;2*n_jobs&#39;</span>
 
-<span class="sd">    iid : boolean, default=False</span>
+<span class="sd">    iid : bool, default=False</span>
 <span class="sd">        If True, return the average score across folds, weighted by the number</span>
 <span class="sd">        of samples in each test set. In this case, the data is assumed to be</span>
 <span class="sd">        identically distributed across the folds, and the loss minimized is</span>
@@ -1041,7 +1072,7 @@
 <span class="sd">        .. deprecated:: 0.22</span>
 <span class="sd">            Parameter ``iid`` is deprecated in 0.22 and will be removed in 0.24</span>
 
-<span class="sd">    cv : int, cross-validation generator or an iterable, optional</span>
+<span class="sd">    cv : int, cross-validation generator or an iterable, default=None</span>
 <span class="sd">        Determines the cross-validation splitting strategy.</span>
 <span class="sd">        Possible inputs for cv are:</span>
 
@@ -1060,18 +1091,18 @@
 <span class="sd">        .. versionchanged:: 0.22</span>
 <span class="sd">            ``cv`` default value if None changed from 3-fold to 5-fold.</span>
 
-<span class="sd">    refit : boolean, string, or callable, default=True</span>
+<span class="sd">    refit : bool, str, or callable, default=True</span>
 <span class="sd">        Refit an estimator using the best found parameters on the whole</span>
 <span class="sd">        dataset.</span>
 
-<span class="sd">        For multiple metric evaluation, this needs to be a string denoting the</span>
+<span class="sd">        For multiple metric evaluation, this needs to be a `str` denoting the</span>
 <span class="sd">        scorer that would be used to find the best parameters for refitting</span>
 <span class="sd">        the estimator at the end.</span>
 
 <span class="sd">        Where there are considerations other than maximum score in</span>
 <span class="sd">        choosing a best estimator, ``refit`` can be set to a function which</span>
 <span class="sd">        returns the selected ``best_index_`` given ``cv_results_``. In that</span>
-<span class="sd">        case, the ``best_estimator_`` and ``best_parameters_`` will be set</span>
+<span class="sd">        case, the ``best_estimator_`` and ``best_params_`` will be set</span>
 <span class="sd">        according to the returned ``best_index_`` while the ``best_score_``</span>
 <span class="sd">        attribute will not be available.</span>
 
@@ -1093,13 +1124,13 @@
 <span class="sd">    verbose : integer</span>
 <span class="sd">        Controls the verbosity: the higher, the more messages.</span>
 
-<span class="sd">    error_score : &#39;raise&#39; or numeric</span>
+<span class="sd">    error_score : &#39;raise&#39; or numeric, default=np.nan</span>
 <span class="sd">        Value to assign to the score if an error occurs in estimator fitting.</span>
 <span class="sd">        If set to &#39;raise&#39;, the error is raised. If a numeric value is given,</span>
 <span class="sd">        FitFailedWarning is raised. This parameter does not affect the refit</span>
-<span class="sd">        step, which will always raise the error. Default is ``np.nan``.</span>
+<span class="sd">        step, which will always raise the error.</span>
 
-<span class="sd">    return_train_score : boolean, default=False</span>
+<span class="sd">    return_train_score : bool, default=False</span>
 <span class="sd">        If ``False``, the ``cv_results_`` attribute will not include training</span>
 <span class="sd">        scores.</span>
 <span class="sd">        Computing training scores is used to get insights on how different</span>
@@ -1107,6 +1138,11 @@
 <span class="sd">        However computing the scores on the training set can be computationally</span>
 <span class="sd">        expensive and is not strictly required to select the parameters that</span>
 <span class="sd">        yield the best generalization performance.</span>
+
+<span class="sd">        .. versionadded:: 0.19</span>
+
+<span class="sd">        .. versionchanged:: 0.21</span>
+<span class="sd">            Default value was changed from ``True`` to ``False``</span>
 
 
 <span class="sd">    Examples</span>
@@ -1232,6 +1268,8 @@
 
 <span class="sd">        This is present only if ``refit`` is not False.</span>
 
+<span class="sd">        .. versionadded:: 0.20</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    The parameters selected are those that maximize the score of the left out</span>
@@ -1261,7 +1299,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_required_parameters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;estimator&quot;</span><span class="p">,</span> <span class="s2">&quot;param_grid&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="nd">@_deprecate_positional_args</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="s1">&#39;deprecated&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span>
                  <span class="n">error_score</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1313,7 +1352,7 @@
 <span class="sd">        or ``scoring`` must be passed.</span>
 
 <span class="sd">    param_distributions : dict or list of dicts</span>
-<span class="sd">        Dictionary with parameters names (string) as keys and distributions</span>
+<span class="sd">        Dictionary with parameters names (`str`) as keys and distributions</span>
 <span class="sd">        or lists of parameters to try. Distributions must provide a ``rvs``</span>
 <span class="sd">        method for sampling (such as those from scipy.stats.distributions).</span>
 <span class="sd">        If a list is given, it is sampled uniformly.</span>
@@ -1324,8 +1363,8 @@
 <span class="sd">        Number of parameter settings that are sampled. n_iter trades</span>
 <span class="sd">        off runtime vs quality of the solution.</span>
 
-<span class="sd">    scoring : string, callable, list/tuple, dict or None, default: None</span>
-<span class="sd">        A single string (see :ref:`scoring_parameter`) or a callable</span>
+<span class="sd">    scoring : str, callable, list/tuple or dict, default=None</span>
+<span class="sd">        A single str (see :ref:`scoring_parameter`) or a callable</span>
 <span class="sd">        (see :ref:`scoring`) to evaluate the predictions on the test set.</span>
 
 <span class="sd">        For evaluating multiple metrics, either give a list of (unique) strings</span>
@@ -1339,13 +1378,16 @@
 
 <span class="sd">        If None, the estimator&#39;s score method is used.</span>
 
-<span class="sd">    n_jobs : int or None, optional (default=None)</span>
+<span class="sd">    n_jobs : int, default=None</span>
 <span class="sd">        Number of jobs to run in parallel.</span>
 <span class="sd">        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
 <span class="sd">        ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
 <span class="sd">        for more details.</span>
 
-<span class="sd">    pre_dispatch : int, or string, optional</span>
+<span class="sd">        .. versionchanged:: v0.20</span>
+<span class="sd">           `n_jobs` default changed from 1 to None</span>
+
+<span class="sd">    pre_dispatch : int, or str, default=None</span>
 <span class="sd">        Controls the number of jobs that get dispatched during parallel</span>
 <span class="sd">        execution. Reducing this number can be useful to avoid an</span>
 <span class="sd">        explosion of memory consumption when more jobs get dispatched</span>
@@ -1359,10 +1401,10 @@
 <span class="sd">            - An int, giving the exact number of total jobs that are</span>
 <span class="sd">              spawned</span>
 
-<span class="sd">            - A string, giving an expression as a function of n_jobs,</span>
+<span class="sd">            - A str, giving an expression as a function of n_jobs,</span>
 <span class="sd">              as in &#39;2*n_jobs&#39;</span>
 
-<span class="sd">    iid : boolean, default=False</span>
+<span class="sd">    iid : bool, default=False</span>
 <span class="sd">        If True, return the average score across folds, weighted by the number</span>
 <span class="sd">        of samples in each test set. In this case, the data is assumed to be</span>
 <span class="sd">        identically distributed across the folds, and the loss minimized is</span>
@@ -1371,7 +1413,7 @@
 <span class="sd">        .. deprecated:: 0.22</span>
 <span class="sd">            Parameter ``iid`` is deprecated in 0.22 and will be removed in 0.24</span>
 
-<span class="sd">    cv : int, cross-validation generator or an iterable, optional</span>
+<span class="sd">    cv : int, cross-validation generator or an iterable, default=None</span>
 <span class="sd">        Determines the cross-validation splitting strategy.</span>
 <span class="sd">        Possible inputs for cv are:</span>
 
@@ -1390,18 +1432,18 @@
 <span class="sd">        .. versionchanged:: 0.22</span>
 <span class="sd">            ``cv`` default value if None changed from 3-fold to 5-fold.</span>
 
-<span class="sd">    refit : boolean, string, or callable, default=True</span>
+<span class="sd">    refit : bool, str, or callable, default=True</span>
 <span class="sd">        Refit an estimator using the best found parameters on the whole</span>
 <span class="sd">        dataset.</span>
 
-<span class="sd">        For multiple metric evaluation, this needs to be a string denoting the</span>
+<span class="sd">        For multiple metric evaluation, this needs to be a `str` denoting the</span>
 <span class="sd">        scorer that would be used to find the best parameters for refitting</span>
 <span class="sd">        the estimator at the end.</span>
 
 <span class="sd">        Where there are considerations other than maximum score in</span>
 <span class="sd">        choosing a best estimator, ``refit`` can be set to a function which</span>
 <span class="sd">        returns the selected ``best_index_`` given the ``cv_results``. In that</span>
-<span class="sd">        case, the ``best_estimator_`` and ``best_parameters_`` will be set</span>
+<span class="sd">        case, the ``best_estimator_`` and ``best_params_`` will be set</span>
 <span class="sd">        according to the returned ``best_index_`` while the ``best_score_``</span>
 <span class="sd">        attribute will not be available.</span>
 
@@ -1423,21 +1465,20 @@
 <span class="sd">    verbose : integer</span>
 <span class="sd">        Controls the verbosity: the higher, the more messages.</span>
 
-<span class="sd">    random_state : int, RandomState instance or None, optional, default=None</span>
+<span class="sd">    random_state : int or RandomState instance, default=None</span>
 <span class="sd">        Pseudo random number generator state used for random uniform sampling</span>
 <span class="sd">        from lists of possible values instead of scipy.stats distributions.</span>
-<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
-<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
-<span class="sd">        If None, the random number generator is the RandomState instance used</span>
-<span class="sd">        by `np.random`.</span>
+<span class="sd">        Pass an int for reproducible output across multiple</span>
+<span class="sd">        function calls.</span>
+<span class="sd">        See :term:`Glossary &lt;random_state&gt;`.</span>
 
-<span class="sd">    error_score : &#39;raise&#39; or numeric</span>
+<span class="sd">    error_score : &#39;raise&#39; or numeric, default=np.nan</span>
 <span class="sd">        Value to assign to the score if an error occurs in estimator fitting.</span>
 <span class="sd">        If set to &#39;raise&#39;, the error is raised. If a numeric value is given,</span>
 <span class="sd">        FitFailedWarning is raised. This parameter does not affect the refit</span>
-<span class="sd">        step, which will always raise the error. Default is ``np.nan``.</span>
+<span class="sd">        step, which will always raise the error.</span>
 
-<span class="sd">    return_train_score : boolean, default=False</span>
+<span class="sd">    return_train_score : bool, default=False</span>
 <span class="sd">        If ``False``, the ``cv_results_`` attribute will not include training</span>
 <span class="sd">        scores.</span>
 <span class="sd">        Computing training scores is used to get insights on how different</span>
@@ -1445,6 +1486,11 @@
 <span class="sd">        However computing the scores on the training set can be computationally</span>
 <span class="sd">        expensive and is not strictly required to select the parameters that</span>
 <span class="sd">        yield the best generalization performance.</span>
+
+<span class="sd">        .. versionadded:: 0.19</span>
+
+<span class="sd">        .. versionchanged:: 0.21</span>
+<span class="sd">            Default value was changed from ``True`` to ``False``</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -1549,6 +1595,8 @@
 
 <span class="sd">        This is present only if ``refit`` is not False.</span>
 
+<span class="sd">        .. versionadded:: 0.20</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    The parameters selected are those that maximize the score of the held-out</span>
@@ -1590,8 +1638,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_required_parameters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;estimator&quot;</span><span class="p">,</span> <span class="s2">&quot;param_distributions&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">param_distributions</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="s1">&#39;deprecated&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="nd">@_deprecate_positional_args</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">param_distributions</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iid</span><span class="o">=</span><span class="s1">&#39;deprecated&#39;</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span>
                  <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
                  <span class="n">return_train_score</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

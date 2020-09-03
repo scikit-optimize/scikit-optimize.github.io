@@ -1,10 +1,12 @@
-.. note::
-    :class: sphx-glr-download-link-note
+.. only:: html
 
-    Click :ref:`here <sphx_glr_download_auto_examples_store-and-load-results.py>` to download the full example code or to run this example in your browser via Binder
-.. rst-class:: sphx-glr-example-title
+    .. note::
+        :class: sphx-glr-download-link-note
 
-.. _sphx_glr_auto_examples_store-and-load-results.py:
+        Click :ref:`here <sphx_glr_download_auto_examples_store-and-load-results.py>`     to download the full example code or to run this example in your browser via Binder
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_store-and-load-results.py:
 
 
 ===========================================
@@ -41,10 +43,6 @@ code. Never load serialized data from untrusted or unauthenticated sources!
     import os
     import sys
 
-    # The followings are hacks to allow sphinx-gallery to run the example.
-    sys.path.insert(0, os.getcwd())
-    main_dir = os.path.basename(sys.modules['__main__'].__file__)
-    IS_RUN_WITH_SPHINX_GALLERY = main_dir != os.getcwd()
 
 
 
@@ -66,55 +64,22 @@ We will use the same optimization problem as in the
     from skopt import gp_minimize
     noise_level = 0.1
 
-    if IS_RUN_WITH_SPHINX_GALLERY:
-        # When this example is run with sphinx gallery, it breaks the pickling
-        # capacity for multiprocessing backend so we have to modify the way we
-        # define our functions. This has nothing to do with the example.
-        from utils import obj_fun
-    else:
-        def obj_fun(x, noise_level=noise_level):
-            return np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2)) + np.random.randn() * noise_level
+
+    def obj_fun(x, noise_level=noise_level):
+        return np.sin(5 * x[0]) * (1 - np.tanh(x[0] ** 2)) + np.random.randn() \
+            * noise_level
 
     res = gp_minimize(obj_fun,            # the function to minimize
                       [(-2.0, 2.0)],      # the bounds on each dimension of x
                       x0=[0.],            # the starting point
                       acq_func="LCB",     # the acquisition function (optional)
                       n_calls=15,         # the number of evaluations of f including at x0
-                      n_random_starts=0,  # the number of random initialization points
+                      n_random_starts=3,  # the number of random initial points
                       random_state=777)
 
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
-    /home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-      warnings.warn("The objective has been evaluated "
 
 
 
@@ -172,7 +137,7 @@ And load from file using :class:`skopt.load`:
  .. code-block:: none
 
 
-    -0.028936565436158978
+    -1.0765599518616937
 
 
 
@@ -205,8 +170,8 @@ level (highest in this case):
 
  .. code-block:: none
 
-    Without compression: 80206 bytes
-    Compressed with gz:  19775 bytes
+    Without compression: 70313 bytes
+    Compressed with gz:  25573 bytes
 
 
 
@@ -294,9 +259,9 @@ copy is created:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.587 seconds)
+   **Total running time of the script:** ( 0 minutes  2.941 seconds)
 
-**Estimated memory usage:**  11 MB
+**Estimated memory usage:**  14 MB
 
 
 .. _sphx_glr_download_auto_examples_store-and-load-results.py:
@@ -310,18 +275,18 @@ copy is created:
 
   .. container:: binder-badge
 
-    .. image:: https://mybinder.org/badge_logo.svg
+    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
       :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb
       :width: 150 px
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-python
 
      :download:`Download Python source code: store-and-load-results.py <store-and-load-results.py>`
 
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
 
      :download:`Download Jupyter notebook: store-and-load-results.ipynb <store-and-load-results.ipynb>`
 

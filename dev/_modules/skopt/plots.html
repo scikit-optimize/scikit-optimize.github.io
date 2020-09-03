@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -556,6 +558,9 @@
 
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># diagonal plots</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">diagonal_ylim</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">iscat</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">dim_i</span><span class="o">.</span><span class="n">bounds</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
@@ -664,7 +669,8 @@
 
 <div class="viewcode-block" id="plot_objective"><a class="viewcode-back" href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective">[docs]</a><span class="k">def</span> <span class="nf">plot_objective</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                    <span class="n">zscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_source</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
-                   <span class="n">minimum</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                   <span class="n">minimum</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">n_minimum_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">show_points</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot a 2-d matrix with so-called Partial Dependence plots</span>
 <span class="sd">    of the objective function. This shows the influence of each</span>
 <span class="sd">    search-space dimension on the objective function.</span>
@@ -713,7 +719,7 @@
 
 <span class="sd">    levels : int, default=10</span>
 <span class="sd">        Number of levels to draw on the contour plot, passed directly</span>
-<span class="sd">        to `plt.contour()`.</span>
+<span class="sd">        to `plt.contourf()`.</span>
 
 <span class="sd">    n_points : int, default=40</span>
 <span class="sd">        Number of points at which to evaluate the partial dependence</span>
@@ -781,6 +787,14 @@
 <span class="sd">        `sample_source` and/or `minimum` is set to</span>
 <span class="sd">        &#39;expected_minimum&#39; or &#39;expected_minimum_random&#39;.</span>
 
+<span class="sd">    show_points: bool, default = True</span>
+<span class="sd">        Choose whether to show evaluated points in the</span>
+<span class="sd">        contour plots.</span>
+
+<span class="sd">    cmap: str or Colormap, default = &#39;viridis_r&#39;</span>
+<span class="sd">        Color map for contour plots. Passed directly to</span>
+<span class="sd">        `plt.contourf()`</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ax : `Matplotlib.Axes`</span>
@@ -844,7 +858,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ax_</span> <span class="o">=</span> <span class="n">ax</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
-                <span class="n">ax_</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">ax_</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
             <span class="c1"># lower triangle</span>
             <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">:</span>
@@ -855,9 +869,10 @@
                                                    <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span>
                                                    <span class="n">samples</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
-                             <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">)</span>
-                <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index2</span><span class="p">],</span> <span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index1</span><span class="p">],</span>
-                            <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                             <span class="n">locator</span><span class="o">=</span><span class="n">locator</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">show_points</span><span class="p">:</span>
+                    <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index2</span><span class="p">],</span> <span class="n">x_samples</span><span class="p">[:,</span> <span class="n">index1</span><span class="p">],</span>
+                                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
                 <span class="n">ax_</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">minimum</span><span class="p">[</span><span class="n">index2</span><span class="p">],</span> <span class="n">minimum</span><span class="p">[</span><span class="n">index1</span><span class="p">],</span>
                             <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
     <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Partial dependence&quot;</span>

@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -131,7 +133,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.learning" title="skopt.learning"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.learning</span></code></a>.ExtraTreesRegressor<a class="headerlink" href="#skopt-learning-extratreesregressor" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.learning.ExtraTreesRegressor">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.learning.</code><code class="sig-name descname">ExtraTreesRegressor</code><span class="sig-paren">(</span><em class="sig-param">n_estimators=10</em>, <em class="sig-param">criterion='mse'</em>, <em class="sig-param">max_depth=None</em>, <em class="sig-param">min_samples_split=2</em>, <em class="sig-param">min_samples_leaf=1</em>, <em class="sig-param">min_weight_fraction_leaf=0.0</em>, <em class="sig-param">max_features='auto'</em>, <em class="sig-param">max_leaf_nodes=None</em>, <em class="sig-param">min_impurity_decrease=0.0</em>, <em class="sig-param">bootstrap=False</em>, <em class="sig-param">oob_score=False</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">warm_start=False</em>, <em class="sig-param">min_variance=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/learning/forest.py#L251"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.learning.</code><code class="sig-name descname">ExtraTreesRegressor</code><span class="sig-paren">(</span><em class="sig-param">n_estimators=10</em>, <em class="sig-param">criterion='mse'</em>, <em class="sig-param">max_depth=None</em>, <em class="sig-param">min_samples_split=2</em>, <em class="sig-param">min_samples_leaf=1</em>, <em class="sig-param">min_weight_fraction_leaf=0.0</em>, <em class="sig-param">max_features='auto'</em>, <em class="sig-param">max_leaf_nodes=None</em>, <em class="sig-param">min_impurity_decrease=0.0</em>, <em class="sig-param">bootstrap=False</em>, <em class="sig-param">oob_score=False</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">warm_start=False</em>, <em class="sig-param">min_variance=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/learning/forest.py#L251"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor" title="Permalink to this definition">¶</a></dt>
 <dd><p>ExtraTreesRegressor that supports conditional standard deviation.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -228,7 +230,7 @@ new forest.</p>
 <dd class="field-even"><dl class="simple">
 <dt><strong>estimators_</strong><span class="classifier">list of DecisionTreeRegressor</span></dt><dd><p>The collection of fitted sub-estimators.</p>
 </dd>
-<dt><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.feature_importances_" title="skopt.learning.ExtraTreesRegressor.feature_importances_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_importances_</span></code></a><span class="classifier">array of shape = [n_features]</span></dt><dd><p>Return the feature importances (the higher, the more important the feature).</p>
+<dt><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.feature_importances_" title="skopt.learning.ExtraTreesRegressor.feature_importances_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_importances_</span></code></a><span class="classifier">array of shape = [n_features]</span></dt><dd><p>The impurity-based feature importances.</p>
 </dd>
 <dt><strong>n_features_</strong><span class="classifier">int</span></dt><dd><p>The number of features when <code class="docutils literal notranslate"><span class="pre">fit</span></code> is performed.</p>
 </dd>
@@ -255,7 +257,7 @@ search of the best split. To obtain a deterministic behaviour during
 fitting, <code class="docutils literal notranslate"><span class="pre">random_state</span></code> has to be fixed.</p>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="r8d4c5fa7c0c3-1"><span class="brackets">R8d4c5fa7c0c3-1</span></dt>
+<dt class="label" id="r8d4c5fa7c0c3-1"><span class="brackets">1</span></dt>
 <dd><ol class="upperalpha simple" start="12">
 <li><p>Breiman, “Random Forests”, Machine Learning, 45(1), 5-32, 2001.</p></li>
 </ol>
@@ -268,43 +270,43 @@ fitting, <code class="docutils literal notranslate"><span class="pre">random_sta
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.apply" title="skopt.learning.ExtraTreesRegressor.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(self, X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.apply" title="skopt.learning.ExtraTreesRegressor.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(X)</p></td>
 <td><p>Apply trees in the forest to X, return leaf indices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.decision_path" title="skopt.learning.ExtraTreesRegressor.decision_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decision_path</span></code></a>(self, X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.decision_path" title="skopt.learning.ExtraTreesRegressor.decision_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decision_path</span></code></a>(X)</p></td>
 <td><p>Return the decision path in the forest.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.fit" title="skopt.learning.ExtraTreesRegressor.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(self, X, y[, sample_weight])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.fit" title="skopt.learning.ExtraTreesRegressor.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y[, sample_weight])</p></td>
 <td><p>Build a forest of trees from the training set (X, y).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.get_params" title="skopt.learning.ExtraTreesRegressor.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>(self[, deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.get_params" title="skopt.learning.ExtraTreesRegressor.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.predict" title="skopt.learning.ExtraTreesRegressor.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(self, X[, return_std])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.predict" title="skopt.learning.ExtraTreesRegressor.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, return_std])</p></td>
 <td><p>Predict continuous output for X.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.score" title="skopt.learning.ExtraTreesRegressor.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(self, X, y[, sample_weight])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.score" title="skopt.learning.ExtraTreesRegressor.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight])</p></td>
 <td><p>Return the coefficient of determination R^2 of the prediction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.set_params" title="skopt.learning.ExtraTreesRegressor.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(self, \*\*params)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skopt.learning.ExtraTreesRegressor.set_params" title="skopt.learning.ExtraTreesRegressor.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n_estimators=10</em>, <em class="sig-param">criterion='mse'</em>, <em class="sig-param">max_depth=None</em>, <em class="sig-param">min_samples_split=2</em>, <em class="sig-param">min_samples_leaf=1</em>, <em class="sig-param">min_weight_fraction_leaf=0.0</em>, <em class="sig-param">max_features='auto'</em>, <em class="sig-param">max_leaf_nodes=None</em>, <em class="sig-param">min_impurity_decrease=0.0</em>, <em class="sig-param">bootstrap=False</em>, <em class="sig-param">oob_score=False</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">warm_start=False</em>, <em class="sig-param">min_variance=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/learning/forest.py#L393"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">n_estimators=10</em>, <em class="sig-param">criterion='mse'</em>, <em class="sig-param">max_depth=None</em>, <em class="sig-param">min_samples_split=2</em>, <em class="sig-param">min_samples_leaf=1</em>, <em class="sig-param">min_weight_fraction_leaf=0.0</em>, <em class="sig-param">max_features='auto'</em>, <em class="sig-param">max_leaf_nodes=None</em>, <em class="sig-param">min_impurity_decrease=0.0</em>, <em class="sig-param">bootstrap=False</em>, <em class="sig-param">oob_score=False</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">warm_start=False</em>, <em class="sig-param">min_variance=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/learning/forest.py#L393"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L207"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L210"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply trees in the forest to X, return leaf indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{array-like or sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>The input samples. Internally, its dtype will be converted to
+<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>The input samples. Internally, its dtype will be converted to
 <code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code>. If a sparse matrix is provided, it will be
 converted into a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</p>
 </dd>
@@ -312,7 +314,7 @@ converted into a sparse <code class="docutils literal notranslate"><span class="
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X_leaves</strong><span class="classifier">array_like, shape = [n_samples, n_estimators]</span></dt><dd><p>For each datapoint x in X and for each tree in the forest,
+<dt><strong>X_leaves</strong><span class="classifier">ndarray of shape (n_samples, n_estimators)</span></dt><dd><p>For each datapoint x in X and for each tree in the forest,
 return the index of the leaf x ends up in.</p>
 </dd>
 </dl>
@@ -322,7 +324,7 @@ return the index of the leaf x ends up in.</p>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.decision_path">
-<code class="sig-name descname">decision_path</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L232"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.decision_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">decision_path</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L235"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.decision_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the decision path in the forest.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.18.</span></p>
@@ -330,7 +332,7 @@ return the index of the leaf x ends up in.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{array-like or sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>The input samples. Internally, its dtype will be converted to
+<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>The input samples. Internally, its dtype will be converted to
 <code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code>. If a sparse matrix is provided, it will be
 converted into a sparse <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>.</p>
 </dd>
@@ -338,10 +340,11 @@ converted into a sparse <code class="docutils literal notranslate"><span class="
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>indicator</strong><span class="classifier">sparse csr array, shape = [n_samples, n_nodes]</span></dt><dd><p>Return a node indicator matrix where non zero elements
-indicates that the samples goes through the nodes.</p>
+<dt><strong>indicator</strong><span class="classifier">sparse matrix of shape (n_samples, n_nodes)</span></dt><dd><p>Return a node indicator matrix where non zero elements indicates
+that the samples goes through the nodes. The matrix is of CSR
+format.</p>
 </dd>
-<dt><strong>n_nodes_ptr</strong><span class="classifier">array of size (n_estimators + 1, )</span></dt><dd><p>The columns from indicator[n_nodes_ptr[i]:n_nodes_ptr[i+1]]
+<dt><strong>n_nodes_ptr</strong><span class="classifier">ndarray of shape (n_estimators + 1,)</span></dt><dd><p>The columns from indicator[n_nodes_ptr[i]:n_nodes_ptr[i+1]]
 gives the indicator value for the i-th estimator.</p>
 </dd>
 </dl>
@@ -352,14 +355,18 @@ gives the indicator value for the i-th estimator.</p>
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.feature_importances_">
 <em class="property">property </em><code class="sig-name descname">feature_importances_</code><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.feature_importances_" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Return the feature importances (the higher, the more important the</dt><dd><p>feature).</p>
-</dd>
-</dl>
+<dd><p>The impurity-based feature importances.</p>
+<p>The higher, the more important the feature.
+The importance of a feature is computed as the (normalized)
+total reduction of the criterion brought by that feature.  It is also
+known as the Gini importance.</p>
+<p>Warning: impurity-based feature importances can be misleading for
+high cardinality features (many unique values). See
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html#sklearn.inspection.permutation_importance" title="(in scikit-learn v0.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.inspection.permutation_importance()</span></code></a> as an alternative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>feature_importances_</strong><span class="classifier">array, shape = [n_features]</span></dt><dd><p>The values of this array sum to 1, unless all trees are single node
+<dt><strong>feature_importances_</strong><span class="classifier">ndarray of shape (n_features,)</span></dt><dd><p>The values of this array sum to 1, unless all trees are single node
 trees consisting of only the root node, in which case it will be an
 array of zeros.</p>
 </dd>
@@ -370,12 +377,12 @@ array of zeros.</p>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L268"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/ensemble/_forest.py#L272"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a forest of trees from the training set (X, y).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like or sparse matrix of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Internally, its dtype will be converted
+<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix} of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Internally, its dtype will be converted
 to <code class="docutils literal notranslate"><span class="pre">dtype=np.float32</span></code>. If a sparse matrix is provided, it will be
 converted into a sparse <code class="docutils literal notranslate"><span class="pre">csc_matrix</span></code>.</p>
 </dd>
@@ -400,7 +407,7 @@ single class carrying a negative weight in either child node.</p>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.get_params">
-<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/base.py#L173"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/base.py#L189"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -421,7 +428,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">return_std=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/learning/forest.py#L413"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">return_std=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/learning/forest.py#L413"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/learning/forest.html#ExtraTreesRegressor.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict continuous output for X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -447,7 +454,7 @@ is set to “mse”, then <code class="docutils literal notranslate"><span class
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/base.py#L376"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/base.py#L509"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the coefficient of determination R^2 of the prediction.</p>
 <p>The coefficient R^2 is defined as (1 - u/v), where u is the residual
 sum of squares ((y_true - y_pred) ** 2).sum() and v is the total
@@ -479,20 +486,17 @@ samples used in the fitting for the estimator.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The R2 score used when calling <code class="docutils literal notranslate"><span class="pre">score</span></code> on a regressor will use
+<p>The R2 score used when calling <code class="docutils literal notranslate"><span class="pre">score</span></code> on a regressor uses
 <code class="docutils literal notranslate"><span class="pre">multioutput='uniform_average'</span></code> from version 0.23 to keep consistent
-with <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="(in scikit-learn v0.22)"><code class="xref py py-func docutils literal notranslate"><span class="pre">r2_score()</span></code></a>. This will influence the
-<code class="docutils literal notranslate"><span class="pre">score</span></code> method of all the multioutput regressors (except for
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor" title="(in scikit-learn v0.22)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiOutputRegressor</span></code></a>). To specify the
-default value manually and avoid the warning, please either call
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="(in scikit-learn v0.22)"><code class="xref py py-func docutils literal notranslate"><span class="pre">r2_score()</span></code></a> directly or make a custom scorer with
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="(in scikit-learn v0.22)"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_scorer()</span></code></a> (the built-in scorer <code class="docutils literal notranslate"><span class="pre">'r2'</span></code> uses
-<code class="docutils literal notranslate"><span class="pre">multioutput='uniform_average'</span></code>).</p>
+with default value of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="(in scikit-learn v0.23)"><code class="xref py py-func docutils literal notranslate"><span class="pre">r2_score()</span></code></a>.
+This influences the <code class="docutils literal notranslate"><span class="pre">score</span></code> method of all the multioutput
+regressors (except for
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor" title="(in scikit-learn v0.23)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiOutputRegressor</span></code></a>).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.learning.ExtraTreesRegressor.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/base.py#L205"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/../../miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/base.py#L221"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.learning.ExtraTreesRegressor.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form

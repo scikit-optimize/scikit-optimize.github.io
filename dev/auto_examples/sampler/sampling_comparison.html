@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -133,7 +135,7 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sampler-sampling-comparison-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sampler-sampling-comparison-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <div class="sphx-glr-example-title section" id="comparing-initial-point-generation-methods">
 <span id="sphx-glr-auto-examples-sampler-sampling-comparison-py"></span><h1>Comparing initial point generation methods<a class="headerlink" href="#comparing-initial-point-generation-methods" title="Permalink to this headline">¶</a></h1>
@@ -152,40 +154,40 @@ performance of:</p>
 a baseline.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 <div class="section" id="toy-model">
 <h2>Toy model<a class="headerlink" href="#toy-model" title="Permalink to this headline">¶</a></h2>
-<p>We will use the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code> function as toy model for the expensive function.
+<p>We will use the <a class="reference internal" href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code></a> function as toy model for the expensive function.
 In a real world application this function would be unknown and expensive
 to evaluate.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">hart6</span> <span class="k">as</span> <span class="n">hart6_</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">hart6</span> <span class="k">as</span> <a href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6" class="sphx-glr-backref-module-skopt-benchmarks sphx-glr-backref-type-py-function"><span class="n">hart6_</span></a>
 <span class="c1"># redefined `hart6` to allow adding arbitrary &quot;noise&quot; dimensions</span>
 <span class="k">def</span> <span class="nf">hart6</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">hart6_</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+    <span class="k">return</span> <a href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6" class="sphx-glr-backref-module-skopt-benchmarks sphx-glr-backref-type-py-function"><span class="n">hart6_</span></a><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">()</span>
 
-<span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="View documentation for skopt.benchmarks.branin"><span class="n">_branin</span></a>
+<span class="kn">from</span> <span class="nn">skopt.benchmarks</span> <span class="kn">import</span> <span class="n">branin</span> <span class="k">as</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin" class="sphx-glr-backref-module-skopt-benchmarks sphx-glr-backref-type-py-function"><span class="n">_branin</span></a>
 
 <span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="k">return</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="View documentation for skopt.benchmarks.branin"><span class="n">_branin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+    <span class="k">return</span> <a href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin" class="sphx-glr-backref-module-skopt-benchmarks sphx-glr-backref-type-py-function"><span class="n">_branin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_level</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">forest_minimize</span><span class="p">,</span> <span class="n">dummy_minimize</span>
 
 <span class="k">def</span> <span class="nf">plot_convergence</span><span class="p">(</span><span class="n">result_list</span><span class="p">,</span> <span class="n">true_minimum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Convergence plot&quot;</span><span class="p">):</span>
 
-    <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="View documentation for matplotlib.pyplot.gca"><span class="n">plt</span><span class="o">.</span><span class="n">gca</span></a><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.gca.html#matplotlib.pyplot.gca" title="matplotlib.pyplot.gca" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">gca</span></a><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of calls $n$&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\min f(x)$ after $n$ calls&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">yscale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">hsv</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="View documentation for numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_list</span><span class="p">)))</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">hsv</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_list</span><span class="p">)))</span>
 
     <span class="k">for</span> <span class="n">results</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">result_list</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
@@ -193,7 +195,7 @@ to evaluate.</p>
         <span class="n">iterations</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">mins</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">func_vals</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iterations</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">mins</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">mins</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="c1">#ax.errorbar(iterations, np.mean(mins, axis=0),</span>
         <span class="c1">#             yerr=np.std(mins, axis=0), c=color, label=name)</span>
     <span class="k">if</span> <span class="n">true_minimum</span><span class="p">:</span>
@@ -213,12 +215,12 @@ to evaluate.</p>
 
 
 <span class="k">def</span> <span class="nf">run_measure</span><span class="p">(</span><span class="n">initial_point_generator</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="View documentation for time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+    <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
     <span class="c1"># n_repeats must set to a much higher value to obtain meaningful results.</span>
     <span class="n">n_repeats</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">initial_point_generator</span><span class="p">,</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">,</span> <span class="n">initial_point_generator</span><span class="p">,</span>
               <span class="n">n_initial_points</span><span class="o">=</span><span class="n">n_initial_points</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="n">n_repeats</span><span class="p">)</span>
-    <span class="n">duration</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="View documentation for time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="n">duration</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
     <span class="c1"># print(&quot;%s %s: %.2f s&quot; % (initial_point_generator,</span>
     <span class="c1">#                          str(init_point_gen_kwargs),</span>
     <span class="c1">#                          duration))</span>
@@ -230,16 +232,16 @@ to evaluate.</p>
 <h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
 <p>The objective of this example is to find one of these minima in as
 few iterations as possible. One iteration is defined as one call
-to the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code> function.</p>
+to the <a class="reference internal" href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code></a> function.</p>
 <p>We will evaluate each model several times using a different seed for the
 random number generator. Then compare the average performance of these
 models. This makes the comparison more robust against models that get
 “lucky”.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a>
 <span class="n">example</span> <span class="o">=</span> <span class="s2">&quot;hart6&quot;</span>
 
 <span class="k">if</span> <span class="n">example</span> <span class="o">==</span> <span class="s2">&quot;hart6&quot;</span><span class="p">:</span>
-    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><span class="n">hart6</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a><span class="p">(</span><span class="n">hart6</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">6</span>
     <span class="n">true_minimum</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.32237</span>
     <span class="n">n_calls</span> <span class="o">=</span> <span class="mi">40</span>
@@ -247,7 +249,7 @@ models. This makes the comparison more robust against models that get
     <span class="n">yscale</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Convergence plot - hart6&quot;</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="View documentation for functools.partial"><span class="n">partial</span></a><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">func</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]</span>
     <span class="n">true_minimum</span> <span class="o">=</span> <span class="mf">0.397887</span>
     <span class="n">n_calls</span> <span class="o">=</span> <span class="mi">30</span>
@@ -256,16 +258,16 @@ models. This makes the comparison more robust against models that get
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Convergence plot - branin&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="skopt.utils.cook_initial_point_generator" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">cook_initial_point_generator</span></a>
 
 <span class="c1"># Random search</span>
 <span class="n">dummy_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
-<span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span>
+<span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="skopt.utils.cook_initial_point_generator" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span>
     <span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">lhs_type</span><span class="o">=</span><span class="s2">&quot;classic&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">lhs_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
-<span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
+<span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="skopt.utils.cook_initial_point_generator" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
 <span class="n">lhs2_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
-<span class="n">sobol</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">sobol</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="skopt.utils.cook_initial_point_generator" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                      <span class="n">min_skip</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_skip</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">sobol_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">sobol</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
 <span class="n">halton_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="s2">&quot;halton&quot;</span><span class="p">,</span> <span class="n">n_initial_points</span><span class="p">)</span>
@@ -285,16 +287,16 @@ models. This makes the comparison more robust against models that get
                         <span class="n">yscale</span><span class="o">=</span><span class="n">yscale</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_sampling_comparison_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_001.png" />
+<img alt="Convergence plot - hart6" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_001.png" />
 <p>This plot shows the value of the minimum found (y axis) as a function
 of the number of iterations performed so far (x axis). The dashed red line
-indicates the true value of the minimum of the <code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code>
+indicates the true value of the minimum of the <a class="reference internal" href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code></a>
 function.</p>
 <p>Test with different n_random_starts values</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="View documentation for skopt.utils.cook_initial_point_generator"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs2</span> <span class="o">=</span> <a href="../../modules/generated/skopt.utils.cook_initial_point_generator.html#skopt.utils.cook_initial_point_generator" title="skopt.utils.cook_initial_point_generator" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">cook_initial_point_generator</span></a><span class="p">(</span><span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">)</span>
 <span class="n">lhs2_15_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="n">lhs2_20_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="n">lhs2_25_res</span> <span class="o">=</span> <span class="n">run_measure</span><span class="p">(</span><span class="n">lhs2</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -310,20 +312,20 @@ function.</p>
                         <span class="n">yscale</span><span class="o">=</span><span class="n">yscale</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_sampling_comparison_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_002.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  41.315 seconds)</p>
+<img alt="Convergence plot - hart6" class="sphx-glr-single-img" src="../../_images/sphx_glr_sampling_comparison_002.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  38.304 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sampler-sampling-comparison-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/sampling_comparison.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/sampling_comparison.ipynb"><img alt="../../_images/binder_badge_logo.png" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/f2628aca259d3f320f4c14ddc49a5526/sampling_comparison.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">sampling_comparison.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2836dfc666978d3b8e63b1399cca6c8a/sampling_comparison.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">sampling_comparison.ipynb</span></code></a></p>
 </div>
 </div>

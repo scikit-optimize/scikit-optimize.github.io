@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 <script src="../_static/jquery.js"></script> 
@@ -206,7 +208,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gp_minimize</span></code></a>(func, dimensions[, …])</p></td>
 <td><p>Bayesian optimization using Gaussian Processes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename, \*\*kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename, **kwargs)</p></td>
 <td><p>Reconstruct a skopt optimization result from a file persisted with skopt.dump.</p></td>
 </tr>
 </tbody>
@@ -271,7 +273,7 @@ further details.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a>(x[, a, b, c, r, s, t])</p></td>
 <td><p>Branin-Hoo function is defined on the square <span class="math notranslate nohighlight">\(x1 \in [-5, 10], x2 \in [0, 15]\)</span>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code>([P, A])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code></a>(x[, alpha, P, A])</p></td>
 <td><p>The six dimensional Hartmann function is defined on the unit hypercube.</p></td>
 </tr>
 </tbody>
@@ -398,13 +400,13 @@ details.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.plots.partial_dependence_2D.html#skopt.plots.partial_dependence_2D" title="skopt.plots.partial_dependence_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.partial_dependence_2D</span></code></a>(space, model, i, …)</p></td>
 <td><p>Calculate the partial dependence for two dimensions in the search-space.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="skopt.plots.plot_convergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_convergence</span></code></a>(\*args, \*\*kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="skopt.plots.plot_convergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_convergence</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Plot one or several convergence traces.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.plots.plot_evaluations.html#skopt.plots.plot_evaluations" title="skopt.plots.plot_evaluations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_evaluations</span></code></a>(result[, bins, …])</p></td>
 <td><p>Visualize the order in which points were sampled during optimization.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_gaussian_process.html#skopt.plots.plot_gaussian_process" title="skopt.plots.plot_gaussian_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_gaussian_process</span></code></a>(res, \*\*kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_gaussian_process.html#skopt.plots.plot_gaussian_process" title="skopt.plots.plot_gaussian_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_gaussian_process</span></code></a>(res, **kwargs)</p></td>
 <td><p>Plots the optimization results and the gaussian process for 1-D objective functions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="skopt.plots.plot_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_objective</span></code></a>(result[, levels, …])</p></td>
@@ -416,7 +418,7 @@ details.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="skopt.plots.plot_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_histogram</span></code></a>(result, …[, bins, …])</p></td>
 <td><p>Create and return a Matplotlib figure with a histogram of the samples from the optimization results, for a given dimension of the search-space.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_regret.html#skopt.plots.plot_regret" title="skopt.plots.plot_regret"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_regret</span></code></a>(\*args, \*\*kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.plots.plot_regret.html#skopt.plots.plot_regret" title="skopt.plots.plot_regret"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plots.plot_regret</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Plot one or several cumulative regret traces.</p></td>
 </tr>
 </tbody>
@@ -449,7 +451,7 @@ details.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.utils.dump.html#skopt.utils.dump" title="skopt.utils.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.dump</span></code></a>(res, filename[, store_objective])</p></td>
 <td><p>Store an skopt optimization result into a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.utils.load.html#skopt.utils.load" title="skopt.utils.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.load</span></code></a>(filename, \*\*kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/skopt.utils.load.html#skopt.utils.load" title="skopt.utils.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.load</span></code></a>(filename, **kwargs)</p></td>
 <td><p>Reconstruct a skopt optimization result from a file persisted with skopt.dump.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/skopt.utils.point_asdict.html#skopt.utils.point_asdict" title="skopt.utils.point_asdict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.point_asdict</span></code></a>(search_space, point_as_list)</p></td>

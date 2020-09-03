@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 <script src="../_static/jquery.js"></script> 
@@ -107,8 +109,8 @@
           </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="hyperparameter-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Tuning a scikit-learn estimator with skopt">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
-            <a href="ask-and-tell.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Async optimization Loop">Next</a>
+            <a href="parallel-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Parallel optimization">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="interruptible-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Interruptible optimization runs with checkpoints">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -138,7 +140,7 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-store-and-load-results-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-store-and-load-results-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <div class="sphx-glr-example-title section" id="store-and-load-skopt-optimization-results">
 <span id="sphx-glr-auto-examples-store-and-load-results-py"></span><h1>Store and load <code class="docutils literal notranslate"><span class="pre">skopt</span></code> optimization results<a class="headerlink" href="#store-and-load-skopt-optimization-results" title="Permalink to this headline">¶</a></h1>
@@ -162,11 +164,6 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-
-<span class="c1"># The followings are hacks to allow sphinx-gallery to run the example.</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <a href="https://docs.python.org/3/library/os.html#os.getcwd" title="View documentation for os.getcwd"><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span></a><span class="p">())</span>
-<span class="n">main_dir</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.basename" title="View documentation for os.path.basename"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/sys.html#sys.modules" title="View documentation for sys.modules"><span class="n">sys</span><span class="o">.</span><span class="n">modules</span></a><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-<span class="n">IS_RUN_WITH_SPHINX_GALLERY</span> <span class="o">=</span> <span class="n">main_dir</span> <span class="o">!=</span> <a href="https://docs.python.org/3/library/os.html#os.getcwd" title="View documentation for os.getcwd"><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span></a><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -174,50 +171,21 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
 <h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
 <p>We will use the same optimization problem as in the
 <a class="reference internal" href="bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a> notebook:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a>
 <span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="k">if</span> <span class="n">IS_RUN_WITH_SPHINX_GALLERY</span><span class="p">:</span>
-    <span class="c1"># When this example is run with sphinx gallery, it breaks the pickling</span>
-    <span class="c1"># capacity for multiprocessing backend so we have to modify the way we</span>
-    <span class="c1"># define our functions. This has nothing to do with the example.</span>
-    <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">obj_fun</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
-        <span class="k">return</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin" title="View documentation for numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.tanh.html#numpy.tanh" title="View documentation for numpy.tanh"><span class="n">np</span><span class="o">.</span><span class="n">tanh</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">noise_level</span>
 
-<span class="n">res</span> <span class="o">=</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+<span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.tanh.html#numpy.tanh" title="numpy.tanh" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">tanh</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">()</span> \
+        <span class="o">*</span> <span class="n">noise_level</span>
+
+<span class="n">res</span> <span class="o">=</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
                   <span class="p">[(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>      <span class="c1"># the bounds on each dimension of x</span>
                   <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>            <span class="c1"># the starting point</span>
                   <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
                   <span class="n">n_calls</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>         <span class="c1"># the number of evaluations of f including at x0</span>
-                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
+                  <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># the number of random initial points</span>
                   <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
 </pre></div>
 </div>
 <p>As long as your Python session is active, you can access all the
@@ -225,7 +193,7 @@ optimization results via the <code class="docutils literal notranslate"><span cl
 <p>So how can you store this data in a file? <code class="docutils literal notranslate"><span class="pre">skopt</span></code> conveniently provides
 functions <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> that handle this for you.
 These functions are essentially thin wrappers around the
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.17.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.17.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
 <p>We will now show how to use <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> for storing
 and loading results.</p>
 </div>
@@ -233,38 +201,38 @@ and loading results.</p>
 <h2>Using <code class="docutils literal notranslate"><span class="pre">skopt.dump()</span></code> and <code class="docutils literal notranslate"><span class="pre">skopt.load()</span></code><a class="headerlink" href="#using-skopt-dump-and-skopt-load" title="Permalink to this headline">¶</a></h2>
 <p>For storing optimization results into a file, call the <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>
 function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">,</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">,</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">load</span></a>
 
-<a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
+<a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And load from file using <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)</span>
 
 <span class="n">res_loaded</span><span class="o">.</span><span class="n">fun</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.028936565436158978
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-1.0765599518616937
 </pre></div>
 </div>
 <p>You can fine-tune the serialization and deserialization process by calling
 <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> with additional keyword arguments. See the
 <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> documentation
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.14.1.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v0.17.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v0.17.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
 <p>For instance, you can specify the compression algorithm and compression
 level (highest in this case):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Without compression: </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Compressed with gz:  </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="View documentation for os.path.getsize"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.gz&#39;</span><span class="p">)))</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="os.path.getsize" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">getsize</span></a>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Without compression: </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="os.path.getsize" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.pkl&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Compressed with gz:  </span><span class="si">{}</span><span class="s1"> bytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.getsize" title="os.path.getsize" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">getsize</span></a><span class="p">(</span><span class="s1">&#39;result.gz&#39;</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Without compression: 80206 bytes
-Compressed with gz:  19775 bytes
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Without compression: 70313 bytes
+Compressed with gz:  25573 bytes
 </pre></div>
 </div>
 <div class="section" id="unserializable-objective-functions">
@@ -274,12 +242,12 @@ engine from Python), it might be not serializable and <a class="reference intern
 raise an exception when you try to store the optimization results.
 In this case you should disable storing the objective function by calling
 <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> with the keyword argument <code class="docutils literal notranslate"><span class="pre">store_objective=False</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">,</span> <span class="n">store_objective</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Notice that the entry <code class="docutils literal notranslate"><span class="pre">'func'</span></code> is absent in the loaded object but is still
 present in the local variable:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded_without_objective</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="View documentation for skopt.load"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">res_loaded_without_objective</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;result_without_objective.pkl&#39;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loaded object: &#39;</span><span class="p">,</span> <span class="n">res_loaded_without_objective</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Local variable:&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -308,19 +276,19 @@ can simply delete it before calling <a class="reference internal" href="../modul
 copy is created:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">res</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span>
 
-<a href="../modules/generated/skopt.dump.html#skopt.dump" title="View documentation for skopt.dump"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
+<a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.587 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  11 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.941 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  14 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-store-and-load-results-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="../_images/binder_badge_logo.png" src="../_images/binder_badge_logo.png" style="width: 150px;" /></a>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/0592ed38982de0188765f2bbe919e8d2/store-and-load-results.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">store-and-load-results.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c5d1fa871ae42002773189655de152a2/store-and-load-results.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">store-and-load-results.ipynb</span></code></a></p>
 </div>
 </div>

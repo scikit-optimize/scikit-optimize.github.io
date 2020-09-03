@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -134,7 +136,7 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.plots" title="skopt.plots"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.plots</span></code></a>.plot_objective<a class="headerlink" href="#skopt-plots-plot-objective" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="skopt.plots.plot_objective">
-<code class="sig-prename descclassname">skopt.plots.</code><code class="sig-name descname">plot_objective</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">levels=10</em>, <em class="sig-param">n_points=40</em>, <em class="sig-param">n_samples=250</em>, <em class="sig-param">size=2</em>, <em class="sig-param">zscale='linear'</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">sample_source='random'</em>, <em class="sig-param">minimum='result'</em>, <em class="sig-param">n_minimum_search=None</em>, <em class="sig-param">plot_dims=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/3d1610c/skopt/plots.py#L538"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/plots.html#plot_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.plots.plot_objective" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">skopt.plots.</code><code class="sig-name descname">plot_objective</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">levels=10</em>, <em class="sig-param">n_points=40</em>, <em class="sig-param">n_samples=250</em>, <em class="sig-param">size=2</em>, <em class="sig-param">zscale='linear'</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">sample_source='random'</em>, <em class="sig-param">minimum='result'</em>, <em class="sig-param">n_minimum_search=None</em>, <em class="sig-param">plot_dims=None</em>, <em class="sig-param">show_points=True</em>, <em class="sig-param">cmap='viridis_r'</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/0ce91b1/skopt/plots.py#L541"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/plots.html#plot_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.plots.plot_objective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a 2-d matrix with so-called Partial Dependence plots
 of the objective function. This shows the influence of each
 search-space dimension on the objective function.</p>
@@ -177,7 +179,7 @@ the Partial Dependence, which also causes distortions in the plots.</p>
 <dt><strong>result</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">OptimizeResult</span></code></span></dt><dd><p>The optimization results from calling e.g. <code class="docutils literal notranslate"><span class="pre">gp_minimize()</span></code>.</p>
 </dd>
 <dt><strong>levels</strong><span class="classifier">int, default=10</span></dt><dd><p>Number of levels to draw on the contour plot, passed directly
-to <code class="docutils literal notranslate"><span class="pre">plt.contour()</span></code>.</p>
+to <code class="docutils literal notranslate"><span class="pre">plt.contourf()</span></code>.</p>
 </dd>
 <dt><strong>n_points</strong><span class="classifier">int, default=40</span></dt><dd><p>Number of points at which to evaluate the partial dependence
 along each dimension.</p>
@@ -235,6 +237,12 @@ to find the minimum when using ‘expected_minimum’ or
 <code class="docutils literal notranslate"><span class="pre">sample_source</span></code> and/or <code class="docutils literal notranslate"><span class="pre">minimum</span></code> is set to
 ‘expected_minimum’ or ‘expected_minimum_random’.</p>
 </dd>
+<dt><strong>show_points: bool, default = True</strong></dt><dd><p>Choose whether to show evaluated points in the
+contour plots.</p>
+</dd>
+<dt><strong>cmap: str or Colormap, default = ‘viridis_r’</strong></dt><dd><p>Color map for contour plots. Passed directly to
+<code class="docutils literal notranslate"><span class="pre">plt.contourf()</span></code></p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -249,23 +257,23 @@ to find the minimum when using ‘expected_minimum’ or
 <div class="section" id="examples-using-skopt-plots-plot-objective">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">skopt.plots.plot_objective</span></code><a class="headerlink" href="#examples-using-skopt-plots-plot-objective" title="Permalink to this headline">¶</a></h2>
 <div class="sphx-glr-thumbcontainer" tooltip="Iaroslav Shcherbatyi, Tim Head and Gilles Louppe. June 2017. Reformatted by Holger Nahrstaedt 2..."><div class="figure align-default" id="id1">
-<img alt="../../_images/sphx_glr_sklearn-gridsearchcv-replacement_thumb.png" src="../../_images/sphx_glr_sklearn-gridsearchcv-replacement_thumb.png" />
+<img alt="Scikit-learn hyperparameter search wrapper" src="../../_images/sphx_glr_sklearn-gridsearchcv-replacement_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Sigurd Carlsen Feb 2019 Holger Nahrstaedt 2020"><div class="figure align-default" id="id2">
-<img alt="../../_images/sphx_glr_partial-dependence-plot_thumb.png" src="../../_images/sphx_glr_partial-dependence-plot_thumb.png" />
+<img alt="Partial Dependence Plots" src="../../_images/sphx_glr_partial-dependence-plot_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/partial-dependence-plot.html#sphx-glr-auto-examples-plots-partial-dependence-plot-py"><span class="std std-ref">Partial Dependence Plots</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Sigurd Carlsen Feb 2019 Holger Nahrstaedt 2020"><div class="figure align-default" id="id3">
-<img alt="../../_images/sphx_glr_partial-dependence-plot-with-categorical_thumb.png" src="../../_images/sphx_glr_partial-dependence-plot-with-categorical_thumb.png" />
+<img alt="Partial Dependence Plots  with categorical values" src="../../_images/sphx_glr_partial-dependence-plot-with-categorical_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/partial-dependence-plot-with-categorical.html#sphx-glr-auto-examples-plots-partial-dependence-plot-with-categorical-py"><span class="std std-ref">Partial Dependence Plots  with categorical values</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Tim Head, August 2016. Reformatted by Holger Nahrstaedt 2020"><div class="figure align-default" id="id4">
-<img alt="../../_images/sphx_glr_visualizing-results_thumb.png" src="../../_images/sphx_glr_visualizing-results_thumb.png" />
+<img alt="Visualizing optimization results" src="../../_images/sphx_glr_visualizing-results_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/visualizing-results.html#sphx-glr-auto-examples-plots-visualizing-results-py"><span class="std std-ref">Visualizing optimization results</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Hvass-Labs Dec 2017 Holger Nahrstaedt 2020"><div class="figure align-default" id="id5">
-<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_thumb.png" src="../../_images/sphx_glr_partial-dependence-plot-2D_thumb.png" />
+<img alt="Partial Dependence Plots 2D" src="../../_images/sphx_glr_partial-dependence-plot-2D_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/plots/partial-dependence-plot-2D.html#sphx-glr-auto-examples-plots-partial-dependence-plot-2d-py"><span class="std std-ref">Partial Dependence Plots 2D</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="clearer"></div></div>

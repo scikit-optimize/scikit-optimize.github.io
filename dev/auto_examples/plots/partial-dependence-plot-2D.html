@@ -20,6 +20,8 @@
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -129,7 +131,7 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plots-partial-dependence-plot-2d-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plots-partial-dependence-plot-2d-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <div class="sphx-glr-example-title section" id="partial-dependence-plots-2d">
 <span id="sphx-glr-auto-examples-plots-partial-dependence-plot-2d-py"></span><h1>Partial Dependence Plots 2D<a class="headerlink" href="#partial-dependence-plots-2d" title="Permalink to this headline">¶</a></h1>
@@ -138,13 +140,13 @@ Holger Nahrstaedt 2020</p>
 <p>Simple example to show the new 2D plots.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/math.html#math.exp" title="View documentation for math.exp"><span class="n">exp</span></a>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/math.html#math.exp" title="math.exp" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">exp</span></a>
 
-<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a>
 <span class="kn">from</span> <span class="nn">skopt.space</span> <span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Integer</span>
-<span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="View documentation for skopt.plots.plot_histogram"><span class="n">plot_histogram</span></a><span class="p">,</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="View documentation for skopt.plots.plot_objective_2D"><span class="n">plot_objective_2D</span></a><span class="p">,</span> <a href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="View documentation for skopt.plots.plot_objective"><span class="n">plot_objective</span></a>
-<span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.utils.point_asdict.html#skopt.utils.point_asdict" title="View documentation for skopt.utils.point_asdict"><span class="n">point_asdict</span></a>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">skopt.plots</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="skopt.plots.plot_histogram" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_histogram</span></a><span class="p">,</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="skopt.plots.plot_objective_2D" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_objective_2D</span></a><span class="p">,</span> <a href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="skopt.plots.plot_objective" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_objective</span></a>
+<span class="kn">from</span> <span class="nn">skopt.utils</span> <span class="kn">import</span> <a href="../../modules/generated/skopt.utils.point_asdict.html#skopt.utils.point_asdict" title="skopt.utils.point_asdict" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">point_asdict</span></a>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
@@ -163,11 +165,11 @@ Holger Nahrstaedt 2020</p>
 <span class="k">def</span> <span class="nf">model_fitness</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">learning_rate</span><span class="p">,</span> <span class="n">num_dense_layers</span><span class="p">,</span> <span class="n">num_dense_nodes</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="n">x</span>
 
-    <span class="n">fitness</span> <span class="o">=</span> <span class="p">((</span><a href="https://docs.python.org/3/library/math.html#math.exp" title="View documentation for math.exp"><span class="n">exp</span></a><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> \
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">((</span><a href="https://docs.python.org/3/library/math.html#math.exp" title="math.exp" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">exp</span></a><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> \
                <span class="p">(</span><span class="n">num_dense_layers</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> \
                <span class="p">(</span><span class="n">num_dense_nodes</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
-    <span class="n">fitness</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+    <span class="n">fitness</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html#numpy.random.rand" title="numpy.random.rand" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">&#39;sigmoid&#39;</span><span class="p">:</span>
         <span class="n">fitness</span> <span class="o">+=</span> <span class="mi">10</span>
@@ -181,7 +183,7 @@ Holger Nahrstaedt 2020</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1.518471835296799
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="View documentation for skopt.gp_minimize"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">model_fitness</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <a href="../../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">model_fitness</span><span class="p">,</span>
                             <span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
                             <span class="n">n_calls</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                             <span class="n">x0</span><span class="o">=</span><span class="n">default_parameters</span><span class="p">,</span>
@@ -193,10 +195,8 @@ Holger Nahrstaedt 2020</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
-  warnings.warn(&quot;The objective has been evaluated &quot;
-[1.5123356521762771e-05, 1, 5, &#39;relu&#39;]
-1.0119643462193577
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[2.6679970228263975e-05, 1, 5, &#39;relu&#39;]
+1.0208133677111686
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fitness</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">search_result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">,</span> <span class="n">search_result</span><span class="o">.</span><span class="n">x_iters</span><span class="p">)):</span>
@@ -204,36 +204,36 @@ Holger Nahrstaedt 2020</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1.0119643462193577 [1.5123356521762771e-05, 1, 5, &#39;relu&#39;]
-1.025402134412104 [4.281015770065775e-06, 1, 5, &#39;relu&#39;]
-1.0319636609842386 [4.276743451103995e-06, 1, 5, &#39;relu&#39;]
-1.0348968272174384 [4.423140508099179e-06, 1, 5, &#39;relu&#39;]
-1.0387871311774666 [4.1468345866642895e-06, 1, 5, &#39;relu&#39;]
-1.0714985416586762 [0.00012213004998537342, 1, 5, &#39;relu&#39;]
-1.0749495973106837 [4.794515790600347e-06, 1, 5, &#39;relu&#39;]
-1.0797896807648497 [0.00011345827837456389, 1, 5, &#39;relu&#39;]
-1.0905513481833962 [1.4976037849740352e-05, 1, 16, &#39;relu&#39;]
-1.1047698717850054 [0.00011322216972613955, 1, 27, &#39;relu&#39;]
-1.111485328647923 [0.00014819189190160391, 1, 5, &#39;relu&#39;]
-1.1532086266475146 [0.00026726841338252507, 1, 5, &#39;relu&#39;]
-1.1852534426050636 [0.0003203976375246648, 1, 5, &#39;relu&#39;]
-1.2072909195304542 [0.00022408676760444582, 1, 31, &#39;relu&#39;]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1.0208133677111686 [2.6679970228263975e-05, 1, 5, &#39;relu&#39;]
+1.0348776634107046 [1e-06, 1, 5, &#39;relu&#39;]
+1.0558012123017941 [3.5385658376936073e-06, 1, 5, &#39;relu&#39;]
+1.0599072431183545 [6.23271592771488e-05, 1, 5, &#39;relu&#39;]
+1.065758323114701 [1.6705126027774294e-06, 1, 5, &#39;relu&#39;]
+1.066159709359935 [7.5745000598879366e-06, 1, 5, &#39;relu&#39;]
+1.0865989427408291 [0.0002446114745330679, 1, 5, &#39;relu&#39;]
+1.371838093575787 [0.0005243194903048878, 1, 5, &#39;relu&#39;]
+1.397381958747002 [1.5127446618337171e-05, 1, 62, &#39;relu&#39;]
 1.4602213686635033 [0.0001, 1, 64, &#39;relu&#39;]
-4.448432550194912 [0.00011154076164170811, 2, 64, &#39;relu&#39;]
-11.042404976402342 [1e-06, 1, 5, &#39;sigmoid&#39;]
+2.2021191754789426 [0.0003989008284362775, 1, 99, &#39;relu&#39;]
+3.461403804526842 [1e-06, 1, 148, &#39;relu&#39;]
+4.557996664570765 [9.807267757898137e-06, 2, 50, &#39;relu&#39;]
+6.9997193368210775 [1e-06, 2, 159, &#39;relu&#39;]
+10.625393902733753 [1.138768777022257e-06, 3, 112, &#39;relu&#39;]
 14.337540595777632 [4.961649309025573e-06, 2, 44, &#39;sigmoid&#39;]
 15.811122459303194 [5.768045960755954e-05, 1, 366, &#39;relu&#39;]
-17.139681456888272 [9.981942791399215e-05, 4, 64, &#39;relu&#39;]
 20.75714626376416 [4.6648726500116405e-05, 4, 195, &#39;relu&#39;]
 20.83105097254721 [3.629134387669892e-06, 3, 323, &#39;relu&#39;]
 25.045498550233685 [1.5528231282886148e-05, 3, 380, &#39;relu&#39;]
 25.725698564025883 [0.0010034940899532338, 4, 264, &#39;relu&#39;]
+25.99771118919538 [1e-06, 5, 5, &#39;relu&#39;]
 31.67808942295837 [9.214584006695478e-05, 4, 213, &#39;sigmoid&#39;]
 32.60979725349034 [0.0007109209001237586, 3, 355, &#39;sigmoid&#39;]
+35.517727998585926 [1.7218635640208468e-05, 4, 301, &#39;sigmoid&#39;]
 36.436844941374716 [9.52877578124997e-06, 4, 306, &#39;sigmoid&#39;]
-38.87726967838361 [2.3491042789635103e-06, 1, 512, &#39;sigmoid&#39;]
+36.96220069557755 [3.683322660225289e-06, 5, 64, &#39;sigmoid&#39;]
+36.96637598001273 [1.0085504162525438e-06, 1, 508, &#39;sigmoid&#39;]
+40.913706315351426 [0.00018781175513912324, 5, 214, &#39;sigmoid&#39;]
 117.22558971730295 [0.008953258961145084, 4, 399, &#39;relu&#39;]
-138.30790675765437 [0.01, 5, 5, &#39;sigmoid&#39;]
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">space</span> <span class="o">=</span> <span class="n">search_result</span><span class="o">.</span><span class="n">space</span>
@@ -242,57 +242,57 @@ Holger Nahrstaedt 2020</p>
 
 <span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">space</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">space</span><span class="o">.</span><span class="n">dimension_names</span><span class="p">}</span>
 
-<span class="nb">print</span><span class="p">(</span><a href="../../modules/generated/skopt.utils.point_asdict.html#skopt.utils.point_asdict" title="View documentation for skopt.utils.point_asdict"><span class="n">point_asdict</span></a><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">default_parameters</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../modules/generated/skopt.utils.point_asdict.html#skopt.utils.point_asdict" title="skopt.utils.point_asdict" class="sphx-glr-backref-module-skopt-utils sphx-glr-backref-type-py-function"><span class="n">point_asdict</span></a><span class="p">(</span><span class="n">search_space</span><span class="p">,</span> <span class="n">default_parameters</span><span class="p">))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[0.0001, 1, 64, &#39;relu&#39;], [0.0007109209001237586, 3, 355, &#39;sigmoid&#39;], [9.214584006695478e-05, 4, 213, &#39;sigmoid&#39;], [3.629134387669892e-06, 3, 323, &#39;relu&#39;], [9.52877578124997e-06, 4, 306, &#39;sigmoid&#39;], [5.768045960755954e-05, 1, 366, &#39;relu&#39;], [1.5528231282886148e-05, 3, 380, &#39;relu&#39;], [4.6648726500116405e-05, 4, 195, &#39;relu&#39;], [0.008953258961145084, 4, 399, &#39;relu&#39;], [4.961649309025573e-06, 2, 44, &#39;sigmoid&#39;], [0.0010034940899532338, 4, 264, &#39;relu&#39;], [9.981942791399215e-05, 4, 64, &#39;relu&#39;], [0.00011154076164170811, 2, 64, &#39;relu&#39;], [1e-06, 1, 5, &#39;sigmoid&#39;], [0.00026726841338252507, 1, 5, &#39;relu&#39;], [0.01, 5, 5, &#39;sigmoid&#39;], [0.00011322216972613955, 1, 27, &#39;relu&#39;], [0.00012213004998537342, 1, 5, &#39;relu&#39;], [0.00022408676760444582, 1, 31, &#39;relu&#39;], [0.00011345827837456389, 1, 5, &#39;relu&#39;], [0.00014819189190160391, 1, 5, &#39;relu&#39;], [0.0003203976375246648, 1, 5, &#39;relu&#39;], [2.3491042789635103e-06, 1, 512, &#39;sigmoid&#39;], [4.794515790600347e-06, 1, 5, &#39;relu&#39;], [4.423140508099179e-06, 1, 5, &#39;relu&#39;], [4.1468345866642895e-06, 1, 5, &#39;relu&#39;], [4.281015770065775e-06, 1, 5, &#39;relu&#39;], [4.276743451103995e-06, 1, 5, &#39;relu&#39;], [1.4976037849740352e-05, 1, 16, &#39;relu&#39;], [1.5123356521762771e-05, 1, 5, &#39;relu&#39;]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[0.0001, 1, 64, &#39;relu&#39;], [0.0007109209001237586, 3, 355, &#39;sigmoid&#39;], [9.214584006695478e-05, 4, 213, &#39;sigmoid&#39;], [3.629134387669892e-06, 3, 323, &#39;relu&#39;], [9.52877578124997e-06, 4, 306, &#39;sigmoid&#39;], [5.768045960755954e-05, 1, 366, &#39;relu&#39;], [1.5528231282886148e-05, 3, 380, &#39;relu&#39;], [4.6648726500116405e-05, 4, 195, &#39;relu&#39;], [0.008953258961145084, 4, 399, &#39;relu&#39;], [4.961649309025573e-06, 2, 44, &#39;sigmoid&#39;], [0.0010034940899532338, 4, 264, &#39;relu&#39;], [0.00018781175513912324, 5, 214, &#39;sigmoid&#39;], [1.0085504162525438e-06, 1, 508, &#39;sigmoid&#39;], [1e-06, 5, 5, &#39;relu&#39;], [0.0005243194903048878, 1, 5, &#39;relu&#39;], [1.7218635640208468e-05, 4, 301, &#39;sigmoid&#39;], [2.6679970228263975e-05, 1, 5, &#39;relu&#39;], [3.5385658376936073e-06, 1, 5, &#39;relu&#39;], [6.23271592771488e-05, 1, 5, &#39;relu&#39;], [7.5745000598879366e-06, 1, 5, &#39;relu&#39;], [1e-06, 1, 148, &#39;relu&#39;], [9.807267757898137e-06, 2, 50, &#39;relu&#39;], [3.683322660225289e-06, 5, 64, &#39;sigmoid&#39;], [1e-06, 2, 159, &#39;relu&#39;], [1e-06, 1, 5, &#39;relu&#39;], [1.138768777022257e-06, 3, 112, &#39;relu&#39;], [0.0002446114745330679, 1, 5, &#39;relu&#39;], [0.0003989008284362775, 1, 99, &#39;relu&#39;], [1.6705126027774294e-06, 1, 5, &#39;relu&#39;], [1.5127446618337171e-05, 1, 62, &#39;relu&#39;]]
 OrderedDict([(&#39;activation&#39;, 0.0001), (&#39;learning_rate&#39;, 1), (&#39;num_dense_layers&#39;, 64), (&#39;num_dense_nodes&#39;, &#39;relu&#39;)])
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Plotting now ...&quot;</span><span class="p">)</span>
 
-<span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="View documentation for skopt.plots.plot_histogram"><span class="n">plot_histogram</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span> <span class="n">dimension_identifier</span><span class="o">=</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span>
+<span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_histogram.html#skopt.plots.plot_histogram" title="skopt.plots.plot_histogram" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_histogram</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span> <span class="n">dimension_identifier</span><span class="o">=</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span>
                    <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_001.png" />
+<img alt="partial dependence plot 2D" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Plotting now ...
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="View documentation for skopt.plots.plot_objective_2D"><span class="n">plot_objective_2D</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="skopt.plots.plot_objective_2D" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_objective_2D</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
                       <span class="n">dimension_identifier1</span><span class="o">=</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span>
                       <span class="n">dimension_identifier2</span><span class="o">=</span><span class="s1">&#39;num_dense_nodes&#39;</span><span class="p">)</span>
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_002.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="View documentation for skopt.plots.plot_objective_2D"><span class="n">plot_objective_2D</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
+<img alt="partial dependence plot 2D" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_002.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective_2D.html#skopt.plots.plot_objective_2D" title="skopt.plots.plot_objective_2D" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_objective_2D</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
                       <span class="n">dimension_identifier1</span><span class="o">=</span><span class="s1">&#39;num_dense_layers&#39;</span><span class="p">,</span>
                       <span class="n">dimension_identifier2</span><span class="o">=</span><span class="s1">&#39;num_dense_nodes&#39;</span><span class="p">)</span>
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_003.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_003.png" />
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="View documentation for skopt.plots.plot_objective"><span class="n">plot_objective</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
+<img alt="partial dependence plot 2D" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_003.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="skopt.plots.plot_objective" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_objective</span></a><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">search_result</span><span class="p">,</span>
                    <span class="n">plot_dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;num_dense_layers&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;num_dense_nodes&#39;</span><span class="p">])</span>
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../../_images/sphx_glr_partial-dependence-plot-2D_004.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_004.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.208 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  11 MB</p>
+<img alt="partial dependence plot 2D" class="sphx-glr-single-img" src="../../_images/sphx_glr_partial-dependence-plot-2D_004.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.419 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plots-partial-dependence-plot-2d-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/plots/partial-dependence-plot-2D.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/plots/partial-dependence-plot-2D.ipynb"><img alt="../../_images/binder_badge_logo.png" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/365fdab27864494141feaa35987b301b/partial-dependence-plot-2D.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">partial-dependence-plot-2D.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/b6b07db6d7bc35ac6c82ff6c997e4ad1/partial-dependence-plot-2D.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">partial-dependence-plot-2D.ipynb</span></code></a></p>
 </div>
 </div>

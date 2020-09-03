@@ -1,10 +1,12 @@
-.. note::
-    :class: sphx-glr-download-link-note
+.. only:: html
 
-    Click :ref:`here <sphx_glr_download_auto_examples_sklearn-gridsearchcv-replacement.py>` to download the full example code or to run this example in your browser via Binder
-.. rst-class:: sphx-glr-example-title
+    .. note::
+        :class: sphx-glr-download-link-note
 
-.. _sphx_glr_auto_examples_sklearn-gridsearchcv-replacement.py:
+        Click :ref:`here <sphx_glr_download_auto_examples_sklearn-gridsearchcv-replacement.py>`     to download the full example code or to run this example in your browser via Binder
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_sklearn-gridsearchcv-replacement.py:
 
 
 ==========================================
@@ -69,7 +71,7 @@ A minimal example of optimizing hyperparameters of SVC (Support Vector machine C
     from sklearn.svm import SVC
     from sklearn.model_selection import train_test_split
 
-    X, y = load_digits(10, True)
+    X, y = load_digits(n_class=10, return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.75, test_size=.25, random_state=0)
 
     # log-uniform: understand as search over p = exp(x) by varying x
@@ -100,7 +102,7 @@ A minimal example of optimizing hyperparameters of SVC (Support Vector machine C
 
  .. code-block:: none
 
-    val. score: 0.9851521900519673
+    val. score: 0.985894580549369
     test score: 0.9822222222222222
 
 
@@ -127,7 +129,7 @@ decision trees is given below.
     from sklearn.pipeline import Pipeline
     from sklearn.model_selection import train_test_split
 
-    X, y = load_digits(10, True)
+    X, y = load_digits(n_class=10, return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
     # pipeline class is used as estimator to enable
@@ -177,66 +179,57 @@ decision trees is given below.
 
  .. code-block:: none
 
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      warnings.warn("Liblinear failed to converge, increase "
-    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.22.2.post1-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:946: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-      warnings.warn("Liblinear failed to converge, increase "
-    val. score: 0.985894580549369
-    test score: 0.9822222222222222
-    best params: OrderedDict([('model', SVC(C=0.41571471424085416, break_ties=False, cache_size=200, class_weight=None,
-        coef0=0.0, decision_function_shape='ovr', degree=3,
-        gamma=1.0560013164213486, kernel='poly', max_iter=-1, probability=False,
-        random_state=None, shrinking=True, tol=0.001, verbose=False)), ('model__C', 0.41571471424085416), ('model__degree', 3), ('model__gamma', 1.0560013164213486), ('model__kernel', 'poly')])
+    val. score: 0.9873793615441723
+    test score: 0.9888888888888889
+    best params: OrderedDict([('model', SVC(C=26.01160432109631, gamma=0.00011992388693910152, kernel='poly')), ('model__C', 26.01160432109631), ('model__degree', 3), ('model__gamma', 0.00011992388693910152), ('model__kernel', 'poly')])
 
 
 
@@ -256,6 +249,7 @@ Partial Dependence plot of the objective function for SVC
 
 
 .. image:: /auto_examples/images/sphx_glr_sklearn-gridsearchcv-replacement_001.png
+    :alt: sklearn gridsearchcv replacement
     :class: sphx-glr-single-img
 
 
@@ -275,6 +269,7 @@ Plot of the histogram for LinearSVC
 
 
 .. image:: /auto_examples/images/sphx_glr_sklearn-gridsearchcv-replacement_002.png
+    :alt: sklearn gridsearchcv replacement
     :class: sphx-glr-single-img
 
 
@@ -305,7 +300,7 @@ An example usage is shown below.
     from sklearn.datasets import load_iris
     from sklearn.svm import SVC
 
-    X, y = load_iris(True)
+    X, y = load_iris(return_X_y=True)
 
     searchcv = BayesSearchCV(
         SVC(gamma='scale'),
@@ -335,28 +330,11 @@ An example usage is shown below.
 
  .. code-block:: none
 
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
-    best score: 0.9666666666666667
+    best score: 0.98
+    Interrupting!
 
-    BayesSearchCV(cv=3, error_score='raise',
-                  estimator=SVC(C=1.0, break_ties=False, cache_size=200,
-                                class_weight=None, coef0=0.0,
-                                decision_function_shape='ovr', degree=3,
-                                gamma='scale', kernel='rbf', max_iter=-1,
-                                probability=False, random_state=None,
-                                shrinking=True, tol=0.001, verbose=False),
-                  fit_params=None, iid=True, n_iter=10, n_jobs=1, n_points=1,
-                  optimizer_kwargs=None, pre_dispatch='2*n_jobs', random_state=None,
-                  refit=True, return_train_score=False, scoring=None,
-                  search_spaces={'C': (0.01, 100.0, 'log-uniform')}, verbose=0)
+    BayesSearchCV(cv=3, estimator=SVC(), n_iter=10,
+                  search_spaces={'C': (0.01, 100.0, 'log-uniform')})
 
 
 
@@ -400,6 +378,8 @@ calculated with `total_iterations` property, as in the code below.
 
  .. code-block:: none
 
+    /home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/utils/validation.py:67: FutureWarning: Pass return_X_y=True as keyword args. From version 0.25 passing these as positional arguments will result in an error
+      warnings.warn("Pass {} as keyword args. From version 0.25 "
     42
 
 
@@ -408,9 +388,9 @@ calculated with `total_iterations` property, as in the code below.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  43.118 seconds)
+   **Total running time of the script:** ( 1 minutes  31.858 seconds)
 
-**Estimated memory usage:**  8 MB
+**Estimated memory usage:**  10 MB
 
 
 .. _sphx_glr_download_auto_examples_sklearn-gridsearchcv-replacement.py:
@@ -424,18 +404,18 @@ calculated with `total_iterations` property, as in the code below.
 
   .. container:: binder-badge
 
-    .. image:: https://mybinder.org/badge_logo.svg
+    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
       :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sklearn-gridsearchcv-replacement.ipynb
       :width: 150 px
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-python
 
      :download:`Download Python source code: sklearn-gridsearchcv-replacement.py <sklearn-gridsearchcv-replacement.py>`
 
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
 
      :download:`Download Jupyter notebook: sklearn-gridsearchcv-replacement.ipynb <sklearn-gridsearchcv-replacement.ipynb>`
 
