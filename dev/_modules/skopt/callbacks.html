@@ -348,6 +348,25 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<span class="k">class</span> <span class="nc">HollowIterationsStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stop if the improvement over the last n iterations is below a threshold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iterations</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HollowIterationsStopper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iterations</span> <span class="o">=</span> <span class="n">n_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iterations</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">cummin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">func_vals</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cummin</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iterations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cummin</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+
+
 <div class="viewcode-block" id="DeadlineStopper"><a class="viewcode-back" href="../../modules/generated/skopt.callbacks.DeadlineStopper.html#skopt.callbacks.DeadlineStopper">[docs]</a><span class="k">class</span> <span class="nc">DeadlineStopper</span><span class="p">(</span><span class="n">EarlyStopper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Stop the optimization before running out of a fixed budget of time.</span>
