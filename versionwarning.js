@@ -1,7 +1,7 @@
 (function() {
 	// taken from https://raw.githubusercontent.com/scikit-learn/scikit-learn.github.io/master/index.html
 	// scikit-learn contributors
-    var latestStable = '0.7';
+    var latestStable = '0.8';
     var goodPaths = ['stable', 'dev', latestStable];
     var showWarning = (msg) => {
         $('.body[role=main]').prepend(
