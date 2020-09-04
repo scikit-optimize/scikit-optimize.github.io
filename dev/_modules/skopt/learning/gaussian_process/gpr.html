@@ -353,10 +353,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">K_inv_</span> <span class="o">=</span> <span class="n">L_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L_inv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="c1"># Fix deprecation warning #462</span>
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">19</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">23</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
+        <span class="k">elif</span> <span class="nb">int</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">19</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -438,11 +443,14 @@
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
             <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>    <span class="c1"># Line 4 (y_mean = f_star)</span>
-            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span> <span class="o">+</span> <span class="n">y_mean</span>  <span class="c1"># undo normal.</span>
+            <span class="c1"># undo normalisation</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span> <span class="o">*</span> <span class="n">y_mean</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_mean_</span>
 
             <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
                 <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>   <span class="c1"># Line 6</span>
+                <span class="c1"># undo normalisation</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="n">y_cov</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span><span class="o">**</span><span class="mi">2</span>
                 <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
 
             <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
@@ -459,17 +467,22 @@
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
                                   <span class="s2">&quot;Setting those variances to 0.&quot;</span><span class="p">)</span>
                     <span class="n">y_var</span><span class="p">[</span><span class="n">y_var_negative</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="c1"># undo normalisation</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span><span class="o">**</span><span class="mi">2</span>
                 <span class="n">y_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">return_mean_grad</span><span class="p">:</span>
                 <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">gradient_x</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
                 <span class="n">grad_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>
-
+                <span class="c1"># undo normalisation</span>
+                <span class="n">grad_mean</span> <span class="o">=</span> <span class="n">grad_mean</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span>
                 <span class="k">if</span> <span class="n">return_std_grad</span><span class="p">:</span>
                     <span class="n">grad_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y_std</span><span class="p">,</span> <span class="n">grad_std</span><span class="p">):</span>
                         <span class="n">grad_std</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_trans</span><span class="p">,</span>
                                            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">K_inv</span><span class="p">,</span> <span class="n">grad</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">y_std</span>
+                        <span class="c1"># undo normalisation</span>
+                        <span class="n">grad_std</span> <span class="o">=</span> <span class="n">grad_std</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_std_</span><span class="o">**</span><span class="mi">2</span>
                     <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_std</span><span class="p">,</span> <span class="n">grad_mean</span><span class="p">,</span> <span class="n">grad_std</span>
 
                 <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
