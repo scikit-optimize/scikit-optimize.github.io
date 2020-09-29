@@ -24,7 +24,7 @@ performance of:
 
 * Halton sequence,
 * Hammersly sequence,
-* Sobol sequence and
+* Sobol' sequence and
 * Latin hypercube sampling
 
 as initial points. The purely random point generation is used as
@@ -202,6 +202,15 @@ models. This makes the comparison more robust against models that get
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /home/circleci/project/skopt/sampler/sobol.py:246: UserWarning: The balance properties of Sobol' points require n to be a power of 2. 0 points have been previously generated, then: n=0+10=10. 
+      warnings.warn("The balance properties of Sobol' points require "
+
 
 
 
@@ -214,7 +223,7 @@ Note that this can take a few minutes.
     plot = plot_convergence([("random", dummy_res),
                             ("lhs", lhs_res),
                             ("lhs_maximin", lhs2_res),
-                            ("sobol", sobol_res),
+                            ("sobol'", sobol_res),
                             ("halton", halton_res),
                             ("hammersly", hammersly_res),
                             ("grid", grid_res)],
@@ -287,7 +296,7 @@ n_random_starts = 10 produces the best results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  50.100 seconds)
+   **Total running time of the script:** ( 3 minutes  11.522 seconds)
 
 **Estimated memory usage:**  8 MB
 
@@ -303,8 +312,9 @@ n_random_starts = 10 produces the best results
 
   .. container:: binder-badge
 
-    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
+    .. image:: images/binder_badge_logo.svg
       :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/sampling_comparison.ipynb
+      :alt: Launch binder
       :width: 150 px
 
 

@@ -136,19 +136,19 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.sampler" title="skopt.sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.sampler</span></code></a>.Hammersly<a class="headerlink" href="#skopt-sampler-hammersly" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.sampler.Hammersly">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.sampler.</code><code class="sig-name descname">Hammersly</code><span class="sig-paren">(</span><em class="sig-param">min_skip=-1</em>, <em class="sig-param">max_skip=-1</em>, <em class="sig-param">primes=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/hammersly.py#L12"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates <code class="docutils literal notranslate"><span class="pre">Hammersley</span></code> sequence samples.
-The Hammersley set is equivalent to the Halton sequence, except for one
+<em class="property">class </em><code class="sig-prename descclassname">skopt.sampler.</code><code class="sig-name descname">Hammersly</code><span class="sig-paren">(</span><em class="sig-param">min_skip=0</em>, <em class="sig-param">max_skip=0</em>, <em class="sig-param">primes=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/hammersly.py#L12"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates <code class="docutils literal notranslate"><span class="pre">Hammersley</span></code> sequence samples.</p>
+<p>The Hammersley set is equivalent to the Halton sequence, except for one
 dimension is replaced with a regular grid. It is not recommended to
 generate a Hammersley sequence with more than 10 dimension.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">==</span> <span class="pre">1</span></code> the sequence falls back to Van Der Corput sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>min_skip</strong><span class="classifier">int, default=-1</span></dt><dd><p>minimum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code> and
+<dt><strong>min_skip</strong><span class="classifier">int, default=-1</span></dt><dd><p>Minimum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code> and
 both are &gt; -1, a random number is picked.</p>
 </dd>
-<dt><strong>max_skip</strong><span class="classifier">int, default=-1</span></dt><dd><p>maximum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code> and
+<dt><strong>max_skip</strong><span class="classifier">int, default=-1</span></dt><dd><p>Maximum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code> and
 both are &gt; -1, a random number is picked.</p>
 </dd>
 <dt><strong>primes</strong><span class="classifier">tuple, default=None</span></dt><dd><p>The (non-)prime base to calculate values along each axis. If
@@ -177,13 +177,13 @@ Points,” Journal of Graphics Tools, vol. 2, no. 2, 1997, pp. 9 - 24.</p>
 </table>
 <dl class="method">
 <dt id="skopt.sampler.Hammersly.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">min_skip=-1</em>, <em class="sig-param">max_skip=-1</em>, <em class="sig-param">primes=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/hammersly.py#L37"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">min_skip=0</em>, <em class="sig-param">max_skip=0</em>, <em class="sig-param">primes=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/hammersly.py#L39"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.sampler.Hammersly.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">n_samples</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/hammersly.py#L42"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.generate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">n_samples</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/hammersly.py#L44"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/hammersly.html#Hammersly.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates samples from Hammersly set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -210,7 +210,7 @@ results.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>np.array, shape=(n_dim, n_samples)</dt><dd><p>Hammersley set</p>
+<dt>np.array, shape=(n_dim, n_samples)</dt><dd><p>Hammersley set.</p>
 </dd>
 </dl>
 </dd>
@@ -219,7 +219,7 @@ results.</p>
 
 <dl class="method">
 <dt id="skopt.sampler.Hammersly.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/base.py#L9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/base.py#L9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Hammersly.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this initial point generator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

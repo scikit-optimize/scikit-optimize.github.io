@@ -122,7 +122,7 @@
             <ul>
 <li><a class="reference internal" href="#">Comparing initial sampling methods on integer space</a><ul>
 <li><a class="reference internal" href="#random-sampling">Random sampling</a></li>
-<li><a class="reference internal" href="#sobol">Sobol</a></li>
+<li><a class="reference internal" href="#sobol">Sobol’</a></li>
 <li><a class="reference internal" href="#classic-latin-hypercube-sampling">Classic latin hypercube sampling</a></li>
 <li><a class="reference internal" href="#centered-latin-hypercube-sampling">Centered latin hypercube sampling</a></li>
 <li><a class="reference internal" href="#maximin-optimized-hypercube-sampling">Maximin optimized hypercube sampling</a></li>
@@ -154,7 +154,7 @@ early part of the optimization to pure exploration. By default the
 optimizer suggests purely random samples for the first n_initial_points
 (10 by default). The downside to this is that there is no guarantee that
 these samples are spread out evenly across all the dimensions.</p>
-<p>Sampling methods as Latin hypercube, Sobol, Halton and Hammersly
+<p>Sampling methods as Latin hypercube, Sobol’, Halton and Hammersly
 take advantage of the fact that we know beforehand how many random
 points we want to sample. Then these points can be “spread out” in
 such a way that each dimension is explored.</p>
@@ -208,18 +208,20 @@ such a way that each dimension is explored.</p>
 </div>
 </div>
 <div class="section" id="sobol">
-<h2>Sobol<a class="headerlink" href="#sobol" title="Permalink to this headline">¶</a></h2>
+<h2>Sobol’<a class="headerlink" href="#sobol" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sobol</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Sobol.html#skopt.sampler.Sobol" title="skopt.sampler.Sobol" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Sobol</span></a><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">sobol</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-<span class="n">plot_searchspace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Sobol&#39;</span><span class="p">)</span>
+<span class="n">plot_searchspace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Sobol&#39;&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;empty fields: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">36</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique" title="numpy.unique" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)))</span>
 <span class="n">pdist_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html#scipy.spatial.distance.pdist" title="scipy.spatial.distance.pdist" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">pdist</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
-<span class="n">x_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;sobol&quot;</span><span class="p">)</span>
+<span class="n">x_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;sobol&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Sobol" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method-integer_002.png" />
+<img alt="Sobol'" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method-integer_002.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/skopt/sampler/sobol.py:246: UserWarning: The balance properties of Sobol&#39; points require n to be a power of 2. 0 points have been previously generated, then: n=0+10=10.
+  warnings.warn(&quot;The balance properties of Sobol&#39; points require &quot;
+empty fields: 26
 </pre></div>
 </div>
 </div>
@@ -235,7 +237,7 @@ such a way that each dimension is explored.</p>
 </div>
 <img alt="classic LHS" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method-integer_003.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 27
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
 </div>
@@ -365,11 +367,11 @@ It can be seen that random has the worst performance</p>
 </pre></div>
 </div>
 <img alt="initial sampling method integer" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method-integer_011.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.209 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.879 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sampler-initial-sampling-method-integer-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/initial-sampling-method-integer.ipynb"><img alt="../../_images/binder_badge_logo.png" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/initial-sampling-method-integer.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0178322c98f167f94a34917648d835b7/initial-sampling-method-integer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">initial-sampling-method-integer.py</span></code></a></p>

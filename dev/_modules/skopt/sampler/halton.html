@@ -139,6 +139,7 @@
 
 <div class="viewcode-block" id="Halton"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Halton.html#skopt.sampler.Halton">[docs]</a><span class="k">class</span> <span class="nc">Halton</span><span class="p">(</span><span class="n">InitialPointGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates `Halton` sequence samples.</span>
+
 <span class="sd">    In statistics, Halton sequences are sequences used to generate</span>
 <span class="sd">    points in space for numerical methods such as Monte Carlo simulations.</span>
 <span class="sd">    Although these sequences are deterministic, they are of low discrepancy,</span>
@@ -152,16 +153,17 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    min_skip : int</span>
-<span class="sd">        minimum skipped seed number. When `min_skip != max_skip`</span>
+<span class="sd">        Minimum skipped seed number. When `min_skip != max_skip`</span>
 <span class="sd">        a random number is picked.</span>
 <span class="sd">    max_skip : int</span>
-<span class="sd">        maximum skipped seed number. When `min_skip != max_skip`</span>
+<span class="sd">        Maximum skipped seed number. When `min_skip != max_skip`</span>
 <span class="sd">        a random number is picked.</span>
 <span class="sd">    primes : tuple, default=None</span>
 <span class="sd">        The (non-)prime base to calculate values along each axis. If</span>
 <span class="sd">        empty or None, growing prime values starting from 2 will be used.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Halton.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Halton.html#skopt.sampler.Halton.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_skip</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_skip</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">primes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Halton.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Halton.html#skopt.sampler.Halton.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">primes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primes</span> <span class="o">=</span> <span class="n">primes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">=</span> <span class="n">min_skip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span> <span class="o">=</span> <span class="n">max_skip</span></div>
@@ -191,7 +193,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.array, shape=(n_dim, n_samples)</span>
-<span class="sd">            Halton set</span>
+<span class="sd">            Halton set.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -210,10 +213,11 @@
 
             <span class="n">primes</span> <span class="o">=</span> <span class="n">primes</span><span class="p">[:</span><span class="n">n_dim</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_dim</span><span class="p">,</span> <span class="s2">&quot;not enough primes&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">skip</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span><span class="p">:</span>
             <span class="n">skip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">skip</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">skip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_skip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skip</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -230,8 +234,7 @@
 
 
 <span class="k">def</span> <span class="nf">_van_der_corput_samples</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">number_base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create `Van Der Corput` low discrepancy sequence samples.</span>
+    <span class="sd">&quot;&quot;&quot;Create `Van Der Corput` low discrepancy sequence samples.</span>
 
 <span class="sd">    A van der Corput sequence is an example of the simplest one-dimensional</span>
 <span class="sd">    low-discrepancy sequence over the unit interval; it was first described in</span>
@@ -254,10 +257,11 @@
 <span class="sd">    -------</span>
 <span class="sd">    float, numpy.ndarray</span>
 <span class="sd">        Van der Corput samples.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">number_base</span> <span class="o">&gt;</span> <span class="mi">1</span>
 
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="n">base</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">number_base</span><span class="p">)</span>

@@ -136,46 +136,68 @@
 <h1><a class="reference internal" href="../classes.html#module-skopt.sampler" title="skopt.sampler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.sampler</span></code></a>.Sobol<a class="headerlink" href="#skopt-sampler-sobol" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="skopt.sampler.Sobol">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.sampler.</code><code class="sig-name descname">Sobol</code><span class="sig-paren">(</span><em class="sig-param">min_skip=0</em>, <em class="sig-param">max_skip=1000</em>, <em class="sig-param">randomize=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/sobol.py#L26"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a new quasirandom Sobol vector with each call.</p>
-<p>The routine adapts the ideas of Antonov and Saleev.</p>
+<em class="property">class </em><code class="sig-prename descclassname">skopt.sampler.</code><code class="sig-name descname">Sobol</code><span class="sig-paren">(</span><em class="sig-param">skip=0</em>, <em class="sig-param">randomize=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/sobol.py#L28"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a new quasirandom Sobol’ vector with each call.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>min_skip</strong><span class="classifier">int</span></dt><dd><p>minimum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code>
-a random number is picked.</p>
+<dt><strong>skip</strong><span class="classifier">int</span></dt><dd><p>Skipped seed number.</p>
 </dd>
-<dt><strong>max_skip</strong><span class="classifier">int</span></dt><dd><p>maximum skipped seed number. When <code class="docutils literal notranslate"><span class="pre">min_skip</span> <span class="pre">!=</span> <span class="pre">max_skip</span></code>
-a random number is picked.</p>
-</dd>
-<dt><strong>randomize</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to True, random shift is applied</p>
+<dt><strong>randomize</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to True, random shift is applied.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Sobol’ sequences <a class="reference internal" href="#rc79c383f3724-1" id="id1">[1]</a> provide <span class="math notranslate nohighlight">\(n=2^m\)</span> low discrepancy points in
+<span class="math notranslate nohighlight">\([0,1)^{dim}\)</span>. Scrambling them makes them suitable for singular
+integrands, provides a means of error estimation, and can improve their
+rate of convergence.</p>
+<p>There are many versions of Sobol’ sequences depending on their
+‘direction numbers’. Here, the maximum number of dimension is 40.</p>
+<p>The routine adapts the ideas of Antonov and Saleev <a class="reference internal" href="#rc79c383f3724-2" id="id2">[2]</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sobol’ sequences are a quadrature rule and they lose their balance
+properties if one uses a sample size that is not a power of 2, or skips
+the first point, or thins the sequence <a class="reference internal" href="#rc79c383f3724-5" id="id3">[5]</a>.</p>
+<p>If <span class="math notranslate nohighlight">\(n=2^m\)</span> points are not enough then one should take <span class="math notranslate nohighlight">\(2^M\)</span>
+points for <span class="math notranslate nohighlight">\(M&gt;m\)</span>. When scrambling, the number R of independent
+replicates does not have to be a power of 2.</p>
+<p>Sobol’ sequences are generated to some number <span class="math notranslate nohighlight">\(B\)</span> of bits. Then
+after <span class="math notranslate nohighlight">\(2^B\)</span> points have been generated, the sequence will repeat.
+Currently <span class="math notranslate nohighlight">\(B=30\)</span>.</p>
+</div>
 <p class="rubric">References</p>
-<p>Antonov, Saleev,
+<dl class="citation">
+<dt class="label" id="rc79c383f3724-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>I. M. Sobol. The distribution of points in a cube and the accurate
+evaluation of integrals. Zh. Vychisl. Mat. i Mat. Phys., 7:784-802,
+1967.</p>
+</dd>
+<dt class="label" id="rc79c383f3724-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Antonov, Saleev,
 USSR Computational Mathematics and Mathematical Physics,
 Volume 19, 1980, pages 252 - 256.</p>
-<p>Paul Bratley, Bennett Fox,
+</dd>
+<dt class="label" id="rc79c383f3724-3"><span class="brackets">3</span></dt>
+<dd><p>Paul Bratley, Bennett Fox,
 Algorithm 659:
 Implementing Sobol’s Quasirandom Sequence Generator,
 ACM Transactions on Mathematical Software,
 Volume 14, Number 1, pages 88-100, 1988.</p>
-<p>Bennett Fox,
+</dd>
+<dt class="label" id="rc79c383f3724-4"><span class="brackets">4</span></dt>
+<dd><p>Bennett Fox,
 Algorithm 647:
 Implementation and Relative Efficiency of Quasirandom
-Sequence Generators,
-ACM Transactions on Mathematical Software,
-Volume 12, Number 4, pages 362-376, 1986.</p>
-<p>Ilya Sobol,
-USSR Computational Mathematics and Mathematical Physics,
-Volume 16, pages 236-242, 1977.</p>
-<p>Ilya Sobol, Levitan,
-The Production of Points Uniformly Distributed in a Multidimensional
-Cube (in Russian),
-Preprint IPM Akad. Nauk SSSR,
-Number 40, Moscow 1976.</p>
+Sequence Generators,</p>
+</dd>
+<dt class="label" id="rc79c383f3724-5"><span class="brackets"><a class="fn-backref" href="#id3">5</a></span></dt>
+<dd><p>Art B. Owen. On dropping the first Sobol’ point. arXiv 2008.08051,
+2020.</p>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -184,7 +206,7 @@ Number 40, Moscow 1976.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#skopt.sampler.Sobol.generate" title="skopt.sampler.Sobol.generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate</span></code></a>(dimensions, n_samples[, random_state])</p></td>
-<td><p>Creates samples from Sobol set.</p></td>
+<td><p>Creates samples from Sobol’ set.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#skopt.sampler.Sobol.set_params" title="skopt.sampler.Sobol.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this initial point generator.</p></td>
@@ -204,14 +226,14 @@ Number 40, Moscow 1976.</p>
 </table>
 <dl class="method">
 <dt id="skopt.sampler.Sobol.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">min_skip=0</em>, <em class="sig-param">max_skip=1000</em>, <em class="sig-param">randomize=False</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/sobol.py#L72"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">skip=0</em>, <em class="sig-param">randomize=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/sobol.py#L90"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="skopt.sampler.Sobol.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">n_samples</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/sobol.py#L190"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates samples from Sobol set.</p>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">dimensions</em>, <em class="sig-param">n_samples</em>, <em class="sig-param">random_state=None</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/sobol.py#L216"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/sampler/sobol.html#Sobol.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates samples from Sobol’ set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -227,7 +249,7 @@ dimensions),</p></li>
 <code class="docutils literal notranslate"><span class="pre">Categorical</span></code>).</p></li>
 </ul>
 </dd>
-<dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>The order of the Sobol sequence. Defines the number of samples.</p>
+<dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>The order of the Sobol’ sequence. Defines the number of samples.</p>
 </dd>
 <dt><strong>random_state</strong><span class="classifier">int, RandomState instance, or None (default)</span></dt><dd><p>Set random state to something other than None for reproducible
 results.</p>
@@ -236,7 +258,7 @@ results.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>np.array, shape=(n_dim, n_samples)</dt><dd><p>Sobol set</p>
+<dt><strong>sample</strong><span class="classifier">array_like (n_samples, dim)</span></dt><dd><p>Sobol’ set.</p>
 </dd>
 </dl>
 </dd>
@@ -245,7 +267,7 @@ results.</p>
 
 <dl class="method">
 <dt id="skopt.sampler.Sobol.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/19abe94/skopt/sampler/base.py#L9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/9334d50/skopt/sampler/base.py#L9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.sampler.Sobol.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this initial point generator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -265,13 +287,13 @@ results.</p>
 
 <div class="section" id="examples-using-skopt-sampler-sobol">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">skopt.sampler.Sobol</span></code><a class="headerlink" href="#examples-using-skopt-sampler-sobol" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Holger Nahrstaedt 2020 Sigurd Carlsen October 2019"><div class="figure align-default" id="id1">
+<div class="sphx-glr-thumbcontainer" tooltip="Holger Nahrstaedt 2020 Sigurd Carlsen October 2019"><div class="figure align-default" id="id9">
 <img alt="Comparing initial sampling methods" src="../../_images/sphx_glr_initial-sampling-method_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sampler/initial-sampling-method.html#sphx-glr-auto-examples-sampler-initial-sampling-method-py"><span class="std std-ref">Comparing initial sampling methods</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sampler/initial-sampling-method.html#sphx-glr-auto-examples-sampler-initial-sampling-method-py"><span class="std std-ref">Comparing initial sampling methods</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Holger Nahrstaedt 2020 Sigurd Carlsen October 2019"><div class="figure align-default" id="id2">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Holger Nahrstaedt 2020 Sigurd Carlsen October 2019"><div class="figure align-default" id="id10">
 <img alt="Comparing initial sampling methods on integer space" src="../../_images/sphx_glr_initial-sampling-method-integer_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sampler/initial-sampling-method-integer.html#sphx-glr-auto-examples-sampler-initial-sampling-method-integer-py"><span class="std std-ref">Comparing initial sampling methods on integer space</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../../auto_examples/sampler/initial-sampling-method-integer.html#sphx-glr-auto-examples-sampler-initial-sampling-method-integer-py"><span class="std std-ref">Comparing initial sampling methods on integer space</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="clearer"></div></div>
 </div>

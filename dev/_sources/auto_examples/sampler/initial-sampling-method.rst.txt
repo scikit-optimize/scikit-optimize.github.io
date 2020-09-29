@@ -24,7 +24,7 @@ optimizer suggests purely random samples for the first n_initial_points
 (10 by default). The downside to this is that there is no guarantee that
 these samples are spread out evenly across all the dimensions.
 
-Sampling methods as Latin hypercube, Sobol, Halton and Hammersly
+Sampling methods as Latin hypercube, Sobol', Halton and Hammersly
 take advantage of the fact that we know beforehand how many random
 points we want to sample. Then these points can be "spread out" in
 such a way that each dimension is explored.
@@ -106,8 +106,8 @@ Random sampling
 
 
 
-Sobol
------
+Sobol'
+------
 
 
 .. code-block:: default
@@ -115,17 +115,26 @@ Sobol
 
     sobol = Sobol()
     x = sobol.generate(space.dimensions, n_samples)
-    plot_searchspace(x, 'Sobol')
+    plot_searchspace(x, "Sobol'")
     pdist_data.append(pdist(x).flatten())
-    x_label.append("sobol")
+    x_label.append("sobol'")
 
 
 
 
 .. image:: /auto_examples/sampler/images/sphx_glr_initial-sampling-method_002.png
-    :alt: Sobol
+    :alt: Sobol'
     :class: sphx-glr-single-img
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /home/circleci/project/skopt/sampler/sobol.py:246: UserWarning: The balance properties of Sobol' points require n to be a power of 2. 0 points have been previously generated, then: n=0+10=10. 
+      warnings.warn("The balance properties of Sobol' points require "
 
 
 
@@ -353,7 +362,7 @@ It can be seen that random has the worst performance
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.125 seconds)
+   **Total running time of the script:** ( 0 minutes  9.217 seconds)
 
 **Estimated memory usage:**  8 MB
 
@@ -369,8 +378,9 @@ It can be seen that random has the worst performance
 
   .. container:: binder-badge
 
-    .. image:: /../../miniconda/envs/testenv/lib/python3.8/site-packages/sphinx_gallery/_static/binder_badge_logo.svg
+    .. image:: images/binder_badge_logo.svg
       :target: https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/initial-sampling-method.ipynb
+      :alt: Launch binder
       :width: 150 px
 
 
