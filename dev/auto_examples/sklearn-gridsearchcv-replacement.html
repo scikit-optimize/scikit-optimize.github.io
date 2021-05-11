@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="Description" content="scikit-optimize: machine learning in Python">
 
@@ -22,6 +23,7 @@
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 <script src="../_static/jquery.js"></script> 
@@ -138,26 +140,27 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">here</span></a>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
-<div class="sphx-glr-example-title section" id="scikit-learn-hyperparameter-search-wrapper">
+<section class="sphx-glr-example-title" id="scikit-learn-hyperparameter-search-wrapper">
 <span id="sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"></span><h1>Scikit-learn hyperparameter search wrapper<a class="headerlink" href="#scikit-learn-hyperparameter-search-wrapper" title="Permalink to this headline">¶</a></h1>
 <p>Iaroslav Shcherbatyi, Tim Head and Gilles Louppe. June 2017.
 Reformatted by Holger Nahrstaedt 2020</p>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This example assumes basic familiarity with
 <a class="reference external" href="http://scikit-learn.org/stable/index.html">scikit-learn</a>.</p>
 <p>Search for parameters of machine learning models that result in best
 cross-validation performance is necessary in almost all practical
 cases to get a model with best generalization estimate. A standard
-approach in scikit-learn is using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> class, which takes
+approach in scikit-learn is using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> class, which takes
 a set of values for every parameter to try, and simply enumerates all
 combinations of parameter values. The complexity of such search grows
 exponentially with the addition of new parameters. A more scalable
-approach is using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>, which however does not take
+approach is using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>, which however does not take
 advantage of the structure of a search space.</p>
-<p>Scikit-optimize provides a drop-in replacement for <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>,
+<p>Scikit-optimize provides a drop-in replacement for <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>,
 which utilizes Bayesian Optimization where a predictive model referred
 to as “surrogate” is used to model the search space and utilized to
 arrive at good parameter values combination as soon as possible.</p>
@@ -169,8 +172,8 @@ arrive at good parameter values combination as soon as possible.</p>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="minimal-example">
+</section>
+<section id="minimal-example">
 <h2>Minimal example<a class="headerlink" href="#minimal-example" title="Permalink to this headline">¶</a></h2>
 <p>A minimal example of optimizing hyperparameters of SVC (Support Vector machine Classifier) is given below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.BayesSearchCV" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BayesSearchCV</span></a>
@@ -201,12 +204,14 @@ arrive at good parameter values combination as soon as possible.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>val. score: 0.985894580549369
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+val. score: 0.985894580549369
 test score: 0.9822222222222222
 </pre></div>
 </div>
-</div>
-<div class="section" id="advanced-example">
+</section>
+<section id="advanced-example">
 <h2>Advanced example<a class="headerlink" href="#advanced-example" title="Permalink to this headline">¶</a></h2>
 <p>In practice, one wants to enumerate over multiple predictive model classes,
 with different search spaces and number of evaluations per class. An
@@ -263,59 +268,59 @@ decision trees is given below.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
-/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/svm/_base.py:976: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/svm/_base.py:985: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(&quot;Liblinear failed to converge, increase &quot;
 val. score: 0.985894580549369
 test score: 0.9822222222222222
@@ -336,8 +341,8 @@ best params: OrderedDict([(&#39;model&#39;, SVC(C=0.41571471424085416, gamma=1.0
 </pre></div>
 </div>
 <img alt="sklearn gridsearchcv replacement" class="sphx-glr-single-img" src="../_images/sphx_glr_sklearn-gridsearchcv-replacement_002.png" />
-</div>
-<div class="section" id="progress-monitoring-and-control-using-callback-argument-of-fit-method">
+</section>
+<section id="progress-monitoring-and-control-using-callback-argument-of-fit-method">
 <h2>Progress monitoring and control using <code class="docutils literal notranslate"><span class="pre">callback</span></code> argument of <code class="docutils literal notranslate"><span class="pre">fit</span></code> method<a class="headerlink" href="#progress-monitoring-and-control-using-callback-argument-of-fit-method" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to monitor the progress of <a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.BayesSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">BayesSearchCV</span></code></a> with an event
 handler that is called on every step of subspace exploration. For single job
@@ -364,7 +369,7 @@ accuracy that you get is sufficiently high.</p>
 
 <span class="c1"># callback handler</span>
 <span class="k">def</span> <span class="nf">on_step</span><span class="p">(</span><span class="n">optim_result</span><span class="p">):</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">searchcv</span><span class="o">.</span><span class="n">best_score_</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">optim_result</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;best score: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">score</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mf">0.98</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Interrupting!&#39;</span><span class="p">)</span>
@@ -382,8 +387,8 @@ BayesSearchCV(cv=3, estimator=SVC(), n_iter=10,
               search_spaces={&#39;C&#39;: (0.01, 100.0, &#39;log-uniform&#39;)})
 </pre></div>
 </div>
-</div>
-<div class="section" id="counting-total-iterations-that-will-be-used-to-explore-all-subspaces">
+</section>
+<section id="counting-total-iterations-that-will-be-used-to-explore-all-subspaces">
 <h2>Counting total iterations that will be used to explore all subspaces<a class="headerlink" href="#counting-total-iterations-that-will-be-used-to-explore-all-subspaces" title="Permalink to this headline">¶</a></h2>
 <p>Subspaces in previous examples can further increase in complexity if you add
 new model subspaces or dimensions for feature extraction pipelines. For
@@ -410,13 +415,13 @@ calculated with <code class="docutils literal notranslate"><span class="pre">tot
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/envs/testenv/lib/python3.8/site-packages/scikit_learn-0.23.2-py3.8-linux-x86_64.egg/sklearn/utils/validation.py:67: FutureWarning: Pass return_X_y=True as keyword args. From version 0.25 passing these as positional arguments will result in an error
-  warnings.warn(&quot;Pass {} as keyword args. From version 0.25 &quot;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
+  warnings.warn(f&quot;Pass {args_msg} as keyword args. From version &quot;
 42
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  50.618 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  9 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  46.392 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  10 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sklearn-gridsearchcv-replacement-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sklearn-gridsearchcv-replacement.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.png" style="width: 150px;" /></a>
@@ -429,8 +434,8 @@ calculated with <code class="docutils literal notranslate"><span class="pre">tot
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
       </div>

@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="Description" content="scikit-optimize: machine learning in Python">
 
@@ -22,6 +23,7 @@
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -144,9 +146,10 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sampler-initial-sampling-method-integer-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-sampler-initial-sampling-method-integer-py"><span class="std std-ref">here</span></a>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
-<div class="sphx-glr-example-title section" id="comparing-initial-sampling-methods-on-integer-space">
+<section class="sphx-glr-example-title" id="comparing-initial-sampling-methods-on-integer-space">
 <span id="sphx-glr-auto-examples-sampler-initial-sampling-method-integer-py"></span><h1>Comparing initial sampling methods on integer space<a class="headerlink" href="#comparing-initial-sampling-methods-on-integer-space" title="Permalink to this headline">¶</a></h1>
 <p>Holger Nahrstaedt 2020 Sigurd Carlsen October 2019</p>
 <p>When doing baysian optimization we often want to reserve some of the
@@ -190,7 +193,7 @@ such a way that each dimension is explored.</p>
 <span class="n">space</span> <span class="o">=</span> <a href="../../modules/generated/skopt.Space.html#skopt.Space" title="skopt.Space" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Space</span></a><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)])</span>
 </pre></div>
 </div>
-<div class="section" id="random-sampling">
+<section id="random-sampling">
 <h2>Random sampling<a class="headerlink" href="#random-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
 <span class="n">plot_searchspace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Random samples&quot;</span><span class="p">)</span>
@@ -206,8 +209,8 @@ such a way that each dimension is explored.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 27
 </pre></div>
 </div>
-</div>
-<div class="section" id="sobol">
+</section>
+<section id="sobol">
 <h2>Sobol’<a class="headerlink" href="#sobol" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sobol</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Sobol.html#skopt.sampler.Sobol" title="skopt.sampler.Sobol" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Sobol</span></a><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">sobol</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -224,8 +227,8 @@ such a way that each dimension is explored.</p>
 empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="classic-latin-hypercube-sampling">
+</section>
+<section id="classic-latin-hypercube-sampling">
 <h2>Classic latin hypercube sampling<a class="headerlink" href="#classic-latin-hypercube-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="skopt.sampler.Lhs" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lhs</span></a><span class="p">(</span><span class="n">lhs_type</span><span class="o">=</span><span class="s2">&quot;classic&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lhs</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -240,8 +243,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="centered-latin-hypercube-sampling">
+</section>
+<section id="centered-latin-hypercube-sampling">
 <h2>Centered latin hypercube sampling<a class="headerlink" href="#centered-latin-hypercube-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="skopt.sampler.Lhs" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lhs</span></a><span class="p">(</span><span class="n">lhs_type</span><span class="o">=</span><span class="s2">&quot;centered&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lhs</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -256,8 +259,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="maximin-optimized-hypercube-sampling">
+</section>
+<section id="maximin-optimized-hypercube-sampling">
 <h2>Maximin optimized hypercube sampling<a class="headerlink" href="#maximin-optimized-hypercube-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="skopt.sampler.Lhs" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lhs</span></a><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lhs</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -272,8 +275,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="correlation-optimized-hypercube-sampling">
+</section>
+<section id="correlation-optimized-hypercube-sampling">
 <h2>Correlation optimized hypercube sampling<a class="headerlink" href="#correlation-optimized-hypercube-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="skopt.sampler.Lhs" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lhs</span></a><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lhs</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -288,8 +291,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="ratio-optimized-hypercube-sampling">
+</section>
+<section id="ratio-optimized-hypercube-sampling">
 <h2>Ratio optimized hypercube sampling<a class="headerlink" href="#ratio-optimized-hypercube-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lhs</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs" title="skopt.sampler.Lhs" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lhs</span></a><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;ratio&quot;</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lhs</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -304,8 +307,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="halton-sampling">
+</section>
+<section id="halton-sampling">
 <h2>Halton sampling<a class="headerlink" href="#halton-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">halton</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Halton.html#skopt.sampler.Halton" title="skopt.sampler.Halton" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Halton</span></a><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">halton</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -320,8 +323,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="hammersly-sampling">
+</section>
+<section id="hammersly-sampling">
 <h2>Hammersly sampling<a class="headerlink" href="#hammersly-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hammersly</span> <span class="o">=</span> <a href="../../modules/generated/skopt.sampler.Hammersly.html#skopt.sampler.Hammersly" title="skopt.sampler.Hammersly" class="sphx-glr-backref-module-skopt-sampler sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Hammersly</span></a><span class="p">()</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">hammersly</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -336,8 +339,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="grid-sampling">
+</section>
+<section id="grid-sampling">
 <h2>Grid sampling<a class="headerlink" href="#grid-sampling" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">border</span><span class="o">=</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="n">use_full_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">space</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
@@ -352,8 +355,8 @@ empty fields: 26
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>empty fields: 26
 </pre></div>
 </div>
-</div>
-<div class="section" id="pdist-boxplot-of-all-methods">
+</section>
+<section id="pdist-boxplot-of-all-methods">
 <h2>Pdist boxplot of all methods<a class="headerlink" href="#pdist-boxplot-of-all-methods" title="Permalink to this headline">¶</a></h2>
 <p>This boxplot shows the distance between all generated points using
 Euclidian distance. The higher the value, the better the sampling method.
@@ -367,8 +370,8 @@ It can be seen that random has the worst performance</p>
 </pre></div>
 </div>
 <img alt="initial sampling method integer" class="sphx-glr-single-img" src="../../_images/sphx_glr_initial-sampling-method-integer_011.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.879 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  8 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.889 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  9 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sampler-initial-sampling-method-integer-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/sampler/initial-sampling-method-integer.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
@@ -381,8 +384,8 @@ It can be seen that random has the worst performance</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
       </div>

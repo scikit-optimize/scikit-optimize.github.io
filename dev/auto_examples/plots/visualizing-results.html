@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="Description" content="scikit-optimize: machine learning in Python">
 
@@ -22,6 +23,7 @@
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 <script src="../../_static/jquery.js"></script> 
@@ -142,9 +144,10 @@
         
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plots-visualizing-results-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plots-visualizing-results-py"><span class="std std-ref">here</span></a>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
-<div class="sphx-glr-example-title section" id="visualizing-optimization-results">
+<section class="sphx-glr-example-title" id="visualizing-optimization-results">
 <span id="sphx-glr-auto-examples-plots-visualizing-results-py"></span><h1>Visualizing optimization results<a class="headerlink" href="#visualizing-optimization-results" title="Permalink to this headline">¶</a></h1>
 <p>Tim Head, August 2016.
 Reformatted by Holger Nahrstaedt 2020</p>
@@ -173,7 +176,7 @@ are helpers that do just that</p>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
-<div class="section" id="toy-models">
+<section id="toy-models">
 <h2>Toy models<a class="headerlink" href="#toy-models" title="Permalink to this headline">¶</a></h2>
 <p>We will use two different toy models to demonstrate how <a class="reference internal" href="../../modules/generated/skopt.plots.plot_evaluations.html#skopt.plots.plot_evaluations" title="skopt.plots.plot_evaluations"><code class="xref py py-class docutils literal notranslate"><span class="pre">plots.plot_evaluations</span></code></a>
 works.</p>
@@ -191,8 +194,8 @@ it hard to visualize. This will show off the utility of
     <span class="k">return</span> <a href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6" class="sphx-glr-backref-module-skopt-benchmarks sphx-glr-backref-type-py-function"><span class="n">hart6_</span></a><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="starting-with-branin">
+</section>
+<section id="starting-with-branin">
 <h2>Starting with <code class="docutils literal notranslate"><span class="pre">branin</span></code><a class="headerlink" href="#starting-with-branin" title="Permalink to this headline">¶</a></h2>
 <p>To start let’s take advantage of the fact that <a class="reference internal" href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> is a simple
 function which can be visualised in two dimensions.</p>
@@ -237,8 +240,8 @@ function which can be visualised in two dimensions.</p>
   cm = ax.pcolormesh(x_ax, y_ax, fx,
 </pre></div>
 </div>
-</div>
-<div class="section" id="evaluating-the-objective-function">
+</section>
+<section id="evaluating-the-objective-function">
 <h2>Evaluating the objective function<a class="headerlink" href="#evaluating-the-objective-function" title="Permalink to this headline">¶</a></h2>
 <p>Next we use an extra trees based minimizer to find one of the minima of the
 <a class="reference internal" href="../../modules/generated/skopt.benchmarks.branin.html#skopt.benchmarks.branin" title="skopt.benchmarks.branin"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.branin</span></code></a> function. Then we visualize at which points the objective is being
@@ -273,7 +276,7 @@ dependence of the surrogate model for each dimension. The contour plot in
 the bottom left corner shows the two dimensional partial dependence. In this
 case this is the same as simply plotting the objective as it only has two
 dimensions.</p>
-<div class="section" id="partial-dependence-plots">
+<section id="partial-dependence-plots">
 <h3>Partial dependence plots<a class="headerlink" href="#partial-dependence-plots" title="Permalink to this headline">¶</a></h3>
 <p>Partial dependence plots were proposed by
 [Friedman (2001)]_
@@ -297,9 +300,9 @@ objective but it does not have to. As points at which the objective function
 is being evaluated are concentrated around the suspected minimum the
 surrogate model sometimes is not a good representation of the objective far
 away from the minima.</p>
-</div>
-</div>
-<div class="section" id="random-sampling">
+</section>
+</section>
+<section id="random-sampling">
 <h2>Random sampling<a class="headerlink" href="#random-sampling" title="Permalink to this headline">¶</a></h2>
 <p>Compare this to a minimizer which picks points at random. There is no
 structure visible in the order in which it evaluates the objective. Because
@@ -311,8 +314,8 @@ random, we can not plot the partial dependence of the model.</p>
 </pre></div>
 </div>
 <img alt="visualizing results" class="sphx-glr-single-img" src="../../_images/sphx_glr_visualizing-results_004.png" />
-</div>
-<div class="section" id="working-in-six-dimensions">
+</section>
+<section id="working-in-six-dimensions">
 <h2>Working in six dimensions<a class="headerlink" href="#working-in-six-dimensions" title="Permalink to this headline">¶</a></h2>
 <p>Visualising what happens in two dimensions is easy, where
 <a class="reference internal" href="../../modules/generated/skopt.plots.plot_evaluations.html#skopt.plots.plot_evaluations" title="skopt.plots.plot_evaluations"><code class="xref py py-class docutils literal notranslate"><span class="pre">plots.plot_evaluations</span></code></a> and <a class="reference internal" href="../../modules/generated/skopt.plots.plot_objective.html#skopt.plots.plot_objective" title="skopt.plots.plot_objective"><code class="xref py py-class docutils literal notranslate"><span class="pre">plots.plot_objective</span></code></a> start to be useful is when the
@@ -336,8 +339,8 @@ things needed to make good plots of all combinations of the dimensions.</p>
 <li><img alt="visualizing results" class="sphx-glr-multi-img" src="../../_images/sphx_glr_visualizing-results_006.png" />
 </li>
 </ul>
-</div>
-<div class="section" id="going-from-6-to-6-2-dimensions">
+</section>
+<section id="going-from-6-to-6-2-dimensions">
 <h2>Going from 6 to 6+2 dimensions<a class="headerlink" href="#going-from-6-to-6-2-dimensions" title="Permalink to this headline">¶</a></h2>
 <p>To make things more interesting let’s add two dimension to the problem.
 As <a class="reference internal" href="../../modules/generated/skopt.benchmarks.hart6.html#skopt.benchmarks.hart6" title="skopt.benchmarks.hart6"><code class="xref py py-class docutils literal notranslate"><span class="pre">benchmarks.hart6</span></code></a> only depends on six dimensions we know that for this problem
@@ -361,8 +364,8 @@ in both the placement of samples and the partial dependence plots.</p>
 <li><img alt="visualizing results" class="sphx-glr-multi-img" src="../../_images/sphx_glr_visualizing-results_008.png" />
 </li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 9 minutes  11.408 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  86 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 9 minutes  38.758 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  80 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plots-visualizing-results-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/plots/visualizing-results.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.png" style="width: 150px;" /></a>
@@ -375,8 +378,8 @@ in both the placement of samples and the partial dependence plots.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
       </div>
