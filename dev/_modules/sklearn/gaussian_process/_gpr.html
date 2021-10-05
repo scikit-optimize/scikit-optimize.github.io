@@ -19,10 +19,10 @@
   
 
   <link rel="stylesheet" href="../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 <script src="../../../_static/jquery.js"></script> 
@@ -138,7 +138,7 @@
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">cholesky</span><span class="p">,</span> <span class="n">cho_solve</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">cholesky</span><span class="p">,</span> <span class="n">cho_solve</span><span class="p">,</span> <span class="n">solve_triangular</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 
 <span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">,</span> <span class="n">clone</span>
@@ -146,25 +146,23 @@
 <span class="kn">from</span> <span class="nn">.kernels</span> <span class="kn">import</span> <span class="n">RBF</span><span class="p">,</span> <span class="n">ConstantKernel</span> <span class="k">as</span> <span class="n">C</span>
 <span class="kn">from</span> <span class="nn">..preprocessing._data</span> <span class="kn">import</span> <span class="n">_handle_zeros_in_scale</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span>
 <span class="kn">from</span> <span class="nn">..utils.optimize</span> <span class="kn">import</span> <span class="n">_check_optimize_result</span>
-<span class="kn">from</span> <span class="nn">..utils.validation</span> <span class="kn">import</span> <span class="n">_deprecate_positional_args</span>
+
+<span class="n">GPR_CHOLESKY_LOWER</span> <span class="o">=</span> <span class="kc">True</span>
 
 
-<span class="k">class</span> <span class="nc">GaussianProcessRegressor</span><span class="p">(</span><span class="n">MultiOutputMixin</span><span class="p">,</span>
-                               <span class="n">RegressorMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">GaussianProcessRegressor</span><span class="p">(</span><span class="n">MultiOutputMixin</span><span class="p">,</span> <span class="n">RegressorMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gaussian process regression (GPR).</span>
 
-<span class="sd">    The implementation is based on Algorithm 2.1 of Gaussian Processes</span>
-<span class="sd">    for Machine Learning (GPML) by Rasmussen and Williams.</span>
+<span class="sd">    The implementation is based on Algorithm 2.1 of [1]_.</span>
 
 <span class="sd">    In addition to standard scikit-learn estimator API,</span>
-<span class="sd">    GaussianProcessRegressor:</span>
+<span class="sd">    :class:`GaussianProcessRegressor`:</span>
 
 <span class="sd">       * allows prediction without prior fitting (based on the GP prior)</span>
-<span class="sd">       * provides an additional method sample_y(X), which evaluates samples</span>
+<span class="sd">       * provides an additional method `sample_y(X)`, which evaluates samples</span>
 <span class="sd">         drawn from the GPR (prior or posterior) at given inputs</span>
-<span class="sd">       * exposes a method log_marginal_likelihood(theta), which can be used</span>
+<span class="sd">       * exposes a method `log_marginal_likelihood(theta)`, which can be used</span>
 <span class="sd">         externally for other ways of selecting hyperparameters, e.g., via</span>
 <span class="sd">         Markov chain Monte Carlo.</span>
 
@@ -191,7 +189,7 @@
 <span class="sd">        have the same number of entries as the data used for fitting and is</span>
 <span class="sd">        used as datapoint-dependent noise level. Allowing to specify the</span>
 <span class="sd">        noise level directly as a parameter is mainly for convenience and</span>
-<span class="sd">        for consistency with Ridge.</span>
+<span class="sd">        for consistency with :class:`~sklearn.linear_model.Ridge`.</span>
 
 <span class="sd">    optimizer : &quot;fmin_l_bfgs_b&quot; or callable, default=&quot;fmin_l_bfgs_b&quot;</span>
 <span class="sd">        Can either be one of the internally supported optimizers for optimizing</span>
@@ -200,8 +198,8 @@
 <span class="sd">        must have the signature::</span>
 
 <span class="sd">            def optimizer(obj_func, initial_theta, bounds):</span>
-<span class="sd">                # * &#39;obj_func&#39; is the objective function to be minimized, which</span>
-<span class="sd">                #   takes the hyperparameters theta as parameter and an</span>
+<span class="sd">                # * &#39;obj_func&#39;: the objective function to be minimized, which</span>
+<span class="sd">                #   takes the hyperparameters theta as a parameter and an</span>
 <span class="sd">                #   optional flag eval_gradient, which determines if the</span>
 <span class="sd">                #   gradient is returned additionally to the function value</span>
 <span class="sd">                # * &#39;initial_theta&#39;: the initial value for theta, which can be</span>
@@ -212,11 +210,9 @@
 <span class="sd">                # the corresponding value of the target function.</span>
 <span class="sd">                return theta_opt, func_min</span>
 
-<span class="sd">        Per default, the &#39;L-BGFS-B&#39; algorithm from scipy.optimize.minimize</span>
+<span class="sd">        Per default, the L-BFGS-B algorithm from `scipy.optimize.minimize`</span>
 <span class="sd">        is used. If None is passed, the kernel&#39;s parameters are kept fixed.</span>
-<span class="sd">        Available internal optimizers are::</span>
-
-<span class="sd">            &#39;fmin_l_bfgs_b&#39;</span>
+<span class="sd">        Available internal optimizers are: `{&#39;fmin_l_bfgs_b&#39;}`.</span>
 
 <span class="sd">    n_restarts_optimizer : int, default=0</span>
 <span class="sd">        The number of restarts of the optimizer for finding the kernel&#39;s</span>
@@ -224,15 +220,15 @@
 <span class="sd">        of the optimizer is performed from the kernel&#39;s initial parameters,</span>
 <span class="sd">        the remaining ones (if any) from thetas sampled log-uniform randomly</span>
 <span class="sd">        from the space of allowed theta-values. If greater than 0, all bounds</span>
-<span class="sd">        must be finite. Note that n_restarts_optimizer == 0 implies that one</span>
+<span class="sd">        must be finite. Note that `n_restarts_optimizer == 0` implies that one</span>
 <span class="sd">        run is performed.</span>
 
 <span class="sd">    normalize_y : bool, default=False</span>
-<span class="sd">        Whether the target values y are normalized, the mean and variance of</span>
-<span class="sd">        the target values are set equal to 0 and 1 respectively. This is</span>
-<span class="sd">        recommended for cases where zero-mean, unit-variance priors are used.</span>
-<span class="sd">        Note that, in this implementation, the normalisation is reversed</span>
-<span class="sd">        before the GP predictions are reported.</span>
+<span class="sd">        Whether or not to normalized the target values `y` by removing the mean</span>
+<span class="sd">        and scaling to unit-variance. This is recommended for cases where</span>
+<span class="sd">        zero-mean, unit-variance priors are used. Note that, in this</span>
+<span class="sd">        implementation, the normalisation is reversed before the GP predictions</span>
+<span class="sd">        are reported.</span>
 
 <span class="sd">        .. versionchanged:: 0.23</span>
 
@@ -245,7 +241,7 @@
 <span class="sd">    random_state : int, RandomState instance or None, default=None</span>
 <span class="sd">        Determines random number generation used to initialize the centers.</span>
 <span class="sd">        Pass an int for reproducible results across multiple function calls.</span>
-<span class="sd">        See :term: `Glossary &lt;random_state&gt;`.</span>
+<span class="sd">        See :term:`Glossary &lt;random_state&gt;`.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -254,20 +250,43 @@
 <span class="sd">        required for prediction).</span>
 
 <span class="sd">    y_train_ : array-like of shape (n_samples,) or (n_samples, n_targets)</span>
-<span class="sd">        Target values in training data (also required for prediction)</span>
+<span class="sd">        Target values in training data (also required for prediction).</span>
 
 <span class="sd">    kernel_ : kernel instance</span>
 <span class="sd">        The kernel used for prediction. The structure of the kernel is the</span>
-<span class="sd">        same as the one passed as parameter but with optimized hyperparameters</span>
+<span class="sd">        same as the one passed as parameter but with optimized hyperparameters.</span>
 
 <span class="sd">    L_ : array-like of shape (n_samples, n_samples)</span>
-<span class="sd">        Lower-triangular Cholesky decomposition of the kernel in ``X_train_``</span>
+<span class="sd">        Lower-triangular Cholesky decomposition of the kernel in ``X_train_``.</span>
 
 <span class="sd">    alpha_ : array-like of shape (n_samples,)</span>
-<span class="sd">        Dual coefficients of training data points in kernel space</span>
+<span class="sd">        Dual coefficients of training data points in kernel space.</span>
 
 <span class="sd">    log_marginal_likelihood_value_ : float</span>
-<span class="sd">        The log-marginal-likelihood of ``self.kernel_.theta``</span>
+<span class="sd">        The log-marginal-likelihood of ``self.kernel_.theta``.</span>
+
+<span class="sd">    n_features_in_ : int</span>
+<span class="sd">        Number of features seen during :term:`fit`.</span>
+
+<span class="sd">        .. versionadded:: 0.24</span>
+
+<span class="sd">    feature_names_in_ : ndarray of shape (`n_features_in_`,)</span>
+<span class="sd">        Names of features seen during :term:`fit`. Defined only when `X`</span>
+<span class="sd">        has feature names that are all strings.</span>
+
+<span class="sd">        .. versionadded:: 1.0</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    GaussianProcessClassifier : Gaussian process classification (GPC)</span>
+<span class="sd">        based on Laplace approximation.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] `Rasmussen, Carl Edward.</span>
+<span class="sd">       &quot;Gaussian processes in machine learning.&quot;</span>
+<span class="sd">       Summer school on machine learning. Springer, Berlin, Heidelberg, 2003</span>
+<span class="sd">       &lt;http://www.gaussianprocess.org/gpml/chapters/RW.pdf&gt;`_.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -282,12 +301,19 @@
 <span class="sd">    0.3680...</span>
 <span class="sd">    &gt;&gt;&gt; gpr.predict(X[:2,:], return_std=True)</span>
 <span class="sd">    (array([653.0..., 592.1...]), array([316.6..., 316.6...]))</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@_deprecate_positional_args</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
-                 <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_X_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">,</span>
+        <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">copy_X_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
@@ -305,33 +331,39 @@
 <span class="sd">            Feature vectors or other representations of training data.</span>
 
 <span class="sd">        y : array-like of shape (n_samples,) or (n_samples, n_targets)</span>
-<span class="sd">            Target values</span>
+<span class="sd">            Target values.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        self : returns an instance of self.</span>
+<span class="sd">        self : object</span>
+<span class="sd">            GaussianProcessRegressor class instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Use an RBF kernel as default</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> \
-                <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span>
+                <span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">requires_vector_input</span><span class="p">:</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">y_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                       <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;numeric&quot;</span><span class="p">)</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">ensure_2d</span> <span class="o">=</span> <span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">y_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                       <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">ensure_2d</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">multi_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">y_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">ensure_2d</span><span class="o">=</span><span class="n">ensure_2d</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="c1"># Normalize target value</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">=</span> <span class="n">_handle_zeros_in_scale</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">=</span> <span class="n">_handle_zeros_in_scale</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># Remove mean and make unit variance</span>
             <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span>
@@ -340,14 +372,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> \
-           <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;alpha must be a scalar or an array&quot;</span>
-                                 <span class="s2">&quot; with same number of entries as y.(</span><span class="si">%d</span><span class="s2"> != </span><span class="si">%d</span><span class="s2">)&quot;</span>
-                                 <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;alpha must be a scalar or an array with same number of &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;entries as y. (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_X_train</span> <span class="k">else</span> <span class="n">X</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_X_train</span> <span class="k">else</span> <span class="n">y</span>
@@ -358,16 +390,20 @@
             <span class="k">def</span> <span class="nf">obj_func</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">eval_gradient</span><span class="p">:</span>
                     <span class="n">lml</span><span class="p">,</span> <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span>
-                        <span class="n">theta</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                        <span class="n">theta</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="p">)</span>
                     <span class="k">return</span> <span class="o">-</span><span class="n">lml</span><span class="p">,</span> <span class="o">-</span><span class="n">grad</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span>
-                                                         <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># First optimize starting from theta specified in kernel</span>
-            <span class="n">optima</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">_constrained_optimization</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span>
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span>
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">bounds</span><span class="p">))]</span>
+            <span class="n">optima</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_constrained_optimization</span><span class="p">(</span>
+                        <span class="n">obj_func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">bounds</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
 
             <span class="c1"># Additional runs are performed from log-uniform chosen initial</span>
             <span class="c1"># theta</span>
@@ -375,14 +411,14 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="s2">&quot;Multiple optimizer restarts (n_restarts_optimizer&gt;0) &quot;</span>
-                        <span class="s2">&quot;requires that all bounds are finite.&quot;</span><span class="p">)</span>
+                        <span class="s2">&quot;requires that all bounds are finite.&quot;</span>
+                    <span class="p">)</span>
                 <span class="n">bounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">bounds</span>
                 <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_restarts_optimizer</span><span class="p">):</span>
-                    <span class="n">theta_initial</span> <span class="o">=</span> \
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="n">theta_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
                     <span class="n">optima</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_constrained_optimization</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span> <span class="n">theta_initial</span><span class="p">,</span>
-                                                       <span class="n">bounds</span><span class="p">))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_constrained_optimization</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span> <span class="n">theta_initial</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+                    <span class="p">)</span>
             <span class="c1"># Select result from run with minimal (negative) log-marginal</span>
             <span class="c1"># likelihood</span>
             <span class="n">lml_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">optima</span><span class="p">))</span>
@@ -391,33 +427,39 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood_value_</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lml_values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood_value_</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span>
-                                             <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood_value_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
 
         <span class="c1"># Precompute quantities required for predictions which are independent</span>
         <span class="c1"># of actual query points</span>
+        <span class="c1"># Alg. 2.1, page 19, line 2 -&gt; L = cholesky(K + sigma^2 I)</span>
         <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
         <span class="n">K</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">diag_indices_from</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">L_</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Line 2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">L_</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">GPR_CHOLESKY_LOWER</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="n">exc</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The kernel, </span><span class="si">%s</span><span class="s2">, is not returning a &quot;</span>
-                        <span class="s2">&quot;positive definite matrix. Try gradually &quot;</span>
-                        <span class="s2">&quot;increasing the &#39;alpha&#39; parameter of your &quot;</span>
-                        <span class="s2">&quot;GaussianProcessRegressor estimator.&quot;</span>
-                        <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">,)</span> <span class="o">+</span> <span class="n">exc</span><span class="o">.</span><span class="n">args</span>
+            <span class="n">exc</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The kernel, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="si">}</span><span class="s2">, is not returning a positive &quot;</span>
+                <span class="s2">&quot;definite matrix. Try gradually increasing the &#39;alpha&#39; &quot;</span>
+                <span class="s2">&quot;parameter of your GaussianProcessRegressor estimator.&quot;</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">+</span> <span class="n">exc</span><span class="o">.</span><span class="n">args</span>
             <span class="k">raise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span><span class="p">)</span>  <span class="c1"># Line 3</span>
+        <span class="c1"># Alg 2.1, page 19, line 3 -&gt; alpha = L^T \ (L \ y)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="n">GPR_CHOLESKY_LOWER</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span><span class="p">,</span>
+            <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict using the Gaussian process regression model</span>
+        <span class="sd">&quot;&quot;&quot;Predict using the Gaussian process regression model.</span>
 
 <span class="sd">        We can also predict based on an unfitted model by using the GP prior.</span>
-<span class="sd">        In addition to the mean of the predictive distribution, also its</span>
-<span class="sd">        standard deviation (return_std=True) or covariance (return_cov=True).</span>
-<span class="sd">        Note that at most one of the two can be requested.</span>
+<span class="sd">        In addition to the mean of the predictive distribution, optionally also</span>
+<span class="sd">        returns its standard deviation (`return_std=True`) or covariance</span>
+<span class="sd">        (`return_cov=True`). Note that at most one of the two can be requested.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -434,7 +476,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y_mean : ndarray of shape (n_samples, [n_output_dims])</span>
+<span class="sd">        y_mean : ndarray of shape (n_samples,) or (n_samples, n_targets)</span>
 <span class="sd">            Mean of predictive distribution a query points.</span>
 
 <span class="sd">        y_std : ndarray of shape (n_samples,), optional</span>
@@ -447,18 +489,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">return_std</span> <span class="ow">and</span> <span class="n">return_cov</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Not returning standard deviation of predictions when &quot;</span>
-                <span class="s2">&quot;returning full covariance.&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;At most one of return_std or return_cov can be requested.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">requires_vector_input</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;numeric&quot;</span><span class="p">)</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">ensure_2d</span> <span class="o">=</span> <span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">ensure_2d</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="n">ensure_2d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;X_train_&quot;</span><span class="p">):</span>  <span class="c1"># Unfitted;predict based on GP prior</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">kernel</span> <span class="o">=</span> <span class="p">(</span><span class="n">C</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> <span class="o">*</span>
-                          <span class="n">RBF</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">))</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">RBF</span><span class="p">(</span>
+                    <span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="s2">&quot;fixed&quot;</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -471,40 +516,45 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">y_mean</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predict based on GP posterior</span>
+            <span class="c1"># Alg 2.1, page 19, line 4 -&gt; f*_bar = K(X_test, X_train) . alpha</span>
             <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
-            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span><span class="p">)</span>  <span class="c1"># Line 4 (y_mean = f_star)</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">K_trans</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_</span>
+
             <span class="c1"># undo normalisation</span>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">*</span> <span class="n">y_mean</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_mean</span>
 
+            <span class="c1"># Alg 2.1, page 19, line 5 -&gt; v = L \ K(X_test, X_train)^T</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">GPR_CHOLESKY_LOWER</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+
             <span class="k">if</span> <span class="n">return_cov</span><span class="p">:</span>
-                <span class="c1"># Solve K @ V = K_trans.T</span>
-                <span class="n">V</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
-                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>  <span class="c1"># Line 6</span>
+                <span class="c1"># Alg 2.1, page 19, line 6 -&gt; K(X_test, X_test) - v^T. v</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">V</span>
 
                 <span class="c1"># undo normalisation</span>
-                <span class="n">y_cov</span> <span class="o">=</span> <span class="n">y_cov</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">y_cov</span> <span class="o">=</span> <span class="n">y_cov</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">**</span> <span class="mi">2</span>
 
                 <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span>
             <span class="k">elif</span> <span class="n">return_std</span><span class="p">:</span>
-                <span class="c1"># Solve K @ V = K_trans.T</span>
-                <span class="n">V</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">L_</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Line 5</span>
-
                 <span class="c1"># Compute variance of predictive distribution</span>
                 <span class="c1"># Use einsum to avoid explicitly forming the large matrix</span>
-                <span class="c1"># K_trans @ V just to extract its diagonal afterward.</span>
+                <span class="c1"># V^T @ V just to extract its diagonal afterward.</span>
                 <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-                <span class="n">y_var</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ij,ji-&gt;i&quot;</span><span class="p">,</span> <span class="n">K_trans</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+                <span class="n">y_var</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ij,ji-&gt;i&quot;</span><span class="p">,</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
 
                 <span class="c1"># Check if any of the variances is negative because of</span>
                 <span class="c1"># numerical issues. If yes: set the variance to 0.</span>
                 <span class="n">y_var_negative</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">&lt;</span> <span class="mi">0</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y_var_negative</span><span class="p">):</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
-                                  <span class="s2">&quot;Setting those variances to 0.&quot;</span><span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;Predicted variances smaller than 0. &quot;</span>
+                        <span class="s2">&quot;Setting those variances to 0.&quot;</span>
+                    <span class="p">)</span>
                     <span class="n">y_var</span><span class="p">[</span><span class="n">y_var_negative</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
                 <span class="c1"># undo normalisation</span>
-                <span class="n">y_var</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">y_var</span> <span class="o">=</span> <span class="n">y_var</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_train_std</span> <span class="o">**</span> <span class="mi">2</span>
 
                 <span class="k">return</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -515,21 +565,22 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like of shape (n_samples, n_features) or list of object</span>
+<span class="sd">        X : array-like of shape (n_samples_X, n_features) or list of object</span>
 <span class="sd">            Query points where the GP is evaluated.</span>
 
 <span class="sd">        n_samples : int, default=1</span>
-<span class="sd">            The number of samples drawn from the Gaussian process</span>
+<span class="sd">            Number of samples drawn from the Gaussian process per query point.</span>
 
 <span class="sd">        random_state : int, RandomState instance or None, default=0</span>
 <span class="sd">            Determines random number generation to randomly draw samples.</span>
 <span class="sd">            Pass an int for reproducible results across multiple function</span>
 <span class="sd">            calls.</span>
-<span class="sd">            See :term: `Glossary &lt;random_state&gt;`.</span>
+<span class="sd">            See :term:`Glossary &lt;random_state&gt;`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y_samples : ndarray of shape (n_samples_X, [n_output_dims], n_samples)</span>
+<span class="sd">        y_samples : ndarray of shape (n_samples_X, n_samples), or \</span>
+<span class="sd">            (n_samples_X, n_targets, n_samples)</span>
 <span class="sd">            Values of n_samples samples drawn from Gaussian process and</span>
 <span class="sd">            evaluated at query points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -539,16 +590,17 @@
         <span class="k">if</span> <span class="n">y_mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">y_samples</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">y_mean</span><span class="p">,</span> <span class="n">y_cov</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">y_samples</span> <span class="o">=</span> \
-                <span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">y_mean</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">y_cov</span><span class="p">,</span>
-                                         <span class="n">n_samples</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y_mean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="n">y_samples</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">y_mean</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">y_cov</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y_mean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">]</span>
             <span class="n">y_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">y_samples</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">y_samples</span></div>
 
-<div class="viewcode-block" id="GaussianProcessRegressor.log_marginal_likelihood"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor.log_marginal_likelihood">[docs]</a>    <span class="k">def</span> <span class="nf">log_marginal_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns log-marginal likelihood of theta for training data.</span>
+<div class="viewcode-block" id="GaussianProcessRegressor.log_marginal_likelihood"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor.log_marginal_likelihood">[docs]</a>    <span class="k">def</span> <span class="nf">log_marginal_likelihood</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clone_kernel</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return log-marginal likelihood of theta for training data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -578,8 +630,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">theta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">eval_gradient</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Gradient can only be evaluated for theta!=None&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Gradient can only be evaluated for theta!=None&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_marginal_likelihood_value_</span>
 
         <span class="k">if</span> <span class="n">clone_kernel</span><span class="p">:</span>
@@ -593,35 +644,70 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">K</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span>
 
+        <span class="c1"># Alg. 2.1, page 19, line 2 -&gt; L = cholesky(K + sigma^2 I)</span>
         <span class="n">K</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">diag_indices_from</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">L</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Line 2</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="n">cholesky</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">GPR_CHOLESKY_LOWER</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> \
-                <span class="k">if</span> <span class="n">eval_gradient</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="k">if</span> <span class="n">eval_gradient</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
         <span class="c1"># Support multi-dimensional output of self.y_train_</span>
         <span class="n">y_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span>
         <span class="k">if</span> <span class="n">y_train</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
-        <span class="n">alpha</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="n">L</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">y_train</span><span class="p">)</span>  <span class="c1"># Line 3</span>
+        <span class="c1"># Alg 2.1, page 19, line 3 -&gt; alpha = L^T \ (L \ y)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="n">L</span><span class="p">,</span> <span class="n">GPR_CHOLESKY_LOWER</span><span class="p">),</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># Compute log-likelihood (compare line 7)</span>
+        <span class="c1"># Alg 2.1, page 19, line 7</span>
+        <span class="c1"># -0.5 . y^T . alpha - sum(log(diag(L))) - n_samples / 2 log(2*pi)</span>
+        <span class="c1"># y is originally thought to be a (1, n_samples) row vector. However,</span>
+        <span class="c1"># in multioutputs, y is of shape (n_samples, 2) and we need to compute</span>
+        <span class="c1"># y^T . alpha for each output, independently using einsum. Thus, it</span>
+        <span class="c1"># is equivalent to:</span>
+        <span class="c1"># for output_idx in range(n_outputs):</span>
+        <span class="c1">#     log_likelihood_dims[output_idx] = (</span>
+        <span class="c1">#         y_train[:, [output_idx]] @ alpha[:, [output_idx]]</span>
+        <span class="c1">#     )</span>
         <span class="n">log_likelihood_dims</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,ik-&gt;k&quot;</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="n">log_likelihood_dims</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="n">log_likelihood_dims</span> <span class="o">-=</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">log_likelihood_dims</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># sum over dimensions</span>
+        <span class="c1"># the log likehood is sum-up across the outputs</span>
+        <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">log_likelihood_dims</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">eval_gradient</span><span class="p">:</span>  <span class="c1"># compare Equation 5.9 from GPML</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,jk-&gt;ijk&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>  <span class="c1"># k: output-dimension</span>
-            <span class="n">tmp</span> <span class="o">-=</span> <span class="n">cho_solve</span><span class="p">((</span><span class="n">L</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-            <span class="c1"># Compute &quot;0.5 * trace(tmp.dot(K_gradient))&quot; without</span>
-            <span class="c1"># constructing the full matrix tmp.dot(K_gradient) since only</span>
-            <span class="c1"># its diagonal is required</span>
-            <span class="n">log_likelihood_gradient_dims</span> <span class="o">=</span> \
-                <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ijl,jik-&gt;kl&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">K_gradient</span><span class="p">)</span>
-            <span class="n">log_likelihood_gradient</span> <span class="o">=</span> <span class="n">log_likelihood_gradient_dims</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">eval_gradient</span><span class="p">:</span>
+            <span class="c1"># Eq. 5.9, p. 114, and footnote 5 in p. 114</span>
+            <span class="c1"># 0.5 * trace((alpha . alpha^T - K^-1) . K_gradient)</span>
+            <span class="c1"># alpha is supposed to be a vector of (n_samples,) elements. With</span>
+            <span class="c1"># multioutputs, alpha is a matrix of size (n_samples, n_outputs).</span>
+            <span class="c1"># Therefore, we want to construct a matrix of</span>
+            <span class="c1"># (n_samples, n_samples, n_outputs) equivalent to</span>
+            <span class="c1"># for output_idx in range(n_outputs):</span>
+            <span class="c1">#     output_alpha = alpha[:, [output_idx]]</span>
+            <span class="c1">#     inner_term[..., output_idx] = output_alpha @ output_alpha.T</span>
+            <span class="n">inner_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,jk-&gt;ijk&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="c1"># compute K^-1 of shape (n_samples, n_samples)</span>
+            <span class="n">K_inv</span> <span class="o">=</span> <span class="n">cho_solve</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">GPR_CHOLESKY_LOWER</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="c1"># create a new axis to use broadcasting between inner_term and</span>
+            <span class="c1"># K_inv</span>
+            <span class="n">inner_term</span> <span class="o">-=</span> <span class="n">K_inv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+            <span class="c1"># Since we are interested about the trace of</span>
+            <span class="c1"># inner_term @ K_gradient, we don&#39;t explicitly compute the</span>
+            <span class="c1"># matrix-by-matrix operation and instead use an einsum. Therefore</span>
+            <span class="c1"># it is equivalent to:</span>
+            <span class="c1"># for param_idx in range(n_kernel_params):</span>
+            <span class="c1">#     for output_idx in range(n_output):</span>
+            <span class="c1">#         log_likehood_gradient_dims[param_idx, output_idx] = (</span>
+            <span class="c1">#             inner_term[..., output_idx] @</span>
+            <span class="c1">#             K_gradient[..., param_idx]</span>
+            <span class="c1">#         )</span>
+            <span class="n">log_likelihood_gradient_dims</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                <span class="s2">&quot;ijl,jik-&gt;kl&quot;</span><span class="p">,</span> <span class="n">inner_term</span><span class="p">,</span> <span class="n">K_gradient</span>
+            <span class="p">)</span>
+            <span class="c1"># the log likehood gradient is the sum-up across the outputs</span>
+            <span class="n">log_likelihood_gradient</span> <span class="o">=</span> <span class="n">log_likelihood_gradient_dims</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">eval_gradient</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">log_likelihood</span><span class="p">,</span> <span class="n">log_likelihood_gradient</span>
@@ -631,20 +717,23 @@
     <span class="k">def</span> <span class="nf">_constrained_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_func</span><span class="p">,</span> <span class="n">initial_theta</span><span class="p">,</span> <span class="n">bounds</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s2">&quot;fmin_l_bfgs_b&quot;</span><span class="p">:</span>
             <span class="n">opt_res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
-                <span class="n">obj_func</span><span class="p">,</span> <span class="n">initial_theta</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;L-BFGS-B&quot;</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+                <span class="n">obj_func</span><span class="p">,</span>
+                <span class="n">initial_theta</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;L-BFGS-B&quot;</span><span class="p">,</span>
+                <span class="n">jac</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">_check_optimize_result</span><span class="p">(</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">opt_res</span><span class="p">)</span>
             <span class="n">theta_opt</span><span class="p">,</span> <span class="n">func_min</span> <span class="o">=</span> <span class="n">opt_res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">opt_res</span><span class="o">.</span><span class="n">fun</span>
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">):</span>
-            <span class="n">theta_opt</span><span class="p">,</span> <span class="n">func_min</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span> <span class="n">initial_theta</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+            <span class="n">theta_opt</span><span class="p">,</span> <span class="n">func_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">(</span><span class="n">obj_func</span><span class="p">,</span> <span class="n">initial_theta</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown optimizer </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown optimizer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">theta_opt</span><span class="p">,</span> <span class="n">func_min</span>
 
     <span class="k">def</span> <span class="nf">_more_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;requires_fit&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;requires_fit&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
 </pre></div>
 
       </div>

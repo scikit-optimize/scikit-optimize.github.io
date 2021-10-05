@@ -71,7 +71,7 @@ Here we define a function that we evaluate.
         clf = DecisionTreeClassifier(
             **{dim.name: val for dim, val in
                zip(SPACE, params) if dim.name != 'dummy'})
-        return -np.mean(cross_val_score(clf, *load_breast_cancer(True)))
+        return -np.mean(cross_val_score(clf, *load_breast_cancer(return_X_y=True)))
 
 
 
@@ -106,53 +106,6 @@ Bayesian optimization
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-    /home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-0.24.2-py3.9-linux-x86_64.egg/sklearn/utils/validation.py:70: FutureWarning: Pass return_X_y=True as keyword args. From version 1.0 (renaming of 0.25) passing these as positional arguments will result in an error
-      warnings.warn(f"Pass {args_msg} as keyword args. From version "
-
 
 
 
@@ -176,9 +129,10 @@ predictions for each point on the plots.
 
 
 
-.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_001.png
-    :alt: partial dependence plot with categorical
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_001.png
+   :alt: partial dependence plot with categorical
+   :srcset: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -203,9 +157,10 @@ of funny_func this is close to 0 for all parameters.
 
 
 
-.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_002.png
-    :alt: partial dependence plot with categorical
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_002.png
+   :alt: partial dependence plot with categorical
+   :srcset: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_002.png
+   :class: sphx-glr-single-img
 
 
 
@@ -233,9 +188,10 @@ which is used to find the minimum
 
 
 
-.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_003.png
-    :alt: partial dependence plot with categorical
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_003.png
+   :alt: partial dependence plot with categorical
+   :srcset: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_003.png
+   :class: sphx-glr-single-img
 
 
 
@@ -258,9 +214,10 @@ parsing a list as the pars argument:
 
 
 
-.. image:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_004.png
-    :alt: partial dependence plot with categorical
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_004.png
+   :alt: partial dependence plot with categorical
+   :srcset: /auto_examples/plots/images/sphx_glr_partial-dependence-plot-with-categorical_004.png
+   :class: sphx-glr-single-img
 
 
 
@@ -269,9 +226,9 @@ parsing a list as the pars argument:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.827 seconds)
+   **Total running time of the script:** ( 0 minutes  15.580 seconds)
 
-**Estimated memory usage:**  46 MB
+**Estimated memory usage:**  52 MB
 
 
 .. _sphx_glr_download_auto_examples_plots_partial-dependence-plot-with-categorical.py:

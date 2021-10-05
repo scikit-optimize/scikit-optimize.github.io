@@ -20,10 +20,10 @@
   
 
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 <script src="../_static/jquery.js"></script> 
@@ -147,13 +147,13 @@ to download the full example code or to run this example in your browser via Bin
 <p>Gilles Louppe, July 2016
 Katie Malone, August 2016
 Reformatted by Holger Nahrstaedt 2020</p>
-<p>If you are looking for a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> replacement checkout
+<p>If you are looking for a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> replacement checkout
 <a class="reference internal" href="sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a> instead.</p>
 <section id="problem-statement">
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
 <p>Tuning the hyper-parameters of a machine learning model is often carried out
 using an exhaustive exploration of (a subset of) the space all hyper-parameter
-configurations (e.g., using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>), which
+configurations (e.g., using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>), which
 often results in a very time consuming operation.</p>
 <p>In this notebook, we illustrate how to couple <a class="reference internal" href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">gp_minimize</span></code></a> with sklearn’s
 estimators to tune hyper-parameters using sequential model-based optimisation,
@@ -161,7 +161,7 @@ hopefully resulting in equivalent or better solutions, but within fewer
 evaluations.</p>
 <p>Note: scikit-optimize provides a dedicated interface for estimator tuning via
 <a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.BayesSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">BayesSearchCV</span></code></a> class which has a similar interface to those of
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v0.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>. This class uses functions of skopt to perform hyperparameter
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a>. This class uses functions of skopt to perform hyperparameter
 search efficiently. For example usage of this class, see
 <a class="reference internal" href="sklearn-gridsearchcv-replacement.html#sphx-glr-auto-examples-sklearn-gridsearchcv-replacement-py"><span class="std std-ref">Scikit-learn hyperparameter search wrapper</span></a>
 example notebook.</p>
@@ -185,6 +185,45 @@ we want to minimize.</p>
 
 <span class="c1"># gradient boosted trees tend to do well on problems like this</span>
 <span class="n">reg</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor" title="sklearn.ensemble.GradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GradientBoostingRegressor</span></a><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/envs/testenv/lib/python3.9/site-packages/scikit_learn-1.0-py3.9-linux-x86_64.egg/sklearn/utils/deprecation.py:87: FutureWarning: Function load_boston is deprecated; `load_boston` is deprecated in 1.0 and will be removed in 1.2.
+
+    The Boston housing prices dataset has an ethical problem. You can refer to
+    the documentation of this function for further details.
+
+    The scikit-learn maintainers therefore strongly discourage the use of this
+    dataset unless the purpose of the code is to study and educate about
+    ethical issues in data science and machine learning.
+
+    In this case special case, you can fetch the dataset from the original
+    source::
+
+        import pandas as pd
+        import numpy as np
+
+
+        data_url = &quot;http://lib.stat.cmu.edu/datasets/boston&quot;
+        raw_df = pd.read_csv(data_url, sep=&quot;\s+&quot;, skiprows=22, header=None)
+        data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])
+        target = raw_df.values[1::2, 2]
+
+    Alternative datasets include the California housing dataset (i.e.
+    func:`~sklearn.datasets.fetch_california_housing`) and the Ames housing
+    dataset. You can load the datasets as follows:
+
+        from sklearn.datasets import fetch_california_housing
+        housing = fetch_california_housing()
+
+    for the California housing dataset and:
+
+        from sklearn.datasets import fetch_openml
+        housing = fetch_openml(name=&quot;house_prices&quot;, as_frame=True)
+
+    for the Ames housing dataset.
+
+  warnings.warn(msg, category=FutureWarning)
 </pre></div>
 </div>
 <p>Next, we need to define the bounds of the dimensions of the search space
@@ -227,7 +266,7 @@ optimisation. Here we use gaussian process-based optimisation.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;Best score=2.9232&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;Best score=2.9062&#39;
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Best parameters:</span>
@@ -242,9 +281,9 @@ optimisation. Here we use gaussian process-based optimisation.</p>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Best parameters:
-- max_depth=4
-- learning_rate=0.179710
-- max_features=13
+- max_depth=5
+- learning_rate=0.143650
+- max_features=9
 - min_samples_split=100
 - min_samples_leaf=1
 </pre></div>
@@ -257,13 +296,12 @@ optimisation. Here we use gaussian process-based optimisation.</p>
 <a href="../modules/generated/skopt.plots.plot_convergence.html#skopt.plots.plot_convergence" title="skopt.plots.plot_convergence" class="sphx-glr-backref-module-skopt-plots sphx-glr-backref-type-py-function"><span class="n">plot_convergence</span></a><span class="p">(</span><span class="n">res_gp</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Convergence plot" class="sphx-glr-single-img" src="../_images/sphx_glr_hyperparameter-optimization_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
+<img src="../_images/sphx_glr_hyperparameter-optimization_001.png" srcset="../_images/sphx_glr_hyperparameter-optimization_001.png" alt="Convergence plot" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;Convergence plot&#39;}, xlabel=&#39;Number of calls $n$&#39;, ylabel=&#39;$\\min f(x)$ after $n$ calls&#39;&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  27.737 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  34 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  25.650 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  35 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-hyperparameter-optimization-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/hyperparameter-optimization.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.png" style="width: 150px;" /></a>
