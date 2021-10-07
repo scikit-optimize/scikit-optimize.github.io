@@ -20,6 +20,8 @@
   
 
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -191,12 +193,17 @@ code. Never load serialized data from untrusted or unauthenticated sources!</p>
                   <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
 </pre></div>
 </div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/skopt/optimizer/optimizer.py:449: UserWarning: The objective has been evaluated at this point before.
+  warnings.warn(&quot;The objective has been evaluated &quot;
+</pre></div>
+</div>
 <p>As long as your Python session is active, you can access all the
 optimization results via the <code class="docutils literal notranslate"><span class="pre">res</span></code> object.</p>
 <p>So how can you store this data in a file? <code class="docutils literal notranslate"><span class="pre">skopt</span></code> conveniently provides
 functions <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> that handle this for you.
 These functions are essentially thin wrappers around the
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v1.1.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v1.1.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> module’s <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v1.1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v1.1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a>.</p>
 <p>We will now show how to use <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> for storing
 and loading results.</p>
 </section>
@@ -216,14 +223,14 @@ function:</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.8978205537371866
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.9346919079496689
 </pre></div>
 </div>
 <p>You can fine-tune the serialization and deserialization process by calling
 <a class="reference internal" href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a> and <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a> with additional keyword arguments. See the
 <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> documentation
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v1.1.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
-<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v1.1.0.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.dump.html#joblib.dump" title="(in joblib v1.1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.dump</span></code></a> and
+<a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.load.html#joblib.load" title="(in joblib v1.1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.load</span></code></a> for the additional parameters.</p>
 <p>For instance, you can specify the compression algorithm and compression
 level (highest in this case):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result.gz&#39;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
@@ -235,7 +242,7 @@ level (highest in this case):</p>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Without compression: 74076 bytes
-Compressed with gz:  27247 bytes
+Compressed with gz:  26955 bytes
 </pre></div>
 </div>
 <section id="unserializable-objective-functions">
@@ -282,17 +289,17 @@ copy is created:</p>
 <a href="../modules/generated/skopt.dump.html#skopt.dump" title="skopt.dump" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">dump</span></a><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;result_without_objective_2.pkl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.733 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.807 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  14 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-store-and-load-results-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.png" style="width: 150px;" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/store-and-load-results.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.svg" width="150px" /></a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/0592ed38982de0188765f2bbe919e8d2/store-and-load-results.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">store-and-load-results.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/d20503d0380fb778ad8116a8530b7f12/store-and-load-results.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">store-and-load-results.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/c5d1fa871ae42002773189655de152a2/store-and-load-results.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">store-and-load-results.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/d8462e2b1ab6e751b35fc1ea1dead5e6/store-and-load-results.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">store-and-load-results.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>

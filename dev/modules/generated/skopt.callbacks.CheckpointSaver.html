@@ -20,6 +20,8 @@
   
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -136,9 +138,9 @@
         
   <section id="skopt-callbacks-checkpointsaver">
 <h1><a class="reference internal" href="../classes.html#module-skopt.callbacks" title="skopt.callbacks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.callbacks</span></code></a>.CheckpointSaver<a class="headerlink" href="#skopt-callbacks-checkpointsaver" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="skopt.callbacks.CheckpointSaver">
-<em class="property">class </em><code class="sig-prename descclassname">skopt.callbacks.</code><code class="sig-name descname">CheckpointSaver</code><span class="sig-paren">(</span><em class="sig-param">checkpoint_path</em>, <em class="sig-param">**dump_options</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fc469d9/skopt/callbacks.py#L287"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/callbacks.html#CheckpointSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="skopt.callbacks.CheckpointSaver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skopt.callbacks.</span></span><span class="sig-name descname"><span class="pre">CheckpointSaver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dump_options</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/acdafb9/skopt/callbacks.py#L287"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference internal" href="../../_modules/skopt/callbacks.html#CheckpointSaver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save current state after each iteration with <a class="reference internal" href="skopt.dump.html#skopt.dump" title="skopt.dump"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dump</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -151,12 +153,12 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skopt</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">skopt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">checkpoint_callback</span> <span class="o">=</span> <span class="n">skopt</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">CheckpointSaver</span><span class="p">(</span><span class="s2">&quot;./result.pkl&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">skopt</span><span class="o">.</span><span class="n">gp_minimize</span><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span> <span class="p">[(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span> <span class="n">n_calls</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="gp">... </span>                  <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">checkpoint_callback</span><span class="p">])</span> <span class="c1"># doctest: +SKIP</span>
+<span class="gp">... </span>                  <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">checkpoint_callback</span><span class="p">])</span> 
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -175,11 +177,10 @@
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="skopt.callbacks.CheckpointSaver.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">checkpoint_path</em>, <em class="sig-param">**dump_options</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/fc469d9/skopt/callbacks.py#L308"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../../_modules/skopt/callbacks.html#CheckpointSaver.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="skopt.callbacks.CheckpointSaver.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dump_options</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/acdafb9/skopt/callbacks.py#L308"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference internal" href="../../_modules/skopt/callbacks.html#CheckpointSaver.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skopt.callbacks.CheckpointSaver.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
