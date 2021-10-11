@@ -11,7 +11,7 @@
   <meta name="Description" content="scikit-optimize: machine learning in Python">
 
   
-  <title>Version 0.9.0 &mdash; scikit-optimize 0.9.dev0 documentation</title>
+  <title>Version 0.9.0 &mdash; scikit-optimize 0.9rc1 documentation</title>
   
   <link rel="canonical" href="https://scikit-optimize.github.io/whats_new/v0.9.html" />
 
@@ -118,17 +118,13 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-optimize 0.9.dev0</strong><br/>
+          <strong>scikit-optimize 0.9rc1</strong><br/>
             <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
           </p>
         </div>
           <div class="sk-sidebar-toc">
             <ul>
-<li><a class="reference internal" href="#">Version 0.9.0</a><ul>
-<li><a class="reference internal" href="#skopt-searchcv"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.searchcv</span></code></a></li>
-<li><a class="reference internal" href="#skopt-learning-gaussian-process-gpr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.gpr</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Version 0.9.0</a></li>
 </ul>
 
           </div>
@@ -139,27 +135,27 @@
         
   <section id="version-0-9-0">
 <span id="changes-0-9"></span><h1>Version 0.9.0<a class="headerlink" href="#version-0-9-0" title="Permalink to this headline">¶</a></h1>
-<p><strong>In Development</strong></p>
-<section id="skopt-searchcv">
-<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.searchcv</span></code><a class="headerlink" href="#skopt-searchcv" title="Permalink to this headline">¶</a></h2>
+<p><strong>October 2021</strong></p>
 <ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor" title="skopt.learning.gaussian_process.gpr.GaussianProcessRegressor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.gpr.GaussianProcessRegressor</span></code></a>
+for sklearn &gt;= 0.23. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/943">#943</a></p></li>
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">skip=</span></code> parameter in <a class="reference internal" href="../modules/generated/skopt.sampler.Sobol.html#skopt.sampler.Sobol" title="skopt.sampler.sobol.Sobol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skopt.sampler.sobol.Sobol</span></code></a>
+initial point generator. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/955">#955</a></p></li>
+<li><p><span class="raw-html"><span class="badge badge-success">Feature</span></span>  <code class="xref py py-obj docutils literal notranslate"><span class="pre">skopt.callbacks.HollowIterationsStopper</span></code> callback. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/917">#917</a></p></li>
+<li><p><span class="raw-html"><span class="badge badge-success">Feature</span></span>  <code class="xref py py-obj docutils literal notranslate"><span class="pre">skopt.callbacks.ThresholdStopper</span></code> callback. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/1000">#1000</a></p></li>
 <li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix <a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.searchcv.BayesSearchCV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skopt.searchcv.BayesSearchCV</span></code></a> for scikit-learn &gt;= 0.24.
 <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/988">#988</a></p></li>
-<li><dl class="simple">
-<dt><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  Deprecate <a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.searchcv.BayesSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.searchcv.BayesSearchCV</span></code></a> parameter <code class="docutils literal notranslate"><span class="pre">iid=</span></code>.</dt><dd><p><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/988">#988</a></p>
-</dd>
-</dl>
-</li>
+<li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  Deprecate <a class="reference internal" href="../modules/generated/skopt.BayesSearchCV.html#skopt.BayesSearchCV" title="skopt.searchcv.BayesSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.searchcv.BayesSearchCV</span></code></a> parameter <code class="docutils literal notranslate"><span class="pre">iid=</span></code>.
+<a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/988">#988</a></p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  NumPy deprecation errors. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/1023">#1023</a></p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  issue with <a class="reference internal" href="../modules/generated/skopt.optimizer.Optimizer.html#skopt.optimizer.Optimizer" title="skopt.optimizer.optimizer.Optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.optimizer.optimizer.Optimizer</span></code></a> not being
+garbage-collectable. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/1029">#1029</a></p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  version check in
+<a class="reference internal" href="../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor" title="skopt.learning.gaussian_process.gpr.GaussianProcessRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.gpr.GaussianProcessRegressor</span></code></a>
+for scikit-learn &gt;= 1.0. <a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/1063">#1063</a></p></li>
+<li><p>Minor documentation improvements.</p></li>
+<li><p>Various small bugs and fixes.</p></li>
 </ul>
-</section>
-<section id="skopt-learning-gaussian-process-gpr">
-<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.gpr</span></code><a class="headerlink" href="#skopt-learning-gaussian-process-gpr" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix <a class="reference internal" href="../modules/generated/skopt.learning.GaussianProcessRegressor.html#skopt.learning.GaussianProcessRegressor" title="skopt.learning.gaussian_process.gpr.GaussianProcessRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.gpr.GaussianProcessRegressor</span></code></a>
-for scikit-learn &gt;= 1.0
-<a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/pull/1063">#1063</a></p></li>
-</ul>
-</section>
 </section>
 
 
