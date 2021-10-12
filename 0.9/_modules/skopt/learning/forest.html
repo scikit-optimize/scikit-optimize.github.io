@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.learning.forest &mdash; scikit-optimize 0.9.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/learning/forest.html" />
+
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+<script src="../../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.9.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.learning.forest</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span> <span class="k">as</span> <span class="n">_sk_RandomForestRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesRegressor</span> <span class="k">as</span> <span class="n">_sk_ExtraTreesRegressor</span>
+
+
+<span class="k">def</span> <span class="nf">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">trees</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">min_variance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns `std(Y | X)`.</span>
+
+<span class="sd">    Can be calculated by E[Var(Y | Tree)] + Var(E[Y | Tree]) where</span>
+<span class="sd">    P(Tree) is `1 / len(trees)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array-like, shape=(n_samples, n_features)</span>
+<span class="sd">        Input data.</span>
+
+<span class="sd">    trees : list, shape=(n_estimators,)</span>
+<span class="sd">        List of fit sklearn trees as obtained from the ``estimators_``</span>
+<span class="sd">        attribute of a fit RandomForestRegressor or ExtraTreesRegressor.</span>
+
+<span class="sd">    predictions : array-like, shape=(n_samples,)</span>
+<span class="sd">        Prediction of each data point as returned by RandomForestRegressor</span>
+<span class="sd">        or ExtraTreesRegressor.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    std : array-like, shape=(n_samples,)</span>
+<span class="sd">        Standard deviation of `y` at `X`. If criterion</span>
+<span class="sd">        is set to &quot;mse&quot;, then `std[i] ~= std(y | X[i])`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="n">var_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">impurity</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span>
+
+        <span class="c1"># This rounding off is done in accordance with the</span>
+        <span class="c1"># adjustment done in section 4.3.3</span>
+        <span class="c1"># of http://arxiv.org/pdf/1211.0906v2.pdf to account</span>
+        <span class="c1"># for cases such as leaves with 1 sample in which there</span>
+        <span class="c1"># is zero variance.</span>
+        <span class="n">var_tree</span><span class="p">[</span><span class="n">var_tree</span> <span class="o">&lt;</span> <span class="n">min_variance</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">+=</span> <span class="n">var_tree</span> <span class="o">+</span> <span class="n">mean_tree</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="n">std</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trees</span><span class="p">)</span>
+    <span class="n">std</span> <span class="o">-=</span> <span class="n">predictions</span> <span class="o">**</span> <span class="mf">2.0</span>
+    <span class="n">std</span><span class="p">[</span><span class="n">std</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">std</span>
+
+
+<div class="viewcode-block" id="RandomForestRegressor"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.RandomForestRegressor.html#skopt.learning.RandomForestRegressor">[docs]</a><span class="k">class</span> <span class="nc">RandomForestRegressor</span><span class="p">(</span><span class="n">_sk_RandomForestRegressor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RandomForestRegressor that supports conditional std computation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_estimators : integer, optional (default=10)</span>
+<span class="sd">        The number of trees in the forest.</span>
+
+<span class="sd">    criterion : string, optional (default=&quot;mse&quot;)</span>
+<span class="sd">        The function to measure the quality of a split. Supported criteria</span>
+<span class="sd">        are &quot;mse&quot; for the mean squared error, which is equal to variance</span>
+<span class="sd">        reduction as feature selection criterion, and &quot;mae&quot; for the mean</span>
+<span class="sd">        absolute error.</span>
+
+<span class="sd">    max_features : int, float, string or None, optional (default=&quot;auto&quot;)</span>
+<span class="sd">        The number of features to consider when looking for the best split:</span>
+
+<span class="sd">        - If int, then consider `max_features` features at each split.</span>
+<span class="sd">        - If float, then `max_features` is a percentage and</span>
+<span class="sd">          `int(max_features * n_features)` features are considered at each</span>
+<span class="sd">          split.</span>
+<span class="sd">        - If &quot;auto&quot;, then `max_features=n_features`.</span>
+<span class="sd">        - If &quot;sqrt&quot;, then `max_features=sqrt(n_features)`.</span>
+<span class="sd">        - If &quot;log2&quot;, then `max_features=log2(n_features)`.</span>
+<span class="sd">        - If None, then `max_features=n_features`.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The search for a split does not stop until at least one</span>
+<span class="sd">            valid partition of the node samples is found, even if it</span>
+<span class="sd">            requires to effectively inspect more than ``max_features``</span>
+<span class="sd">            features.</span>
+
+<span class="sd">    max_depth : integer or None, optional (default=None)</span>
+<span class="sd">        The maximum depth of the tree. If None, then nodes are expanded until</span>
+<span class="sd">        all leaves are pure or until all leaves contain less than</span>
+<span class="sd">        min_samples_split samples.</span>
+
+<span class="sd">    min_samples_split : int, float, optional (default=2)</span>
+<span class="sd">        The minimum number of samples required to split an internal node:</span>
+
+<span class="sd">        - If int, then consider `min_samples_split` as the minimum number.</span>
+<span class="sd">        - If float, then `min_samples_split` is a percentage and</span>
+<span class="sd">          `ceil(min_samples_split * n_samples)` are the minimum</span>
+<span class="sd">          number of samples for each split.</span>
+
+<span class="sd">    min_samples_leaf : int, float, optional (default=1)</span>
+<span class="sd">        The minimum number of samples required to be at a leaf node:</span>
+
+<span class="sd">        - If int, then consider `min_samples_leaf` as the minimum number.</span>
+<span class="sd">        - If float, then `min_samples_leaf` is a percentage and</span>
+<span class="sd">          `ceil(min_samples_leaf * n_samples)` are the minimum</span>
+<span class="sd">          number of samples for each node.</span>
+
+<span class="sd">    min_weight_fraction_leaf : float, optional (default=0.)</span>
+<span class="sd">        The minimum weighted fraction of the sum total of weights (of all</span>
+<span class="sd">        the input samples) required to be at a leaf node. Samples have</span>
+<span class="sd">        equal weight when sample_weight is not provided.</span>
+
+<span class="sd">    max_leaf_nodes : int or None, optional (default=None)</span>
+<span class="sd">        Grow trees with ``max_leaf_nodes`` in best-first fashion.</span>
+<span class="sd">        Best nodes are defined as relative reduction in impurity.</span>
+<span class="sd">        If None then unlimited number of leaf nodes.</span>
+
+<span class="sd">    min_impurity_decrease : float, optional (default=0.)</span>
+<span class="sd">        A node will be split if this split induces a decrease of the impurity</span>
+<span class="sd">        greater than or equal to this value.</span>
+<span class="sd">        The weighted impurity decrease equation is the following::</span>
+
+<span class="sd">            N_t / N * (impurity - N_t_R / N_t * right_impurity</span>
+<span class="sd">                                - N_t_L / N_t * left_impurity)</span>
+
+<span class="sd">        where ``N`` is the total number of samples, ``N_t`` is the number of</span>
+<span class="sd">        samples at the current node, ``N_t_L`` is the number of samples in the</span>
+<span class="sd">        left child, and ``N_t_R`` is the number of samples in the right child.</span>
+<span class="sd">        ``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,</span>
+<span class="sd">        if ``sample_weight`` is passed.</span>
+
+<span class="sd">    bootstrap : boolean, optional (default=True)</span>
+<span class="sd">        Whether bootstrap samples are used when building trees.</span>
+
+<span class="sd">    oob_score : bool, optional (default=False)</span>
+<span class="sd">        whether to use out-of-bag samples to estimate</span>
+<span class="sd">        the R^2 on unseen data.</span>
+
+<span class="sd">    n_jobs : integer, optional (default=1)</span>
+<span class="sd">        The number of jobs to run in parallel for both `fit` and `predict`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
+<span class="sd">    verbose : int, optional (default=0)</span>
+<span class="sd">        Controls the verbosity of the tree building process.</span>
+
+<span class="sd">    warm_start : bool, optional (default=False)</span>
+<span class="sd">        When set to ``True``, reuse the solution of the previous call to fit</span>
+<span class="sd">        and add more estimators to the ensemble, otherwise, just fit a whole</span>
+<span class="sd">        new forest.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimators_ : list of DecisionTreeRegressor</span>
+<span class="sd">        The collection of fitted sub-estimators.</span>
+
+<span class="sd">    feature_importances_ : array of shape = [n_features]</span>
+<span class="sd">        The feature importances (the higher, the more important the feature).</span>
+
+<span class="sd">    n_features_ : int</span>
+<span class="sd">        The number of features when ``fit`` is performed.</span>
+
+<span class="sd">    n_outputs_ : int</span>
+<span class="sd">        The number of outputs when ``fit`` is performed.</span>
+
+<span class="sd">    oob_score_ : float</span>
+<span class="sd">        Score of the training dataset obtained using an out-of-bag estimate.</span>
+
+<span class="sd">    oob_prediction_ : array of shape = [n_samples]</span>
+<span class="sd">        Prediction computed with out-of-bag estimate on the training set.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The default values for the parameters controlling the size of the trees</span>
+<span class="sd">    (e.g. ``max_depth``, ``min_samples_leaf``, etc.) lead to fully grown and</span>
+<span class="sd">    unpruned trees which can potentially be very large on some data sets. To</span>
+<span class="sd">    reduce memory consumption, the complexity and size of the trees should be</span>
+<span class="sd">    controlled by setting those parameter values.</span>
+<span class="sd">    The features are always randomly permuted at each split. Therefore,</span>
+<span class="sd">    the best found split may vary, even with the same training data,</span>
+<span class="sd">    ``max_features=n_features`` and ``bootstrap=False``, if the improvement</span>
+<span class="sd">    of the criterion is identical for several splits enumerated during the</span>
+<span class="sd">    search of the best split. To obtain a deterministic behaviour during</span>
+<span class="sd">    fitting, ``random_state`` has to be fixed.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] L. Breiman, &quot;Random Forests&quot;, Machine Learning, 45(1), 5-32, 2001.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RandomForestRegressor.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.RandomForestRegressor.html#skopt.learning.RandomForestRegressor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                 <span class="n">bootstrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+            <span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">min_impurity_decrease</span><span class="p">,</span>
+            <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RandomForestRegressor.predict"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.RandomForestRegressor.html#skopt.learning.RandomForestRegressor.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict continuous output for X.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array of shape = (n_samples, n_features)</span>
+<span class="sd">            Input data.</span>
+
+<span class="sd">        return_std : boolean</span>
+<span class="sd">            Whether or not to return the standard deviation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        predictions : array-like of shape = (n_samples,)</span>
+<span class="sd">            Predicted values for X. If criterion is set to &quot;mse&quot;,</span>
+<span class="sd">            then `predictions[i] ~= mean(y | X[i])`.</span>
+
+<span class="sd">        std : array-like of shape=(n_samples,)</span>
+<span class="sd">            Standard deviation of `y` at `X`. If criterion</span>
+<span class="sd">            is set to &quot;mse&quot;, then `std[i] ~= std(y | X[i])`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">!=</span> <span class="s2">&quot;mse&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
+                    <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+        <span class="k">return</span> <span class="n">mean</span></div></div>
+
+
+<div class="viewcode-block" id="ExtraTreesRegressor"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.ExtraTreesRegressor.html#skopt.learning.ExtraTreesRegressor">[docs]</a><span class="k">class</span> <span class="nc">ExtraTreesRegressor</span><span class="p">(</span><span class="n">_sk_ExtraTreesRegressor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ExtraTreesRegressor that supports conditional standard deviation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_estimators : integer, optional (default=10)</span>
+<span class="sd">        The number of trees in the forest.</span>
+
+<span class="sd">    criterion : string, optional (default=&quot;mse&quot;)</span>
+<span class="sd">        The function to measure the quality of a split. Supported criteria</span>
+<span class="sd">        are &quot;mse&quot; for the mean squared error, which is equal to variance</span>
+<span class="sd">        reduction as feature selection criterion, and &quot;mae&quot; for the mean</span>
+<span class="sd">        absolute error.</span>
+
+<span class="sd">    max_features : int, float, string or None, optional (default=&quot;auto&quot;)</span>
+<span class="sd">        The number of features to consider when looking for the best split:</span>
+
+<span class="sd">        - If int, then consider `max_features` features at each split.</span>
+<span class="sd">        - If float, then `max_features` is a percentage and</span>
+<span class="sd">          `int(max_features * n_features)` features are considered at each</span>
+<span class="sd">          split.</span>
+<span class="sd">        - If &quot;auto&quot;, then `max_features=n_features`.</span>
+<span class="sd">        - If &quot;sqrt&quot;, then `max_features=sqrt(n_features)`.</span>
+<span class="sd">        - If &quot;log2&quot;, then `max_features=log2(n_features)`.</span>
+<span class="sd">        - If None, then `max_features=n_features`.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The search for a split does not stop until at least one</span>
+<span class="sd">            valid partition of the node samples is found, even if it</span>
+<span class="sd">            requires to effectively inspect more than ``max_features``</span>
+<span class="sd">            features.</span>
+
+<span class="sd">    max_depth : integer or None, optional (default=None)</span>
+<span class="sd">        The maximum depth of the tree. If None, then nodes are expanded until</span>
+<span class="sd">        all leaves are pure or until all leaves contain less than</span>
+<span class="sd">        min_samples_split samples.</span>
+
+<span class="sd">    min_samples_split : int, float, optional (default=2)</span>
+<span class="sd">        The minimum number of samples required to split an internal node:</span>
+
+<span class="sd">        - If int, then consider `min_samples_split` as the minimum number.</span>
+<span class="sd">        - If float, then `min_samples_split` is a percentage and</span>
+<span class="sd">          `ceil(min_samples_split * n_samples)` are the minimum</span>
+<span class="sd">          number of samples for each split.</span>
+
+<span class="sd">    min_samples_leaf : int, float, optional (default=1)</span>
+<span class="sd">        The minimum number of samples required to be at a leaf node:</span>
+
+<span class="sd">        - If int, then consider `min_samples_leaf` as the minimum number.</span>
+<span class="sd">        - If float, then `min_samples_leaf` is a percentage and</span>
+<span class="sd">          `ceil(min_samples_leaf * n_samples)` are the minimum</span>
+<span class="sd">          number of samples for each node.</span>
+
+<span class="sd">    min_weight_fraction_leaf : float, optional (default=0.)</span>
+<span class="sd">        The minimum weighted fraction of the sum total of weights (of all</span>
+<span class="sd">        the input samples) required to be at a leaf node. Samples have</span>
+<span class="sd">        equal weight when sample_weight is not provided.</span>
+
+<span class="sd">    max_leaf_nodes : int or None, optional (default=None)</span>
+<span class="sd">        Grow trees with ``max_leaf_nodes`` in best-first fashion.</span>
+<span class="sd">        Best nodes are defined as relative reduction in impurity.</span>
+<span class="sd">        If None then unlimited number of leaf nodes.</span>
+
+<span class="sd">    min_impurity_decrease : float, optional (default=0.)</span>
+<span class="sd">        A node will be split if this split induces a decrease of the impurity</span>
+<span class="sd">        greater than or equal to this value.</span>
+<span class="sd">        The weighted impurity decrease equation is the following::</span>
+
+<span class="sd">            N_t / N * (impurity - N_t_R / N_t * right_impurity</span>
+<span class="sd">                                - N_t_L / N_t * left_impurity)</span>
+
+<span class="sd">        where ``N`` is the total number of samples, ``N_t`` is the number of</span>
+<span class="sd">        samples at the current node, ``N_t_L`` is the number of samples in the</span>
+<span class="sd">        left child, and ``N_t_R`` is the number of samples in the right child.</span>
+<span class="sd">        ``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,</span>
+<span class="sd">        if ``sample_weight`` is passed.</span>
+
+<span class="sd">    bootstrap : boolean, optional (default=True)</span>
+<span class="sd">        Whether bootstrap samples are used when building trees.</span>
+
+<span class="sd">    oob_score : bool, optional (default=False)</span>
+<span class="sd">        whether to use out-of-bag samples to estimate</span>
+<span class="sd">        the R^2 on unseen data.</span>
+
+<span class="sd">    n_jobs : integer, optional (default=1)</span>
+<span class="sd">        The number of jobs to run in parallel for both `fit` and `predict`.</span>
+<span class="sd">        If -1, then the number of jobs is set to the number of cores.</span>
+
+<span class="sd">    random_state : int, RandomState instance or None, optional (default=None)</span>
+<span class="sd">        If int, random_state is the seed used by the random number generator;</span>
+<span class="sd">        If RandomState instance, random_state is the random number generator;</span>
+<span class="sd">        If None, the random number generator is the RandomState instance used</span>
+<span class="sd">        by `np.random`.</span>
+
+<span class="sd">    verbose : int, optional (default=0)</span>
+<span class="sd">        Controls the verbosity of the tree building process.</span>
+
+<span class="sd">    warm_start : bool, optional (default=False)</span>
+<span class="sd">        When set to ``True``, reuse the solution of the previous call to fit</span>
+<span class="sd">        and add more estimators to the ensemble, otherwise, just fit a whole</span>
+<span class="sd">        new forest.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    estimators_ : list of DecisionTreeRegressor</span>
+<span class="sd">        The collection of fitted sub-estimators.</span>
+
+<span class="sd">    feature_importances_ : array of shape = [n_features]</span>
+<span class="sd">        The feature importances (the higher, the more important the feature).</span>
+
+<span class="sd">    n_features_ : int</span>
+<span class="sd">        The number of features when ``fit`` is performed.</span>
+
+<span class="sd">    n_outputs_ : int</span>
+<span class="sd">        The number of outputs when ``fit`` is performed.</span>
+
+<span class="sd">    oob_score_ : float</span>
+<span class="sd">        Score of the training dataset obtained using an out-of-bag estimate.</span>
+
+<span class="sd">    oob_prediction_ : array of shape = [n_samples]</span>
+<span class="sd">        Prediction computed with out-of-bag estimate on the training set.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The default values for the parameters controlling the size of the trees</span>
+<span class="sd">    (e.g. ``max_depth``, ``min_samples_leaf``, etc.) lead to fully grown and</span>
+<span class="sd">    unpruned trees which can potentially be very large on some data sets. To</span>
+<span class="sd">    reduce memory consumption, the complexity and size of the trees should be</span>
+<span class="sd">    controlled by setting those parameter values.</span>
+<span class="sd">    The features are always randomly permuted at each split. Therefore,</span>
+<span class="sd">    the best found split may vary, even with the same training data,</span>
+<span class="sd">    ``max_features=n_features`` and ``bootstrap=False``, if the improvement</span>
+<span class="sd">    of the criterion is identical for several splits enumerated during the</span>
+<span class="sd">    search of the best split. To obtain a deterministic behaviour during</span>
+<span class="sd">    fitting, ``random_state`` has to be fixed.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] L. Breiman, &quot;Random Forests&quot;, Machine Learning, 45(1), 5-32, 2001.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ExtraTreesRegressor.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.ExtraTreesRegressor.html#skopt.learning.ExtraTreesRegressor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                 <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_impurity_decrease</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                 <span class="n">bootstrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">min_variance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span> <span class="o">=</span> <span class="n">min_variance</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+            <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">min_samples_split</span><span class="o">=</span><span class="n">min_samples_split</span><span class="p">,</span>
+            <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">min_samples_leaf</span><span class="p">,</span>
+            <span class="n">min_weight_fraction_leaf</span><span class="o">=</span><span class="n">min_weight_fraction_leaf</span><span class="p">,</span>
+            <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+            <span class="n">min_impurity_decrease</span><span class="o">=</span><span class="n">min_impurity_decrease</span><span class="p">,</span>
+            <span class="n">bootstrap</span><span class="o">=</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="n">oob_score</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExtraTreesRegressor.predict"><a class="viewcode-back" href="../../../modules/generated/skopt.learning.ExtraTreesRegressor.html#skopt.learning.ExtraTreesRegressor.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict continuous output for X.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape=(n_samples, n_features)</span>
+<span class="sd">            Input data.</span>
+
+<span class="sd">        return_std : boolean</span>
+<span class="sd">            Whether or not to return the standard deviation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        predictions : array-like of shape=(n_samples,)</span>
+<span class="sd">            Predicted values for X. If criterion is set to &quot;mse&quot;,</span>
+<span class="sd">            then `predictions[i] ~= mean(y | X[i])`.</span>
+
+<span class="sd">        std : array-like of shape=(n_samples,)</span>
+<span class="sd">            Standard deviation of `y` at `X`. If criterion</span>
+<span class="sd">            is set to &quot;mse&quot;, then `std[i] ~= std(y | X[i])`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ExtraTreesRegressor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">return_std</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">!=</span> <span class="s2">&quot;mse&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Expected impurity to be &#39;mse&#39;, got </span><span class="si">%s</span><span class="s2"> instead&quot;</span>
+                    <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">_return_std</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_variance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+
+        <span class="k">return</span> <span class="n">mean</span></div></div>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

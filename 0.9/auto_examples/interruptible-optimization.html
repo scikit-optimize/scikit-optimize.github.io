@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>Interruptible optimization runs with checkpoints &mdash; scikit-optimize 0.9.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/auto_examples/interruptible-optimization.html" />
+
+  
+  <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../index.html">
+        <img
+          class="sk-brand-img"
+          src="../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../index.html">
+            <img
+              class="sk-brand-img"
+              src="../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="store-and-load-results.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Store and load skopt optimization results">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="hyperparameter-optimization.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Tuning a scikit-learn estimator with skopt">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.9.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#">Interruptible optimization runs with checkpoints</a><ul>
+<li><a class="reference internal" href="#problem-statement">Problem statement</a></li>
+<li><a class="reference internal" href="#simple-example">Simple example</a></li>
+<li><a class="reference internal" href="#restoring-the-last-checkpoint">Restoring the last checkpoint</a></li>
+<li><a class="reference internal" href="#continue-the-search">Continue the search</a></li>
+<li><a class="reference internal" href="#possible-problems">Possible problems</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-interruptible-optimization-py"><span class="std std-ref">here</span></a>
+to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<section class="sphx-glr-example-title" id="interruptible-optimization-runs-with-checkpoints">
+<span id="sphx-glr-auto-examples-interruptible-optimization-py"></span><h1>Interruptible optimization runs with checkpoints<a class="headerlink" href="#interruptible-optimization-runs-with-checkpoints" title="Permalink to this headline">¶</a></h1>
+<p>Christian Schell, Mai 2018
+Reformatted by Holger Nahrstaedt 2020</p>
+<section id="problem-statement">
+<h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
+<p>Optimization runs can take a very long time and even run for multiple days.
+If for some reason the process has to be interrupted results are irreversibly
+lost, and the routine has to start over from the beginning.</p>
+<p>With the help of the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a> callback the optimizer’s current state
+can be saved after each iteration, allowing to restart from that point at any
+time.</p>
+<p>This is useful, for example,</p>
+<ul class="simple">
+<li><p>if you don’t know how long the process will take and cannot hog computational resources forever</p></li>
+<li><p>if there might be system failures due to shaky infrastructure (or colleagues…)</p></li>
+<li><p>if you want to adjust some parameters and continue with the already obtained results</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-example">
+<h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
+<p>We will use pretty much the same optimization problem as in the
+<a class="reference internal" href="bayesian-optimization.html#sphx-glr-auto-examples-bayesian-optimization-py"><span class="std std-ref">Bayesian optimization with skopt</span></a>
+notebook. Additionally we will instantiate the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a>
+and pass it to the minimizer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a>
+<span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <span class="n">callbacks</span>
+<span class="kn">from</span> <span class="nn">skopt.callbacks</span> <span class="kn">import</span> <a href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver" class="sphx-glr-backref-module-skopt-callbacks sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CheckpointSaver</span></a>
+
+<span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+
+<span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">):</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.tanh.html#numpy.tanh" title="numpy.tanh" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">tanh</span></a><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">()</span> \
+        <span class="o">*</span> <span class="n">noise_level</span>
+
+<span class="n">checkpoint_saver</span> <span class="o">=</span> <a href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver" class="sphx-glr-backref-module-skopt-callbacks sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CheckpointSaver</span></a><span class="p">(</span><span class="s2">&quot;./checkpoint.pkl&quot;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span> <span class="c1"># keyword arguments will be passed to `skopt.dump`</span>
+
+<a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+            <span class="p">[(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)],</span>    <span class="c1"># the bounds on each dimension of x</span>
+            <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">20.</span><span class="p">],</span>          <span class="c1"># the starting point</span>
+            <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
+            <span class="n">n_calls</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c1"># number of evaluations of f including at x0</span>
+            <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># the number of random initial points</span>
+            <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">checkpoint_saver</span><span class="p">],</span>
+            <span class="c1"># a list of callbacks including the checkpoint saver</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: -0.17524445239614728
+   func_vals: array([-0.04682088, -0.08228249, -0.00653801, -0.07133619,  0.09063509,
+       0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491])
+      models: [GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735)]
+random_state: RandomState(MT19937) at 0x7F900BD12B40
+       space: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
+       specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7f900af80280&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), &#39;n_calls&#39;: 10, &#39;n_random_starts&#39;: 3, &#39;n_initial_points&#39;: 10, &#39;initial_point_generator&#39;: &#39;random&#39;, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [-20.0], &#39;y0&#39;: None, &#39;random_state&#39;: RandomState(MT19937) at 0x7F900BD12B40, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7f900b0e0ee0&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
+           x: [-18.660711622818603]
+     x_iters: [[-20.0], [5.857990176187936], [-11.97095004855501], [5.450171667295798], [10.524218484749973], [-17.111120867646513], [7.251301450238415], [-19.16709880491886], [-18.660711622818603], [-18.284297243496926]]
+</pre></div>
+</div>
+<p>Now let’s assume this did not finish at once but took some long time: you
+started this on Friday night, went out for the weekend and now, Monday
+morning, you’re eager to see the results. However, instead of the
+notebook server you only see a blank page and your colleague Garry
+tells you that he had had an update scheduled for Sunday noon – who
+doesn’t like updates?</p>
+<p><a class="reference internal" href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">gp_minimize</span></code></a> did not finish, and there is no <code class="docutils literal notranslate"><span class="pre">res</span></code> variable with the
+actual results!</p>
+</section>
+<section id="restoring-the-last-checkpoint">
+<h2>Restoring the last checkpoint<a class="headerlink" href="#restoring-the-last-checkpoint" title="Permalink to this headline">¶</a></h2>
+<p>Luckily we employed the <a class="reference internal" href="../modules/generated/skopt.callbacks.CheckpointSaver.html#skopt.callbacks.CheckpointSaver" title="skopt.callbacks.CheckpointSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">callbacks.CheckpointSaver</span></code></a> and can now restore the latest
+result with <a class="reference internal" href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.load</span></code></a>
+(see <a class="reference internal" href="store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a> for more
+information on that)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skopt</span> <span class="kn">import</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">load</span></a>
+
+<span class="n">res</span> <span class="o">=</span> <a href="../modules/generated/skopt.load.html#skopt.load" title="skopt.load" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">load</span></a><span class="p">(</span><span class="s1">&#39;./checkpoint.pkl&#39;</span><span class="p">)</span>
+
+<span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.17524445239614728
+</pre></div>
+</div>
+</section>
+<section id="continue-the-search">
+<h2>Continue the search<a class="headerlink" href="#continue-the-search" title="Permalink to this headline">¶</a></h2>
+<p>The previous results can then be used to continue the optimization process:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x_iters</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">func_vals</span>
+
+<a href="../modules/generated/skopt.gp_minimize.html#skopt.gp_minimize" title="skopt.gp_minimize" class="sphx-glr-backref-module-skopt sphx-glr-backref-type-py-function"><span class="n">gp_minimize</span></a><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span>            <span class="c1"># the function to minimize</span>
+            <span class="p">[(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)],</span>    <span class="c1"># the bounds on each dimension of x</span>
+            <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>              <span class="c1"># already examined values for x</span>
+            <span class="n">y0</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span>              <span class="c1"># observed values for x0</span>
+            <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;LCB&quot;</span><span class="p">,</span>     <span class="c1"># the acquisition function (optional)</span>
+            <span class="n">n_calls</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c1"># number of evaluations of f including at x0</span>
+            <span class="n">n_random_starts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># the number of random initialization points</span>
+            <span class="n">callback</span><span class="o">=</span><span class="p">[</span><span class="n">checkpoint_saver</span><span class="p">],</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="mi">777</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         fun: -0.17524445239614728
+   func_vals: array([-0.04682088, -0.08228249, -0.00653801, -0.07133619,  0.09063509,
+       0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491,
+       0.05448095,  0.18951609, -0.07693575, -0.14030959, -0.06324675,
+      -0.05588737, -0.12332314, -0.04395035,  0.09147873,  0.02650409])
+      models: [GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5) + WhiteKernel(noise_level=1),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735)]
+random_state: RandomState(MT19937) at 0x7F900BD12B40
+       space: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)])
+       specs: {&#39;args&#39;: {&#39;func&#39;: &lt;function obj_fun at 0x7f900af80280&gt;, &#39;dimensions&#39;: Space([Real(low=-20.0, high=20.0, prior=&#39;uniform&#39;, transform=&#39;normalize&#39;)]), &#39;base_estimator&#39;: GaussianProcessRegressor(kernel=1**2 * Matern(length_scale=1, nu=2.5),
+                        n_restarts_optimizer=2, noise=&#39;gaussian&#39;,
+                        normalize_y=True, random_state=655685735), &#39;n_calls&#39;: 10, &#39;n_random_starts&#39;: 3, &#39;n_initial_points&#39;: 10, &#39;initial_point_generator&#39;: &#39;random&#39;, &#39;acq_func&#39;: &#39;LCB&#39;, &#39;acq_optimizer&#39;: &#39;auto&#39;, &#39;x0&#39;: [[-20.0], [5.857990176187936], [-11.97095004855501], [5.450171667295798], [10.524218484749973], [-17.111120867646513], [7.251301450238415], [-19.16709880491886], [-18.660711622818603], [-18.284297243496926]], &#39;y0&#39;: array([-0.04682088, -0.08228249, -0.00653801, -0.07133619,  0.09063509,
+       0.07662367,  0.08260541, -0.13236828, -0.17524445,  0.10024491]), &#39;random_state&#39;: RandomState(MT19937) at 0x7F900BD12B40, &#39;verbose&#39;: False, &#39;callback&#39;: [&lt;skopt.callbacks.CheckpointSaver object at 0x7f900b0e0ee0&gt;], &#39;n_points&#39;: 10000, &#39;n_restarts_optimizer&#39;: 5, &#39;xi&#39;: 0.01, &#39;kappa&#39;: 1.96, &#39;n_jobs&#39;: 1, &#39;model_queue_size&#39;: None}, &#39;function&#39;: &#39;base_minimize&#39;}
+           x: [-18.660711622818603]
+     x_iters: [[-20.0], [5.857990176187936], [-11.97095004855501], [5.450171667295798], [10.524218484749973], [-17.111120867646513], [7.251301450238415], [-19.16709880491886], [-18.660711622818603], [-18.284297243496926], [5.857990176187936], [-11.97095004855501], [5.450171667295798], [-19.095152570513417], [-18.99431276746093], [-19.303491085633596], [-18.902401743872336], [-18.828069913611525], [-19.391720111674047], [-18.851948436512373]]
+</pre></div>
+</div>
+</section>
+<section id="possible-problems">
+<h2>Possible problems<a class="headerlink" href="#possible-problems" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>changes in search space:</strong> You can use this technique to interrupt
+the search, tune the search space and continue the optimization. Note
+that the optimizers will complain if <code class="docutils literal notranslate"><span class="pre">x0</span></code> contains parameter values not
+covered by the dimension definitions, so in many cases shrinking the
+search space will not work without deleting the offending runs from
+<code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">y0</span></code>.</p></li>
+<li><p>see <a class="reference internal" href="store-and-load-results.html#sphx-glr-auto-examples-store-and-load-results-py"><span class="std std-ref">Store and load skopt optimization results</span></a></p></li>
+</ul>
+<p>for more information on how the results get saved and possible caveats</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.554 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  16 MB</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-interruptible-optimization-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-optimize/scikit-optimize/master?urlpath=lab/tree/notebooks/auto_examples/interruptible-optimization.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/283a4aef788dadc4cf49a7a2d11804bd/interruptible-optimization.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">interruptible-optimization.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/673cb066bff7b44c11753f51b63cd340/interruptible-optimization.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">interruptible-optimization.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+          <a href="../_sources/auto_examples/interruptible-optimization.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

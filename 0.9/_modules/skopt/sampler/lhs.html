@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.sampler.lhs &mdash; scikit-optimize 0.9.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/_modules/skopt/sampler/lhs.html" />
+
+  
+  <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+<script src="../../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../modules/classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Prev</a><a href="../../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Module code">Up</a>
+            <a href="#" role="button" class="btn sk-btn-rellink py-1 disabled"">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.9.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <h1>Source code for skopt.sampler.lhs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Lhs functions are inspired by</span>
+<span class="sd">https://github.com/clicumu/pyDOE2/blob/</span>
+<span class="sd">master/pyDOE2/doe_lhs.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">from</span> <span class="nn">..space</span> <span class="kn">import</span> <span class="n">Space</span><span class="p">,</span> <span class="n">Categorical</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">InitialPointGenerator</span>
+
+
+<span class="k">def</span> <span class="nf">_random_permute_matrix</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">h_rand_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">samples</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
+        <span class="n">h_rand_perm</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">order</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">h_rand_perm</span>
+
+
+<div class="viewcode-block" id="Lhs"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs">[docs]</a><span class="k">class</span> <span class="nc">Lhs</span><span class="p">(</span><span class="n">InitialPointGenerator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Latin hypercube sampling</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lhs_type : str, default=&#39;classic&#39;</span>
+<span class="sd">        - &#39;classic&#39; - a small random number is added</span>
+<span class="sd">        - &#39;centered&#39; - points are set uniformly in each interval</span>
+
+<span class="sd">    criterion : str or None, default=&#39;maximin&#39;</span>
+<span class="sd">        When set to None, the LHS is not optimized</span>
+
+<span class="sd">        - &#39;correlation&#39; : optimized LHS by minimizing the correlation</span>
+<span class="sd">        - &#39;maximin&#39; : optimized LHS by maximizing the minimal pdist</span>
+<span class="sd">        - &#39;ratio&#39; : optimized LHS by minimizing the ratio</span>
+<span class="sd">          `max(pdist) / min(pdist)`</span>
+
+<span class="sd">    iterations : int</span>
+<span class="sd">        Defines the number of iterations for optimizing LHS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Lhs.__init__"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lhs_type</span><span class="o">=</span><span class="s2">&quot;classic&quot;</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;maximin&quot;</span><span class="p">,</span>
+                 <span class="n">iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhs_type</span> <span class="o">=</span> <span class="n">lhs_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span></div>
+
+<div class="viewcode-block" id="Lhs.generate"><a class="viewcode-back" href="../../../modules/generated/skopt.sampler.Lhs.html#skopt.sampler.Lhs.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates latin hypercube samples.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dimensions : list, shape (n_dims,)</span>
+<span class="sd">            List of search space dimensions.</span>
+<span class="sd">            Each search dimension can be defined either as</span>
+
+<span class="sd">            - a `(lower_bound, upper_bound)` tuple (for `Real` or `Integer`</span>
+<span class="sd">              dimensions),</span>
+<span class="sd">            - a `(lower_bound, upper_bound, &quot;prior&quot;)` tuple (for `Real`</span>
+<span class="sd">              dimensions),</span>
+<span class="sd">            - as a list of categories (for `Categorical` dimensions), or</span>
+<span class="sd">            - an instance of a `Dimension` object (`Real`, `Integer` or</span>
+<span class="sd">              `Categorical`).</span>
+
+<span class="sd">        n_samples : int</span>
+<span class="sd">            The order of the LHS sequence. Defines the number of samples.</span>
+<span class="sd">        random_state : int, RandomState instance, or None (default)</span>
+<span class="sd">            Set random state to something other than None for reproducible</span>
+<span class="sd">            results.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.array, shape=(n_dim, n_samples)</span>
+<span class="sd">            LHS set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">space</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+        <span class="n">transformer</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">get_transformer</span><span class="p">()</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">n_dims</span>
+        <span class="n">space</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="s2">&quot;normalize&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">n_samples</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lhs_normalized</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="n">space</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">h</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">h_opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lhs_normalized</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+            <span class="n">h_opt</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">h_opt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">==</span> <span class="s2">&quot;correlation&quot;</span><span class="p">:</span>
+                <span class="n">mincorr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">):</span>
+                    <span class="c1"># Generate a random LHS</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lhs_normalized</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> \
+                            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">&lt;</span> <span class="n">mincorr</span><span class="p">:</span>
+                        <span class="n">mincorr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">h_opt</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">==</span> <span class="s2">&quot;maximin&quot;</span><span class="p">:</span>
+                <span class="n">maxdist</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1"># Maximize the minimum distance between points</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">):</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lhs_normalized</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">maxdist</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+                        <span class="n">maxdist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">h_opt</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">==</span> <span class="s2">&quot;ratio&quot;</span><span class="p">:</span>
+                <span class="n">minratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+                <span class="c1"># Maximize the minimum distance between points</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">):</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lhs_normalized</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e-8</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">minratio</span> <span class="o">&gt;</span> <span class="n">ratio</span><span class="p">:</span>
+                        <span class="n">minratio</span> <span class="o">=</span> <span class="n">ratio</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">h_opt</span> <span class="o">=</span> <span class="n">space</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">h_opt</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong criterion.&quot;</span>
+                                 <span class="s2">&quot;Got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">))</span>
+            <span class="n">space</span><span class="o">.</span><span class="n">set_transformer</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">h_opt</span></div>
+
+    <span class="k">def</span> <span class="nf">_lhs_normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="p">):</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhs_type</span> <span class="o">==</span> <span class="s2">&quot;centered&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+                <span class="n">h</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="n">x</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhs_type</span> <span class="o">==</span> <span class="s2">&quot;classic&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+                <span class="n">h</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong lhs_type. Got &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs_type</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">_random_permute_matrix</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span></div>
+</pre></div>
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

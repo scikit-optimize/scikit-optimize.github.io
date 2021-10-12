@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.optimizer.gp_minimize &mdash; scikit-optimize 0.9.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/modules/generated/skopt.optimizer.gp_minimize.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="skopt.optimizer.gbrt_minimize.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.optimizer.gbrt_minimize">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
+            <a href="skopt.plots.partial_dependence.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.plots.partial_dependence">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.9.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.optimizer</span></code>.gp_minimize</a></li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <section id="skopt-optimizer-gp-minimize">
+<h1><a class="reference internal" href="../classes.html#module-skopt.optimizer" title="skopt.optimizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.optimizer</span></code></a>.gp_minimize<a class="headerlink" href="#skopt-optimizer-gp-minimize" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="skopt.optimizer.gp_minimize">
+<span class="sig-prename descclassname"><span class="pre">skopt.optimizer.</span></span><span class="sig-name descname"><span class="pre">gp_minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_calls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_random_starts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_initial_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_point_generator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gp_hedge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acq_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_restarts_optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.96</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_queue_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/a2369dd/skopt/optimizer/gp.py#L12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference internal" href="../../_modules/skopt/optimizer/gp.html#gp_minimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skopt.optimizer.gp_minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bayesian optimization using Gaussian Processes.</p>
+<p>If every function evaluation is expensive, for instance
+when the parameters are the hyperparameters of a neural network
+and the function evaluation is the mean cross-validation score across
+ten folds, optimizing the hyperparameters by standard optimization
+routines would take for ever!</p>
+<p>The idea is to approximate the function using a Gaussian process.
+In other words the function values are assumed to follow a multivariate
+gaussian. The covariance of the function values are given by a
+GP kernel between the parameters. Then a smart choice to choose the
+next parameter to evaluate can be made by the acquisition function
+over the Gaussian prior which is much quicker to evaluate.</p>
+<p>The total number of evaluations, <code class="docutils literal notranslate"><span class="pre">n_calls</span></code>, are performed like the
+following. If <code class="docutils literal notranslate"><span class="pre">x0</span></code> is provided but not <code class="docutils literal notranslate"><span class="pre">y0</span></code>, then the elements of <code class="docutils literal notranslate"><span class="pre">x0</span></code>
+are first evaluated, followed by <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> evaluations.
+Finally, <code class="docutils literal notranslate"><span class="pre">n_calls</span> <span class="pre">-</span> <span class="pre">len(x0)</span> <span class="pre">-</span> <span class="pre">n_initial_points</span></code> evaluations are
+made guided by the surrogate model. If <code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">y0</span></code> are both
+provided then <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> evaluations are first made then
+<code class="docutils literal notranslate"><span class="pre">n_calls</span> <span class="pre">-</span> <span class="pre">n_initial_points</span></code> subsequent evaluations are made
+guided by the surrogate model.</p>
+<p>The first <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> are generated by the
+<code class="docutils literal notranslate"><span class="pre">initial_point_generator</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>Function to minimize. Should take a single list of parameters
+and return the objective value.</p>
+<p>If you have a search-space where all dimensions have names,
+then you can use <a class="reference internal" href="skopt.utils.use_named_args.html#skopt.utils.use_named_args" title="skopt.utils.use_named_args"><code class="xref py py-func docutils literal notranslate"><span class="pre">skopt.utils.use_named_args()</span></code></a> as a decorator
+on your objective function, in order to call it directly
+with the named arguments. See <code class="docutils literal notranslate"><span class="pre">use_named_args</span></code> for an example.</p>
+</dd>
+<dt><strong>dimensions</strong><span class="classifier">[list, shape (n_dims,)</span></dt><dd><p>List of search space dimensions.
+Each search dimension can be defined either as</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">(lower_bound,</span> <span class="pre">upper_bound)</span></code> tuple (for <code class="docutils literal notranslate"><span class="pre">Real</span></code> or <code class="docutils literal notranslate"><span class="pre">Integer</span></code>
+dimensions),</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">(lower_bound,</span> <span class="pre">upper_bound,</span> <span class="pre">&quot;prior&quot;)</span></code> tuple (for <code class="docutils literal notranslate"><span class="pre">Real</span></code>
+dimensions),</p></li>
+<li><p>as a list of categories (for <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> dimensions), or</p></li>
+<li><p>an instance of a <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> object (<code class="docutils literal notranslate"><span class="pre">Real</span></code>, <code class="docutils literal notranslate"><span class="pre">Integer</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Categorical</span></code>).</p></li>
+</ul>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The upper and lower bounds are inclusive for <code class="docutils literal notranslate"><span class="pre">Integer</span></code>
+dimensions.</p>
+</div>
+</div></blockquote>
+</dd>
+<dt><strong>base_estimator</strong><span class="classifier">a Gaussian process estimator</span></dt><dd><p>The Gaussian process estimator to use for optimization.
+By default, a Matern kernel is used with the following
+hyperparameters tuned.</p>
+<ul class="simple">
+<li><p>All the length scales of the Matern kernel.</p></li>
+<li><p>The covariance amplitude that each element is multiplied with.</p></li>
+<li><p>Noise that is added to the matern kernel. The noise is assumed
+to be iid gaussian.</p></li>
+</ul>
+</dd>
+<dt><strong>n_calls</strong><span class="classifier">int, default: 100</span></dt><dd><p>Number of calls to <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p>
+</dd>
+<dt><strong>n_random_starts</strong><span class="classifier">int, default: None</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with random points before
+approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.8: </span>use <code class="docutils literal notranslate"><span class="pre">n_initial_points</span></code> instead.</p>
+</div>
+</dd>
+<dt><strong>n_initial_points</strong><span class="classifier">int, default: 10</span></dt><dd><p>Number of evaluations of <code class="docutils literal notranslate"><span class="pre">func</span></code> with initialization points
+before approximating it with <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>. Initial point
+generator can be changed by setting <code class="docutils literal notranslate"><span class="pre">initial_point_generator</span></code>.</p>
+</dd>
+<dt><strong>initial_point_generator</strong><span class="classifier">str, InitialPointGenerator instance,             default: ‘random’</span></dt><dd><p>Sets a initial points generator. Can be either</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code> for uniform random numbers,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;sobol&quot;</span></code> for a Sobol’ sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;halton&quot;</span></code> for a Halton sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;hammersly&quot;</span></code> for a Hammersly sequence,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lhs&quot;</span></code> for a latin hypercube sequence,</p></li>
+</ul>
+</dd>
+<dt><strong>acq_func</strong><span class="classifier">string, default: <code class="docutils literal notranslate"><span class="pre">&quot;gp_hedge&quot;</span></code></span></dt><dd><p>Function to minimize over the gaussian prior. Can be either</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code> for lower confidence bound.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;EI&quot;</span></code> for negative expected improvement.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;PI&quot;</span></code> for negative probability of improvement.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;gp_hedge&quot;</span></code> Probabilistically choose one of the above three
+acquisition functions at every iteration. The weightage
+given to these gains can be set by <span class="math notranslate nohighlight">\(\eta\)</span> through
+<code class="docutils literal notranslate"><span class="pre">acq_func_kwargs</span></code>.</p>
+<ul>
+<li><p>The gains <code class="docutils literal notranslate"><span class="pre">g_i</span></code> are initialized to zero.</p></li>
+<li><p>At every iteration,</p>
+<ul>
+<li><p>Each acquisition function is optimised independently to
+propose an candidate point <code class="docutils literal notranslate"><span class="pre">X_i</span></code>.</p></li>
+<li><p>Out of all these candidate points, the next point <code class="docutils literal notranslate"><span class="pre">X_best</span></code> is
+chosen by <span class="math notranslate nohighlight">\(softmax(\eta g_i)\)</span></p></li>
+<li><p>After fitting the surrogate model with <code class="docutils literal notranslate"><span class="pre">(X_best,</span> <span class="pre">y_best)</span></code>,
+the gains are updated such that <span class="math notranslate nohighlight">\(g_i -= \mu(X_i)\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;EIps&quot;</span></code> for negated expected improvement per second to take into
+account the function compute time. Then, the objective function is
+assumed to return two values, the first being the objective value and
+the second being the time taken in seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;PIps&quot;</span></code> for negated probability of improvement per second. The
+return type of the objective function is assumed to be similar to
+that of <code class="docutils literal notranslate"><span class="pre">&quot;EIps&quot;</span></code></p></li>
+</ul>
+</dd>
+<dt><strong>acq_optimizer</strong><span class="classifier">string, <code class="docutils literal notranslate"><span class="pre">&quot;sampling&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code>, default: <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code></span></dt><dd><p>Method to minimize the acquisition function. The fit model
+is updated with the optimal value obtained by optimizing <code class="docutils literal notranslate"><span class="pre">acq_func</span></code>
+with <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">acq_func</span></code> is computed at <code class="docutils literal notranslate"><span class="pre">n_points</span></code> sampled randomly.</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, then <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> is configured on the
+basis of the space searched over.
+If the space is Categorical then this is set to be <code class="docutils literal notranslate"><span class="pre">&quot;sampling&quot;</span></code>.</p></li>
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">&quot;sampling&quot;</span></code>, then the point among these <code class="docutils literal notranslate"><span class="pre">n_points</span></code>
+where the <code class="docutils literal notranslate"><span class="pre">acq_func</span></code> is minimum is the next candidate minimum.</p></li>
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code>, then</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">n_restarts_optimizer</span></code> no. of points which the acquisition
+function is least are taken as start points.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code> is run for 20 iterations with these points as initial
+points to find local minima.</p></li>
+<li><p>The optimal of these local minima is used to update the prior.</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt><strong>x0</strong><span class="classifier">list, list of lists or <code class="docutils literal notranslate"><span class="pre">None</span></code></span></dt><dd><p>Initial input points.</p>
+<ul class="simple">
+<li><p>If it is a list of lists, use it as a list of input points.</p></li>
+<li><p>If it is a list, use it as a single initial input point.</p></li>
+<li><p>If it is <code class="docutils literal notranslate"><span class="pre">None</span></code>, no initial input points are used.</p></li>
+</ul>
+</dd>
+<dt><strong>y0</strong><span class="classifier">list, scalar or <code class="docutils literal notranslate"><span class="pre">None</span></code></span></dt><dd><p>Evaluation of initial input points.</p>
+<ul class="simple">
+<li><p>If it is a list, then it corresponds to evaluations of the function
+at each element of <code class="docutils literal notranslate"><span class="pre">x0</span></code> : the i-th element of <code class="docutils literal notranslate"><span class="pre">y0</span></code> corresponds
+to the function evaluated at the i-th element of <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
+<li><p>If it is a scalar, then it corresponds to the evaluation of the
+function at <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
+<li><p>If it is None and <code class="docutils literal notranslate"><span class="pre">x0</span></code> is provided, then the function is evaluated
+at each element of <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
+</ul>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int, RandomState instance, or None (default)</span></dt><dd><p>Set random state to something other than None for reproducible
+results.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">boolean, default: False</span></dt><dd><p>Control the verbosity. It is advised to set the verbosity to True
+for long optimization runs.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, list of callables, optional</span></dt><dd><p>If callable then <code class="docutils literal notranslate"><span class="pre">callback(res)</span></code> is called after each call to <code class="docutils literal notranslate"><span class="pre">func</span></code>.
+If list of callables, then each callable in the list is called.</p>
+</dd>
+<dt><strong>n_points</strong><span class="classifier">int, default: 10000</span></dt><dd><p>Number of points to sample to determine the next “best” point.
+Useless if acq_optimizer is set to <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code>.</p>
+</dd>
+<dt><strong>n_restarts_optimizer</strong><span class="classifier">int, default: 5</span></dt><dd><p>The number of restarts of the optimizer when <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code>
+is <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code>.</p>
+</dd>
+<dt><strong>kappa</strong><span class="classifier">float, default: 1.96</span></dt><dd><p>Controls how much of the variance in the predicted values should be
+taken into account. If set to be very high, then we are favouring
+exploration over exploitation and vice versa.
+Used when the acquisition is <code class="docutils literal notranslate"><span class="pre">&quot;LCB&quot;</span></code>.</p>
+</dd>
+<dt><strong>xi</strong><span class="classifier">float, default: 0.01</span></dt><dd><p>Controls how much improvement one wants over the previous best
+values. Used when the acquisition is either <code class="docutils literal notranslate"><span class="pre">&quot;EI&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;PI&quot;</span></code>.</p>
+</dd>
+<dt><strong>noise</strong><span class="classifier">float, default: “gaussian”</span></dt><dd><ul class="simple">
+<li><p>Use noise=”gaussian” if the objective returns noisy observations.
+The noise of each observation is assumed to be iid with
+mean zero and a fixed variance.</p></li>
+<li><p>If the variance is known before-hand, this can be set directly
+to the variance of the noise.</p></li>
+<li><p>Set this to a value close to zero (1e-10) if the function is
+noise-free. Setting to zero might cause stability issues.</p></li>
+</ul>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int, default: 1</span></dt><dd><p>Number of cores to run in parallel while running the lbfgs
+optimizations over the acquisition function. Valid only
+when <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> is set to <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code>.
+Defaults to 1 core. If <code class="docutils literal notranslate"><span class="pre">n_jobs=-1</span></code>, then number of jobs is set
+to number of cores.</p>
+</dd>
+<dt><strong>model_queue_size</strong><span class="classifier">int or None, default: None</span></dt><dd><p>Keeps list of models only as long as the argument given. In the
+case of None, the list has no capped length.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">OptimizeResult</span></code>, scipy object</span></dt><dd><p>The optimization result returned as a OptimizeResult object.
+Important attributes are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> [list]: location of the minimum.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span></code> [float]: function value at the minimum.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">models</span></code>: surrogate models used for each iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_iters</span></code> [list of lists]: location of function evaluation for each
+iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">func_vals</span></code> [array]: function value for each iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code> [Space]: the optimization space.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">specs</span></code> [dict]`: the call specifications.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rng</span></code> [RandomState instance]: State of the random state
+at the end of minimization.</p></li>
+</ul>
+<p>For more details related to the OptimizeResult object, refer
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>functions <a class="reference internal" href="skopt.forest_minimize.html#skopt.forest_minimize" title="skopt.forest_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.forest_minimize</span></code></a>,
+<a class="reference internal" href="skopt.dummy_minimize.html#skopt.dummy_minimize" title="skopt.dummy_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.dummy_minimize</span></code></a>, <a class="reference internal" href="skopt.gbrt_minimize.html#skopt.gbrt_minimize" title="skopt.gbrt_minimize"><code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.gbrt_minimize</span></code></a></p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="clearer"></div></section>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+          <a href="../../_sources/modules/generated/skopt.optimizer.gp_minimize.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>

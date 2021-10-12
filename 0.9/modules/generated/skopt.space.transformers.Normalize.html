@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="scikit-optimize: machine learning in Python">
+
+  
+  <title>skopt.space.transformers.Normalize &mdash; scikit-optimize 0.9.0 documentation</title>
+  
+  <link rel="canonical" href="https://scikit-optimize.github.io/modules/generated/skopt.space.transformers.Normalize.html" />
+
+  
+  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script> 
+</head>
+<body>
+<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
+  <div class="container-fluid sk-docs-container px-0">
+      <a class="navbar-brand py-0" href="../../index.html">
+        <img
+          class="sk-brand-img"
+          src="../../_static/logo.png"
+          alt="logo"/>
+      </a>
+    <button
+      id="sk-navbar-toggler"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../classes.html">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html">Getting Started</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../development.html">Development</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+        </li>
+        <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+        </li>
+        <li class="nav-item dropdown nav-more-item-dropdown">
+          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html">Getting Started</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../../development.html">Development</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-optimize/scikit-optimize">GitHub</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-optimize.github.io/dev/versions.html">Other Versions</a>
+          </div>
+        </li>
+      </ul>
+      <div id="searchbox" role="search">
+          <div class="searchformwrapper">
+          <form class="search" action="../../search.html" method="get">
+            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
+            <input class="sk-search-text-btn" type="submit" value="Go" />
+          </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="d-flex" id="sk-doc-wrapper">
+    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
+    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
+    <div id="sk-sidebar-wrapper" class="border-right">
+      <div class="sk-sidebar-toc-wrapper">
+        <div class="sk-sidebar-toc-logo">
+          <a href="../../index.html">
+            <img
+              class="sk-brand-img"
+              src="../../_static/logo.png"
+              alt="logo"/>
+          </a>
+        </div>
+        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
+            <a href="skopt.space.transformers.LogN.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.space.transformers.LogN">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
+            <a href="skopt.space.transformers.Pipeline.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="skopt.space.transformers.Pipeline">Next</a>
+        </div>
+        <div class="alert alert-danger p-1 mb-2" role="alert">
+          <p class="text-center mb-0">
+          <strong>scikit-optimize 0.9.0</strong><br/>
+            <a href="https://scikit-optimize.github.io/dev/versions.html">Other versions</a>
+          </p>
+        </div>
+          <div class="sk-sidebar-toc">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.space.transformers</span></code>.Normalize</a></li>
+</ul>
+
+          </div>
+      </div>
+    </div>
+    <div id="sk-page-content-wrapper">
+      <div class="sk-page-content container-fluid body px-md-3" role="main">
+        
+  <section id="skopt-space-transformers-normalize">
+<h1><a class="reference internal" href="../classes.html#module-skopt.space.transformers" title="skopt.space.transformers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skopt.space.transformers</span></code></a>.Normalize<a class="headerlink" href="#skopt-space-transformers-normalize" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="skopt.space.transformers.Normalize">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">skopt.space.transformers.</span></span><span class="sig-name descname"><span class="pre">Normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/a2369dd/skopt/space/transformers.py#L221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference internal" href="../../_modules/skopt/space/transformers.html#Normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skopt.space.transformers.Normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scales each dimension into the interval [0, 1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>low</strong><span class="classifier">float</span></dt><dd><p>Lower bound.</p>
+</dd>
+<dt><strong>high</strong><span class="classifier">float</span></dt><dd><p>Higher bound.</p>
+</dd>
+<dt><strong>is_int</strong><span class="classifier">bool, default=False</span></dt><dd><p>Round and cast the return value of <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> to integer. Set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code> when applying this transform to integers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 32%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>fit</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>inverse_transform</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>transform</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="skopt.space.transformers.Normalize.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-optimize/scikit-optimize/blob/a2369dd/skopt/space/transformers.py#L237"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference internal" href="../../_modules/skopt/space/transformers.html#Normalize.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#skopt.space.transformers.Normalize.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<div class="clearer"></div></section>
+
+
+      </div>
+    <div class="container">
+      <footer class="sk-content-footer">
+            &copy; 2017 - 2020, scikit-optimize contributors (BSD License).
+          <a href="../../_sources/modules/generated/skopt.space.transformers.Normalize.rst.txt" rel="nofollow">Show this page source</a>
+      </footer>
+    </div>
+  </div>
+</div>
+<script src="../../_static/js/vendor/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    /* Add a [>>>] button on the top-right corner of code sampler to hide
+     * the >>> and ... prompts and the output and thus make the code
+     * copyable. */
+    var div = $('.highlight-python .highlight,' +
+                '.highlight-python3 .highlight,' +
+                '.highlight-pycon .highlight,' +
+		'.highlight-default .highlight')
+    var pre = div.find('pre');
+
+    // get the styles from the current theme
+    pre.parent().parent().css('position', 'relative');
+    var hide_text = 'Hide prompts and outputs';
+    var show_text = 'Show prompts and outputs';
+
+    // create and add the button to all the code blocks that contain >>>
+    div.each(function(index) {
+        var jthis = $(this);
+        if (jthis.find('.gp').length > 0) {
+            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+            jthis.prepend(button);
+        }
+        // tracebacks (.gt) contain bare text elements that need to be
+        // wrapped in a span to work with .nextUntil() (see later)
+        jthis.find('pre:has(.gt)').contents().filter(function() {
+            return ((this.nodeType == 3) && (this.data.trim().length > 0));
+        }).wrap('<span>');
+    });
+
+    // define the behavior of the button when it's clicked
+    $('.copybutton').click(function(e){
+        e.preventDefault();
+        var button = $(this);
+        if (button.data('hidden') === 'false') {
+            // hide the code output
+            button.parent().find('.go, .gp, .gt').hide();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
+            button.css('text-decoration', 'line-through');
+            button.attr('title', show_text);
+            button.data('hidden', 'true');
+        } else {
+            // show the code output
+            button.parent().find('.go, .gp, .gt').show();
+            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
+            button.css('text-decoration', 'none');
+            button.attr('title', hide_text);
+            button.data('hidden', 'false');
+        }
+    });
+
+	/*** Add permalink buttons next to glossary terms ***/
+	$('dl.glossary > dt[id]').append(function() {
+		return ('<a class="headerlink" href="#' +
+			    this.getAttribute('id') +
+			    '" title="Permalink to this term">¶</a>');
+	});
+  /*** Hide navbar when scrolling down ***/
+  // Returns true when headerlink target matches hash in url
+  (function() {
+    hashTargetOnTop = function() {
+        var hash = window.location.hash;
+        if ( hash.length < 2 ) { return false; }
+
+        var target = document.getElementById( hash.slice(1) );
+        if ( target === null ) { return false; }
+
+        var top = target.getBoundingClientRect().top;
+        return (top < 2) && (top > -2);
+    };
+
+    // Hide navbar on load if hash target is on top
+    var navBar = document.getElementById("navbar");
+    var navBarToggler = document.getElementById("sk-navbar-toggler");
+    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
+    var $window = $(window);
+
+    hideNavBar = function() {
+        navBar.style.top = navBarHeightHidden;
+    };
+
+    showNavBar = function() {
+        navBar.style.top = "0";
+    }
+
+    if (hashTargetOnTop()) {
+        hideNavBar()
+    }
+
+    var prevScrollpos = window.pageYOffset;
+    hideOnScroll = function(lastScrollTop) {
+        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
+            return;
+        }
+        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
+            hideNavBar()
+        } else {
+            showNavBar()
+        }
+        prevScrollpos = lastScrollTop;
+    };
+
+    /*** high performance scroll event listener***/
+    var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.oRequestAnimationFrame;
+    var lastScrollTop = $window.scrollTop();
+
+    if (raf) {
+        loop();
+    }
+
+    function loop() {
+        var scrollTop = $window.scrollTop();
+        if (lastScrollTop === scrollTop) {
+            raf(loop);
+            return;
+        } else {
+            lastScrollTop = scrollTop;
+            hideOnScroll(lastScrollTop);
+            raf(loop);
+        }
+    }
+  })();
+});
+
+</script>
+    
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://scikit-optimize.github.io/versionwarning.js"></script>
+</body>
+</html>
